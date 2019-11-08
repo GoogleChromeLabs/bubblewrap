@@ -1,0 +1,35 @@
+{
+  "name": "llama-pack",
+  "version": "0.1.0",
+  "description": "CLI tool to Generate TWA projects from a Web Manifest",
+  "bin": {
+    "outside": "bin/llama-pack"
+  },
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "main": "index.js",
+  "keywords": [
+    "twa",
+    "trusted-web-activities",
+    "pwa",
+    "progressive-web-apps",
+    "android"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "extract-zip": "^1.6.7",
+    "lodash.template": "^4.5.0",
+    "minimist": "^1.2.0",
+    "node-fetch": "^2.6.0",
+    "prompt": "^1.0.0",
+    "sharp": "^0.23.2",
+    "tar": "^5.0.5"
+  },
+  "devDependencies": {
+    "eslint": "^6.6.0",
+    "eslint-config-google": "^0.14.0"
+  }
+}

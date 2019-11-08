@@ -1,0 +1,39 @@
+{
+  "extends": "google",
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module"
+  },
+  "rules": {
+    "max-len": [2, 100, {
+      "ignoreComments": true,
+      "ignoreUrls": true,
+      "tabWidth": 2
+    }],
+    "no-implicit-coercion": [2, {
+      "boolean": false,
+      "number": true,
+      "string": true
+    }],
+    "no-unused-expressions": [2, {
+      "allowShortCircuit": true,
+      "allowTernary": false
+    }],
+    "no-unused-vars": [2, {
+      "vars": "all",
+      "args": "after-used",
+      "argsIgnorePattern": "(^reject$|^_$)",
+      "varsIgnorePattern": "(^_$)"
+    }],
+    "quotes": [2, "single"],
+    "require-jsdoc": 0,
+    "valid-jsdoc": 0,
+    "prefer-arrow-callback": 1,
+    "no-var": 1
+  },
+  "env": {
+    "node": true,
+    "jasmine": true
+  }
+}
+

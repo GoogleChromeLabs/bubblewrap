@@ -1,0 +1,6 @@
+**/node_modules/
+**/dist/
+packages/linter/
+jdk8u232-b09/
+android_sdk/
+
