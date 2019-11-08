@@ -20,6 +20,11 @@ Llama Pack is a Command Line Interface (CLI) that helps developers to create
 a Project for an Android application that launches an existing Progressive Web App (PWA) using a
 [Trusted Web Activity (TWA)](https://developers.google.com/web/updates/2019/02/using-twa).
 
+**Important:** llama-pack is still under active development. The tool works on MacOS and Linux,
+but hasn't yet been tested on Linux. It also hasn't been tested on a wide range of Web APKs,
+and bootstraping a new project may fail in those cases. Please, file issues, feature requests,
+and contribute with pull requests, if possible.
+
 ## Requirements
 - [Node.js](https://nodejs.org/en/) 10.0 or above
 
