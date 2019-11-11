@@ -34,6 +34,8 @@ Clone the Llama Pack repository:
 
 ```shell
 git clone https://github.com/GoogleChromeLabs/llama-pack.git
+cd llama-pack
+npm install
 ```
 
 ### Get the Java Development Kit (JDK) 8.
