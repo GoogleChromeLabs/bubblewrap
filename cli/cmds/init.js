@@ -97,7 +97,8 @@ async function init(args) {
     const twaGenerator = new TwaGenerator();
     const targetDirectory = args.directory || process.cwd();
     const config = await createTwaConfig(manifestUrl, manifest);
-    config.icon = await fetchIcon(manifestUrl, manifest);
+    const stretchImages = args.stretchImages || false;
+    config.icon = await fetchIcon(manifestUrl, manifest, stretchImages);
     await twaGenerator.createTwaProject(targetDirectory, config);
     await createSigningKey();
     return true;
@@ -163,7 +164,7 @@ async function createSigningKey() {
   console.log('Signing Key created successfully');
 }
 
-async function fetchIcon(manifestUrl, manifest) {
+async function fetchIcon(manifestUrl, manifest, stretchImages = false) {
   let largestIcon;
   if (!manifest.icons) {
     throw new Error('An icon with the minimum size of 512x512 is required');
@@ -177,7 +178,7 @@ async function fetchIcon(manifestUrl, manifest) {
     }
   }
 
-  if (largestIcon.size < 512) {
+  if (largestIcon.size < 512 && !stretchImages) {
     throw new Error('An icon with the minimum size of 512x512 is required');
   }
 
