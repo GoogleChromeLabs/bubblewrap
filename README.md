@@ -69,7 +69,7 @@ Generate an Android project from an existing Web Manifest:
 <path-to-llama-pack>/bin/llama-pack init --manifest https://my-twa.com/manifest.json
 ```
 
-When initalizing a project, llama-pack will download the Wer Manifest and ask you to confirm
+When initalizing a project, llama-pack will download the Web Manifest and ask you to confirm
 the values that should be used when building the Android project.
 
 It will also ask you for the details needed to generate a signing key, used to sign the
