@@ -16,8 +16,8 @@
 
 'use strict';
 
-const androidSdkTools = require('../../lib/androidSdk/AndroidSdkTools');
-const gradleWraper = require('../../lib/GradleWrapper');
+const {androidSdkTools} = require('../../lib/androidSdk');
+const GradleWraper = require('../../lib/GradleWrapper');
 
 const {promisify} = require('util');
 const prompt = require('prompt');
@@ -29,6 +29,7 @@ async function build() {
     console.log('Installing Android Build Tools. Please, read and accept the license agreement');
     await androidSdkTools.installBuildTools();
   }
+
   prompt.message = colors.green('[llama-pack-build]');
   prompt.delimiter = ' ';
   prompt.start();
@@ -44,6 +45,7 @@ async function build() {
 
   // Builds the Android Studio Project
   console.log('Building the Android App...');
+  const gradleWraper = new GradleWraper(process, androidSdkTools);
   await gradleWraper.assembleRelease();
 
   // Zip Align
