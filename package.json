@@ -6,7 +6,8 @@
     "outside": "bin/llama-pack"
   },
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "jasmine"
   },
   "main": "index.js",
   "keywords": [
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "eslint": "^6.6.0",
-    "eslint-config-google": "^0.14.0"
+    "eslint-config-google": "^0.14.0",
+    "jasmine": "^3.5.0"
   }
 }

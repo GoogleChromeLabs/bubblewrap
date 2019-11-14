@@ -17,7 +17,7 @@
 'use strict';
 
 const TwaGenerator = require('../../lib/TwaGenerator');
-const jdkInstaller = require('../../lib/jdk/JdkHelper');
+const {jdkHelper} = require('../../lib/jdk');
 const fetch = require('node-fetch');
 const {promisify} = require('util');
 const util = require('../../lib/util');
@@ -110,7 +110,7 @@ async function init(args) {
 // keytool -genkeypair -dname "cn=Mark Jones, ou=JavaSoft, o=Sun, c=US" -alias business -keypass kpi135 -keystore /working/android.keystore -storepass ab987c -validity 20000
 async function createSigningKey() {
   console.log('You will need a Signing Key when building the Android App. Let\'s create one now');
-  const env = jdkInstaller.getEnv();
+  const env = jdkHelper.getEnv();
 
   prompt.message = colors.green('[llama-pack-init]');
   prompt.delimiter = ' ';
