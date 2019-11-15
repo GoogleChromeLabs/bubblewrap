@@ -102,7 +102,6 @@ async function createTwaConfig(manifestUrl, manifest, icon, maskableIcon) {
     },
   };
   const result = await prompt.get(schema);
-  result.maskableIconUrl = maskableIcon;
   return result;
 }
 
