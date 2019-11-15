@@ -61,5 +61,36 @@ describe('util', () => {
       expect(result.type).toBe('image/png');
       expect(result.size).toBe(512);
     });
+
+    it('returns null when not maskable icon is available', () => {
+      const result = util.findSuitableIcon({
+        icons: [{
+          'src': '/favicons/android-chrome-512x512.png',
+          'sizes': '512x512',
+          'type': 'image/png',
+        }],
+      }, 'maskable');
+      expect(result).toBeNull();
+    });
+
+    it('returns icon when not maskable icon is available', () => {
+      const result = util.findSuitableIcon({
+        icons: [{
+          'src': '/favicons/android-chrome-512x512.png',
+          'sizes': '512x512',
+          'type': 'image/png',
+        }, {
+          'src': '/favicons/icon-maskable-7a2eb399.png',
+          'sizes': '512x512',
+          'type': 'image/png',
+          'purpose': 'maskable',
+        }],
+      }, 'maskable');
+      expect(result.src).toBe('/favicons/icon-maskable-7a2eb399.png');
+      expect(result.sizes).toBe('512x512');
+      expect(result.type).toBe('image/png');
+      expect(result.purpose).toBe('maskable');
+      expect(result.size).toBe(512);
+    });
   });
 });
