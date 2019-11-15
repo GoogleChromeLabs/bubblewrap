@@ -23,6 +23,7 @@ const {promisify} = require('util');
 const util = require('../../lib/util');
 const colors = require('colors/safe');
 const prompt = require('prompt');
+const validUrl = require('valid-url');
 prompt.get = promisify(prompt.get);
 
 // Regex for disallowed characters on Android Packages, as per
@@ -35,7 +36,7 @@ function _generatePackageId(host) {
   return parts.join('.').replace(DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX, '_');
 }
 
-async function createTwaConfig(manifestUrl, manifest) {
+async function createTwaConfig(manifestUrl, manifest, icon, maskableIcon) {
   const fullStartUrl = new URL(manifest['start_url'], manifestUrl);
   prompt.message = colors.green('[llama-pack-init]');
   prompt.delimiter = ' ';
@@ -77,6 +78,21 @@ async function createTwaConfig(manifestUrl, manifest) {
         required: true,
         default: fullStartUrl.pathname + fullStartUrl.search,
       },
+      iconUrl: {
+        name: 'iconUrl',
+        description: 'URL to an image that is at least 512x512px',
+        message: 'Must be a well-formed http or https URL.',
+        required: true,
+        default: icon ? new URL(icon.src, manifestUrl).toString() : '',
+        conform: validUrl.isWebUri,
+      },
+      maskableIconUrl: {
+        name: 'maskableIconUrl',
+        description: 'URL to an image to be used when generating maskable icons',
+        message: 'Must be a well-formed http or https URL.',
+        default: maskableIcon ? new URL(maskableIcon.src, manifestUrl).toString() : '',
+        conform: validUrl.isWebUri,
+      },
       packageId: {
         name: 'packageId',
         description: 'Android Package Name (or Application ID):',
@@ -86,6 +102,7 @@ async function createTwaConfig(manifestUrl, manifest) {
     },
   };
   const result = await prompt.get(schema);
+  result.maskableIconUrl = maskableIcon;
   return result;
 }
 
@@ -96,13 +113,9 @@ async function init(args) {
     const manifestUrl = new URL(args.manifest);
     const twaGenerator = new TwaGenerator();
     const targetDirectory = args.directory || process.cwd();
-    const config = await createTwaConfig(manifestUrl, manifest);
-    config.icon = await fetchIcon(manifestUrl, manifest, 'any');
-    try {
-      config.maskableIcon = await fetchIcon(manifestUrl, manifest, 'maskable');
-    } catch (err) {
-      config.maskableIcon = undefined;
-    }
+    const suitableIcon = util.findSuitableIcon(manifest, 'any');
+    const maskableIcon = util.findSuitableIcon(manifest, 'maskable');
+    const config = await createTwaConfig(manifestUrl, manifest, suitableIcon, maskableIcon);
     await twaGenerator.createTwaProject(targetDirectory, config);
     await createSigningKey();
     return true;
@@ -166,40 +179,6 @@ async function createSigningKey() {
   ];
   await util.execute(keytoolCmd, env);
   console.log('Signing Key created successfully');
-}
-
-/**
- * Fetches data for the largest icon from the web app manifest with a given purpose.
- * @param {string} manifestUrl URL to Web App Manifest
- * @param {WebAppManifest} manifest Reference to manifest object
- * @param {string} purpose Purpose filter that the icon must match
- */
-async function fetchIcon(manifestUrl, manifest, purpose) {
-  let largestIcon;
-  if (!manifest.icons) {
-    throw new Error('An icon with the minimum size of 512x512 is required');
-  }
-
-  for (const icon of manifest.icons) {
-    const size = icon.sizes.split(' ')
-      .map(size => Number.parseInt(size, 10))
-      .reduce((max, size) => Math.max(max, size), 0);
-    const purposes = new Set((icon.purpose || 'any').split(' '));
-    if (purposes.has(purpose) && (!largestIcon || largestIcon.size < size)) {
-      largestIcon = icon;
-      largestIcon.size = size;
-    }
-  }
-
-  if (!largestIcon || largestIcon.size < 512) {
-    throw new Error('An icon with the minimum size of 512x512 is required');
-  }
-
-  const iconUrl = new URL(largestIcon.src, manifestUrl);
-  const response = await fetch(iconUrl);
-  const body = await response.buffer();
-  largestIcon.data = body;
-  return largestIcon;
 }
 
 module.exports = init;

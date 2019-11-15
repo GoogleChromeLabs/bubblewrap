@@ -27,7 +27,8 @@
     "minimist": "^1.2.0",
     "node-fetch": "^2.6.0",
     "prompt": "^1.0.0",
-    "tar": "^5.0.5"
+    "tar": "^5.0.5",
+    "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "eslint": "^6.6.0",
