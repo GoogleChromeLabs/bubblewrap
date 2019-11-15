@@ -15,6 +15,7 @@
    limitations under the License.
 -->
 # 🦙Llama Pack
+![Node CI Status](https://github.com/GoogleChromeLabs/llama-pack/workflows/Node%20CI/badge.svg)
 
 Llama Pack is a Command Line Interface (CLI) that helps developers to create
 a Project for an Android application that launches an existing Progressive Web App (PWA) using a
