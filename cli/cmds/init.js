@@ -97,7 +97,12 @@ async function init(args) {
     const twaGenerator = new TwaGenerator();
     const targetDirectory = args.directory || process.cwd();
     const config = await createTwaConfig(manifestUrl, manifest);
-    config.icon = await fetchIcon(manifestUrl, manifest);
+    config.icon = await fetchIcon(manifestUrl, manifest, 'any');
+    try {
+      config.maskableIcon = await fetchIcon(manifestUrl, manifest, 'maskable');
+    } catch (err) {
+      config.maskableIcon = undefined;
+    }
     await twaGenerator.createTwaProject(targetDirectory, config);
     await createSigningKey();
     return true;
@@ -163,21 +168,30 @@ async function createSigningKey() {
   console.log('Signing Key created successfully');
 }
 
-async function fetchIcon(manifestUrl, manifest) {
+/**
+ * Fetches data for the largest icon from the web app manifest with a given purpose.
+ * @param {string} manifestUrl URL to Web App Manifest
+ * @param {WebAppManifest} manifest Reference to manifest object
+ * @param {string} purpose Purpose filter that the icon must match
+ */
+async function fetchIcon(manifestUrl, manifest, purpose) {
   let largestIcon;
   if (!manifest.icons) {
     throw new Error('An icon with the minimum size of 512x512 is required');
   }
 
   for (const icon of manifest.icons) {
-    const size = Number.parseInt(icon.sizes);
-    if (!largestIcon || largestIcon.size < size) {
+    const size = icon.sizes.split(' ')
+      .map(size => Number.parseInt(size, 10))
+      .reduce((max, size) => Math.max(max, size), 0);
+    const purposes = new Set((icon.purpose || 'any').split(' '));
+    if (purposes.has(purpose) && (!largestIcon || largestIcon.size < size)) {
       largestIcon = icon;
       largestIcon.size = size;
     }
   }
 
-  if (largestIcon.size < 512) {
+  if (!largestIcon || largestIcon.size < 512) {
     throw new Error('An icon with the minimum size of 512x512 is required');
   }
 
