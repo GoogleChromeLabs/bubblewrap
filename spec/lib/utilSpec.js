@@ -62,7 +62,7 @@ describe('util', () => {
       expect(result.size).toBe(512);
     });
 
-    it('returns null when not maskable icon is available', () => {
+    it('returns null when no maskable icon is available', () => {
       const result = util.findSuitableIcon({
         icons: [{
           'src': '/favicons/android-chrome-512x512.png',
@@ -73,7 +73,7 @@ describe('util', () => {
       expect(result).toBeNull();
     });
 
-    it('returns icon when not maskable icon is available', () => {
+    it('returns icon when a maskable icon is available', () => {
       const result = util.findSuitableIcon({
         icons: [{
           'src': '/favicons/android-chrome-512x512.png',

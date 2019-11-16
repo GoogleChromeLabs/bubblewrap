@@ -88,7 +88,8 @@ async function createTwaConfig(manifestUrl, manifest, icon, maskableIcon) {
       },
       maskableIconUrl: {
         name: 'maskableIconUrl',
-        description: 'URL to an image to be used when generating maskable icons',
+        description: 'URL to an image that is at least 512x512px to be used when generating ' +
+            'maskable icons',
         message: 'Must be a well-formed http or https URL.',
         default: maskableIcon ? new URL(maskableIcon.src, manifestUrl).toString() : '',
         conform: validUrl.isWebUri,
