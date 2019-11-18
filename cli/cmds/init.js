@@ -37,7 +37,7 @@ function _generatePackageId(host) {
 }
 
 async function createTwaConfig(manifestUrl, manifest, icon, maskableIcon) {
-  const fullStartUrl = new URL(manifest['start_url'], manifestUrl);
+  const fullStartUrl = new URL(manifest['start_url'] || '', manifestUrl);
   prompt.message = colors.green('[llama-pack-init]');
   prompt.delimiter = ' ';
   prompt.start();
@@ -53,7 +53,7 @@ async function createTwaConfig(manifestUrl, manifest, icon, maskableIcon) {
         name: 'name',
         description: 'Name to be shown on the Android Launcher:',
         required: true,
-        default: manifest['short_name'] || manifest['name'],
+        default: manifest['short_name'] || manifest['name'] || 'My TWA',
       },
       themeColor: {
         name: 'themeColor',
