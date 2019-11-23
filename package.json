@@ -33,6 +33,7 @@
   "devDependencies": {
     "eslint": "^6.6.0",
     "eslint-config-google": "^0.14.0",
-    "jasmine": "^3.5.0"
+    "jasmine": "^3.5.0",
+    "parse-color": "^1.0.0"
   }
 }

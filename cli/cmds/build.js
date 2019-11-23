@@ -18,6 +18,7 @@
 
 const {androidSdkTools} = require('../../lib/androidSdk');
 const GradleWraper = require('../../lib/GradleWrapper');
+const TwaManifest = require('../../lib/TwaManifest');
 
 const {promisify} = require('util');
 const prompt = require('prompt');
@@ -30,6 +31,7 @@ async function build() {
     await androidSdkTools.installBuildTools();
   }
 
+  const twaManifest = await TwaManifest.fromFile('./twa-manifest.json');
   prompt.message = colors.green('[llama-pack-build]');
   prompt.delimiter = ' ';
   prompt.start();
@@ -59,9 +61,9 @@ async function build() {
   console.log('Signing...');
   const outputFile = './app-release-signed.apk';
   await androidSdkTools.apksigner(
-      './android.keystore', // the path to the keystore file
+      twaManifest.signingKey.path,
       result.password, // keystore password
-      'android', // alias
+      twaManifest.signingKey.alias, // alias
       result.password, // key password
       './app-release-unsigned-aligned.apk', // input file path
       './app-release-signed.apk', // output file path

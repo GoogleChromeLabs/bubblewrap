@@ -16,27 +16,16 @@
 
 'use strict';
 
-const minimist = require('minimist');
-const config = require('../lib/Config');
+const path = require('path');
+const TwaGenerator = require('../../lib/TwaGenerator');
+const TwaManifest = require('../../lib/TwaManifest');
 
-class Cli {
-  async run(args) {
-    await config.check();
-    args = minimist(args);
-    const command = args._[0] || 'help';
-    switch (command) {
-      case 'help':
-        return await require('./cmds/help')(args);
-      case 'init':
-        return await require('./cmds/init')(args);
-      case 'update':
-        return await require('./cmds/update')(args);
-      case 'build':
-        return await require('./cmds/build')(args);
-      default:
-        throw new Error(`"${command}" is not a valid command!`);
-    }
-  }
+async function update(args) {
+  const targetDirectory = args.directory || process.cwd();
+  const manifestFile = args.manifest || path.join(process.cwd(), 'twa-manifest.json');
+  const twaManifest = await TwaManifest.fromFile(manifestFile);
+  const twaGenerator = new TwaGenerator();
+  twaGenerator.createTwaProject(targetDirectory, twaManifest);
 }
 
-module.exports = Cli;
+module.exports = update;
