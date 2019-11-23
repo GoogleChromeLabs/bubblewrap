@@ -16,6 +16,7 @@
 
 'use strict';
 
+const colorString = require('color-string');
 const TwaGenerator = require('../../lib/TwaGenerator');
 const TwaManifest = require('../../lib/TwaManifest');
 const {keytool} = require('../../lib/jdk');
@@ -27,6 +28,10 @@ const fs = require('fs');
 prompt.get = promisify(prompt.get);
 
 async function confirmTwaConfig(twaManifest) {
+  const validateColor = (color) => {
+    return colorString.get(color) !== null;
+  };
+
   prompt.message = colors.green('[llama-pack-init]');
   prompt.delimiter = ' ';
   prompt.start();
@@ -49,7 +54,7 @@ async function confirmTwaConfig(twaManifest) {
         description: 'Color to be used for the status bar:',
         message: 'Must use a color in hex format',
         required: true,
-        pattern: '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+        conform: validateColor,
         default: twaManifest.themeColor,
       },
       backgroundColor: {
@@ -57,7 +62,7 @@ async function confirmTwaConfig(twaManifest) {
         description: 'Color to be used for the splash screen background:',
         message: 'Must use a color in hex format',
         required: true,
-        pattern: '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+        conform: validateColor,
         default: twaManifest.backgroundColor,
       },
       startUrl: {
