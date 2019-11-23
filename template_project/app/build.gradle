@@ -26,8 +26,8 @@ def twaManifest = [
     themeColor: '<%= themeColor %>', // The color used for the status bar.
     navigationColor: '<%= themeColor %>', // The color used for the navigation bar.    
     backgroundColor: '<%= backgroundColor %>', // The color used for the splash screen background.
-    enableNotifications: false, // Set to true to enable notification delegation.
-    useBrowserOnChromeOS: true, // Set to false if you've added interaction with Android system APIs.
+    enableNotifications: <%= enableNotifications %>, // Set to true to enable notification delegation.
+    useBrowserOnChromeOS: <%= useBrowserOnChromeOS %>, // Set to false if you've added interaction with Android system APIs.
     // Add shortcuts for your app here. Every shortcut must include the following fields:
     // - name: String that will show up in the shortcut.
     // - short_name: Shorter string used if |name| is too long.
@@ -38,7 +38,7 @@ def twaManifest = [
         // [name: 'Open SVG', short_name: 'Open', url: '/open', icon: 'splash']
     ],
     // The duration of fade out animation in milliseconds to be played when removing splash screen.
-    splashScreenFadeOutDuration: 300
+    splashScreenFadeOutDuration: <%= splashScreenFadeOutDuration %>
 ]
 
 android {

@@ -108,7 +108,6 @@ async function confirmTwaConfig(twaManifest) {
     },
   };
   const result = await prompt.get(schema);
-  console.log(result);
   Object.assign(twaManifest, result);
   return twaManifest;
 }
