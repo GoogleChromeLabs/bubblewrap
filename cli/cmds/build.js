@@ -36,14 +36,27 @@ async function build() {
   prompt.delimiter = ' ';
   prompt.start();
 
+  const schema = {
+    properties: {
+      password: {
+        name: 'password',
+        required: true,
+        description: 'KeyStore password:',
+        hidden: true,
+        replace: '*',
+      },
+      keypassword: {
+        name: 'keypassword',
+        required: true,
+        description: 'Key password:',
+        hidden: true,
+        replace: '*',
+      },
+    },
+  };
+
   // Ask user for the keystore password
-  const result = await prompt.get({
-    name: 'password',
-    required: true,
-    description: 'Password for the Key Store',
-    hidden: true,
-    replace: '*',
-  });
+  const result = await prompt.get(schema);
 
   // Builds the Android Studio Project
   console.log('Building the Android App...');
@@ -64,7 +77,7 @@ async function build() {
       twaManifest.signingKey.path,
       result.password, // keystore password
       twaManifest.signingKey.alias, // alias
-      result.password, // key password
+      result.keypassword, // key password
       './app-release-unsigned-aligned.apk', // input file path
       './app-release-signed.apk', // output file path
       outputFile,
