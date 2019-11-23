@@ -18,9 +18,8 @@
 
 const TwaGenerator = require('../../lib/TwaGenerator');
 const TwaManifest = require('../../lib/TwaManifest');
-const {jdkHelper} = require('../../lib/jdk');
+const {keytool} = require('../../lib/jdk');
 const {promisify} = require('util');
-const util = require('../../lib/util');
 const colors = require('colors/safe');
 const prompt = require('prompt');
 const validUrl = require('valid-url');
@@ -90,9 +89,26 @@ async function confirmTwaConfig(twaManifest) {
         required: true,
         default: twaManifest.packageId,
       },
+      signingKey: {
+        properties: {
+          path: {
+            name: 'path',
+            description: 'Location of the Signing Key:',
+            required: true,
+            default: twaManifest.signingKey.path,
+          },
+          alias: {
+            name: 'alias',
+            description: 'Key name:',
+            required: true,
+            default: twaManifest.signingKey.alias,
+          },
+        },
+      },
     },
   };
   const result = await prompt.get(schema);
+  console.log(result);
   Object.assign(twaManifest, result);
   return twaManifest;
 }
@@ -114,65 +130,33 @@ async function init(args) {
   }
 }
 
-// keytool -genkeypair -dname "cn=Mark Jones, ou=JavaSoft, o=Sun, c=US" -alias business -keypass kpi135 -keystore /working/android.keystore -storepass ab987c -validity 20000
 async function createSigningKey(twaManifest) {
-  console.log(twaManifest);
+  // Signing Key already exists. Skip creation.
   if (fs.existsSync(twaManifest.signingKey.path)) {
     return;
   }
 
-  console.log('You will need a Signing Key when building the Android App. Let\'s create one now');
-  const env = jdkHelper.getEnv();
-
-  prompt.message = colors.green('[llama-pack-init]');
-  prompt.delimiter = ' ';
   prompt.start();
 
-  const schema = {
-    properties: {
-      cn: {
-        name: 'cn',
-        required: true,
-        description: 'First and Last names (eg: John Doe):',
-      },
-      ou: {
-        name: 'ou',
-        required: true,
-        description: 'Organizational Unit (eg: Engineering Dept):',
-      },
-      o: {
-        name: 'o',
-        required: true,
-        description: 'Organization: (eg: Company Name)',
-      },
-      c: {
-        name: 'c',
-        required: true,
-        description: 'Country (2 letter code):',
-      },
-      password: {
-        name: 'password',
-        required: true,
-        description: 'Password for the Key Store',
-        hidden: true,
-        replace: '*',
-      },
-    },
+  // Ask user if they want to create a signing key now.
+  const property = {
+    name: 'yesno',
+    message: `Signing Key could not be found at "${twaManifest.signingKey.path}". Do you want to` +
+        ' create one now?',
+    validator: /y[es]*|n[o]?/,
+    warning: 'Must respond yes or no',
+    default: 'yes',
   };
-  const result = await prompt.get(schema);
-  const keytoolCmd = [
-    'keytool',
-    '-genkeypair',
-    `-dname "cn=${result.cn}, ou=${result.ou}, o=${result.o}}, c=${result.c}"`,
-    `-alias ${twaManifest.signingKey.alias}`,
-    `-keypass ${result.password}`,
-    `-keystore ${twaManifest.signingKey.path}`,
-    `-storepass ${result.password}`,
-    '-validity 20000',
-    '-keyalg RSA',
-  ];
-  await util.execute(keytoolCmd, env);
-  console.log('Signing Key created successfully');
+
+  const result = await prompt.get(property);
+  if (result.yesno === 'no') {
+    return;
+  }
+
+  await keytool.createSigningKey(
+      twaManifest.signingKey.path,
+      twaManifest.signingKey.alias,
+  );
 }
 
 module.exports = init;
