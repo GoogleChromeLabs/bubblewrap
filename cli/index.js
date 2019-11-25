@@ -29,6 +29,8 @@ class Cli {
         return await require('./cmds/help')(args);
       case 'init':
         return await require('./cmds/init')(args);
+      case 'update':
+        return await require('./cmds/update')(args);
       case 'build':
         return await require('./cmds/build')(args);
       default:

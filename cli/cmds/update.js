@@ -16,13 +16,16 @@
 
 'use strict';
 
-const JdkHelper = require('./JdkHelper');
-const KeyTool = require('./KeyTool');
-const config = require('../Config');
+const path = require('path');
+const TwaGenerator = require('../../lib/TwaGenerator');
+const TwaManifest = require('../../lib/TwaManifest');
 
-const jdkHelper = new JdkHelper(process, config);
+async function update(args) {
+  const targetDirectory = args.directory || process.cwd();
+  const manifestFile = args.manifest || path.join(process.cwd(), 'twa-manifest.json');
+  const twaManifest = await TwaManifest.fromFile(manifestFile);
+  const twaGenerator = new TwaGenerator();
+  twaGenerator.createTwaProject(targetDirectory, twaManifest);
+}
 
-module.exports = {
-  jdkHelper: jdkHelper,
-  keytool: new KeyTool(jdkHelper),
-};
+module.exports = update;

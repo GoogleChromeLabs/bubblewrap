@@ -18,6 +18,7 @@
 
 const {androidSdkTools} = require('../../lib/androidSdk');
 const GradleWraper = require('../../lib/GradleWrapper');
+const TwaManifest = require('../../lib/TwaManifest');
 
 const {promisify} = require('util');
 const prompt = require('prompt');
@@ -30,18 +31,32 @@ async function build() {
     await androidSdkTools.installBuildTools();
   }
 
+  const twaManifest = await TwaManifest.fromFile('./twa-manifest.json');
   prompt.message = colors.green('[llama-pack-build]');
   prompt.delimiter = ' ';
   prompt.start();
 
+  const schema = {
+    properties: {
+      password: {
+        name: 'password',
+        required: true,
+        description: 'KeyStore password:',
+        hidden: true,
+        replace: '*',
+      },
+      keypassword: {
+        name: 'keypassword',
+        required: true,
+        description: 'Key password:',
+        hidden: true,
+        replace: '*',
+      },
+    },
+  };
+
   // Ask user for the keystore password
-  const result = await prompt.get({
-    name: 'password',
-    required: true,
-    description: 'Password for the Key Store',
-    hidden: true,
-    replace: '*',
-  });
+  const result = await prompt.get(schema);
 
   // Builds the Android Studio Project
   console.log('Building the Android App...');
@@ -59,10 +74,10 @@ async function build() {
   console.log('Signing...');
   const outputFile = './app-release-signed.apk';
   await androidSdkTools.apksigner(
-      './android.keystore', // the path to the keystore file
+      twaManifest.signingKey.path,
       result.password, // keystore password
-      'android', // alias
-      result.password, // key password
+      twaManifest.signingKey.alias, // alias
+      result.keypassword, // key password
       './app-release-unsigned-aligned.apk', // input file path
       './app-release-signed.apk', // output file path
       outputFile,
