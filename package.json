@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "description": "CLI tool to Generate TWA projects from a Web Manifest",
   "bin": {
-    "outside": "bin/llama-pack"
+    "outside": "dist/bin/llama-pack"
   },
   "scripts": {
-    "lint": "eslint .",
-    "test": "jasmine"
+    "build": "tsc",
+    "test": "jasmine --config=jasmine.json"
   },
-  "main": "index.js",
+  "main": "dist/index.js",
   "keywords": [
     "twa",
     "trusted-web-activities",
@@ -32,8 +32,10 @@
     "valid-url": "^1.0.9"
   },
   "devDependencies": {
+    "@types/node": "^12.12.12",
     "eslint": "^6.6.0",
     "eslint-config-google": "^0.14.0",
-    "jasmine": "^3.5.0"
+    "jasmine": "^3.5.0",
+    "typescript": "^3.7.2"
   }
 }
