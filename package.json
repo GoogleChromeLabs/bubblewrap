@@ -6,6 +6,7 @@
     "outside": "dist/bin/llama-pack"
   },
   "scripts": {
+    "llama-pack": "node dist/bin/llama-pack",
     "build": "tsc",
     "lint": "eslint .",
     "test": "jasmine --config=jasmine.json"

@@ -67,7 +67,7 @@ Edit `llama-pack-config.js`, which can be found inside the cloned repository.
 Generate an Android project from an existing Web Manifest:
 
 ```shell
-<path-to-llama-pack>/bin/llama-pack init --manifest https://my-twa.com/manifest.json
+npm run llama-pack init --manifest https://my-twa.com/manifest.json
 ```
 
 When initalizing a project, llama-pack will download the Web Manifest and ask you to confirm
@@ -78,7 +78,7 @@ app before uploading to the Play Store.
 
 ### Building the Android Project
 ```shell
-<path-to-llama-pack>/bin/llama-pack build
+npm run llama-pack build
 ```
 
 When building the project for the first time, the Android Build Tools will need to be installed.
