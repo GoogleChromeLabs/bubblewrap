@@ -7,7 +7,7 @@
     "postinstall": "tsc",
     "build": "tsc",
     "lint": "eslint .",
-    "test": "jasmine --config=jasmine.json"
+    "test": "tsc && jasmine --config=jasmine.json"
   },
   "main": "dist/index.js",
   "keywords": [
