@@ -2,11 +2,8 @@
   "name": "llama-pack",
   "version": "0.1.0",
   "description": "CLI tool to Generate TWA projects from a Web Manifest",
-  "bin": {
-    "outside": "dist/bin/llama-pack"
-  },
   "scripts": {
-    "llama-pack": "node dist/bin/llama-pack",
+    "postinstall": "tsc",
     "build": "tsc",
     "lint": "eslint .",
     "test": "jasmine --config=jasmine.json"
@@ -31,13 +28,13 @@
     "node-fetch": "^2.6.0",
     "prompt": "^1.0.0",
     "tar": "^5.0.5",
-    "valid-url": "^1.0.9"
+    "valid-url": "^1.0.9",
+    "@types/node": "^12.12.12",    
+    "typescript": "^3.7.2"    
   },
   "devDependencies": {
-    "@types/node": "^12.12.12",
     "eslint": "^6.6.0",
     "eslint-config-google": "^0.14.0",
-    "jasmine": "^3.5.0",
-    "typescript": "^3.7.2"
+    "jasmine": "^3.5.0"
   }
 }
