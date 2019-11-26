@@ -18,4 +18,4 @@
 
 'use strict';
 
-require('..')();
+require('../dist')();
