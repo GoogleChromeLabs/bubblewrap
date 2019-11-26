@@ -19,7 +19,8 @@
 const colorString = require('color-string');
 const TwaGenerator = require('../../lib/TwaGenerator');
 const TwaManifest = require('../../lib/TwaManifest');
-const {keytool} = require('../../lib/jdk');
+const KeyTool = require('../../lib/jdk/KeyTool');
+const JdkHelper = require('../../lib/jdk/JdkHelper');
 const {promisify} = require('util');
 const colors = require('colors/safe');
 const prompt = require('prompt');
@@ -117,7 +118,7 @@ async function confirmTwaConfig(twaManifest) {
   return twaManifest;
 }
 
-async function init(args) {
+async function init(args, config) {
   console.log('Fetching Manifest: ', args.manifest);
   try {
     let twaManifest = await TwaManifest.fromWebManifest(args.manifest);
@@ -126,7 +127,7 @@ async function init(args) {
     const targetDirectory = args.directory || process.cwd();
     await twaManifest.saveToFile('./twa-manifest.json');
     await twaGenerator.createTwaProject(targetDirectory, twaManifest);
-    await createSigningKey(twaManifest);
+    await createSigningKey(twaManifest, config);
     return true;
   } catch (e) {
     console.error('Error Genearating TWA', e);
@@ -134,11 +135,14 @@ async function init(args) {
   }
 }
 
-async function createSigningKey(twaManifest) {
+async function createSigningKey(twaManifest, config) {
   // Signing Key already exists. Skip creation.
   if (fs.existsSync(twaManifest.signingKey.path)) {
     return;
   }
+
+  const jdkHelper = new JdkHelper(process, config);
+  const keytool = new KeyTool(jdkHelper);
 
   prompt.start();
 
@@ -157,7 +161,7 @@ async function createSigningKey(twaManifest) {
     return;
   }
 
-  await keytool.createSigningKey(
+  await keytool.createSigningKeyIfNeeded(
       twaManifest.signingKey.path,
       twaManifest.signingKey.alias,
   );

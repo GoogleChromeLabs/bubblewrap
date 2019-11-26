@@ -17,6 +17,10 @@
     "progressive-web-apps",
     "android"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GoogleChromeLabs/llama-pack.git"
+  },
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {

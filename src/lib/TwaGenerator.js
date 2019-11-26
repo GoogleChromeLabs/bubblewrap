@@ -158,7 +158,8 @@ class TwaGenerator {
     };
 
     console.log('Generating Android Project files:');
-    const templateDirectory = path.join(__dirname, '../template_project');
+    console.log(__dirname);
+    const templateDirectory = path.join(__dirname, '../../template_project');
 
     const copyFileList = new Set(COPY_FILE_LIST);
     if (!args.maskableIconUrl) {
@@ -166,7 +167,7 @@ class TwaGenerator {
     }
 
     // Copy Project Files
-    await this._copyStaticFiles(templateDirectory, targetDirectory, [...copyFileList]);
+    await this._copyStaticFiles(templateDirectory, targetDirectory, Array.from(copyFileList));
 
     // Generate templated files
     await this._applyTemplates(templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, args);
