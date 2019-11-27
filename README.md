@@ -29,15 +29,6 @@ feature requests, and contribute with pull requests, if possible.
 - [Node.js](https://nodejs.org/en/) 10.0 or above
 
 ## Setting up the Environment
-### Get llama-pack
-Clone the Llama Pack repository:
-
-```shell
-git clone https://github.com/GoogleChromeLabs/llama-pack.git
-cd llama-pack
-npm install
-npm run build
-```
 
 ### Get the Java Development Kit (JDK) 8.
 The Android Command line tools requires the correct version of the JDK to run. To prevent version
@@ -57,17 +48,16 @@ Download a version of Android command line tools that is compatible with your OS
 Create a folder and extract the downloaded file into it.
 
 ### Tell llama-pack where the JDK and Android command line tools are
-Edit `llama-pack-config.js`, which can be found inside the cloned repository. 
-   - Change `jdkHome` to the directory the JDK has been extracted,
-   - and `androidToolsHome` to the path where the Android command line tools has been
-    extracted.
+When running `llama-pack` for the first time, it will ask where it can find the JDK and Android command
+line tools. So, take note of the location where both were decompressed.
+
 
 ## Using llama-pack
 ### Initializing an Android Project
 Generate an Android project from an existing Web Manifest:
 
 ```shell
-npm run llama-pack init --manifest https://my-twa.com/manifest.json
+npx GoogleChromeLabs/llama-pack#0.1.0 init --manifest https://my-twa.com/manifest.json
 ```
 
 When initalizing a project, llama-pack will download the Web Manifest and ask you to confirm
@@ -78,7 +68,7 @@ app before uploading to the Play Store.
 
 ### Building the Android Project
 ```shell
-npm run llama-pack build
+npx GoogleChromeLabs/llama-pack#0.1.0 build
 ```
 
 When building the project for the first time, the Android Build Tools will need to be installed.
