@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
  * Copyright 2019 Google Inc. All Rights Reserved.
  *
@@ -14,15 +15,7 @@
  *  limitations under the License.
  */
 
+
 'use strict';
 
-const JdkHelper = require('./JdkHelper');
-const KeyTool = require('./KeyTool');
-const config = require('../Config');
-
-const jdkHelper = new JdkHelper(process, config);
-
-module.exports = {
-  jdkHelper: jdkHelper,
-  keytool: new KeyTool(jdkHelper),
-};
+require('../dist')();

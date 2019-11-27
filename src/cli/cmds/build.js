@@ -16,7 +16,8 @@
 
 'use strict';
 
-const {androidSdkTools} = require('../../lib/androidSdk');
+const AndroidSdkTools = require('../../lib/androidSdk/AndroidSdkTools');
+const JdkHelper = require('../../lib/jdk/JdkHelper');
 const GradleWraper = require('../../lib/GradleWrapper');
 const TwaManifest = require('../../lib/TwaManifest');
 
@@ -25,7 +26,10 @@ const prompt = require('prompt');
 const colors = require('colors/safe');
 prompt.get = promisify(prompt.get);
 
-async function build() {
+async function build(_, config) {
+  const jdkHelper = new JdkHelper(process, config);
+  const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
+
   if (!await androidSdkTools.checkBuildTools()) {
     console.log('Installing Android Build Tools. Please, read and accept the license agreement');
     await androidSdkTools.installBuildTools();

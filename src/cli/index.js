@@ -17,22 +17,23 @@
 'use strict';
 
 const minimist = require('minimist');
-const config = require('../lib/Config');
+const Config = require('../lib/Config');
 
 class Cli {
   async run(args) {
-    await config.check();
+    const config = await Config.loadOrCreate();
+
     args = minimist(args);
     const command = args._[0] || 'help';
     switch (command) {
       case 'help':
-        return await require('./cmds/help')(args);
+        return await require('./cmds/help')(args, config);
       case 'init':
-        return await require('./cmds/init')(args);
+        return await require('./cmds/init')(args, config);
       case 'update':
-        return await require('./cmds/update')(args);
+        return await require('./cmds/update')(args, config);
       case 'build':
-        return await require('./cmds/build')(args);
+        return await require('./cmds/build')(args, config);
       default:
         throw new Error(`"${command}" is not a valid command!`);
     }
