@@ -14,26 +14,23 @@
  *  limitations under the License.
  */
 
-'use strict';
-
 const {promisify} = require('util');
 const fs = require('fs');
 const homedir = require('os').homedir();
 const path = require('path');
 const fileExists = promisify(fs.exists);
-const prompt = require('prompt');
-prompt.get = promisify(prompt.get);
+const userPrompt = require('prompt');
+userPrompt.get = promisify(userPrompt.get);
 
 const CONFIG_FILE_NAME = path.join(homedir, '/.llama-pack/llama-pack-config.json');
 
-class Config {
-  async loadConfig() {
-    if (!await fileExists(CONFIG_FILE_NAME)) {
-      return false;
-    }
-    const config = JSON.parse(await fs.promises.readFile(CONFIG_FILE_NAME));
-    Object.assign(this, config);
-    return true;
+export class Config {
+  jdkPath: string ;
+  androidSdkPath: string;
+
+  constructor(jdkPath: string, androidSdkPath: string) {
+    this.jdkPath = jdkPath;
+    this.androidSdkPath = androidSdkPath;
   }
 
   async saveConfig() {
@@ -41,7 +38,17 @@ class Config {
     await fs.promises.writeFile(CONFIG_FILE_NAME, JSON.stringify(this));
   }
 
-  async createConfig() {
+  async check() {
+    if (!await fileExists(this.jdkPath)) {
+      throw new Error(`${this.jdkPath} does not exist. Check the jdkPath on your config`);
+    }
+    if (!await fileExists(this.androidSdkPath)) {
+      throw new Error(
+          `${this.androidSdkPath} does not exist. Check the androidSdkPath on your config`);
+    };
+  }
+
+  static async createConfig(): Promise<Config> {
     const schema = {
       properties: {
         jdkPath: {
@@ -58,29 +65,21 @@ class Config {
         },
       },
     };
-    const result = await prompt.get(schema);
-    Object.assign(this, result);
+    const result = await userPrompt.get(schema);
+    return new Config(result.jdkPath, result.androidSdkPath);
   }
 
-  async check() {
-    if (!await fileExists(this.jdkPath)) {
-      throw new Error(`${this.jdkPath} does not exist. Check the jdkPath on your config`);
-    }
-    if (!await fileExists(this.androidSdkPath)) {
-      throw new Error(
-          `${this.androidSdkPath} does not exist. Check the androidSdkPath on your config`);
-    };
+  static async loadConfig(): Promise<Config> {
+    const config = JSON.parse(await fs.promises.readFile(CONFIG_FILE_NAME));
+    return new Config(config.jdkPath, config.androidSdkPath);
   }
 
-  static async loadOrCreate() {
-    const config = new Config();
-    const configExists = await config.loadConfig();
-    if (!configExists) {
-      await config.createConfig();
-      await config.saveConfig();
+  static async loadOrCreate(): Promise<Config> {
+    if (await fileExists(CONFIG_FILE_NAME)) {
+      return await Config.loadConfig();
     }
+    const config = await Config.createConfig();
+    await config.saveConfig();
     return config;
   }
 }
-
-module.exports = Config;

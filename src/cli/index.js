@@ -17,7 +17,7 @@
 'use strict';
 
 const minimist = require('minimist');
-const Config = require('../lib/Config');
+const {Config} = require('../lib/Config');
 
 class Cli {
   async run(args) {
