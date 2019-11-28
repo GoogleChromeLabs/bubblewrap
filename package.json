@@ -24,6 +24,8 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
+    "@types/jasmine": "^3.5.0",
+    "@types/node": "^12.12.12",
     "color-string": "^1.5.3",
     "colors": "^1.4.0",
     "extract-zip": "^1.6.7",
@@ -33,9 +35,8 @@
     "node-fetch": "^2.6.0",
     "prompt": "^1.0.0",
     "tar": "^5.0.5",
-    "valid-url": "^1.0.9",
-    "@types/node": "^12.12.12",    
-    "typescript": "^3.7.2"    
+    "typescript": "^3.7.2",
+    "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "eslint": "^6.6.0",
