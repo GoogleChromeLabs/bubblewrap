@@ -69,20 +69,17 @@ export class Config {
     return new Config(result.jdkPath, result.androidSdkPath);
   }
 
-  static async loadConfig(): Promise<Config | null> {
-    if (!await fileExists(CONFIG_FILE_NAME)) {
-      return null;
-    }
+  static async loadConfig(): Promise<Config> {
     const config = JSON.parse(await fs.promises.readFile(CONFIG_FILE_NAME));
     return new Config(config.jdkPath, config.androidSdkPath);
   }
 
   static async loadOrCreate(): Promise<Config> {
-    let config: Config | null = await Config.loadConfig();
-    if (config == null) {
-      config = await Config.createConfig();
-      await config.saveConfig();
+    if (await fileExists(CONFIG_FILE_NAME)) {
+      return await Config.loadConfig();
     }
+    const config = await Config.createConfig();
+    await config.saveConfig();
     return config;
   }
 }
