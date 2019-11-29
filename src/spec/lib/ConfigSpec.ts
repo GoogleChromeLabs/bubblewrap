@@ -20,9 +20,8 @@ describe('config', () => {
   describe('#constructor', () => {
     it('Assigns values correctly', () => {
       const config: Config = new Config('/jdk', '/androidSdk');
-      expect(config.jdkPath).toBe('/jdk'); 
-      expect(config.androidSdkPath).toBe('/androidSdk'); 
+      expect(config.jdkPath).toBe('/jdk');
+      expect(config.androidSdkPath).toBe('/androidSdk');
     });
-  })
+  });
 });
-
