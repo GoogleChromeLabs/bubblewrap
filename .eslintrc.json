@@ -1,5 +1,6 @@
 {
   "extends": "google",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2017,
     "sourceType": "module"
@@ -36,4 +37,3 @@
     "jasmine": true
   }
 }
-
