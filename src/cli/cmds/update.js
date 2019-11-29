@@ -18,7 +18,7 @@
 
 const path = require('path');
 const TwaGenerator = require('../../lib/TwaGenerator');
-const TwaManifest = require('../../lib/TwaManifest');
+const {TwaManifest} = require('../../lib/TwaManifest');
 
 async function update(args) {
   const targetDirectory = args.directory || process.cwd();

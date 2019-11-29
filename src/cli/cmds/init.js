@@ -18,7 +18,7 @@
 
 const colorString = require('color-string');
 const TwaGenerator = require('../../lib/TwaGenerator');
-const TwaManifest = require('../../lib/TwaManifest');
+const {TwaManifest} = require('../../lib/TwaManifest');
 const KeyTool = require('../../lib/jdk/KeyTool');
 const JdkHelper = require('../../lib/jdk/JdkHelper');
 const {promisify} = require('util');

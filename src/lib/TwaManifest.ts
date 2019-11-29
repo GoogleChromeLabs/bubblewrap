@@ -35,7 +35,7 @@ const DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX = /[^ a-zA-Z0-9_\.]/;
  *
  * @param {String} host the original hostname
  */
-function generatePackageId(host) {
+function generatePackageId(host: string): string {
   const parts = host.split('.').reverse();
   parts.push('twa');
   return parts.join('.').replace(DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX, '_');
@@ -93,8 +93,23 @@ class ShortcutInfo {
  * splashScreenFadeOutDuration: 300
  *
  */
-class TwaManifest {
-  constructor(data) {
+export class TwaManifest {
+  packageId: string;
+  host: string;
+  name: string;
+  themeColor: string;
+  navigationColor: string;
+  backgroundColor: string;
+  enableNotifications: boolean;
+  startUrl: string;
+  iconUrl: string;
+  maskableIconUrl: string;
+  useBrowserOnChromeOS: boolean;
+  splashScreenFadeOutDuration: number;
+  signingKey: string;
+  appVersion: string;
+
+  constructor(data: any) {
     this.packageId = data.packageId;
     this.host = data.host;
     this.name = data.name;
@@ -117,7 +132,7 @@ class TwaManifest {
    *
    * @param {String} filename the location where the TWA Manifest will be saved.
    */
-  async saveToFile(filename) {
+  async saveToFile(filename: string) {
     console.log('Saving Config to: ' + filename);
     await fs.promises.writeFile(filename, JSON.stringify(this, null, 2));
   }
@@ -126,7 +141,7 @@ class TwaManifest {
    * Validates if the Manifest has all the fields needed to generate a TWA project and if the
    * values for those fields are valid.
    */
-  validate() {
+  validate(): boolean {
     if (!this.host) {
       return false;
     }
@@ -146,20 +161,20 @@ class TwaManifest {
     return true;
   }
 
-  _hexColor(color) {
+  _hexColor(color: string): string {
     const rgbColor = colorString.get.rgb(color);
     return colorString.to.hex(rgbColor);
   }
 
-  themeColorHex() {
+  themeColorHex(): string {
     return this._hexColor(this.themeColor);
   }
 
-  navigationColorHex() {
+  navigationColorHex(): string {
     return this._hexColor(this.navigationColor);
   }
 
-  backgroundColorHex() {
+  backgroundColorHex(): string {
     return this._hexColor(this.backgroundColor);
   }
 
@@ -178,10 +193,10 @@ class TwaManifest {
    * @param {WebManifest} webManifest the Web Manifest, used as a base for the TWA Manifest.
    * @returns {TwaManifest}
    */
-  static fromWebManifestJson(webManifestUrl, webManifest) {
-    const icon = util.findSuitableIcon(webManifest, 'any');
-    const maskableIcon = util.findSuitableIcon(webManifest, 'maskable');
-    const fullStartUrl = new URL(webManifest['start_url'] || '/', webManifestUrl);
+  static fromWebManifestJson(webManifestUrl: URL, webManifest: any): TwaManifest {
+    const icon: any = util.findSuitableIcon(webManifest, 'any');
+    const maskableIcon: any = util.findSuitableIcon(webManifest, 'maskable');
+    const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
 
     const shortcuts = (webManifest.shortcuts || []).map((s) => new ShortcutInfo(s, webManifestUrl))
         .filter((s) => s.isValid())
@@ -217,9 +232,9 @@ class TwaManifest {
    * @param {String} url the URL where the webmanifest is available
    * @returns {TwaManifest}
    */
-  static async fromWebManifest(url) {
-    const webManifest = await fetch(url).then((res) => res.json());
-    const webManifestUrl = new URL(url);
+  static async fromWebManifest(url: string): Promise<TwaManifest> {
+    const webManifest: JSON = await fetch(url).then((res: Response) => res.json());
+    const webManifestUrl: URL = new URL(url);
     return TwaManifest.fromWebManifestJson(webManifestUrl, webManifest);
   }
 
@@ -228,10 +243,8 @@ class TwaManifest {
    *
    * @param {String} fileName the location of the TWA Manifest file
    */
-  static async fromFile(fileName) {
+  static async fromFile(fileName: string): Promise<TwaManifest> {
     const json = JSON.parse(await fs.promises.readFile(fileName));
     return new TwaManifest(json);
   }
 }
-
-module.exports = TwaManifest;

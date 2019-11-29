@@ -29,6 +29,7 @@
     "@jimp/types": "^0.9.3",
     "@types/jasmine": "^3.5.0",
     "@types/node": "^12.12.14",
+    "@types/node-fetch": "^2.5.4",
     "color-string": "^1.5.3",
     "colors": "^1.4.0",
     "extract-zip": "^1.6.7",
