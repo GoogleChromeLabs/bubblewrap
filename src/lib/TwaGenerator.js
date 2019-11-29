@@ -20,8 +20,15 @@ const path = require('path');
 const fs = require('fs');
 const fetch = require('node-fetch');
 const template = require('lodash.template');
-const Jimp = require('jimp');
+const configure = require('@jimp/custom');
+const types = require('@jimp/types');
+const resize = require('@jimp/custom');
 const {promisify} = require('util');
+
+const Jimp = configure({
+  types: [types],
+  plugins: [resize],
+});
 
 const COPY_FILE_LIST = [
   'settings.gradle',
