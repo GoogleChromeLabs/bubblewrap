@@ -22,7 +22,7 @@ const fetch = require('node-fetch');
 const template = require('lodash.template');
 const configure = require('@jimp/custom');
 const types = require('@jimp/types');
-const resize = require('@jimp/custom');
+const resize = require('@jimp/plugin-resize');
 const {promisify} = require('util');
 
 const Jimp = configure({
