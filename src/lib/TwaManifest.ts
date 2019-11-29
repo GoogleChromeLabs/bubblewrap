@@ -45,11 +45,17 @@ function generatePackageId(host: string): string {
  * A wrapper around the WebManifest's ShortcutInfo.
  */
 class ShortcutInfo {
+  icons: string;
+  name: string;
+  shortName: string;
+  url: string | undefined;
+  chosenIconUrl: string | undefined;
+
   /**
    * @param {Object} the WebManifest's ShortcutInfo.
    * @param {URL} webManifestUrl the URL where the webmanifest is available.
    */
-  constructor(shortcutInfo, webManifestUrl) {
+  constructor(shortcutInfo: any, webManifestUrl: URL) {
     this.name = shortcutInfo['name'];
     this.shortName = shortcutInfo['short_name'] || this.name;
     this.url = shortcutInfo['url'] ?
@@ -57,10 +63,10 @@ class ShortcutInfo {
     this.icons = shortcutInfo['icons'] || [];
 
     // TODO(rayankans): Choose the most suitable icon rather than the first one.
-    const sutiableIcon = this.icons.length ? this.icons[0] : null;
+    const suitableIcon: any = this.icons.length ? this.icons[0] : null;
 
-    this.chosenIconUrl = sutiableIcon ?
-      new URL(sutiableIcon.src, webManifestUrl).toString() : undefined;
+    this.chosenIconUrl = suitableIcon ?
+      new URL(suitableIcon.src, webManifestUrl).toString() : undefined;
   }
 
   isValid() {
@@ -108,8 +114,9 @@ export class TwaManifest {
   splashScreenFadeOutDuration: number;
   signingKey: string;
   appVersion: string;
+  shortcuts: string;
 
-  constructor(data: any) {
+  constructor(data: any) { // TODO(andreban): Change `any` to a proper Object.
     this.packageId = data.packageId;
     this.host = data.host;
     this.name = data.name;
@@ -179,7 +186,7 @@ export class TwaManifest {
   }
 
   generateShortcuts() {
-    return '[' + JSON.parse(this.shortcuts).map((s, i) =>
+    return '[' + JSON.parse(this.shortcuts).map((s: any, i: number) =>
       `[name:'${s.name}', short_name:'${s.shortName}', url:'${s.url}', icon:'shortcut_${i}']`)
         .join(',') +
       ']';
@@ -198,9 +205,10 @@ export class TwaManifest {
     const maskableIcon: any = util.findSuitableIcon(webManifest, 'maskable');
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
 
-    const shortcuts = (webManifest.shortcuts || []).map((s) => new ShortcutInfo(s, webManifestUrl))
-        .filter((s) => s.isValid())
-        .filter((_, i) => i < 4);
+    const shortcuts = (webManifest.shortcuts || [])
+        .map((s: any) => new ShortcutInfo(s, webManifestUrl))
+        .filter((s: ShortcutInfo) => s.isValid())
+        .filter((_: ShortcutInfo, i: number) => i < 4);
 
     const twaManifest = new TwaManifest({
       packageId: generatePackageId(webManifestUrl.host),
