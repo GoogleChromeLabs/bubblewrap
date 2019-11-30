@@ -16,7 +16,7 @@
 
 'use strict';
 
-const TwaManifest = require('../../lib/TwaManifest');
+const {TwaManifest} = require('../../lib/TwaManifest');
 
 describe('TwaManifest', () => {
   describe('#fromWebManifestJson', () => {
@@ -120,7 +120,7 @@ describe('TwaManifest', () => {
         iconUrl: 'https://pwa-directory.com/favicons/android-chrome-512x512.png',
         themeColor: '#7cc0ff',
         navigationColor: '#7cc0ff',
-        navigationColor: '#7cc0ff',
+        backgroundColor: '#7cc0ff',
         appVersion: '1.0.0',
         signingKey: {
           path: './android-keystore',
