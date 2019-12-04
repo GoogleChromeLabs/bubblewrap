@@ -89,6 +89,15 @@ async function confirmTwaConfig(twaManifest) {
         default: twaManifest.maskableIconUrl || undefined,
         conform: validUrl.isWebUri,
       },
+      shortcuts: {
+        name: 'shortcuts',
+        validator: /y[es]*|n[o]?/,
+        message: 'Include app shortcuts?',
+        description: 'App shortcuts to display for users to users quickly start common or '+
+            'recommended tasks within the app',
+        warning: 'Must respond yes or no',
+        default: 'yes',
+      },
       packageId: {
         name: 'packageId',
         description: 'Android Package Name (or Application ID):',
@@ -114,6 +123,13 @@ async function confirmTwaConfig(twaManifest) {
     },
   };
   const result = await prompt.get(schema);
+
+  if (result.shortcuts === 'no') {
+    result.shortcuts = '[]';
+  } else {
+    result.shortcuts = twaManifest.shortcuts;
+  }
+
   Object.assign(twaManifest, result);
   return twaManifest;
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import groovy.xml.MarkupBuilder;
+import groovy.xml.MarkupBuilder
 
 apply plugin: 'com.android.application'
 
@@ -28,15 +28,12 @@ def twaManifest = [
     backgroundColor: '<%= backgroundColorHex() %>', // The color used for the splash screen background.
     enableNotifications: <%= enableNotifications %>, // Set to true to enable notification delegation.
     useBrowserOnChromeOS: <%= useBrowserOnChromeOS %>, // Set to false if you've added interaction with Android system APIs.
-    // Add shortcuts for your app here. Every shortcut must include the following fields:
+    // Every shortcut must include the following fields:
     // - name: String that will show up in the shortcut.
     // - short_name: Shorter string used if |name| is too long.
     // - url: Absolute path of the URL to launch the app with (e.g '/create').
     // - icon: Name of the resource in the drawable folder to use as an icon.
-    shortcuts: [
-        // Insert shortcuts here, for example:
-        // [name: 'Open SVG', short_name: 'Open', url: '/open', icon: 'splash']
-    ],
+    shortcuts: <%= generateShortcuts() %>,
     // The duration of fade out animation in milliseconds to be played when removing splash screen.
     splashScreenFadeOutDuration: <%= splashScreenFadeOutDuration %>
 ]
@@ -143,7 +140,7 @@ task generateShorcutsFile {
                             'android:action': 'android.intent.action.MAIN',
                             'android:targetPackage': twaManifest.applicationId,
                             'android:targetClass': 'android.support.customtabs.trusted.LauncherActivity',
-                            'android:data': 'https://' + twaManifest.hostName + s.url)
+                            'android:data': s.url)
                     'categories'('android:name': 'android.intent.category.LAUNCHER')
                 }
             }

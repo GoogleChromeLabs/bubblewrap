@@ -36,6 +36,14 @@ describe('TwaManifest', () => {
         }],
         'theme_color': '#7cc0ff',
         'background_color': '#7cc0ff',
+        'shortcuts': [{
+          'name': 'shortcut name',
+          'short_name': 'short',
+          'url': '/launch',
+          'icons': [{
+            'src': '/shortcut_icon.png',
+          }],
+        }],
       };
       const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
       const twaManifest = TwaManifest.fromWebManifestJson(manifestUrl, manifest);
@@ -54,6 +62,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.splashScreenFadeOutDuration).toBe(300);
       expect(twaManifest.useBrowserOnChromeOS).toBeTrue();
       expect(twaManifest.enableNotifications).toBeFalse();
+      expect(twaManifest.shortcuts).toBe('[{"name":"shortcut name","shortName":"short","url":"https://pwa-directory.com/launch","icons":[{"src":"/shortcut_icon.png"}],"chosenIconUrl":"https://pwa-directory.com/shortcut_icon.png"}]');
     });
 
     it('Sets correct defaults for unavailable fields', () => {
@@ -75,6 +84,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.splashScreenFadeOutDuration).toBe(300);
       expect(twaManifest.useBrowserOnChromeOS).toBeTrue();
       expect(twaManifest.enableNotifications).toBeFalse();
+      expect(twaManifest.shortcuts).toBe('[]');
     });
 
     it('Uses "name" when "short_name" is not available', () => {
@@ -111,6 +121,7 @@ describe('TwaManifest', () => {
         splashScreenFadeOutDuration: 300,
         useBrowserOnChromeOS: true,
         enableNotifications: true,
+        shortcuts: [{name: 'name', url: '/', icons:[{src: 'icon.png'}]}],
       });
       expect(twaManifest.validate()).toBeTrue();
     });

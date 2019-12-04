@@ -75,6 +75,14 @@ const ADAPTIVE_IMAGES = [
   {dest: 'app/src/main/res/mipmap-xxxhdpi/ic_maskable.png', size: 328},
 ];
 
+const SHORTCUT_IMAGES = [
+  {dest: 'app/src/main/res/drawable-mdpi/', size: 48},
+  {dest: 'app/src/main/res/drawable-hdpi/', size: 72},
+  {dest: 'app/src/main/res/drawable-xhdpi/', size: 96},
+  {dest: 'app/src/main/res/drawable-xxhdpi/', size: 144},
+  {dest: 'app/src/main/res/drawable-xxxhdpi/', size: 192},
+]
+
 // fs.promises is marked as experimental. This should be replaced when stable.
 const fsMkDir = promisify(fs.mkdir);
 const fsCopyFile = promisify(fs.copyFile);
@@ -181,6 +189,10 @@ class TwaGenerator {
 
     // Generate images
     await this._generateIcons(args.iconUrl, targetDirectory, IMAGES);
+    await Promise.all(JSON.parse(args.shortcuts).map((shortcut, i) => {
+      const imageDirs = SHORTCUT_IMAGES.map(imageDir => ({...imageDir, dest: `${imageDir.dest}shortcut_${i}.png`}));
+      return this._generateIcons(shortcut.chosenIconUrl, targetDirectory, imageDirs);
+    }));
 
     // Generate adaptive images
     if (args.maskableIconUrl) {
