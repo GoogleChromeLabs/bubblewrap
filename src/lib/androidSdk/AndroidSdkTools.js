@@ -29,6 +29,11 @@ class AndroidSdkTools {
     this.process = process;
     this.config = config;
     this.jdkHelper = jdkHelper;
+    if (this.process.platform === 'win32') {
+      this.pathJoin = path.win32.join;
+    } else {
+      this.pathJoin = path.posix.join;
+    }
   }
 
   // Runs <path-to-sdk-tools>/tools/bin/sdkmanager --install "build-tools;29.0.2"
@@ -37,7 +42,7 @@ class AndroidSdkTools {
 
     console.log('Installing Build Tools');
     await util.execInteractive(
-        path.join(this.getAndroidHome(), '/tools/bin/sdkmanager'),
+        this.pathJoin(this.getAndroidHome(), '/tools/bin/sdkmanager'),
         ['--install',
           `"build-tools;${BUILD_TOOLS_VERSION}"`],
         env,
@@ -45,22 +50,20 @@ class AndroidSdkTools {
   }
 
   async checkBuildTools() {
-    const buildToolsPath = path.join(this.getAndroidHome(), '/build-tools/', BUILD_TOOLS_VERSION);
+    const buildToolsPath =
+        this.pathJoin(this.getAndroidHome(), '/build-tools/', BUILD_TOOLS_VERSION);
     return fs.existsSync(buildToolsPath);
   }
 
   async writeLicenseFile() {
-    const licensesPath = path.join(this.getAndroidHome(), '/licenses/');
+    const licensesPath = this.pathJoin(this.getAndroidHome(), '/licenses/');
     await fs.promises.mkdir(licensesPath, {recursive: true});
-    const androidSdkLicenseFile = path.join(licensesPath, '/android-sdk-license');
+    const androidSdkLicenseFile = this.pathJoin(licensesPath, '/android-sdk-license');
     await fs.promises.writeFile(androidSdkLicenseFile, '24333f8a63b6825ea9c5514f83c2829b004d1fee');
   }
 
   getAndroidHome() {
-    if (this.process.platform === 'win32') {
-      return path.win32.join(this.config.androidSdkPath, '/');
-    }
-    return path.posix.join(this.config.androidSdkPath, '/');
+    return this.pathJoin(this.config.androidSdkPath, '/');
   }
 
   getEnv() {
@@ -72,7 +75,7 @@ class AndroidSdkTools {
   async zipalign(input, output) {
     const env = this.getEnv();
     const zipalignCmd = [
-      path.join(this.getAndroidHome(), '/build-tools/29.0.2/zipalign'),
+      `"${this.pathJoin(this.getAndroidHome(), '/build-tools/29.0.2/zipalign')}"`,
       '-v -f -p 4',
       input,
       output,
@@ -83,7 +86,7 @@ class AndroidSdkTools {
   async apksigner(keystore, ksPass, alias, keyPass, input, output) {
     const env = this.getEnv();
     const apksignerCmd = [
-      path.join(this.getAndroidHome(), '/build-tools/29.0.2/apksigner'),
+      `"${this.pathJoin(this.getAndroidHome(), '/build-tools/29.0.2/apksigner')}"`,
       `sign --ks ${keystore}`,
       `--ks-key-alias ${alias}`,
       `--ks-pass pass:${ksPass}`,
