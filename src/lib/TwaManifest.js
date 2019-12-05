@@ -206,7 +206,7 @@ class TwaManifest {
       splashScreenFadeOutDuration: 300,
       useBrowserOnChromeOS: true,
       enableNotifications: false,
-      shortcuts: JSON.stringify(shortcuts),
+      shortcuts: JSON.stringify(shortcuts, undefined, 2),
     });
     return twaManifest;
   }

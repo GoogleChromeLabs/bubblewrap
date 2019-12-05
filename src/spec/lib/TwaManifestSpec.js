@@ -62,7 +62,15 @@ describe('TwaManifest', () => {
       expect(twaManifest.splashScreenFadeOutDuration).toBe(300);
       expect(twaManifest.useBrowserOnChromeOS).toBeTrue();
       expect(twaManifest.enableNotifications).toBeFalse();
-      expect(twaManifest.shortcuts).toBe('[{"name":"shortcut name","shortName":"short","url":"https://pwa-directory.com/launch","icons":[{"src":"/shortcut_icon.png"}],"chosenIconUrl":"https://pwa-directory.com/shortcut_icon.png"}]');
+      expect(JSON.parse(twaManifest.shortcuts)).toEqual([
+        {
+          name: 'shortcut name',
+          shortName: 'short',
+          url: 'https://pwa-directory.com/launch',
+          icons: [{src: '/shortcut_icon.png'}],
+          chosenIconUrl: 'https://pwa-directory.com/shortcut_icon.png',
+        },
+      ]);
     });
 
     it('Sets correct defaults for unavailable fields', () => {
