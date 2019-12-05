@@ -19,7 +19,7 @@
 const fs = require('fs');
 const fetch = require('node-fetch');
 const util = require('./util');
-const colorString = require('color-string');
+import Color = require('color');
 
 // Regex for disallowed characters on Android Packages, as per
 // https://developer.android.com/guide/topics/manifest/manifest-element.html#package
@@ -103,9 +103,9 @@ export class TwaManifest {
   packageId: string;
   host: string;
   name: string;
-  themeColor: string;
-  navigationColor: string;
-  backgroundColor: string;
+  themeColor: Color;
+  navigationColor: Color;
+  backgroundColor: Color;
   enableNotifications: boolean;
   startUrl: string;
   iconUrl: string;
@@ -120,9 +120,9 @@ export class TwaManifest {
     this.packageId = data.packageId;
     this.host = data.host;
     this.name = data.name;
-    this.themeColor = data.themeColor;
-    this.navigationColor = data.navigationColor;
-    this.backgroundColor = data.backgroundColor;
+    this.themeColor = new Color(data.themeColor);
+    this.navigationColor = new Color(data.navigationColor);
+    this.backgroundColor = new Color(data.backgroundColor);
     this.enableNotifications = data.enableNotifications;
     this.startUrl = data.startUrl;
     this.iconUrl = data.iconUrl;
@@ -141,7 +141,13 @@ export class TwaManifest {
    */
   async saveToFile(filename: string) {
     console.log('Saving Config to: ' + filename);
-    await fs.promises.writeFile(filename, JSON.stringify(this, null, 2));
+    const json:any = {};
+    Object.assign(json, this, {
+      themeColor: this.themeColor.hex(),
+      navigationColor: this.navigationColor.hex(),
+      backgroundColor: this.backgroundColor.hex(),
+    });
+    await fs.promises.writeFile(filename, JSON.stringify(json, null, 2));
   }
 
   /**
@@ -168,6 +174,7 @@ export class TwaManifest {
     return true;
   }
 
+<<<<<<< HEAD
   _hexColor(color: string): string {
     const rgbColor = colorString.get.rgb(color);
     return colorString.to.hex(rgbColor);
@@ -192,6 +199,8 @@ export class TwaManifest {
       ']';
   }
 
+=======
+>>>>>>> Replaces `color-string` with `color`
   /**
    * Creates a new TwaManifest, using the URL for the Manifest as a base URL and uses the content
    * of the Web Manifest to generate the fields for the TWA Manifest.
