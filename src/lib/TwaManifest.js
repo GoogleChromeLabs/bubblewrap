@@ -47,18 +47,20 @@ function generatePackageId(host) {
 class ShortcutInfo {
   /**
    * @param {Object} the WebManifest's ShortcutInfo.
-   * @param {URL} webManifestUrl the URL where the webmanifest is available.} shortcutInfo 
+   * @param {URL} webManifestUrl the URL where the webmanifest is available.
    */
   constructor(shortcutInfo, webManifestUrl) {
     this.name = shortcutInfo['name'];
     this.shortName = shortcutInfo['short_name'] || this.name;
-    this.url = shortcutInfo['url'] ? new URL(shortcutInfo['url'], webManifestUrl).toString() : undefined;
+    this.url = shortcutInfo['url'] ?
+      new URL(shortcutInfo['url'], webManifestUrl).toString() : undefined;
     this.icons = shortcutInfo['icons'] || [];
 
     // TODO(rayankans): Choose the most suitable icon rather than the first one.
     const sutiableIcon = this.icons.length ? this.icons[0] : null;
 
-    this.chosenIconUrl = sutiableIcon ? new URL(sutiableIcon.src, webManifestUrl).toString() : undefined;
+    this.chosenIconUrl = sutiableIcon ?
+      new URL(sutiableIcon.src, webManifestUrl).toString() : undefined;
   }
 
   isValid() {
@@ -162,10 +164,9 @@ class TwaManifest {
   }
 
   generateShortcuts() {
-    return '[' +
-      JSON.parse(this.shortcuts).map((s, i) =>
-          `[name: '${s.name}', short_name: '${s.shortName}', url: '${s.url}', icon: 'shortcut_${i}']`)
-          .join(',') +
+    return '[' + JSON.parse(this.shortcuts).map((s, i) =>
+      `[name:'${s.name}', short_name:'${s.shortName}', url:'${s.url}', icon:'shortcut_${i}']`)
+        .join(',') +
       ']';
   }
 
@@ -182,9 +183,9 @@ class TwaManifest {
     const maskableIcon = util.findSuitableIcon(webManifest, 'maskable');
     const fullStartUrl = new URL(webManifest['start_url'] || '/', webManifestUrl);
 
-    const shortcuts = (webManifest.shortcuts || []).map(s => new ShortcutInfo(s, webManifestUrl))
-                                                      .filter(s => s.isValid())
-                                                      .filter((_, i) => i < 4);
+    const shortcuts = (webManifest.shortcuts || []).map((s) => new ShortcutInfo(s, webManifestUrl))
+        .filter((s) => s.isValid())
+        .filter((_, i) => i < 4);
 
     const twaManifest = new TwaManifest({
       packageId: generatePackageId(webManifestUrl.host),

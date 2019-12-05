@@ -93,8 +93,8 @@ async function confirmTwaConfig(twaManifest) {
         name: 'shortcuts',
         validator: /y[es]*|n[o]?/,
         message: 'Include app shortcuts?',
-        description: 'App shortcuts to display for users to users quickly start common or '+
-            'recommended tasks within the app',
+        description: 'App shortcuts to display for users TO quickly start common or recommended ' +
+            'tasks within the app',
         warning: 'Must respond yes or no',
         default: 'yes',
       },

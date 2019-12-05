@@ -121,7 +121,7 @@ describe('TwaManifest', () => {
         splashScreenFadeOutDuration: 300,
         useBrowserOnChromeOS: true,
         enableNotifications: true,
-        shortcuts: [{name: 'name', url: '/', icons:[{src: 'icon.png'}]}],
+        shortcuts: [{name: 'name', url: '/', icons: [{src: 'icon.png'}]}],
       });
       expect(twaManifest.validate()).toBeTrue();
     });
