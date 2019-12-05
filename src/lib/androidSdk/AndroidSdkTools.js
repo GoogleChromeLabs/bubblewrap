@@ -37,7 +37,7 @@ class AndroidSdkTools {
 
     console.log('Installing Build Tools');
     await util.execInteractive(
-        path.join(this.getAndroidHome(), '/tools/bin/sdkmanager'),
+        path.win32.join(this.getAndroidHome(), '/tools/bin/sdkmanager'),
         ['--install',
           `"build-tools;${BUILD_TOOLS_VERSION}"`],
         env,
@@ -57,6 +57,7 @@ class AndroidSdkTools {
   }
 
   getAndroidHome() {
+    console.log(this.config.androidSdkPath);
     if (this.process.platform === 'win32') {
       return path.win32.join(this.config.androidSdkPath, '/');
     }
@@ -72,7 +73,7 @@ class AndroidSdkTools {
   async zipalign(input, output) {
     const env = this.getEnv();
     const zipalignCmd = [
-      path.join(this.getAndroidHome(), '/build-tools/29.0.2/zipalign'),
+      `"${path.join(this.getAndroidHome(), '/build-tools/29.0.2/zipalign')}"`,
       '-v -f -p 4',
       input,
       output,
@@ -83,7 +84,7 @@ class AndroidSdkTools {
   async apksigner(keystore, ksPass, alias, keyPass, input, output) {
     const env = this.getEnv();
     const apksignerCmd = [
-      path.join(this.getAndroidHome(), '/build-tools/29.0.2/apksigner'),
+      `"${path.join(this.getAndroidHome(), '/build-tools/29.0.2/apksigner')}"`,
       `sign --ks ${keystore}`,
       `--ks-key-alias ${alias}`,
       `--ks-pass pass:${ksPass}`,

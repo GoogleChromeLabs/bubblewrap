@@ -70,7 +70,8 @@ async function untar(tarFile, destinationPath, deleteZipWhenDone = false) {
 
 function execInteractive(cwd, args, env) {
   const {spawn} = require('child_process');
-  const shell = spawn(cwd, args, {
+  console.log(cwd);
+  const shell = spawn(`"${cwd}"`, args, {
     stdio: 'inherit',
     env: env,
     shell: true,
