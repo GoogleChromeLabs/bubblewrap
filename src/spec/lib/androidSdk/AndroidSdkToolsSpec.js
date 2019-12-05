@@ -71,72 +71,47 @@ function buildMockProcess(platform) {
 
 describe('AndroidSdkTools', () => {
   describe('#getEnv()', () => {
-    it('Sets the correct ANDROID_HOME on Linux', () => {
-      const config = buildMockConfig('linux');
-      const process = buildMockProcess('darwin');
-      const jdkHelper = new JdkHelper(process, config);
-      const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
-      const env = androidSdkTools.getEnv();
-      expect(env['ANDROID_HOME']).toBe('/home/user/android-sdk/');
-    });
+    const tests = [
+      {platform: 'linux', expectedAndroidHome: '/home/user/android-sdk/'},
+      {platform: 'darwin', expectedAndroidHome: '/home/user/android-sdk/'},
+      {platform: 'win32', expectedAndroidHome: 'C:\\Users\\user\\android-sdk\\'},
+    ];
 
-    it('Sets the correct ANDROID_HOME on MacOSX', () => {
-      const config = buildMockConfig('darwin');
-      const process = buildMockProcess('darwin');
-      const jdkHelper = new JdkHelper(process, config);
-      const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
-      const env = androidSdkTools.getEnv();
-      expect(env['ANDROID_HOME']).toBe('/home/user/android-sdk/');
-    });
-
-    it('Sets the correct ANDROID_HOME on Windows', () => {
-      const config = buildMockConfig('win32');
-      const process = buildMockProcess('win32');
-      const jdkHelper = new JdkHelper(process, config);
-      const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
-      const env = androidSdkTools.getEnv();
-      expect(env['ANDROID_HOME']).toBe('C:\\Users\\user\\android-sdk\\');
+    tests.forEach((test) => {
+      it(`Sets the correct ANDROID_HOME on ${test.platform}`, () => {
+        const config = buildMockConfig(test.platform);
+        const process = buildMockProcess(test.platform);
+        const jdkHelper = new JdkHelper(process, config);
+        const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
+        const env = androidSdkTools.getEnv();
+        expect(env['ANDROID_HOME']).toBe(test.expectedAndroidHome);
+      });
     });
   });
 
   describe('#installBuildTools', () => {
-    it('Build the correct command-line on Linux', () => {
-      const config = buildMockConfig('linux');
-      const process = buildMockProcess('linux');
-      const jdkHelper = new JdkHelper(process, config);
-      const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
-      spyOn(util, 'execInteractive').and.stub();
-      androidSdkTools.installBuildTools();
-      expect(util.execInteractive).toHaveBeenCalledWith(
-          '/home/user/android-sdk/tools/bin/sdkmanager',
-          ['--install', '"build-tools;29.0.2"'],
-          androidSdkTools.getEnv());
-    });
+    const tests = [
+      {platform: 'linux',
+        expectedAndroidHome: '/home/user/android-sdk/tools/bin/sdkmanager'},
+      {platform: 'darwin',
+        expectedAndroidHome: '/home/user/android-sdk/tools/bin/sdkmanager'},
+      {platform: 'win32',
+        expectedAndroidHome: 'C:\\Users\\user\\android-sdk\\tools\\bin\\sdkmanager'},
+    ];
 
-    it('Build the correct command-line on MacOs', () => {
-      const config = buildMockConfig('darwin');
-      const process = buildMockProcess('darwin');
-      const jdkHelper = new JdkHelper(process, config);
-      const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
-      spyOn(util, 'execInteractive').and.stub();
-      androidSdkTools.installBuildTools();
-      expect(util.execInteractive).toHaveBeenCalledWith(
-          '/home/user/android-sdk/tools/bin/sdkmanager',
-          ['--install', '"build-tools;29.0.2"'],
-          androidSdkTools.getEnv());
-    });
-
-    it('Build the correct command-line on Windows', () => {
-      const config = buildMockConfig('win32');
-      const process = buildMockProcess('win32');
-      const jdkHelper = new JdkHelper(process, config);
-      const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
-      spyOn(util, 'execInteractive').and.stub();
-      androidSdkTools.installBuildTools();
-      expect(util.execInteractive).toHaveBeenCalledWith(
-          'C:\\Users\\user\\android-sdk\\tools\\bin\\sdkmanager',
-          ['--install', '"build-tools;29.0.2"'],
-          androidSdkTools.getEnv());
+    tests.forEach((test) => {
+      it(`Build the correct command-line on ${test.platform}`, () => {
+        const config = buildMockConfig(test.platform);
+        const process = buildMockProcess(test.platform);
+        const jdkHelper = new JdkHelper(process, config);
+        const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
+        spyOn(util, 'execInteractive').and.stub();
+        androidSdkTools.installBuildTools();
+        expect(util.execInteractive).toHaveBeenCalledWith(
+            test.expectedAndroidHome,
+            ['--install', '"build-tools;29.0.2"'],
+            androidSdkTools.getEnv());
+      });
     });
   });
 });
