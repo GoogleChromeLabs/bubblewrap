@@ -174,24 +174,6 @@ export class TwaManifest {
     return true;
   }
 
-<<<<<<< HEAD
-  _hexColor(color: string): string {
-    const rgbColor = colorString.get.rgb(color);
-    return colorString.to.hex(rgbColor);
-  }
-
-  themeColorHex(): string {
-    return this._hexColor(this.themeColor);
-  }
-
-  navigationColorHex(): string {
-    return this._hexColor(this.navigationColor);
-  }
-
-  backgroundColorHex(): string {
-    return this._hexColor(this.backgroundColor);
-  }
-
   generateShortcuts() {
     return '[' + JSON.parse(this.shortcuts).map((s: any, i: number) =>
       `[name:'${s.name}', short_name:'${s.shortName}', url:'${s.url}', icon:'shortcut_${i}']`)
@@ -199,8 +181,6 @@ export class TwaManifest {
       ']';
   }
 
-=======
->>>>>>> Replaces `color-string` with `color`
   /**
    * Creates a new TwaManifest, using the URL for the Manifest as a base URL and uses the content
    * of the Web Manifest to generate the fields for the TWA Manifest.

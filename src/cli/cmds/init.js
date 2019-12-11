@@ -129,21 +129,11 @@ async function confirmTwaConfig(twaManifest) {
     },
   };
   const result = await prompt.get(schema);
-<<<<<<< HEAD
-
-  if (result.shortcuts === 'no') {
-    result.shortcuts = '[]';
-  } else {
-    result.shortcuts = twaManifest.shortcuts;
-  }
-
-  Object.assign(twaManifest, result);
-=======
   Object.assign(twaManifest, result, {
     themeColor: new Color(result.themeColor),
     backgroundColor: new Color(result.themeColor),
+    shortcuts: result.shortcuts === 'no' ? '[]' : twaManifest.shortcuts,
   });
->>>>>>> Replaces `color-string` with `color`
   return twaManifest;
 }
 
