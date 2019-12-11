@@ -42,6 +42,33 @@ function generatePackageId(host) {
 }
 
 /**
+ * A wrapper around the WebManifest's ShortcutInfo.
+ */
+class ShortcutInfo {
+  /**
+   * @param {Object} the WebManifest's ShortcutInfo.
+   * @param {URL} webManifestUrl the URL where the webmanifest is available.
+   */
+  constructor(shortcutInfo, webManifestUrl) {
+    this.name = shortcutInfo['name'];
+    this.shortName = shortcutInfo['short_name'] || this.name;
+    this.url = shortcutInfo['url'] ?
+      new URL(shortcutInfo['url'], webManifestUrl).toString() : undefined;
+    this.icons = shortcutInfo['icons'] || [];
+
+    // TODO(rayankans): Choose the most suitable icon rather than the first one.
+    const sutiableIcon = this.icons.length ? this.icons[0] : null;
+
+    this.chosenIconUrl = sutiableIcon ?
+      new URL(sutiableIcon.src, webManifestUrl).toString() : undefined;
+  }
+
+  isValid() {
+    return this.name && this.url && this.chosenIconUrl;
+  }
+}
+
+/**
  * A Manifest used to generate the TWA Project
  *
  * applicationId: '<%= packageId %>',
@@ -82,6 +109,7 @@ class TwaManifest {
     this.splashScreenFadeOutDuration = data.splashScreenFadeOutDuration;
     this.signingKey = data.signingKey;
     this.appVersion = data.appVersion;
+    this.shortcuts = data.shortcuts;
   }
 
   /**
@@ -135,18 +163,29 @@ class TwaManifest {
     return this._hexColor(this.backgroundColor);
   }
 
+  generateShortcuts() {
+    return '[' + JSON.parse(this.shortcuts).map((s, i) =>
+      `[name:'${s.name}', short_name:'${s.shortName}', url:'${s.url}', icon:'shortcut_${i}']`)
+        .join(',') +
+      ']';
+  }
+
   /**
    * Creates a new TwaManifest, using the URL for the Manifest as a base URL and uses the content
    * of the Web Manifest to generate the fields for the TWA Manifest.
    *
    * @param {URL} webManifestUrl the URL where the webmanifest is available.
-   * @param {WebManifest} the Web Manifest, used as a base for the TWA Manifest.
+   * @param {WebManifest} webManifest the Web Manifest, used as a base for the TWA Manifest.
    * @returns {TwaManifest}
    */
   static fromWebManifestJson(webManifestUrl, webManifest) {
     const icon = util.findSuitableIcon(webManifest, 'any');
     const maskableIcon = util.findSuitableIcon(webManifest, 'maskable');
     const fullStartUrl = new URL(webManifest['start_url'] || '/', webManifestUrl);
+
+    const shortcuts = (webManifest.shortcuts || []).map((s) => new ShortcutInfo(s, webManifestUrl))
+        .filter((s) => s.isValid())
+        .filter((_, i) => i < 4);
 
     const twaManifest = new TwaManifest({
       packageId: generatePackageId(webManifestUrl.host),
@@ -167,6 +206,7 @@ class TwaManifest {
       splashScreenFadeOutDuration: 300,
       useBrowserOnChromeOS: true,
       enableNotifications: false,
+      shortcuts: JSON.stringify(shortcuts, undefined, 2),
     });
     return twaManifest;
   }
