@@ -19,7 +19,7 @@
 const fs = require('fs');
 const fetch = require('node-fetch');
 const util = require('./util');
-const colorString = require('color-string');
+import Color = require('color');
 
 // Regex for disallowed characters on Android Packages, as per
 // https://developer.android.com/guide/topics/manifest/manifest-element.html#package
@@ -35,7 +35,7 @@ const DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX = /[^ a-zA-Z0-9_\.]/;
  *
  * @param {String} host the original hostname
  */
-function generatePackageId(host) {
+function generatePackageId(host: string): string {
   const parts = host.split('.').reverse();
   parts.push('twa');
   return parts.join('.').replace(DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX, '_');
@@ -45,11 +45,17 @@ function generatePackageId(host) {
  * A wrapper around the WebManifest's ShortcutInfo.
  */
 class ShortcutInfo {
+  icons: string;
+  name: string;
+  shortName: string;
+  url: string | undefined;
+  chosenIconUrl: string | undefined;
+
   /**
    * @param {Object} the WebManifest's ShortcutInfo.
    * @param {URL} webManifestUrl the URL where the webmanifest is available.
    */
-  constructor(shortcutInfo, webManifestUrl) {
+  constructor(shortcutInfo: any, webManifestUrl: URL) {
     this.name = shortcutInfo['name'];
     this.shortName = shortcutInfo['short_name'] || this.name;
     this.url = shortcutInfo['url'] ?
@@ -57,10 +63,10 @@ class ShortcutInfo {
     this.icons = shortcutInfo['icons'] || [];
 
     // TODO(rayankans): Choose the most suitable icon rather than the first one.
-    const sutiableIcon = this.icons.length ? this.icons[0] : null;
+    const suitableIcon: any = this.icons.length ? this.icons[0] : null;
 
-    this.chosenIconUrl = sutiableIcon ?
-      new URL(sutiableIcon.src, webManifestUrl).toString() : undefined;
+    this.chosenIconUrl = suitableIcon ?
+      new URL(suitableIcon.src, webManifestUrl).toString() : undefined;
   }
 
   isValid() {
@@ -93,14 +99,30 @@ class ShortcutInfo {
  * splashScreenFadeOutDuration: 300
  *
  */
-class TwaManifest {
-  constructor(data) {
+export class TwaManifest {
+  packageId: string;
+  host: string;
+  name: string;
+  themeColor: Color;
+  navigationColor: Color;
+  backgroundColor: Color;
+  enableNotifications: boolean;
+  startUrl: string;
+  iconUrl: string;
+  maskableIconUrl: string;
+  useBrowserOnChromeOS: boolean;
+  splashScreenFadeOutDuration: number;
+  signingKey: string;
+  appVersion: string;
+  shortcuts: string;
+
+  constructor(data: any) { // TODO(andreban): Change `any` to a proper Object.
     this.packageId = data.packageId;
     this.host = data.host;
     this.name = data.name;
-    this.themeColor = data.themeColor;
-    this.navigationColor = data.navigationColor;
-    this.backgroundColor = data.backgroundColor;
+    this.themeColor = new Color(data.themeColor);
+    this.navigationColor = new Color(data.navigationColor);
+    this.backgroundColor = new Color(data.backgroundColor);
     this.enableNotifications = data.enableNotifications;
     this.startUrl = data.startUrl;
     this.iconUrl = data.iconUrl;
@@ -117,16 +139,22 @@ class TwaManifest {
    *
    * @param {String} filename the location where the TWA Manifest will be saved.
    */
-  async saveToFile(filename) {
+  async saveToFile(filename: string) {
     console.log('Saving Config to: ' + filename);
-    await fs.promises.writeFile(filename, JSON.stringify(this, null, 2));
+    const json:any = {};
+    Object.assign(json, this, {
+      themeColor: this.themeColor.hex(),
+      navigationColor: this.navigationColor.hex(),
+      backgroundColor: this.backgroundColor.hex(),
+    });
+    await fs.promises.writeFile(filename, JSON.stringify(json, null, 2));
   }
 
   /**
    * Validates if the Manifest has all the fields needed to generate a TWA project and if the
    * values for those fields are valid.
    */
-  validate() {
+  validate(): boolean {
     if (!this.host) {
       return false;
     }
@@ -146,25 +174,8 @@ class TwaManifest {
     return true;
   }
 
-  _hexColor(color) {
-    const rgbColor = colorString.get.rgb(color);
-    return colorString.to.hex(rgbColor);
-  }
-
-  themeColorHex() {
-    return this._hexColor(this.themeColor);
-  }
-
-  navigationColorHex() {
-    return this._hexColor(this.navigationColor);
-  }
-
-  backgroundColorHex() {
-    return this._hexColor(this.backgroundColor);
-  }
-
   generateShortcuts() {
-    return '[' + JSON.parse(this.shortcuts).map((s, i) =>
+    return '[' + JSON.parse(this.shortcuts).map((s: any, i: number) =>
       `[name:'${s.name}', short_name:'${s.shortName}', url:'${s.url}', icon:'shortcut_${i}']`)
         .join(',') +
       ']';
@@ -178,14 +189,15 @@ class TwaManifest {
    * @param {WebManifest} webManifest the Web Manifest, used as a base for the TWA Manifest.
    * @returns {TwaManifest}
    */
-  static fromWebManifestJson(webManifestUrl, webManifest) {
-    const icon = util.findSuitableIcon(webManifest, 'any');
-    const maskableIcon = util.findSuitableIcon(webManifest, 'maskable');
-    const fullStartUrl = new URL(webManifest['start_url'] || '/', webManifestUrl);
+  static fromWebManifestJson(webManifestUrl: URL, webManifest: any): TwaManifest {
+    const icon: any = util.findSuitableIcon(webManifest, 'any');
+    const maskableIcon: any = util.findSuitableIcon(webManifest, 'maskable');
+    const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
 
-    const shortcuts = (webManifest.shortcuts || []).map((s) => new ShortcutInfo(s, webManifestUrl))
-        .filter((s) => s.isValid())
-        .filter((_, i) => i < 4);
+    const shortcuts = (webManifest.shortcuts || [])
+        .map((s: any) => new ShortcutInfo(s, webManifestUrl))
+        .filter((s: ShortcutInfo) => s.isValid())
+        .filter((_: ShortcutInfo, i: number) => i < 4);
 
     const twaManifest = new TwaManifest({
       packageId: generatePackageId(webManifestUrl.host),
@@ -217,9 +229,9 @@ class TwaManifest {
    * @param {String} url the URL where the webmanifest is available
    * @returns {TwaManifest}
    */
-  static async fromWebManifest(url) {
-    const webManifest = await fetch(url).then((res) => res.json());
-    const webManifestUrl = new URL(url);
+  static async fromWebManifest(url: string): Promise<TwaManifest> {
+    const webManifest: JSON = await fetch(url).then((res: Response) => res.json());
+    const webManifestUrl: URL = new URL(url);
     return TwaManifest.fromWebManifestJson(webManifestUrl, webManifest);
   }
 
@@ -228,10 +240,8 @@ class TwaManifest {
    *
    * @param {String} fileName the location of the TWA Manifest file
    */
-  static async fromFile(fileName) {
+  static async fromFile(fileName: string): Promise<TwaManifest> {
     const json = JSON.parse(await fs.promises.readFile(fileName));
     return new TwaManifest(json);
   }
 }
-
-module.exports = TwaManifest;

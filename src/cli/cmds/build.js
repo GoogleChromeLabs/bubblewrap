@@ -19,7 +19,7 @@
 const AndroidSdkTools = require('../../lib/androidSdk/AndroidSdkTools');
 const JdkHelper = require('../../lib/jdk/JdkHelper');
 const GradleWraper = require('../../lib/GradleWrapper');
-const TwaManifest = require('../../lib/TwaManifest');
+const {TwaManifest} = require('../../lib/TwaManifest');
 
 const {promisify} = require('util');
 const prompt = require('prompt');

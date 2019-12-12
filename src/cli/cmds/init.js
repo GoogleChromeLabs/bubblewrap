@@ -16,9 +16,8 @@
 
 'use strict';
 
-const colorString = require('color-string');
 const TwaGenerator = require('../../lib/TwaGenerator');
-const TwaManifest = require('../../lib/TwaManifest');
+const {TwaManifest} = require('../../lib/TwaManifest');
 const KeyTool = require('../../lib/jdk/KeyTool');
 const JdkHelper = require('../../lib/jdk/JdkHelper');
 const {promisify} = require('util');
@@ -26,11 +25,17 @@ const colors = require('colors/safe');
 const prompt = require('prompt');
 const validUrl = require('valid-url');
 const fs = require('fs');
+const Color = require('color');
 prompt.get = promisify(prompt.get);
 
 async function confirmTwaConfig(twaManifest) {
   const validateColor = (color) => {
-    return colorString.get(color) !== null;
+    try {
+      new Color(color);
+      return true;
+    } catch (_) {
+      return false;
+    }
   };
 
   prompt.message = colors.green('[llama-pack-init]');
@@ -56,7 +61,7 @@ async function confirmTwaConfig(twaManifest) {
         message: 'Must use a color in hex format',
         required: true,
         conform: validateColor,
-        default: twaManifest.themeColor,
+        default: twaManifest.themeColor.hex(),
       },
       backgroundColor: {
         name: 'backgroundColor',
@@ -64,7 +69,7 @@ async function confirmTwaConfig(twaManifest) {
         message: 'Must use a color in hex format',
         required: true,
         conform: validateColor,
-        default: twaManifest.backgroundColor,
+        default: twaManifest.backgroundColor.hex(),
       },
       startUrl: {
         name: 'startUrl',
@@ -124,14 +129,11 @@ async function confirmTwaConfig(twaManifest) {
     },
   };
   const result = await prompt.get(schema);
-
-  if (result.shortcuts === 'no') {
-    result.shortcuts = '[]';
-  } else {
-    result.shortcuts = twaManifest.shortcuts;
-  }
-
-  Object.assign(twaManifest, result);
+  Object.assign(twaManifest, result, {
+    themeColor: new Color(result.themeColor),
+    backgroundColor: new Color(result.themeColor),
+    shortcuts: result.shortcuts === 'no' ? '[]' : twaManifest.shortcuts,
+  });
   return twaManifest;
 }
 

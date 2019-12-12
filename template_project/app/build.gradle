@@ -23,9 +23,9 @@ def twaManifest = [
     hostName: '<%= host %>', // The domain being opened in the TWA.
     launchUrl: '<%= startUrl %>', // The start path for the TWA. Must be relative to the domain.
     name: '<%= name %>', // The name shown on the Android Launcher.
-    themeColor: '<%= themeColorHex() %>', // The color used for the status bar.
-    navigationColor: '<%= navigationColorHex() %>', // The color used for the navigation bar.    
-    backgroundColor: '<%= backgroundColorHex() %>', // The color used for the splash screen background.
+    themeColor: '<%= themeColor.hex() %>', // The color used for the status bar.
+    navigationColor: '<%= navigationColor.hex() %>', // The color used for the navigation bar.
+    backgroundColor: '<%= backgroundColor.hex() %>', // The color used for the splash screen background.
     enableNotifications: <%= enableNotifications %>, // Set to true to enable notification delegation.
     useBrowserOnChromeOS: <%= useBrowserOnChromeOS %>, // Set to false if you've added interaction with Android system APIs.
     // Every shortcut must include the following fields:
