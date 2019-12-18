@@ -60,7 +60,6 @@ describe('TwaManifest', () => {
       expect(twaManifest.signingKey.path).toBe('./android.keystore');
       expect(twaManifest.signingKey.alias).toBe('android');
       expect(twaManifest.splashScreenFadeOutDuration).toBe(300);
-      expect(twaManifest.useBrowserOnChromeOS).toBeTrue();
       expect(twaManifest.enableNotifications).toBeFalse();
       expect(JSON.parse(twaManifest.shortcuts)).toEqual([
         {
@@ -90,7 +89,6 @@ describe('TwaManifest', () => {
       expect(twaManifest.signingKey.path).toBe('./android.keystore');
       expect(twaManifest.signingKey.alias).toBe('android');
       expect(twaManifest.splashScreenFadeOutDuration).toBe(300);
-      expect(twaManifest.useBrowserOnChromeOS).toBeTrue();
       expect(twaManifest.enableNotifications).toBeFalse();
       expect(twaManifest.shortcuts).toBe('[]');
     });
@@ -127,7 +125,6 @@ describe('TwaManifest', () => {
           alias: 'android',
         },
         splashScreenFadeOutDuration: 300,
-        useBrowserOnChromeOS: true,
         enableNotifications: true,
         shortcuts: [{name: 'name', url: '/', icons: [{src: 'icon.png'}]}],
       });
