@@ -16,15 +16,14 @@
 
 'use strict';
 
-const JdkHelper = require('../../../lib/jdk/JdkHelper');
+import {JdkHelper} from "../../../lib/jdk/JdkHelper";
+import {Config} from "../../../lib/Config";
 
 describe('JdkHelper', () => {
   describe('getEnv()', () => {
     it('Creates the correct environment for Linux', () => {
-      const config = {
-        jdkPath: '/home/user/jdk8',
-      };
-      const process = {
+      const config = new Config('/home/user/jdk8', '/home/user/sdktools');
+      const process = <NodeJS.Process><unknown> {
         platform: 'linux',
         env: {
           'PATH': '',
@@ -37,10 +36,8 @@ describe('JdkHelper', () => {
     });
 
     it('Creates the correct environment for MacOSX', () => {
-      const config = {
-        jdkPath: '/home/user/jdk8',
-      };
-      const process = {
+      const config = new Config('/home/user/jdk8', '/home/user/sdktools');      
+      const process = <NodeJS.Process><unknown> {
         platform: 'darwin',
         env: {
           'PATH': '',
@@ -53,10 +50,8 @@ describe('JdkHelper', () => {
     });
 
     it('Creates the correct environment for Windows', () => {
-      const config = {
-        jdkPath: 'C:\\Users\\user\\jdk8',
-      };
-      const process = {
+      const config = new Config('C:\\Users\\user\\jdk8', 'C:\\Users\\user\\sdktools');      
+      const process:any = <NodeJS.Process><unknown> {
         platform: 'win32',
         env: {
           'Path': '',

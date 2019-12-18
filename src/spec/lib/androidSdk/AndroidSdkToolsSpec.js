@@ -16,7 +16,7 @@
 
 'use strict';
 
-const JdkHelper = require('../../../lib/jdk/JdkHelper');
+const {JdkHelper} = require('../../../lib/jdk/JdkHelper');
 const AndroidSdkTools = require('../../../lib/androidSdk/AndroidSdkTools');
 const util = require('../../../lib/util');
 

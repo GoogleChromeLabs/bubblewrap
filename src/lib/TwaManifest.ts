@@ -16,9 +16,9 @@
 
 'use strict';
 
-const fs = require('fs');
-const fetch = require('node-fetch');
-const util = require('./util');
+import * as fs from 'fs';
+import fetch from 'node-fetch';
+import * as util from './util';
 import Color = require('color');
 
 // Regex for disallowed characters on Android Packages, as per
@@ -139,9 +139,9 @@ export class TwaManifest {
    *
    * @param {String} filename the location where the TWA Manifest will be saved.
    */
-  async saveToFile(filename: string) {
+  async saveToFile(filename: string): Promise<void> {
     console.log('Saving Config to: ' + filename);
-    const json:any = {};
+    const json: any = {};
     Object.assign(json, this, {
       themeColor: this.themeColor.hex(),
       navigationColor: this.navigationColor.hex(),
@@ -174,7 +174,7 @@ export class TwaManifest {
     return true;
   }
 
-  generateShortcuts() {
+  generateShortcuts(): string {
     return '[' + JSON.parse(this.shortcuts).map((s: any, i: number) =>
       `[name:'${s.name}', short_name:'${s.shortName}', url:'${s.url}', icon:'shortcut_${i}']`)
         .join(',') +
@@ -230,7 +230,8 @@ export class TwaManifest {
    * @returns {TwaManifest}
    */
   static async fromWebManifest(url: string): Promise<TwaManifest> {
-    const webManifest: JSON = await fetch(url).then((res: Response) => res.json());
+    const response = await fetch(url);
+    const webManifest = await response.json();
     const webManifestUrl: URL = new URL(url);
     return TwaManifest.fromWebManifestJson(webManifestUrl, webManifest);
   }
@@ -241,7 +242,7 @@ export class TwaManifest {
    * @param {String} fileName the location of the TWA Manifest file
    */
   static async fromFile(fileName: string): Promise<TwaManifest> {
-    const json = JSON.parse(await fs.promises.readFile(fileName));
+    const json = JSON.parse((await fs.promises.readFile(fileName)).toString());
     return new TwaManifest(json);
   }
 }

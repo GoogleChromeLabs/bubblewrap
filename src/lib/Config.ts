@@ -14,12 +14,16 @@
  *  limitations under the License.
  */
 
-const {promisify} = require('util');
-const fs = require('fs');
-const homedir = require('os').homedir();
-const path = require('path');
-const fileExists = promisify(fs.exists);
+import {promisify} from 'util';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as os from 'os';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const userPrompt = require('prompt');
+
+const homedir = os.homedir();
+const fileExists = promisify(fs.exists);
 userPrompt.get = promisify(userPrompt.get);
 
 const CONFIG_FILE_NAME = path.join(homedir, '/.llama-pack/llama-pack-config.json');
@@ -33,12 +37,12 @@ export class Config {
     this.androidSdkPath = androidSdkPath;
   }
 
-  async saveConfig() {
+  async saveConfig(): Promise<void> {
     await fs.promises.mkdir(path.join(homedir, '/.llama-pack'));
     await fs.promises.writeFile(CONFIG_FILE_NAME, JSON.stringify(this));
   }
 
-  async check() {
+  async check(): Promise<void> {
     if (!await fileExists(this.jdkPath)) {
       throw new Error(`${this.jdkPath} does not exist. Check the jdkPath on your config`);
     }
@@ -70,7 +74,7 @@ export class Config {
   }
 
   static async loadConfig(): Promise<Config> {
-    const config = JSON.parse(await fs.promises.readFile(CONFIG_FILE_NAME));
+    const config = JSON.parse((await fs.promises.readFile(CONFIG_FILE_NAME)).toString());
     return new Config(config.jdkPath, config.androidSdkPath);
   }
 
