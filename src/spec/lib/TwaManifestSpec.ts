@@ -67,7 +67,6 @@ describe('TwaManifest', () => {
           name: 'shortcut name',
           shortName: 'short',
           url: 'https://pwa-directory.com/launch',
-          icons: [{src: '/shortcut_icon.png'}],
           chosenIconUrl: 'https://pwa-directory.com/shortcut_icon.png',
         },
       ]);

@@ -20,6 +20,7 @@ import * as fs from 'fs';
 import fetch from 'node-fetch';
 import * as util from './util';
 import Color = require('color');
+import {WebManifestIcon, WebManifestJson, WebManifestShortcutJson} from './types/WebManifest';
 
 // Regex for disallowed characters on Android Packages, as per
 // https://developer.android.com/guide/topics/manifest/manifest-element.html#package
@@ -45,7 +46,6 @@ function generatePackageId(host: string): string {
  * A wrapper around the WebManifest's ShortcutInfo.
  */
 class ShortcutInfo {
-  icons: string;
   name: string;
   shortName: string;
   url: string | undefined;
@@ -55,22 +55,22 @@ class ShortcutInfo {
    * @param {Object} the WebManifest's ShortcutInfo.
    * @param {URL} webManifestUrl the URL where the webmanifest is available.
    */
-  constructor(shortcutInfo: any, webManifestUrl: URL) {
-    this.name = shortcutInfo['name'];
+  constructor(shortcutInfo: WebManifestShortcutJson, webManifestUrl: URL) {
+    this.name = shortcutInfo['name'] || '';
     this.shortName = shortcutInfo['short_name'] || this.name;
     this.url = shortcutInfo['url'] ?
       new URL(shortcutInfo['url'], webManifestUrl).toString() : undefined;
-    this.icons = shortcutInfo['icons'] || [];
+    const icons = shortcutInfo['icons'] || [];
 
     // TODO(rayankans): Choose the most suitable icon rather than the first one.
-    const suitableIcon: any = this.icons.length ? this.icons[0] : null;
+    const suitableIcon = icons.length ? icons[0] : null;
 
     this.chosenIconUrl = suitableIcon ?
       new URL(suitableIcon.src, webManifestUrl).toString() : undefined;
   }
 
-  isValid() {
-    return this.name && this.url && this.chosenIconUrl;
+  isValid(): boolean {
+    return this.name != undefined && this.url != undefined && this.chosenIconUrl != undefined;
   }
 }
 
@@ -108,15 +108,15 @@ export class TwaManifest {
   backgroundColor: Color;
   enableNotifications: boolean;
   startUrl: string;
-  iconUrl: string;
-  maskableIconUrl: string;
+  iconUrl: string | undefined;
+  maskableIconUrl: string | undefined;
   useBrowserOnChromeOS: boolean;
   splashScreenFadeOutDuration: number;
-  signingKey: string;
+  signingKey: SigningKeyInfo;
   appVersion: string;
   shortcuts: string;
 
-  constructor(data: any) { // TODO(andreban): Change `any` to a proper Object.
+  constructor(data: TwaManifestJson) {
     this.packageId = data.packageId;
     this.host = data.host;
     this.name = data.name;
@@ -141,8 +141,7 @@ export class TwaManifest {
    */
   async saveToFile(filename: string): Promise<void> {
     console.log('Saving Config to: ' + filename);
-    const json: any = {};
-    Object.assign(json, this, {
+    const json: TwaManifestJson = Object.assign({}, this, {
       themeColor: this.themeColor.hex(),
       navigationColor: this.navigationColor.hex(),
       backgroundColor: this.backgroundColor.hex(),
@@ -175,7 +174,7 @@ export class TwaManifest {
   }
 
   generateShortcuts(): string {
-    return '[' + JSON.parse(this.shortcuts).map((s: any, i: number) =>
+    return '[' + JSON.parse(this.shortcuts).map((s: ShortcutInfo, i: number) =>
       `[name:'${s.name}', short_name:'${s.shortName}', url:'${s.url}', icon:'shortcut_${i}']`)
         .join(',') +
       ']';
@@ -189,13 +188,13 @@ export class TwaManifest {
    * @param {WebManifest} webManifest the Web Manifest, used as a base for the TWA Manifest.
    * @returns {TwaManifest}
    */
-  static fromWebManifestJson(webManifestUrl: URL, webManifest: any): TwaManifest {
-    const icon: any = util.findSuitableIcon(webManifest, 'any');
-    const maskableIcon: any = util.findSuitableIcon(webManifest, 'maskable');
+  static fromWebManifestJson(webManifestUrl: URL, webManifest: WebManifestJson): TwaManifest {
+    const icon: WebManifestIcon = util.findSuitableIcon(webManifest, 'any');
+    const maskableIcon: WebManifestIcon = util.findSuitableIcon(webManifest, 'maskable');
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
 
     const shortcuts = (webManifest.shortcuts || [])
-        .map((s: any) => new ShortcutInfo(s, webManifestUrl))
+        .map((s: WebManifestShortcutJson) => new ShortcutInfo(s, webManifestUrl))
         .filter((s: ShortcutInfo) => s.isValid())
         .filter((_: ShortcutInfo, i: number) => i < 4);
 
@@ -245,4 +244,30 @@ export class TwaManifest {
     const json = JSON.parse((await fs.promises.readFile(fileName)).toString());
     return new TwaManifest(json);
   }
+}
+
+/**
+ * A JSON representation of the TWA Manifest. Used when loading and saving the Manifest
+ */
+interface TwaManifestJson {
+  packageId: string;
+  host: string;
+  name: string;
+  themeColor: string;
+  navigationColor: string;
+  backgroundColor: string;
+  enableNotifications: boolean;
+  startUrl: string;
+  iconUrl: string | undefined;
+  maskableIconUrl: string | undefined;
+  useBrowserOnChromeOS: boolean;
+  splashScreenFadeOutDuration: number;
+  signingKey: SigningKeyInfo;
+  appVersion: string;
+  shortcuts: string;
+}
+
+interface SigningKeyInfo {
+  path: string;
+  alias: string;
 }
