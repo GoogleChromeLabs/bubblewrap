@@ -32,9 +32,10 @@
         <meta-data
             android:name="asset_statements"
             android:resource="@string/assetStatements" />
+
         <meta-data
-            android:name="use_browser_on_chromeOS"
-            android:resource="@bool/useBrowserOnChromeOS" />
+            android:name="cros_web_alternative"
+            android:value="@string/crosLaunchUrl" />
 
         <activity android:name="android.support.customtabs.trusted.LauncherActivity"
             android:label="@string/appName">

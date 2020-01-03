@@ -85,7 +85,6 @@ class ShortcutInfo {
  * navigationColor: '<%= themeColor %>', // The color used for the navigation bar.
  * backgroundColor: '<%= backgroundColor %>', // The color used for the splash screen background.
  * enableNotifications: false, // Set to true to enable notification delegation.
- * useBrowserOnChromeOS: true, // Set to false if you've added interaction with Android system APIs.
  * // Add shortcuts for your app here. Every shortcut must include the following fields:
  * // - name: String that will show up in the shortcut.
  * // - short_name: Shorter string used if |name| is too long.
@@ -127,7 +126,6 @@ export class TwaManifest {
     this.startUrl = data.startUrl;
     this.iconUrl = data.iconUrl;
     this.maskableIconUrl = data.maskableIconUrl;
-    this.useBrowserOnChromeOS = data.useBrowserOnChromeOS;
     this.splashScreenFadeOutDuration = data.splashScreenFadeOutDuration;
     this.signingKey = data.signingKey;
     this.appVersion = data.appVersion;
@@ -215,7 +213,6 @@ export class TwaManifest {
         alias: 'android',
       },
       splashScreenFadeOutDuration: 300,
-      useBrowserOnChromeOS: true,
       enableNotifications: false,
       shortcuts: JSON.stringify(shortcuts, undefined, 2),
     });
