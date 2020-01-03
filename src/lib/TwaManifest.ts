@@ -126,6 +126,7 @@ export class TwaManifest {
     this.startUrl = data.startUrl;
     this.iconUrl = data.iconUrl;
     this.maskableIconUrl = data.maskableIconUrl;
+    this.useBrowserOnChromeOS = data.useBrowserOnChromeOS;
     this.splashScreenFadeOutDuration = data.splashScreenFadeOutDuration;
     this.signingKey = data.signingKey;
     this.appVersion = data.appVersion;
@@ -212,6 +213,7 @@ export class TwaManifest {
         path: './android.keystore',
         alias: 'android',
       },
+      useBrowserOnChromeOS: true,
       splashScreenFadeOutDuration: 300,
       enableNotifications: false,
       shortcuts: JSON.stringify(shortcuts, undefined, 2),
