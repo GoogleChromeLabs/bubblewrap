@@ -16,7 +16,7 @@
 
 'use strict';
 
-import { Config } from "../Config";
+import {Config} from '../Config';
 import * as path from 'path';
 
 /**

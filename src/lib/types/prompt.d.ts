@@ -16,5 +16,6 @@
 
 declare module 'prompt' {
   import prompt = require('prompt');
-  export function get(schema: any): any;
+  // TODO(andreban): Remove usage of any
+  export function get(schema: any): any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }

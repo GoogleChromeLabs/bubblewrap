@@ -16,14 +16,14 @@
 
 'use strict';
 
-const Cli = require('./cli');
+import Cli = require('./cli');
 
-module.exports = () => {
+module.exports = (): void => {
   const cli = new Cli();
   const args = process.argv.slice(2);
   // TODO(peconn): Tighten up the `any` below once CLI is typed.
   cli.run(args)
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error(err.message);
         process.exit(1);
       });

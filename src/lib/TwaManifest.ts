@@ -248,7 +248,7 @@ export class TwaManifest {
 /**
  * A JSON representation of the TWA Manifest. Used when loading and saving the Manifest
  */
-interface TwaManifestJson {
+export interface TwaManifestJson {
   packageId: string;
   host: string;
   name: string;
@@ -266,7 +266,7 @@ interface TwaManifestJson {
   shortcuts: string;
 }
 
-interface SigningKeyInfo {
+export interface SigningKeyInfo {
   path: string;
   alias: string;
 }
