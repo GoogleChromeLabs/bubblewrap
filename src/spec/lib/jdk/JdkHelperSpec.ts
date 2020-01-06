@@ -16,20 +16,19 @@
 
 'use strict';
 
-const JdkHelper = require('../../../lib/jdk/JdkHelper');
+import {JdkHelper} from '../../../lib/jdk/JdkHelper';
+import {Config} from '../../../lib/Config';
 
 describe('JdkHelper', () => {
   describe('getEnv()', () => {
     it('Creates the correct environment for Linux', () => {
-      const config = {
-        jdkPath: '/home/user/jdk8',
-      };
+      const config = new Config('/home/user/jdk8', '/home/user/sdktools');
       const process = {
         platform: 'linux',
         env: {
           'PATH': '',
         },
-      };
+      } as unknown as NodeJS.Process;
       const jdkHelper = new JdkHelper(process, config);
       const env = jdkHelper.getEnv();
       expect(env['PATH']).toBe('/home/user/jdk8/bin/:');
@@ -37,15 +36,13 @@ describe('JdkHelper', () => {
     });
 
     it('Creates the correct environment for MacOSX', () => {
-      const config = {
-        jdkPath: '/home/user/jdk8',
-      };
+      const config = new Config('/home/user/jdk8', '/home/user/sdktools');
       const process = {
         platform: 'darwin',
         env: {
           'PATH': '',
         },
-      };
+      } as unknown as NodeJS.Process;
       const jdkHelper = new JdkHelper(process, config);
       const env = jdkHelper.getEnv();
       expect(env['JAVA_HOME']).toBe('/home/user/jdk8/Contents/Home/');
@@ -53,15 +50,13 @@ describe('JdkHelper', () => {
     });
 
     it('Creates the correct environment for Windows', () => {
-      const config = {
-        jdkPath: 'C:\\Users\\user\\jdk8',
-      };
+      const config = new Config('C:\\Users\\user\\jdk8', 'C:\\Users\\user\\sdktools');
       const process = {
         platform: 'win32',
         env: {
           'Path': '',
         },
-      };
+      } as unknown as NodeJS.Process;
       const jdkHelper = new JdkHelper(process, config);
       const env = jdkHelper.getEnv();
       expect(env['Path']).toBe('C:\\Users\\user\\jdk8\\bin\\;');

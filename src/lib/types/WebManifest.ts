@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2019 Google Inc. All Rights Reserved.
  *
@@ -14,16 +15,22 @@
  *  limitations under the License.
  */
 
-'use strict';
+export interface WebManifestIcon {
+  src: string;
+}
 
-import Cli = require('./cli');
+export interface WebManifestShortcutJson {
+  name?: string;
+  short_name?: string;
+  url?: string;
+  icons?: Array<WebManifestIcon>;
+}
 
-module.exports = (): void => {
-  const cli = new Cli();
-  const args = process.argv.slice(2);
-  cli.run(args)
-      .catch((err: Error) => {
-        console.error(err.message);
-        process.exit(1);
-      });
-};
+export interface WebManifestJson {
+  name?: string;
+  short_name?: string;
+  start_url?: string;
+  theme_color?: string;
+  background_color?: string;
+  shortcuts?: Array<WebManifestShortcutJson>;
+}

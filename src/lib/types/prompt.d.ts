@@ -14,16 +14,8 @@
  *  limitations under the License.
  */
 
-'use strict';
-
-import Cli = require('./cli');
-
-module.exports = (): void => {
-  const cli = new Cli();
-  const args = process.argv.slice(2);
-  cli.run(args)
-      .catch((err: Error) => {
-        console.error(err.message);
-        process.exit(1);
-      });
-};
+declare module 'prompt' {
+  import prompt = require('prompt');
+  // TODO(andreban): Remove usage of any
+  export function get(schema: any): any; // eslint-disable-line @typescript-eslint/no-explicit-any
+}

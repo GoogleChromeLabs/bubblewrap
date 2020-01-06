@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "tsc",
     "build": "tsc",
-    "lint": "eslint src/**/*.{js,ts}",
+    "lint": "eslint \"src/**/*.{js,ts}\"",
     "test": "tsc && jasmine --config=jasmine.json"
   },
   "main": "dist/index.js",

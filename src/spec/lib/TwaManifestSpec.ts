@@ -16,7 +16,8 @@
 
 'use strict';
 
-const {TwaManifest} = require('../../lib/TwaManifest');
+import {TwaManifest, TwaManifestJson} from '../../lib/TwaManifest';
+import {WebManifestJson} from '../../lib/types/WebManifest';
 
 describe('TwaManifest', () => {
   describe('#fromWebManifestJson', () => {
@@ -66,14 +67,13 @@ describe('TwaManifest', () => {
           name: 'shortcut name',
           shortName: 'short',
           url: 'https://pwa-directory.com/launch',
-          icons: [{src: '/shortcut_icon.png'}],
           chosenIconUrl: 'https://pwa-directory.com/shortcut_icon.png',
         },
       ]);
     });
 
     it('Sets correct defaults for unavailable fields', () => {
-      const manifest = {};
+      const manifest = {} as WebManifestJson;
       const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
       const twaManifest = TwaManifest.fromWebManifestJson(manifestUrl, manifest);
       expect(twaManifest.packageId).toBe('com.pwa_directory.twa');
@@ -96,7 +96,7 @@ describe('TwaManifest', () => {
     it('Uses "name" when "short_name" is not available', () => {
       const manifest = {
         'name': 'PWA Directory',
-      };
+      } as WebManifestJson;
       const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
       const twaManifest = TwaManifest.fromWebManifestJson(manifestUrl, manifest);
       expect(twaManifest.name).toBe('PWA Directory');
@@ -105,7 +105,7 @@ describe('TwaManifest', () => {
 
   describe('#validate', () => {
     it('Returns false for an empty TWA Manifest', () => {
-      const twaManifest = new TwaManifest({});
+      const twaManifest = new TwaManifest({} as TwaManifestJson);
       expect(twaManifest.validate()).toBeFalse();
     });
 
@@ -126,8 +126,8 @@ describe('TwaManifest', () => {
         },
         splashScreenFadeOutDuration: 300,
         enableNotifications: true,
-        shortcuts: [{name: 'name', url: '/', icons: [{src: 'icon.png'}]}],
-      });
+        shortcuts: '[{name: "name", url: "/", icons: [{src: "icon.png"}]}]',
+      } as TwaManifestJson);
       expect(twaManifest.validate()).toBeTrue();
     });
   });

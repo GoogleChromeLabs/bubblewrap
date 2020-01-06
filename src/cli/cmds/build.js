@@ -17,7 +17,7 @@
 'use strict';
 
 const AndroidSdkTools = require('../../lib/androidSdk/AndroidSdkTools');
-const JdkHelper = require('../../lib/jdk/JdkHelper');
+const {JdkHelper} = require('../../lib/jdk/JdkHelper');
 const GradleWraper = require('../../lib/GradleWrapper');
 const {TwaManifest} = require('../../lib/TwaManifest');
 
