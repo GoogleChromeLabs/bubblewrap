@@ -78,6 +78,7 @@ export class JdkHelper {
   getEnv(): NodeJS.ProcessEnv {
     const env: NodeJS.ProcessEnv = Object.assign({}, this.process.env);
     env['JAVA_HOME'] = this.getJavaHome();
+    // Concatenates the Java binary path to the existing PATH environment variable.
     env[this.pathEnvironmentKey] =
         this.getJavaBin() + this.pathSeparator + env[this.pathEnvironmentKey];
     return env;

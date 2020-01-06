@@ -20,17 +20,17 @@ export interface WebManifestIcon {
 }
 
 export interface WebManifestShortcutJson {
-  name: string | undefined;
-  short_name: string | undefined;
-  url: string | undefined;
-  icons: Array<WebManifestIcon> | undefined;
+  name?: string;
+  short_name?: string;
+  url?: string;
+  icons?: Array<WebManifestIcon>;
 }
 
 export interface WebManifestJson {
-  name: string | undefined;
-  short_name: string | undefined;
-  start_url: string | undefined;
-  theme_color: string | undefined;
-  background_color: string | undefined;
-  shortcuts: Array<WebManifestShortcutJson> | undefined;
+  name?: string;
+  short_name?: string;
+  start_url?: string;
+  theme_color?: string;
+  background_color?: string;
+  shortcuts?: Array<WebManifestShortcutJson>;
 }

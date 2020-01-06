@@ -257,8 +257,8 @@ export interface TwaManifestJson {
   backgroundColor: string;
   enableNotifications: boolean;
   startUrl: string;
-  iconUrl: string | undefined;
-  maskableIconUrl: string | undefined;
+  iconUrl?: string;
+  maskableIconUrl?: string;
   useBrowserOnChromeOS: boolean;
   splashScreenFadeOutDuration: number;
   signingKey: SigningKeyInfo;

@@ -18,9 +18,7 @@ import {promisify} from 'util';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const userPrompt = require('prompt');
+import userPrompt = require('prompt');
 
 const homedir = os.homedir();
 const fileExists = promisify(fs.exists);
