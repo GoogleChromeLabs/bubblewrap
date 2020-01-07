@@ -17,6 +17,8 @@
 
 export interface WebManifestIcon {
   src: string;
+  sizes?: string;
+  purpose?: string;
 }
 
 export interface WebManifestShortcutJson {
@@ -32,5 +34,6 @@ export interface WebManifestJson {
   start_url?: string;
   theme_color?: string;
   background_color?: string;
+  icons?: Array<WebManifestIcon>;
   shortcuts?: Array<WebManifestShortcutJson>;
 }

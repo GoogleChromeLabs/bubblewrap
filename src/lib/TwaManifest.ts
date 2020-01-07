@@ -26,6 +26,9 @@ import {WebManifestIcon, WebManifestJson, WebManifestShortcutJson} from './types
 // https://developer.android.com/guide/topics/manifest/manifest-element.html#package
 const DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX = /[^ a-zA-Z0-9_\.]/;
 
+// The minimum size needed for the app icon.
+const MIN_ICON_SIZE = 512;
+
 /**
  * Generates an Android Application Id / Package Name, using the reverse hostname as a base
  * and appending `.twa` to the end.
@@ -60,10 +63,8 @@ class ShortcutInfo {
     this.shortName = shortcutInfo['short_name'] || this.name;
     this.url = shortcutInfo['url'] ?
       new URL(shortcutInfo['url'], webManifestUrl).toString() : undefined;
-    const icons = shortcutInfo['icons'] || [];
 
-    // TODO(rayankans): Choose the most suitable icon rather than the first one.
-    const suitableIcon = icons.length ? icons[0] : null;
+    const suitableIcon = util.findSuitableIcon(shortcutInfo['icons'], 'any');
 
     this.chosenIconUrl = suitableIcon ?
       new URL(suitableIcon.src, webManifestUrl).toString() : undefined;
@@ -188,8 +189,9 @@ export class TwaManifest {
    * @returns {TwaManifest}
    */
   static fromWebManifestJson(webManifestUrl: URL, webManifest: WebManifestJson): TwaManifest {
-    const icon: WebManifestIcon = util.findSuitableIcon(webManifest, 'any');
-    const maskableIcon: WebManifestIcon = util.findSuitableIcon(webManifest, 'maskable');
+    const icon: WebManifestIcon = util.findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE);
+    const maskableIcon: WebManifestIcon =
+      util.findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE);
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
 
     const shortcuts = (webManifest.shortcuts || [])

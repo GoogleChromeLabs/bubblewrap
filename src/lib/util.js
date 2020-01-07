@@ -88,17 +88,18 @@ function execInteractive(cwd, args, env) {
 
 /**
  * Fetches data for the largest icon from the web app manifest with a given purpose.
- * @param {WebAppManifest} manifest Reference to manifest object
- * @param {string} purpose Purpose filter that the icon must match
+ * @param {Array<WebManifestIcon>|undefined} icons List of the manifest icons.
+ * @param {string} purpose Purpose filter that the icon must match.
+ * @param {number=} minSize The minimum required icon size enforced id provided.
  */
-function findSuitableIcon(manifest, purpose) {
-  if (!manifest || !manifest.icons) {
+function findSuitableIcon(icons, purpose, minSize) {
+  if (!icons) {
     return null;
   }
 
   let largestIcon = null;
-  for (const icon of manifest.icons) {
-    const size = icon.sizes.split(' ')
+  for (const icon of icons) {
+    const size = (icon.sizes || '0x0').split(' ')
         .map((size) => Number.parseInt(size, 10))
         .reduce((max, size) => Math.max(max, size), 0);
     const purposes = new Set((icon.purpose || 'any').split(' '));
@@ -108,7 +109,7 @@ function findSuitableIcon(manifest, purpose) {
     }
   }
 
-  if (!largestIcon || largestIcon.size < 512) {
+  if (!largestIcon || (minSize && largestIcon.size < minSize)) {
     return null;
   }
 
