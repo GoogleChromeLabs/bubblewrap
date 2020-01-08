@@ -155,5 +155,5 @@ preBuild.dependsOn(generateShorcutsFile)
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.github.GoogleChrome:android-browser-helper:5a0accde23'
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:1.0.0'
 }
