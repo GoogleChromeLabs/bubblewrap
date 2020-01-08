@@ -34,10 +34,6 @@ allprojects {
     repositories {
         google()
         jcenter()
-        // Jitpack is currently being used to publish beta versions of the TWA Support Library.
-        // This will change in the future to use the same approach as other Android Support
-        // Libraries.
-        maven { url "https://jitpack.io" }
     }
 }
 
