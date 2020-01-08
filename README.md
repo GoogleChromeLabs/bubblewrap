@@ -57,7 +57,7 @@ line tools. So, take note of the location where both were decompressed.
 Generate an Android project from an existing Web Manifest:
 
 ```shell
-npx GoogleChromeLabs/llama-pack#0.2.0 init --manifest https://my-twa.com/manifest.json
+npx GoogleChromeLabs/llama-pack#0.3.0 init --manifest https://my-twa.com/manifest.json
 ```
 
 When initalizing a project, llama-pack will download the Web Manifest and ask you to confirm
@@ -68,7 +68,7 @@ app before uploading to the Play Store.
 
 ### Building the Android Project
 ```shell
-npx GoogleChromeLabs/llama-pack#0.2.0 build
+npx GoogleChromeLabs/llama-pack#0.3.0 build
 ```
 
 When building the project for the first time, the Android Build Tools will need to be installed.
