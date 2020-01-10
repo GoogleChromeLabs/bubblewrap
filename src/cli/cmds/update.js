@@ -25,7 +25,7 @@ async function update(args) {
   const manifestFile = args.manifest || path.join(process.cwd(), 'twa-manifest.json');
   const twaManifest = await TwaManifest.fromFile(manifestFile);
   const twaGenerator = new TwaGenerator();
-  twaGenerator.createTwaProject(targetDirectory, twaManifest);
+  await twaGenerator.createTwaProject(targetDirectory, twaManifest);
 }
 
 module.exports = update;

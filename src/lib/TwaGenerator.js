@@ -105,7 +105,7 @@ class TwaGenerator {
   // Copies a list of file from sourceDir to targetDir.
   _copyStaticFiles(sourceDir, targetDir, fileList) {
     return Promise.all(fileList.map((file) => {
-      this._copyStaticFile(sourceDir, targetDir, file);
+      return this._copyStaticFile(sourceDir, targetDir, file);
     }));
   }
 
