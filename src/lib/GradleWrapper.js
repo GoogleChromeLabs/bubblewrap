@@ -18,15 +18,17 @@
 
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const path = require('path');
 
 class GradleWrapper {
-  constructor(process, androidSdkTools) {
+  constructor(process, androidSdkTools, gradleProjectLocation) {
     this.process = process;
     this.androidSdkTools = androidSdkTools;
+    gradleProjectLocation = gradleProjectLocation || this.process.cwd();
     if (process.platform === 'win32') {
-      this.gradleCmd = 'gradlew.bat';
+      this.gradleCmd = path.win32.join(gradleProjectLocation, 'gradlew.bat');
     } else {
-      this.gradleCmd = './gradlew';
+      this.gradleCmd = path.posix.join(gradleProjectLocation, 'gradlew');
     }
   }
 
