@@ -207,7 +207,7 @@ export class TwaManifest {
       name: webManifest['name'] || webManifest['short_name'] || 'My TWA',
       launcherName: webManifest['short_name'] || webManifest['name'] || 'My TWA',
       themeColor: webManifest['theme_color'] || '#FFFFFF',
-      navigationColor: webManifest['theme_color'] || '#FFFFFF',
+      navigationColor: '#000000',
       backgroundColor: webManifest['background_color'] || '#FFFFFF',
       startUrl: fullStartUrl.pathname + fullStartUrl.search,
       iconUrl: icon ? new URL(icon.src, webManifestUrl).toString() : undefined,

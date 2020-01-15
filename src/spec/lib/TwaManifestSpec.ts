@@ -56,7 +56,7 @@ describe('TwaManifest', () => {
           .toBe('https://pwa-directory.com/favicons/android-chrome-512x512.png');
       expect(twaManifest.maskableIconUrl).toBeUndefined();
       expect(twaManifest.themeColor.hex()).toBe('#00FF00');
-      expect(twaManifest.navigationColor.hex()).toBe('#00FF00');
+      expect(twaManifest.navigationColor.hex()).toBe('#000000');
       expect(twaManifest.backgroundColor.hex()).toBe('#7CC0FF');
       expect(twaManifest.appVersion).toBe('1.0.0');
       expect(twaManifest.signingKey.path).toBe('./android.keystore');
@@ -85,7 +85,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.iconUrl).toBeUndefined();
       expect(twaManifest.maskableIconUrl).toBeUndefined();
       expect(twaManifest.themeColor.hex()).toBe('#FFFFFF');
-      expect(twaManifest.navigationColor.hex()).toBe('#FFFFFF');
+      expect(twaManifest.navigationColor.hex()).toBe('#000000');
       expect(twaManifest.backgroundColor.hex()).toBe('#FFFFFF');
       expect(twaManifest.appVersion).toBe('1.0.0');
       expect(twaManifest.signingKey.path).toBe('./android.keystore');
@@ -121,7 +121,7 @@ describe('TwaManifest', () => {
         startUrl: '/',
         iconUrl: 'https://pwa-directory.com/favicons/android-chrome-512x512.png',
         themeColor: '#00ff00',
-        navigationColor: '#ff0000',
+        navigationColor: '#000000',
         backgroundColor: '#0000ff',
         appVersion: '1.0.0',
         signingKey: {
