@@ -131,7 +131,7 @@ async function confirmTwaConfig(twaManifest) {
   const result = await prompt.get(schema);
   Object.assign(twaManifest, result, {
     themeColor: new Color(result.themeColor),
-    backgroundColor: new Color(result.themeColor),
+    backgroundColor: new Color(result.backgroundColor),
     shortcuts: result.shortcuts === 'no' ? '[]' : twaManifest.shortcuts,
   });
   return twaManifest;
