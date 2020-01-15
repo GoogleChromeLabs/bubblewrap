@@ -121,7 +121,7 @@ export class TwaManifest {
     this.packageId = data.packageId;
     this.host = data.host;
     this.name = data.name;
-    this.launcherName = data.launcherName || data.name;
+    this.launcherName = data.launcherName || data.name; // Older Manifests may not have this field.
     this.themeColor = new Color(data.themeColor);
     this.navigationColor = new Color(data.navigationColor);
     this.backgroundColor = new Color(data.backgroundColor);
