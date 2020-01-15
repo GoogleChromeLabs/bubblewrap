@@ -103,6 +103,7 @@ export class TwaManifest {
   packageId: string;
   host: string;
   name: string;
+  launcherName: string;
   themeColor: Color;
   navigationColor: Color;
   backgroundColor: Color;
@@ -120,6 +121,7 @@ export class TwaManifest {
     this.packageId = data.packageId;
     this.host = data.host;
     this.name = data.name;
+    this.launcherName = data.launcherName || data.name; // Older Manifests may not have this field.
     this.themeColor = new Color(data.themeColor);
     this.navigationColor = new Color(data.navigationColor);
     this.backgroundColor = new Color(data.backgroundColor);
@@ -202,7 +204,8 @@ export class TwaManifest {
     const twaManifest = new TwaManifest({
       packageId: generatePackageId(webManifestUrl.host),
       host: webManifestUrl.host,
-      name: webManifest['short_name'] || webManifest['name'] || 'My TWA',
+      name: webManifest['name'] || webManifest['short_name'] || 'My TWA',
+      launcherName: webManifest['short_name'] || webManifest['name'] || 'My TWA',
       themeColor: webManifest['theme_color'] || '#FFFFFF',
       navigationColor: webManifest['theme_color'] || '#FFFFFF',
       backgroundColor: webManifest['background_color'] || '#FFFFFF',
@@ -254,6 +257,7 @@ export interface TwaManifestJson {
   packageId: string;
   host: string;
   name: string;
+  launcherName?: string; // Older Manifests may not have this field.
   themeColor: string;
   navigationColor: string;
   backgroundColor: string;

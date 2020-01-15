@@ -22,7 +22,8 @@ def twaManifest = [
     applicationId: '<%= packageId %>',
     hostName: '<%= host %>', // The domain being opened in the TWA.
     launchUrl: '<%= startUrl %>', // The start path for the TWA. Must be relative to the domain.
-    name: '<%= name %>', // The name shown on the Android Launcher.
+    name: '<%= name %>', // The application name.
+    launcherName: '<%= launcherName %>', // The name shown on the Android Launcher.
     themeColor: '<%= themeColor.hex() %>', // The color used for the status bar.
     navigationColor: '<%= navigationColor.hex() %>', // The color used for the navigation bar.
     backgroundColor: '<%= backgroundColor.hex() %>', // The color used for the splash screen background.
@@ -46,8 +47,11 @@ android {
         versionCode 1
         versionName "2.0.0"
 
-        // The name for the application on the Android Launcher
+        // The name for the application
         resValue "string", "appName", twaManifest.name
+
+        // The name for the application on the Android Launcher
+        resValue "string", "launcherName", twaManifest.launcherName
 
         // The URL that will be used when launching the TWA from the Android Launcher
         resValue "string", "launchUrl", "https://" + twaManifest.hostName + twaManifest.launchUrl
@@ -82,7 +86,7 @@ android {
         // This attribute sets the navigation bar color for the TWA. It can be either set here or in
         // `res/values/colors.xml`. Setting in both places is an error and the app will not
         // compile. If not set, the navigation bar color defaults to #FFFFFF - white.
-        resValue "color", "navigationColor", twaManifest.navigationColor        
+        resValue "color", "navigationColor", twaManifest.navigationColor
 
         // Sets the color for the background used for the splash screen when launching the
         // Trusted Web Activity.
@@ -103,7 +107,7 @@ android {
 
         // The splashScreenFadeOutDuration resource is used to set the duration of fade out animation in milliseconds
         // to be played when removing splash screen. The default is 0 (no animation).
-        resValue "integer", "splashScreenFadeOutDuration", twaManifest.splashScreenFadeOutDuration.toString()        
+        resValue "integer", "splashScreenFadeOutDuration", twaManifest.splashScreenFadeOutDuration.toString()
     }
     buildTypes {
         release {

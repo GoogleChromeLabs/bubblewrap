@@ -49,7 +49,8 @@ describe('TwaManifest', () => {
       const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
       const twaManifest = TwaManifest.fromWebManifestJson(manifestUrl, manifest);
       expect(twaManifest.packageId).toBe('com.pwa_directory.twa');
-      expect(twaManifest.name).toBe('PwaDirectory');
+      expect(twaManifest.name).toBe('PWA Directory');
+      expect(twaManifest.launcherName).toBe('PwaDirectory');
       expect(twaManifest.startUrl).toBe('/?utm_source=homescreen');
       expect(twaManifest.iconUrl)
           .toBe('https://pwa-directory.com/favicons/android-chrome-512x512.png');
@@ -79,6 +80,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.packageId).toBe('com.pwa_directory.twa');
       expect(twaManifest.host).toBe('pwa-directory.com');
       expect(twaManifest.name).toBe('My TWA');
+      expect(twaManifest.launcherName).toBe('My TWA');
       expect(twaManifest.startUrl).toBe('/');
       expect(twaManifest.iconUrl).toBeUndefined();
       expect(twaManifest.maskableIconUrl).toBeUndefined();
@@ -100,6 +102,7 @@ describe('TwaManifest', () => {
       const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
       const twaManifest = TwaManifest.fromWebManifestJson(manifestUrl, manifest);
       expect(twaManifest.name).toBe('PWA Directory');
+      expect(twaManifest.launcherName).toBe('PWA Directory');
     });
   });
 
@@ -114,6 +117,7 @@ describe('TwaManifest', () => {
         packageId: 'com.pwa_directory.twa',
         host: 'pwa-directory.com',
         name: 'PWA Directory',
+        launcherName: 'PwaDirectory',
         startUrl: '/',
         iconUrl: 'https://pwa-directory.com/favicons/android-chrome-512x512.png',
         themeColor: '#00ff00',
