@@ -51,9 +51,15 @@ async function confirmTwaConfig(twaManifest) {
       },
       name: {
         name: 'name',
-        description: 'Name to be shown on the Android Launcher:',
+        description: 'Name of the application:',
         required: true,
         default: twaManifest.name,
+      },
+      launcherName: {
+        name: 'launcherName',
+        description: 'Name to be shown on the Android Launcher:',
+        required: true,
+        default: twaManifest.launcherName,
       },
       themeColor: {
         name: 'themeColor',
