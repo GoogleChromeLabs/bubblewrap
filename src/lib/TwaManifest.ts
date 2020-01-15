@@ -121,7 +121,7 @@ export class TwaManifest {
     this.packageId = data.packageId;
     this.host = data.host;
     this.name = data.name;
-    this.launcherName = data.launcherName;
+    this.launcherName = data.launcherName || data.name;
     this.themeColor = new Color(data.themeColor);
     this.navigationColor = new Color(data.navigationColor);
     this.backgroundColor = new Color(data.backgroundColor);
@@ -257,7 +257,7 @@ export interface TwaManifestJson {
   packageId: string;
   host: string;
   name: string;
-  launcherName: string;
+  launcherName?: string; // Older Manifests may not have this field.
   themeColor: string;
   navigationColor: string;
   backgroundColor: string;
