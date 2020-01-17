@@ -20,9 +20,11 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
 class GradleWrapper {
-  constructor(process, androidSdkTools) {
+  constructor(process, androidSdkTools, projectLocation) {
     this.process = process;
     this.androidSdkTools = androidSdkTools;
+    this.projectLocation = projectLocation || this.process.cwd();
+
     if (process.platform === 'win32') {
       this.gradleCmd = 'gradlew.bat';
     } else {
@@ -32,7 +34,10 @@ class GradleWrapper {
 
   async assembleRelease() {
     const env = this.androidSdkTools.getEnv();
-    await exec(`${this.gradleCmd} assembleRelease --stacktrace`, {env: env});
+    await exec(`${this.gradleCmd} assembleRelease --stacktrace`, {
+      env: env,
+      cwd: this.projectLocation,
+    });
   }
 }
 
