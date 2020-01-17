@@ -18,23 +18,26 @@
 
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-const path = require('path');
 
 class GradleWrapper {
-  constructor(process, androidSdkTools, gradleProjectLocation) {
+  constructor(process, androidSdkTools, projectLocation) {
     this.process = process;
     this.androidSdkTools = androidSdkTools;
-    gradleProjectLocation = gradleProjectLocation || this.process.cwd();
+    this.projectLocation = projectLocation || this.process.cwd();
+
     if (process.platform === 'win32') {
-      this.gradleCmd = path.win32.join(gradleProjectLocation, 'gradlew.bat');
+      this.gradleCmd = 'gradlew.bat';
     } else {
-      this.gradleCmd = path.posix.join(gradleProjectLocation, 'gradlew');
+      this.gradleCmd = './gradlew';
     }
   }
 
   async assembleRelease() {
     const env = this.androidSdkTools.getEnv();
-    await exec(`${this.gradleCmd} assembleRelease --stacktrace`, {env: env});
+    await exec(`${this.gradleCmd} assembleRelease --stacktrace`, {
+      env: env,
+      cwd: this.projectLocation,
+    });
   }
 }
 
