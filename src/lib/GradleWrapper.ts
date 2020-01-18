@@ -14,13 +14,29 @@
  *  limitations under the License.
  */
 
-'use strict';
+import * as util from 'util';
+import {exec} from 'child_process';
+import {AndroidSdkTools} from './androidSdk/AndroidSdkTools';
 
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+const execPromise = util.promisify(exec);
 
-class GradleWrapper {
-  constructor(process, androidSdkTools, projectLocation) {
+/**
+ * A Wrapper around the Gradle commands.
+ */
+export class GradleWrapper {
+  process: NodeJS.Process;
+  androidSdkTools: AndroidSdkTools;
+  projectLocation: string;
+  gradleCmd: string;
+
+  /**
+   * Builds a new GradleWrapper
+   * @param {NodeJS.Process} process NodeJS process information.
+   * @param {AndroidSdkTools} androidSdkTools Android SDK to be used when building a project.
+   * @param {string} projectLocation The location of the Android project.
+   */
+  constructor(
+      process: NodeJS.Process, androidSdkTools: AndroidSdkTools, projectLocation?: string) {
     this.process = process;
     this.androidSdkTools = androidSdkTools;
     this.projectLocation = projectLocation || this.process.cwd();
@@ -32,13 +48,14 @@ class GradleWrapper {
     }
   }
 
-  async assembleRelease() {
+  /**
+   * Invokes `gradle assembleRelease` for the Android project.
+   */
+  async assembleRelease(): Promise<void> {
     const env = this.androidSdkTools.getEnv();
-    await exec(`${this.gradleCmd} assembleRelease --stacktrace`, {
+    await execPromise(`${this.gradleCmd} assembleRelease --stacktrace`, {
       env: env,
       cwd: this.projectLocation,
     });
   }
 }
-
-module.exports = GradleWrapper;
