@@ -16,9 +16,9 @@
 
 'use strict';
 
-const AndroidSdkTools = require('../../lib/androidSdk/AndroidSdkTools');
+const {AndroidSdkTools} = require('../../lib/androidSdk/AndroidSdkTools');
 const {JdkHelper} = require('../../lib/jdk/JdkHelper');
-const GradleWraper = require('../../lib/GradleWrapper');
+const {GradleWrapper} = require('../../lib/GradleWrapper');
 const {TwaManifest} = require('../../lib/TwaManifest');
 
 const {promisify} = require('util');
@@ -64,7 +64,7 @@ async function build(_, config) {
 
   // Builds the Android Studio Project
   console.log('Building the Android App...');
-  const gradleWraper = new GradleWraper(process, androidSdkTools);
+  const gradleWraper = new GradleWrapper(process, androidSdkTools);
   await gradleWraper.assembleRelease();
 
   // Zip Align

@@ -14,38 +14,37 @@
  *  limitations under the License.
  */
 
-'use strict';
+import {Config} from '../../../lib/Config';
+import {JdkHelper} from '../../../lib/jdk/JdkHelper';
+import {AndroidSdkTools} from '../../../lib/androidSdk/AndroidSdkTools';
+import util = require('../../../lib/util');
 
-const {JdkHelper} = require('../../../lib/jdk/JdkHelper');
-const AndroidSdkTools = require('../../../lib/androidSdk/AndroidSdkTools');
-const util = require('../../../lib/util');
-
-function buildMockConfig(platform) {
+function buildMockConfig(platform: string): Config {
   if (platform === 'linux' || platform == 'darwin') {
     return {
       jdkPath: '/home/user/jdk8',
       androidSdkPath: '/home/user/android-sdk',
-    };
+    } as unknown as Config;
   }
 
   if (platform === 'win32') {
     return {
       jdkPath: 'C:\\Users\\user\\jdk8',
       androidSdkPath: 'C:\\Users\\user\\android-sdk',
-    };
+    } as unknown as Config;
   }
 
   throw new Error('Unsupported Platform: ' + platform);
 }
 
-function buildMockProcess(platform) {
+function buildMockProcess(platform: string): NodeJS.Process {
   if (platform === 'linux') {
     return {
       platform: 'linux',
       env: {
         'PATH': '',
       },
-    };
+    } as unknown as NodeJS.Process;
   }
 
   if (platform === 'darwin') {
@@ -54,7 +53,7 @@ function buildMockProcess(platform) {
       env: {
         'PATH': '',
       },
-    };
+    } as unknown as NodeJS.Process;
   }
 
   if (platform === 'win32') {
@@ -63,7 +62,7 @@ function buildMockProcess(platform) {
       env: {
         'PATH': '',
       },
-    };
+    } as unknown as NodeJS.Process;
   }
 
   throw new Error('Unsupported Platform: ' + platform);
