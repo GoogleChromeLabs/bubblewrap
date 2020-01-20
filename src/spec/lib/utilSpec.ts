@@ -27,13 +27,18 @@ describe('util', () => {
         [{
           'src': '/favicons/android-chrome-192x192.png',
           'sizes': '192x192',
-          'type': 'image/png',
+          'mimeType': 'image/png',
         }], 'any');
     expect(result).not.toBeNull();
+    // The test aborts when the expectation above fails, but `tsc` doesn't now it
+    // and compilation fails pointing that `result` could be null on the tests below.
+    //
+    // TODO(andreban): Investigate if it's possible to get `tsc` to understand the tests below
+    // don't run if the test above fails.
     if (result === null) return;
     expect(result.src).toBe('/favicons/android-chrome-192x192.png');
     expect(result.sizes).toBe('192x192');
-    expect(result.type).toBe('image/png');
+    expect(result.mimeType).toBe('image/png');
     expect(result.size).toBe(192);
   });
 
@@ -41,12 +46,18 @@ describe('util', () => {
     const result = util.findSuitableIcon(
         [{
           'src': '/favicons/android-chrome-192x192.png',
-          'type': 'image/png',
+          'mimeType': 'image/png',
         }], 'any');
     expect(result).not.toBeNull();
+
+    // The test aborts when the expectation above fails, but `tsc` doesn't now it
+    // and compilation fails pointing that `result` could be null on the tests below.
+    //
+    // TODO(andreban): Investigate if it's possible to get `tsc` to understand the tests below
+    // don't run if the test above fails.
     if (result === null) return;
     expect(result.src).toBe('/favicons/android-chrome-192x192.png');
-    expect(result.type).toBe('image/png');
+    expect(result.mimeType).toBe('image/png');
     expect(result.size).toBe(0);
   });
 
@@ -55,7 +66,7 @@ describe('util', () => {
         [{
           'src': '/favicons/android-chrome-192x192.png',
           'sizes': '192x192',
-          'type': 'image/png',
+          'mimeType': 'image/png',
         }], 'any', 512);
     expect(result).toBeNull();
   });
@@ -64,13 +75,18 @@ describe('util', () => {
     const result = util.findSuitableIcon([{
       'src': '/favicons/android-chrome-512x512.png',
       'sizes': '512x512',
-      'type': 'image/png',
+      'mimeType': 'image/png',
     }], 'any', 512);
     expect(result).not.toBeNull();
+    // The test aborts when the expectation above fails, but `tsc` doesn't now it
+    // and compilation fails pointing that `result` could be null on the tests below.
+    //
+    // TODO(andreban): Investigate if it's possible to get `tsc` to understand the tests below
+    // don't run if the test above fails.
     if (result === null) return;
     expect(result.src).toBe('/favicons/android-chrome-512x512.png');
     expect(result.sizes).toBe('512x512');
-    expect(result.type).toBe('image/png');
+    expect(result.mimeType).toBe('image/png');
     expect(result.size).toBe(512);
   });
 
@@ -79,7 +95,7 @@ describe('util', () => {
         [{
           'src': '/favicons/android-chrome-512x512.png',
           'sizes': '512x512',
-          'type': 'image/png',
+          'mimeType': 'image/png',
         }], 'maskable', 512);
     expect(result).toBeNull();
   });
@@ -88,18 +104,23 @@ describe('util', () => {
     const result = util.findSuitableIcon([{
       'src': '/favicons/android-chrome-512x512.png',
       'sizes': '512x512',
-      'type': 'image/png',
+      'mimeType': 'image/png',
     }, {
       'src': '/favicons/icon-maskable-7a2eb399.png',
       'sizes': '512x512',
-      'type': 'image/png',
+      'mimeType': 'image/png',
       'purpose': 'maskable',
     }], 'maskable', 512);
     expect(result).not.toBeNull();
+    // The test aborts when the expectation above fails, but `tsc` doesn't now it
+    // and compilation fails pointing that `result` could be null on the tests below.
+    //
+    // TODO(andreban): Investigate if it's possible to get `tsc` to understand the tests below
+    // don't run if the test above fails.
     if (result === null) return;
     expect(result.src).toBe('/favicons/icon-maskable-7a2eb399.png');
     expect(result.sizes).toBe('512x512');
-    expect(result.type).toBe('image/png');
+    expect(result.mimeType).toBe('image/png');
     expect(result.purpose).toBe('maskable');
     expect(result.size).toBe(512);
   });

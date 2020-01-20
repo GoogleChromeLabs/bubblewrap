@@ -19,7 +19,7 @@ export interface WebManifestIcon {
   src: string;
   sizes?: string;
   purpose?: string;
-  type?: string;
+  mimeType?: string;
   size?: number;
 }
 
