@@ -16,7 +16,7 @@
 
 'use strict';
 
-const TwaGenerator = require('../../lib/TwaGenerator');
+const {TwaGenerator} = require('../../lib/TwaGenerator');
 const {TwaManifest} = require('../../lib/TwaManifest');
 const KeyTool = require('../../lib/jdk/KeyTool');
 const {JdkHelper} = require('../../lib/jdk/JdkHelper');

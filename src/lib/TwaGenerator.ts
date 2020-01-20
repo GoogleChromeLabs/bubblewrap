@@ -14,21 +14,13 @@
  *  limitations under the License.
  */
 
-'use strict';
-
-const path = require('path');
-const fs = require('fs');
-const fetch = require('node-fetch');
-const template = require('lodash.template');
-const configure = require('@jimp/custom');
-const types = require('@jimp/types');
-const resize = require('@jimp/plugin-resize');
-const {promisify} = require('util');
-
-const Jimp = configure({
-  types: [types],
-  plugins: [resize],
-});
+import * as path from 'path';
+import * as fs from 'fs';
+import fetch from 'node-fetch';
+import {template} from 'lodash';
+import {promisify} from 'util';
+import {TwaManifest} from './TwaManifest';
+import Jimp = require('jimp');
 
 const COPY_FILE_LIST = [
   'settings.gradle',
@@ -53,7 +45,7 @@ const DELETE_FILE_LIST = [
   'app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml',
 ];
 
-const IMAGES = [
+const IMAGES: IconDefinition[] = [
   {dest: 'app/src/main/res/mipmap-hdpi/ic_launcher.png', size: 72},
   {dest: 'app/src/main/res/mipmap-mdpi/ic_launcher.png', size: 48},
   {dest: 'app/src/main/res/mipmap-xhdpi/ic_launcher.png', size: 96},
@@ -67,7 +59,7 @@ const IMAGES = [
   {dest: 'store_icon.png', size: 512},
 ];
 
-const ADAPTIVE_IMAGES = [
+const ADAPTIVE_IMAGES: IconDefinition[] = [
   {dest: 'app/src/main/res/mipmap-hdpi/ic_maskable.png', size: 123},
   {dest: 'app/src/main/res/mipmap-mdpi/ic_maskable.png', size: 82},
   {dest: 'app/src/main/res/mipmap-xhdpi/ic_maskable.png', size: 164},
@@ -75,7 +67,7 @@ const ADAPTIVE_IMAGES = [
   {dest: 'app/src/main/res/mipmap-xxxhdpi/ic_maskable.png', size: 328},
 ];
 
-const SHORTCUT_IMAGES = [
+const SHORTCUT_IMAGES: IconDefinition[] = [
   {dest: 'app/src/main/res/drawable-mdpi/', size: 48},
   {dest: 'app/src/main/res/drawable-hdpi/', size: 72},
   {dest: 'app/src/main/res/drawable-xhdpi/', size: 96},
@@ -89,12 +81,22 @@ const fsCopyFile = promisify(fs.copyFile);
 const fsWriteFile = promisify(fs.writeFile);
 const fsReadFile = promisify(fs.readFile);
 
+interface IconDefinition {
+  dest: string;
+  size: number;
+}
+
+interface Icon {
+  url: string;
+  data: Buffer;
+}
+
 /**
  * Generates TWA Projects from a TWA Manifest
  */
-class TwaGenerator {
+export class TwaGenerator {
   // Ensures targetDir exists and copies a file from sourceDir to target dir.
-  async _copyStaticFile(sourceDir, targetDir, filename) {
+  async _copyStaticFile(sourceDir: string, targetDir: string, filename: string): Promise<void> {
     const sourceFile = path.join(sourceDir, filename);
     const destFile = path.join(targetDir, filename);
     console.log('\t', destFile);
@@ -103,13 +105,14 @@ class TwaGenerator {
   }
 
   // Copies a list of file from sourceDir to targetDir.
-  _copyStaticFiles(sourceDir, targetDir, fileList) {
+  _copyStaticFiles(sourceDir: string, targetDir: string, fileList: string[]): Promise<void[]> {
     return Promise.all(fileList.map((file) => {
       return this._copyStaticFile(sourceDir, targetDir, file);
     }));
   }
 
-  async _applyTemplate(sourceDir, targetDir, filename, args) {
+  async _applyTemplate(
+      sourceDir: string, targetDir: string, filename: string, args: object): Promise<void> {
     const sourceFile = path.join(sourceDir, filename);
     const destFile = path.join(targetDir, filename);
     console.log('\t', destFile);
@@ -119,29 +122,31 @@ class TwaGenerator {
     await fsWriteFile(destFile, output);
   }
 
-  _applyTemplates(sourceDir, targetDir, fileList, args) {
+  _applyTemplates(
+      sourceDir: string, targetDir: string, fileList: string[], args: object): Promise<void[]> {
     return Promise.all(fileList.map((file) => {
       this._applyTemplate(sourceDir, targetDir, file, args);
     }));
   }
 
-  async _saveIcon(data, size, fileName) {
+  async _saveIcon(data: Buffer, size: number, fileName: string): Promise<void> {
     const image = await Jimp.read(data);
     await image.resize(size, size);
     await image.writeAsync(fileName);
   }
 
-  async _generateIcon(iconData, targetDir, iconDef) {
+  async _generateIcon(iconData: Icon, targetDir: string, iconDef: IconDefinition): Promise<void> {
     const destFile = path.join(targetDir, iconDef.dest);
     console.log(`\t ${iconDef.size}x${iconDef.size} Icon: ${destFile}`);
     await fsMkDir(path.dirname(destFile), {recursive: true});
     return await this._saveIcon(iconData.data, iconDef.size, destFile);
   }
 
-  async _generateIcons(iconUrl, targetDir, iconList) {
+  async _generateIcons(
+      iconUrl: string, targetDir: string, iconList: IconDefinition[]): Promise<void[]> {
     const icon = await this._fetchIcon(iconUrl);
     return Promise.all(iconList.map((iconDef) => {
-      this._generateIcon(icon, targetDir, iconDef);
+      return this._generateIcon(icon, targetDir, iconDef);
     }));
   }
 
@@ -151,24 +156,23 @@ class TwaGenerator {
    * @param {Object} iconUrl the URL to fetch the icon from.
    * @returns an Object containing the original URL and the icon image data.
    */
-  async _fetchIcon(iconUrl) {
-    const icon = {
-      url: iconUrl,
-    };
+  async _fetchIcon(iconUrl: string): Promise<Icon> {
     const response = await fetch(iconUrl);
     const body = await response.buffer();
-    icon.data = body;
-    return icon;
+    return {
+      url: iconUrl,
+      data: body,
+    };
   }
 
   /**
    * Creates a new TWA Project.
    *
    * @param {String} targetDirectory the directory where the project will be created
-   * @param {Object} args configurations values for the project.
+   * @param {Object} twaManifest configurations values for the project.
    */
-  async createTwaProject(targetDirectory, args) {
-    if (!args.validate()) {
+  async createTwaProject(targetDirectory: string, twaManifest: TwaManifest): Promise<void> {
+    if (!twaManifest.validate()) {
       throw new Error('Invalid TWA Manifest. Missing or incorrect fields.');
     };
 
@@ -177,7 +181,7 @@ class TwaGenerator {
     const templateDirectory = path.join(__dirname, '../../template_project');
 
     const copyFileList = new Set(COPY_FILE_LIST);
-    if (!args.maskableIconUrl) {
+    if (!twaManifest.maskableIconUrl) {
       DELETE_FILE_LIST.forEach((file) => copyFileList.delete(file));
     }
 
@@ -185,21 +189,26 @@ class TwaGenerator {
     await this._copyStaticFiles(templateDirectory, targetDirectory, Array.from(copyFileList));
 
     // Generate templated files
-    await this._applyTemplates(templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, args);
+    await this._applyTemplates(
+        templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, twaManifest);
 
     // Generate images
-    await this._generateIcons(args.iconUrl, targetDirectory, IMAGES);
-    await Promise.all(JSON.parse(args.shortcuts).map((shortcut, i) => {
+    if (twaManifest.iconUrl) {
+      await this._generateIcons(twaManifest.iconUrl, targetDirectory, IMAGES);
+    }
+
+    // TODO(andreban): TwaManifest.shortcuts is a string, which is being parsed into an Object.
+    // Needs to be transformed into a proper Class.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await Promise.all(JSON.parse(twaManifest.shortcuts).map((shortcut: any, i: number) => {
       const imageDirs = SHORTCUT_IMAGES.map(
           (imageDir) => ({...imageDir, dest: `${imageDir.dest}shortcut_${i}.png`}));
       return this._generateIcons(shortcut.chosenIconUrl, targetDirectory, imageDirs);
     }));
 
     // Generate adaptive images
-    if (args.maskableIconUrl) {
-      await this._generateIcons(args.maskableIconUrl, targetDirectory, ADAPTIVE_IMAGES);
+    if (twaManifest.maskableIconUrl) {
+      await this._generateIcons(twaManifest.maskableIconUrl, targetDirectory, ADAPTIVE_IMAGES);
     }
   }
 }
-
-module.exports = TwaGenerator;
