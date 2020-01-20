@@ -19,6 +19,8 @@ export interface WebManifestIcon {
   src: string;
   sizes?: string;
   purpose?: string;
+  type?: string;
+  size?: number;
 }
 
 export interface WebManifestShortcutJson {

@@ -14,10 +14,7 @@
  *  limitations under the License.
  */
 
-'use strict';
-
 import {TwaManifest, TwaManifestJson} from '../../lib/TwaManifest';
-import {WebManifestJson} from '../../lib/types/WebManifest';
 
 describe('TwaManifest', () => {
   describe('#fromWebManifestJson', () => {
@@ -74,7 +71,7 @@ describe('TwaManifest', () => {
     });
 
     it('Sets correct defaults for unavailable fields', () => {
-      const manifest = {} as WebManifestJson;
+      const manifest = {};
       const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
       const twaManifest = TwaManifest.fromWebManifestJson(manifestUrl, manifest);
       expect(twaManifest.packageId).toBe('com.pwa_directory.twa');
@@ -98,7 +95,7 @@ describe('TwaManifest', () => {
     it('Uses "name" when "short_name" is not available', () => {
       const manifest = {
         'name': 'PWA Directory',
-      } as WebManifestJson;
+      };
       const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
       const twaManifest = TwaManifest.fromWebManifestJson(manifestUrl, manifest);
       expect(twaManifest.name).toBe('PWA Directory');

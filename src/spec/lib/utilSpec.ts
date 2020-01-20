@@ -14,9 +14,7 @@
  *  limitations under the License.
  */
 
-'use strict';
-
-const util = require('../../lib/util');
+import * as util from '../../lib/util';
 
 describe('util', () => {
   it('returns null for an empty icon list', () => {
@@ -31,10 +29,25 @@ describe('util', () => {
           'sizes': '192x192',
           'type': 'image/png',
         }], 'any');
+    expect(result).not.toBeNull();
+    if (result === null) return;
     expect(result.src).toBe('/favicons/android-chrome-192x192.png');
     expect(result.sizes).toBe('192x192');
     expect(result.type).toBe('image/png');
     expect(result.size).toBe(192);
+  });
+
+  it('returns any icon if `sizes` is undefined', () => {
+    const result = util.findSuitableIcon(
+        [{
+          'src': '/favicons/android-chrome-192x192.png',
+          'type': 'image/png',
+        }], 'any');
+    expect(result).not.toBeNull();
+    if (result === null) return;
+    expect(result.src).toBe('/favicons/android-chrome-192x192.png');
+    expect(result.type).toBe('image/png');
+    expect(result.size).toBe(0);
   });
 
   it('returns null if an icon larger than minSize is not found', () => {
@@ -53,6 +66,10 @@ describe('util', () => {
       'sizes': '512x512',
       'type': 'image/png',
     }], 'any', 512);
+    expect(result).toBeDefined();
+    if (result == null) {
+      return;
+    }
     expect(result.src).toBe('/favicons/android-chrome-512x512.png');
     expect(result.sizes).toBe('512x512');
     expect(result.type).toBe('image/png');
@@ -80,6 +97,8 @@ describe('util', () => {
       'type': 'image/png',
       'purpose': 'maskable',
     }], 'maskable', 512);
+    expect(result).not.toBeNull();
+    if (result === null) return;
     expect(result.src).toBe('/favicons/icon-maskable-7a2eb399.png');
     expect(result.sizes).toBe('512x512');
     expect(result.type).toBe('image/png');

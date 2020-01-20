@@ -64,10 +64,14 @@ class ShortcutInfo {
     this.url = shortcutInfo['url'] ?
       new URL(shortcutInfo['url'], webManifestUrl).toString() : undefined;
 
-    const suitableIcon = util.findSuitableIcon(shortcutInfo['icons'], 'any');
+    if (shortcutInfo.icons === undefined) {
+      return;
+    }
 
-    this.chosenIconUrl = suitableIcon ?
-      new URL(suitableIcon.src, webManifestUrl).toString() : undefined;
+    const suitableIcon = util.findSuitableIcon(shortcutInfo.icons, 'any');
+    if (suitableIcon !== null) {
+      this.chosenIconUrl = new URL(suitableIcon.src, webManifestUrl).toString();
+    }
   }
 
   isValid(): boolean {
@@ -191,12 +195,15 @@ export class TwaManifest {
    * @returns {TwaManifest}
    */
   static fromWebManifestJson(webManifestUrl: URL, webManifest: WebManifestJson): TwaManifest {
-    const icon: WebManifestIcon = util.findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE);
-    const maskableIcon: WebManifestIcon =
-      util.findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE);
+    const icon: WebManifestIcon | null = webManifest.icons ?
+      util.findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE) : null;
+
+    const maskableIcon: WebManifestIcon | null = webManifest.icons ?
+      util.findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE) : null;
+
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
 
-    const shortcuts = (webManifest.shortcuts || [])
+    const shortcuts: ShortcutInfo[] = (webManifest.shortcuts || [])
         .map((s: WebManifestShortcutJson) => new ShortcutInfo(s, webManifestUrl))
         .filter((s: ShortcutInfo) => s.isValid())
         .filter((_: ShortcutInfo, i: number) => i < 4);
