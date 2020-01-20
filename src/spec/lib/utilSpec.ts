@@ -66,10 +66,8 @@ describe('util', () => {
       'sizes': '512x512',
       'type': 'image/png',
     }], 'any', 512);
-    expect(result).toBeDefined();
-    if (result == null) {
-      return;
-    }
+    expect(result).not.toBeNull();
+    if (result === null) return;
     expect(result.src).toBe('/favicons/android-chrome-512x512.png');
     expect(result.sizes).toBe('512x512');
     expect(result.type).toBe('image/png');
