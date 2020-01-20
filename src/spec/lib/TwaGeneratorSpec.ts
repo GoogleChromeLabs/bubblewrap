@@ -14,18 +14,11 @@
  *  limitations under the License.
  */
 
-'use strict';
+import {TwaGenerator} from '../../lib/TwaGenerator';
 
-const path = require('path');
-const {TwaGenerator} = require('../../lib/TwaGenerator');
-const {TwaManifest} = require('../../lib/TwaManifest');
-
-async function update(args) {
-  const targetDirectory = args.directory || process.cwd();
-  const manifestFile = args.manifest || path.join(process.cwd(), 'twa-manifest.json');
-  const twaManifest = await TwaManifest.fromFile(manifestFile);
-  const twaGenerator = new TwaGenerator();
-  await twaGenerator.createTwaProject(targetDirectory, twaManifest);
-}
-
-module.exports = update;
+describe('TwaGenerator', () => {
+  it('Builds an instance of TwaGenerator', () => {
+    const twaGenerator = new TwaGenerator();
+    expect(twaGenerator).not.toBeNull();
+  });
+});
