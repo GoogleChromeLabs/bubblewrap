@@ -14,20 +14,21 @@
  *  limitations under the License.
  */
 
-'use strict';
+import * as extract from 'extract-zip';
+import fetch from 'node-fetch';
+import * as fs from 'fs';
+import * as util from 'util';
+import {exec, spawn} from 'child_process';
+import * as tar from 'tar';
+import {WebManifestIcon} from './types/WebManifest';
 
-const extract = require('extract-zip');
-const fetch = require('node-fetch');
-const fs = require('fs');
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
-const tar = require('tar');
+const execPromise = util.promisify(exec);
 
-async function execute(cmd, env) {
-  await exec(cmd.join(' '), {env: env});
+export async function execute(cmd: string[], env: NodeJS.ProcessEnv): Promise<void> {
+  await execPromise(cmd.join(' '), {env: env});
 }
 
-async function downloadFile(url, path) {
+export async function downloadFile(url: string, path: string): Promise<void> {
   const result = await fetch(url);
   const fileStream = fs.createWriteStream(path);
 
@@ -42,7 +43,8 @@ async function downloadFile(url, path) {
   });
 }
 
-function unzipFile(zipFile, destinationPath, deleteZipWhenDone = false) {
+export function unzipFile(
+    zipFile: string, destinationPath: string, deleteZipWhenDone = false): Promise<void> {
   return new Promise((resolve, reject) => {
     extract(zipFile, {dir: destinationPath}, (err) => {
       if (err) {
@@ -57,7 +59,8 @@ function unzipFile(zipFile, destinationPath, deleteZipWhenDone = false) {
   });
 }
 
-async function untar(tarFile, destinationPath, deleteZipWhenDone = false) {
+export async function untar(
+    tarFile: string, destinationPath: string, deleteZipWhenDone = false): Promise<void> {
   console.log(`Extracting ${tarFile} to ${destinationPath}`);
   await tar.x({
     file: tarFile,
@@ -68,8 +71,8 @@ async function untar(tarFile, destinationPath, deleteZipWhenDone = false) {
   }
 }
 
-function execInteractive(cwd, args, env) {
-  const {spawn} = require('child_process');
+export function execInteractive(
+    cwd: string, args: string[], env: NodeJS.ProcessEnv): Promise<number> {
   const shell = spawn(`"${cwd}"`, args, {
     stdio: 'inherit',
     env: env,
@@ -90,37 +93,31 @@ function execInteractive(cwd, args, env) {
  * Fetches data for the largest icon from the web app manifest with a given purpose.
  * @param {Array<WebManifestIcon>|undefined} icons List of the manifest icons.
  * @param {string} purpose Purpose filter that the icon must match.
- * @param {number=} minSize The minimum required icon size enforced id provided.
+ * @param {number} minSize The minimum required icon size enforced id provided.
  */
-function findSuitableIcon(icons, purpose, minSize) {
-  if (!icons) {
+export function findSuitableIcon(
+    icons: WebManifestIcon[], purpose: string, minSize = 0): WebManifestIcon | null {
+  if (icons.length === 0) {
     return null;
   }
 
-  let largestIcon = null;
+  let largestIcon: WebManifestIcon | null = null;
+  let largestIconSize = 0;
   for (const icon of icons) {
     const size = (icon.sizes || '0x0').split(' ')
         .map((size) => Number.parseInt(size, 10))
         .reduce((max, size) => Math.max(max, size), 0);
     const purposes = new Set((icon.purpose || 'any').split(' '));
-    if (purposes.has(purpose) && (!largestIcon || largestIcon.size < size)) {
+    if (purposes.has(purpose) && (!largestIcon || largestIconSize < size)) {
       largestIcon = icon;
-      largestIcon.size = size;
+      largestIconSize = size;
     }
   }
 
-  if (!largestIcon || (minSize && largestIcon.size < minSize)) {
+  if (largestIcon === null || (minSize > 0 && largestIconSize < minSize)) {
     return null;
   }
 
+  largestIcon.size = largestIconSize;
   return largestIcon;
 }
-
-module.exports = {
-  execute: execute,
-  downloadFile: downloadFile,
-  unzipFile: unzipFile,
-  untar: untar,
-  execInteractive: execInteractive,
-  findSuitableIcon: findSuitableIcon,
-};
