@@ -186,10 +186,54 @@ async function createSigningKey(twaManifest, config) {
     return;
   }
 
-  await keytool.createSigningKeyIfNeeded(
-      twaManifest.signingKey.path,
-      twaManifest.signingKey.alias,
-  );
+  prompt.message = colors.green('[keytool]');
+  prompt.delimiter = ' ';
+  prompt.start();
+
+  // Ask user for keystore details
+  const schema = {
+    properties: {
+      cn: {
+        name: 'cn',
+        required: true,
+        description: 'First and Last names (eg: John Doe):',
+      },
+      ou: {
+        name: 'ou',
+        required: true,
+        description: 'Organizational Unit (eg: Engineering Dept):',
+      },
+      o: {
+        name: 'o',
+        required: true,
+        description: 'Organization (eg: Company Name):',
+      },
+      c: {
+        name: 'c',
+        required: true,
+        description: 'Country (2 letter code):',
+      },
+      password: {
+        name: 'password',
+        required: true,
+        description: 'Password for the Key Store:',
+        hidden: true,
+        replace: '*',
+      },
+      keypassword: {
+        name: 'keypassword',
+        required: true,
+        description: 'Password for the Key:',
+        hidden: true,
+        replace: '*',
+      },
+    },
+  };
+
+  const result = await prompt.get(schema);
+  result.keyPath = twaManifest.signingKey.keyPath;
+  result.alias = twaManifest.signingKey.alias;
+  await keytool.createSigningKey(result);
 }
 
 module.exports = init;
