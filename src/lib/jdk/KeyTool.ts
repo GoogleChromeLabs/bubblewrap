@@ -14,17 +14,18 @@
  *  limitations under the License.
  */
 
-import * as fs from 'fs';
-import * as util from '../util';
+import {existsSync, promises} from 'fs';
+import {execute} from '../util';
 import {JdkHelper} from './JdkHelper';
+import Log from '../Log';
 
 export interface CreateKeyOptions {
   path: string;
   alias: string;
-  cn: string; // First and Last Name
-  ou: string; // Organization Unit
-  o: string; // Organization
-  c: string; // Country
+  fullName: string;
+  organizationalUnit: string;
+  organization: string;
+  country: string;
   keypassword: string;
   password: string;
 }
@@ -32,10 +33,12 @@ export interface CreateKeyOptions {
  * A Wrapper of the Java keytool command-line tool
  */
 export class KeyTool {
-  jdkHelper: JdkHelper;
+  private jdkHelper: JdkHelper;
+  private log: Log;
 
-  constructor(jdkHelper: JdkHelper) {
+  constructor(jdkHelper: JdkHelper, log = new Log('keytool')) {
     this.jdkHelper = jdkHelper;
+    this.log = log;
   }
 
   /**
@@ -46,10 +49,12 @@ export class KeyTool {
    * @returns {Promise<void>}
    */
   async createSigningKey(keyOptions: CreateKeyOptions, overwrite = false): Promise<void> {
+    this.log.debug('Generating Signature with keyOptions:', JSON.stringify(keyOptions));
+
     // Checks if the key already exists and deletes it, if overriting is enabled.
-    if (fs.existsSync(keyOptions.path)) {
+    if (existsSync(keyOptions.path)) {
       if (overwrite) {
-        await fs.promises.unlink(keyOptions.path);
+        await promises.unlink(keyOptions.path);
       } else {
         return;
       }
@@ -59,7 +64,8 @@ export class KeyTool {
     const keytoolCmd = [
       'keytool',
       '-genkeypair',
-      `-dname "cn=${keyOptions.cn}, ou=${keyOptions.ou}, o=${keyOptions.o}}, c=${keyOptions.c}"`,
+      `-dname "cn=${keyOptions.fullName}, ou=${keyOptions.organizationalUnit}, ` +
+          `o=${keyOptions.organization}, c=${keyOptions.country}"`,
       `-alias ${keyOptions.alias}`,
       `-keypass ${keyOptions.keypassword}`,
       `-keystore ${keyOptions.path}`,
@@ -68,7 +74,7 @@ export class KeyTool {
       '-keyalg RSA',
     ];
     const env = this.jdkHelper.getEnv();
-    await util.execute(keytoolCmd, env);
-    console.log('Signing Key created successfully');
+    await execute(keytoolCmd, env);
+    this.log.info('Signing Key created successfully');
   }
 }

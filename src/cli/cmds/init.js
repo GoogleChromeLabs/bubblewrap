@@ -18,7 +18,7 @@
 
 const {TwaGenerator} = require('../../lib/TwaGenerator');
 const {TwaManifest} = require('../../lib/TwaManifest');
-const KeyTool = require('../../lib/jdk/KeyTool');
+const {KeyTool} = require('../../lib/jdk/KeyTool');
 const {JdkHelper} = require('../../lib/jdk/JdkHelper');
 const {promisify} = require('util');
 const colors = require('colors/safe');
@@ -193,23 +193,23 @@ async function createSigningKey(twaManifest, config) {
   // Ask user for keystore details
   const schema = {
     properties: {
-      cn: {
-        name: 'cn',
+      fullName: {
+        name: 'fullName',
         required: true,
         description: 'First and Last names (eg: John Doe):',
       },
-      ou: {
-        name: 'ou',
+      organizationalUnit: {
+        name: 'organizationalUnit',
         required: true,
         description: 'Organizational Unit (eg: Engineering Dept):',
       },
-      o: {
-        name: 'o',
+      organization: {
+        name: 'organization',
         required: true,
         description: 'Organization (eg: Company Name):',
       },
-      c: {
-        name: 'c',
+      country: {
+        name: 'country',
         required: true,
         description: 'Country (2 letter code):',
       },
@@ -231,7 +231,7 @@ async function createSigningKey(twaManifest, config) {
   };
 
   const result = await prompt.get(schema);
-  result.keyPath = twaManifest.signingKey.keyPath;
+  result.path = twaManifest.signingKey.path;
   result.alias = twaManifest.signingKey.alias;
   await keytool.createSigningKey(result);
 }
