@@ -66,10 +66,10 @@ export class KeyTool {
       '-genkeypair',
       `-dname "cn=${keyOptions.fullName}, ou=${keyOptions.organizationalUnit}, ` +
           `o=${keyOptions.organization}, c=${keyOptions.country}"`,
-      `-alias ${keyOptions.alias}`,
-      `-keypass ${keyOptions.keypassword}`,
-      `-keystore ${keyOptions.path}`,
-      `-storepass ${keyOptions.password}`,
+      `-alias \"${keyOptions.alias}\"`,
+      `-keypass \"${keyOptions.keypassword}\"`,
+      `-keystore \"${keyOptions.path}\"`,
+      `-storepass \"${keyOptions.password}\"`,
       '-validity 20000',
       '-keyalg RSA',
     ];
