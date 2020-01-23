@@ -18,10 +18,14 @@
  * An utility class to print nice Log messages.
  */
 export default class Log {
-  tag_: string;
-  prefix_: string;
-  verbose_: boolean;
-  output_: Console;
+  private tag: string;
+  private prefix: string;
+  private output: Console;
+
+  /**
+   * The verbosity of the Log. "debug" messages are ignored if verbose is set to false.
+   */
+  public verbose: boolean;
 
   /**
    * Creates a new Log instance
@@ -30,10 +34,10 @@ export default class Log {
    * @param output where to output the log messages.
    */
   constructor(tag = '', verbose = false, output = console) {
-    this.tag_ = tag;
-    this.verbose_ = verbose;
-    this.prefix_ = this.inverse(tag);
-    this.output_ = output;
+    this.tag = tag;
+    this.verbose = verbose;
+    this.prefix = this.inverse(tag);
+    this.output = output;
   }
 
   /**
@@ -42,10 +46,10 @@ export default class Log {
    * @param args extra arguments for the console.
    */
   debug(message: string, ...args: string[]): void {
-    if (!this.verbose_) {
+    if (!this.verbose) {
       return;
     }
-    this.log(this.output_.log, this.dim(message), ...args);
+    this.log(this.output.log, this.dim(message), ...args);
   }
 
   /**
@@ -54,7 +58,7 @@ export default class Log {
    * @param args extra arguments for the console.
    */
   info(message: string, ...args: string[]): void {
-    this.log(this.output_.log, message, ...args);
+    this.log(this.output.log, message, ...args);
   }
 
   /**
@@ -63,7 +67,7 @@ export default class Log {
    * @param args extra arguments for the console.
    */
   warn(message: string, ...args: string[]): void {
-    this.log(this.output_.warn, this.yellow('WARNING ' + message), ...args);
+    this.log(this.output.warn, this.yellow('WARNING ' + message), ...args);
   }
 
   /**
@@ -72,33 +76,25 @@ export default class Log {
    * @param args extra arguments for the console.
    */
   error(message: string, ...args: string[]): void {
-    this.output_.log('\n');
-    this.log(this.output_.error, this.red('ERROR ' + message), ...args);
-    this.output_.log('\n');
-  }
-
-  /**
-   * Changes the verbosity of the log.
-   * @param isVerbose true if the log should be verbose.
-   */
-  verbose(isVerbose = true): void {
-    this.verbose_ = isVerbose;
+    this.output.log('\n');
+    this.log(this.output.error, this.red('ERROR ' + message), ...args);
+    this.output.log('\n');
   }
 
   /**
    * Creates a new Log using the same output and verbositity of the current Log.
    * @param newTag the tag the be used on the new Log instance.
    */
-  tag(newTag: string): Log {
-    if (this.tag_) {
-      newTag = this.tag_ + ' ' + newTag;
+  newLog(newTag: string): Log {
+    if (this.tag) {
+      newTag = this.tag + ' ' + newTag;
     }
-    return new Log(newTag, this.verbose_, this.output_);
+    return new Log(newTag, this.verbose, this.output);
   }
 
   private log(fn: Function, message: string, ...args: string[]): void {
-    if (this.prefix_) {
-      message = this.prefix_ + ' ' + message;
+    if (this.prefix) {
+      message = this.prefix + ' ' + message;
     }
     if (args) {
       fn(...[message].concat(args));

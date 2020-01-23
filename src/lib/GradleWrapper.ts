@@ -24,10 +24,10 @@ const execPromise = util.promisify(exec);
  * A Wrapper around the Gradle commands.
  */
 export class GradleWrapper {
-  process: NodeJS.Process;
-  androidSdkTools: AndroidSdkTools;
-  projectLocation: string;
-  gradleCmd: string;
+  private process: NodeJS.Process;
+  private androidSdkTools: AndroidSdkTools;
+  private projectLocation: string;
+  private gradleCmd: string;
 
   /**
    * Builds a new GradleWrapper

@@ -24,11 +24,11 @@ import * as path from 'path';
  * the approprite environment needed to run Java commands on the JDK
  */
 export class JdkHelper {
-  process: NodeJS.Process;
-  config: Config;
-  joinPath: (...paths: string[]) => string;
-  pathSeparator: string;
-  pathEnvironmentKey: string;
+  private process: NodeJS.Process;
+  private config: Config;
+  private joinPath: (...paths: string[]) => string;
+  private pathSeparator: string;
+  private pathEnvironmentKey: string;
 
   /**
    * Constructs a new instance of JdkHelper.

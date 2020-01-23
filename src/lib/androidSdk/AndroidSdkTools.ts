@@ -31,10 +31,10 @@ const BUILD_TOOLS_VERSION = '29.0.2';
  * Wraps functionality of the Android SDK Tools and allows them to be invoked programatically.
  */
 export class AndroidSdkTools {
-  process: NodeJS.Process;
-  config: Config;
-  jdkHelper: JdkHelper;
-  pathJoin: (...paths: string[]) => string;
+  private process: NodeJS.Process;
+  private config: Config;
+  private jdkHelper: JdkHelper;
+  private pathJoin: (...paths: string[]) => string;
 
   /**
    * Constructs a new instance of AndroidSdkTools.
@@ -78,13 +78,6 @@ export class AndroidSdkTools {
     const buildToolsPath =
         this.pathJoin(this.getAndroidHome(), '/build-tools/', BUILD_TOOLS_VERSION);
     return fs.existsSync(buildToolsPath);
-  }
-
-  async writeLicenseFile(): Promise<void> {
-    const licensesPath = this.pathJoin(this.getAndroidHome(), '/licenses/');
-    await fs.promises.mkdir(licensesPath, {recursive: true});
-    const androidSdkLicenseFile = this.pathJoin(licensesPath, '/android-sdk-license');
-    await fs.promises.writeFile(androidSdkLicenseFile, '24333f8a63b6825ea9c5514f83c2829b004d1fee');
   }
 
   /**

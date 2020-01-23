@@ -96,7 +96,8 @@ interface Icon {
  */
 export class TwaGenerator {
   // Ensures targetDir exists and copies a file from sourceDir to target dir.
-  async _copyStaticFile(sourceDir: string, targetDir: string, filename: string): Promise<void> {
+  private async copyStaticFile(
+      sourceDir: string, targetDir: string, filename: string): Promise<void> {
     const sourceFile = path.join(sourceDir, filename);
     const destFile = path.join(targetDir, filename);
     console.log('\t', destFile);
@@ -105,13 +106,14 @@ export class TwaGenerator {
   }
 
   // Copies a list of file from sourceDir to targetDir.
-  _copyStaticFiles(sourceDir: string, targetDir: string, fileList: string[]): Promise<void[]> {
+  private copyStaticFiles(
+      sourceDir: string, targetDir: string, fileList: string[]): Promise<void[]> {
     return Promise.all(fileList.map((file) => {
-      return this._copyStaticFile(sourceDir, targetDir, file);
+      return this.copyStaticFile(sourceDir, targetDir, file);
     }));
   }
 
-  async _applyTemplate(
+  private async applyTemplate(
       sourceDir: string, targetDir: string, filename: string, args: object): Promise<void> {
     const sourceFile = path.join(sourceDir, filename);
     const destFile = path.join(targetDir, filename);
@@ -122,31 +124,32 @@ export class TwaGenerator {
     await fsWriteFile(destFile, output);
   }
 
-  _applyTemplates(
+  private applyTemplates(
       sourceDir: string, targetDir: string, fileList: string[], args: object): Promise<void[]> {
     return Promise.all(fileList.map((file) => {
-      this._applyTemplate(sourceDir, targetDir, file, args);
+      this.applyTemplate(sourceDir, targetDir, file, args);
     }));
   }
 
-  async _saveIcon(data: Buffer, size: number, fileName: string): Promise<void> {
+  private async saveIcon(data: Buffer, size: number, fileName: string): Promise<void> {
     const image = await Jimp.read(data);
     await image.resize(size, size);
     await image.writeAsync(fileName);
   }
 
-  async _generateIcon(iconData: Icon, targetDir: string, iconDef: IconDefinition): Promise<void> {
+  private async generateIcon(
+      iconData: Icon, targetDir: string, iconDef: IconDefinition): Promise<void> {
     const destFile = path.join(targetDir, iconDef.dest);
     console.log(`\t ${iconDef.size}x${iconDef.size} Icon: ${destFile}`);
     await fsMkDir(path.dirname(destFile), {recursive: true});
-    return await this._saveIcon(iconData.data, iconDef.size, destFile);
+    return await this.saveIcon(iconData.data, iconDef.size, destFile);
   }
 
-  async _generateIcons(
+  private async generateIcons(
       iconUrl: string, targetDir: string, iconList: IconDefinition[]): Promise<void[]> {
-    const icon = await this._fetchIcon(iconUrl);
+    const icon = await this.fetchIcon(iconUrl);
     return Promise.all(iconList.map((iconDef) => {
-      return this._generateIcon(icon, targetDir, iconDef);
+      return this.generateIcon(icon, targetDir, iconDef);
     }));
   }
 
@@ -156,7 +159,7 @@ export class TwaGenerator {
    * @param {Object} iconUrl the URL to fetch the icon from.
    * @returns an Object containing the original URL and the icon image data.
    */
-  async _fetchIcon(iconUrl: string): Promise<Icon> {
+  private async fetchIcon(iconUrl: string): Promise<Icon> {
     const response = await fetch(iconUrl);
     const body = await response.buffer();
     return {
@@ -186,15 +189,15 @@ export class TwaGenerator {
     }
 
     // Copy Project Files
-    await this._copyStaticFiles(templateDirectory, targetDirectory, Array.from(copyFileList));
+    await this.copyStaticFiles(templateDirectory, targetDirectory, Array.from(copyFileList));
 
     // Generate templated files
-    await this._applyTemplates(
+    await this.applyTemplates(
         templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, twaManifest);
 
     // Generate images
     if (twaManifest.iconUrl) {
-      await this._generateIcons(twaManifest.iconUrl, targetDirectory, IMAGES);
+      await this.generateIcons(twaManifest.iconUrl, targetDirectory, IMAGES);
     }
 
     // TODO(andreban): TwaManifest.shortcuts is a string, which is being parsed into an Object.
@@ -203,12 +206,12 @@ export class TwaGenerator {
     await Promise.all(JSON.parse(twaManifest.shortcuts).map((shortcut: any, i: number) => {
       const imageDirs = SHORTCUT_IMAGES.map(
           (imageDir) => ({...imageDir, dest: `${imageDir.dest}shortcut_${i}.png`}));
-      return this._generateIcons(shortcut.chosenIconUrl, targetDirectory, imageDirs);
+      return this.generateIcons(shortcut.chosenIconUrl, targetDirectory, imageDirs);
     }));
 
     // Generate adaptive images
     if (twaManifest.maskableIconUrl) {
-      await this._generateIcons(twaManifest.maskableIconUrl, targetDirectory, ADAPTIVE_IMAGES);
+      await this.generateIcons(twaManifest.maskableIconUrl, targetDirectory, ADAPTIVE_IMAGES);
     }
   }
 }
