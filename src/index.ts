@@ -14,9 +14,7 @@
  *  limitations under the License.
  */
 
-'use strict';
-
-import Cli = require('./cli');
+import {Cli} from './cli/';
 
 module.exports = (): void => {
   const cli = new Cli();

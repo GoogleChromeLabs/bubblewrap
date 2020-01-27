@@ -14,8 +14,6 @@
  *  limitations under the License.
  */
 
-declare module 'prompt' {
-  import prompt = require('prompt');
-  // TODO(andreban): Remove usage of any
-  export function get(schema: any): any; // eslint-disable-line @typescript-eslint/no-explicit-any
+export async function help(): Promise<void> {
+  return;
 }

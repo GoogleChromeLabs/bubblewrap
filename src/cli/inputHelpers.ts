@@ -14,9 +14,26 @@
  *  limitations under the License.
  */
 
-'use strict';
+import Color = require('color');
+import {isWebUri} from 'valid-url';
 
-async function help() {
+export function validatePassword(input: string): boolean {
+  return input.length > 0;
 }
 
-module.exports = help;
+export function notEmpty(input: string): boolean {
+  return input.length > 0;
+}
+
+export function validateColor(color: string): boolean {
+  try {
+    new Color(color);
+    return true;
+  } catch (_) {
+    return false;
+  }
+};
+
+export function validateUrl(url: string): boolean {
+  return isWebUri(url) !== undefined;
+}

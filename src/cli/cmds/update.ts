@@ -14,18 +14,15 @@
  *  limitations under the License.
  */
 
-'use strict';
+import * as path from 'path';
+import {TwaGenerator} from '../../lib/TwaGenerator';
+import {TwaManifest} from '../../lib/TwaManifest';
+import {ParsedArgs} from 'minimist';
 
-const path = require('path');
-const {TwaGenerator} = require('../../lib/TwaGenerator');
-const {TwaManifest} = require('../../lib/TwaManifest');
-
-async function update(args) {
+export async function update(args: ParsedArgs): Promise<void> {
   const targetDirectory = args.directory || process.cwd();
   const manifestFile = args.manifest || path.join(process.cwd(), 'twa-manifest.json');
   const twaManifest = await TwaManifest.fromFile(manifestFile);
   const twaGenerator = new TwaGenerator();
-  await twaGenerator.createTwaProject(targetDirectory, twaManifest);
+  return await twaGenerator.createTwaProject(targetDirectory, twaManifest);
 }
-
-module.exports = update;
