@@ -22,7 +22,7 @@ export function validatePassword(input: string): boolean {
 }
 
 export function notEmpty(input: string): boolean {
-  return input.length > 0;
+  return input.trim().length > 0;
 }
 
 export function validateColor(color: string): boolean {
