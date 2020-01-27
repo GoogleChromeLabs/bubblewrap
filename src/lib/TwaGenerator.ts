@@ -21,6 +21,7 @@ import {template} from 'lodash';
 import {promisify} from 'util';
 import {TwaManifest} from './TwaManifest';
 import Jimp = require('jimp');
+import Log from './Log';
 
 const COPY_FILE_LIST = [
   'settings.gradle',
@@ -95,12 +96,18 @@ interface Icon {
  * Generates TWA Projects from a TWA Manifest
  */
 export class TwaGenerator {
+  private log: Log;
+
+  constructor(log = new Log('twa-generator')) {
+    this.log = log;
+  }
+
   // Ensures targetDir exists and copies a file from sourceDir to target dir.
   private async copyStaticFile(
       sourceDir: string, targetDir: string, filename: string): Promise<void> {
     const sourceFile = path.join(sourceDir, filename);
     const destFile = path.join(targetDir, filename);
-    console.log('\t', destFile);
+    this.log.info('\t', destFile);
     await fsMkDir(path.dirname(destFile), {recursive: true});
     await fsCopyFile(sourceFile, destFile);
   }
@@ -117,7 +124,7 @@ export class TwaGenerator {
       sourceDir: string, targetDir: string, filename: string, args: object): Promise<void> {
     const sourceFile = path.join(sourceDir, filename);
     const destFile = path.join(targetDir, filename);
-    console.log('\t', destFile);
+    this.log.info('\t', destFile);
     await fsMkDir(path.dirname(destFile), {recursive: true});
     const templateFile = await fsReadFile(sourceFile, 'utf-8');
     const output = template(templateFile)(args);
@@ -140,7 +147,7 @@ export class TwaGenerator {
   private async generateIcon(
       iconData: Icon, targetDir: string, iconDef: IconDefinition): Promise<void> {
     const destFile = path.join(targetDir, iconDef.dest);
-    console.log(`\t ${iconDef.size}x${iconDef.size} Icon: ${destFile}`);
+    this.log.info(`\t ${iconDef.size}x${iconDef.size} Icon: ${destFile}`);
     await fsMkDir(path.dirname(destFile), {recursive: true});
     return await this.saveIcon(iconData.data, iconDef.size, destFile);
   }
@@ -179,8 +186,7 @@ export class TwaGenerator {
       throw new Error('Invalid TWA Manifest. Missing or incorrect fields.');
     };
 
-    console.log('Generating Android Project files:');
-    console.log(__dirname);
+    this.log.info('Generating Android Project files:');
     const templateDirectory = path.join(__dirname, '../../template_project');
 
     const copyFileList = new Set(COPY_FILE_LIST);

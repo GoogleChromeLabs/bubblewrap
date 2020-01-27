@@ -14,30 +14,30 @@
  *  limitations under the License.
  */
 
-'use strict';
+import * as minimist from 'minimist';
+import {Config} from '../lib/Config';
+import {update} from './cmds/update';
+import {help} from './cmds/help';
+import {build} from './cmds/build';
+import {init} from './cmds/init';
 
-const minimist = require('minimist');
-const {Config} = require('../lib/Config');
-
-class Cli {
-  async run(args) {
+export class Cli {
+  async run(args: string[]): Promise<void> {
     const config = await Config.loadOrCreate();
 
-    args = minimist(args);
-    const command = args._[0] || 'help';
+    const parsedArgs = minimist(args);
+    const command = args[0] || 'help';
     switch (command) {
       case 'help':
-        return await require('./cmds/help')(args, config);
+        return await help();
       case 'init':
-        return await require('./cmds/init')(args, config);
+        return await init(parsedArgs, config);
       case 'update':
-        return await require('./cmds/update')(args, config);
+        return await update(parsedArgs);
       case 'build':
-        return await require('./cmds/build')(args, config);
+        return await build(config);
       default:
         throw new Error(`"${command}" is not a valid command!`);
     }
   }
 }
-
-module.exports = Cli;

@@ -14,8 +14,26 @@
  *  limitations under the License.
  */
 
-declare module 'prompt' {
-  import prompt = require('prompt');
-  // TODO(andreban): Remove usage of any
-  export function get(schema: any): any; // eslint-disable-line @typescript-eslint/no-explicit-any
+import Color = require('color');
+import {isWebUri} from 'valid-url';
+
+export function validatePassword(input: string): boolean {
+  return input.length > 0;
+}
+
+export function notEmpty(input: string): boolean {
+  return input.trim().length > 0;
+}
+
+export function validateColor(color: string): boolean {
+  try {
+    new Color(color);
+    return true;
+  } catch (_) {
+    return false;
+  }
+};
+
+export function validateUrl(url: string): boolean {
+  return isWebUri(url) !== undefined;
 }

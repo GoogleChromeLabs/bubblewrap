@@ -18,11 +18,10 @@ import {promisify} from 'util';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import userPrompt = require('prompt');
+import * as inquirer from 'inquirer';
 
 const homedir = os.homedir();
 const fileExists = promisify(fs.exists);
-userPrompt.get = promisify(userPrompt.get);
 
 const CONFIG_FILE_NAME = path.join(homedir, '/.llama-pack/llama-pack-config.json');
 
@@ -36,7 +35,7 @@ export class Config {
   }
 
   async saveConfig(): Promise<void> {
-    await fs.promises.mkdir(path.join(homedir, '/.llama-pack'));
+    await fs.promises.mkdir(path.join(homedir, '/.llama-pack'), {recursive: true});
     await fs.promises.writeFile(CONFIG_FILE_NAME, JSON.stringify(this));
   }
 
@@ -51,23 +50,18 @@ export class Config {
   }
 
   static async createConfig(): Promise<Config> {
-    const schema = {
-      properties: {
-        jdkPath: {
-          name: 'jdkPath',
-          description: 'Path to the JDK:',
-          required: true,
-          conform: fs.existsSync,
-        },
-        androidSdkPath: {
-          name: 'androidSdkPath',
-          description: 'Path to the Android SDK:',
-          required: true,
-          conform: fs.existsSync,
-        },
+    // TODO(andreban): Move this prompt from '/lib' to '/cli'.
+    const result = await inquirer.prompt([
+      {
+        name: 'jdkPath',
+        message: 'Path to the JDK:',
+        validate: fs.existsSync,
+      }, {
+        name: 'androidSdkPath',
+        message: 'Path to the Android SDK:',
+        validate: fs.existsSync,
       },
-    };
-    const result = await userPrompt.get(schema);
+    ]);
     return new Config(result.jdkPath, result.androidSdkPath);
   }
 

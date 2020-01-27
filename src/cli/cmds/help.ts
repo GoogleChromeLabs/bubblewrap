@@ -14,9 +14,6 @@
  *  limitations under the License.
  */
 
-'use strict';
-
-async function help() {
+export async function help(): Promise<void> {
+  return;
 }
-
-module.exports = help;
