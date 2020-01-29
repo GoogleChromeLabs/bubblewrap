@@ -59,7 +59,7 @@ export async function help(args: ParsedArgs, log = new Log('help')): Promise<voi
   const command = args._[1];
   const message = HELP_MESSAGES.get(command) || HELP_MESSAGES.get('main');
 
-  // Should never happen, as we know we have a message for Command.main,
+  // Should never happen, as we know we have a message for main,
   // but TypeScript doesn't know it.
   if (message === undefined) {
     log.error(`Could not find help message for args: ${args}`);
