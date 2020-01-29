@@ -37,6 +37,10 @@
             android:name="cros_web_alternative"
             android:value="@string/crosLaunchUrl" />
 
+        <meta-data
+            android:name="twa_generator"
+            android:value="@string/generatorApp" />            
+
         <activity android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
             android:label="@string/launcherName">
             <meta-data android:name="android.support.customtabs.trusted.DEFAULT_URL"

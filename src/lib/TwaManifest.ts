@@ -120,6 +120,7 @@ export class TwaManifest {
   signingKey: SigningKeyInfo;
   appVersion: string;
   shortcuts: string;
+  generatorApp: string;
 
   constructor(data: TwaManifestJson) {
     this.packageId = data.packageId;
@@ -138,6 +139,7 @@ export class TwaManifest {
     this.signingKey = data.signingKey;
     this.appVersion = data.appVersion;
     this.shortcuts = data.shortcuts;
+    this.generatorApp = data.generatorApp || 'unknown';
   }
 
   /**
@@ -277,6 +279,7 @@ export interface TwaManifestJson {
   signingKey: SigningKeyInfo;
   appVersion: string;
   shortcuts: string;
+  generatorApp?: string;
 }
 
 export interface SigningKeyInfo {

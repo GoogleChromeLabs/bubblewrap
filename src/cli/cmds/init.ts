@@ -25,6 +25,7 @@ import {TwaGenerator} from '../../lib/TwaGenerator';
 import {TwaManifest} from '../../lib/TwaManifest';
 import {validateColor, validatePassword, validateUrl, notEmpty} from '../inputHelpers';
 import {ParsedArgs} from 'minimist';
+import {APP_NAME} from '../consts';
 
 const log = new Log('init');
 
@@ -127,6 +128,7 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
     alias: result.keyAlias,
     path: result.keyPath,
   };
+  twaManifest.generatorApp = APP_NAME;
   return twaManifest;
 }
 
