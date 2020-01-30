@@ -14,6 +14,52 @@
  *  limitations under the License.
  */
 
-export async function help(): Promise<void> {
+import Log from '../../lib/Log';
+import {ParsedArgs} from 'minimist';
+
+const HELP_MESSAGES = new Map<string, string>(
+    [
+      ['main', [
+        'llama-pack [command] <options>',
+        '',
+        '',
+        'build ............... generates an Android APK from a TWA Project',
+        'help ................ shows this menu',
+        'init ................ initializes a new TWA Project',
+        'update .............. updates an existing TWA Project with the latest llama-pack template',
+      ].join('\n')],
+      ['init', [
+        'Usage:',
+        '',
+        '',
+        'lama-pack init --manifest=[web-manifest-url]',
+        '',
+        '',
+        'Options:',
+        '--directory ......... path where to generate the project. Defaults to the current' +
+            ' directory',
+      ].join('\n')],
+      ['build', [
+        'Usage:',
+        '',
+        '',
+        'llama-pack build',
+      ].join('\n')],
+      ['update', [
+        'Usage:',
+        '',
+        '',
+        'llama-pack update',
+      ].join('\n')],
+    ],
+);
+
+export async function help(args: ParsedArgs, log = new Log('help')): Promise<void> {
+  // minimist uses an `_` object to store details.
+  const command = args._[1];
+  const message = HELP_MESSAGES.get(command) || HELP_MESSAGES.get('main');
+
+  // We know we have a message for 'main', in case the command is invalid.
+  log.info(message!);
   return;
 }

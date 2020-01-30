@@ -29,7 +29,7 @@ export class Cli {
     const command = args[0] || 'help';
     switch (command) {
       case 'help':
-        return await help();
+        return await help(parsedArgs);
       case 'init':
         return await init(parsedArgs, config);
       case 'update':
