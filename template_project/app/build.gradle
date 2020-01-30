@@ -35,7 +35,8 @@ def twaManifest = [
     // - icon: Name of the resource in the drawable folder to use as an icon.
     shortcuts: <%= generateShortcuts() %>,
     // The duration of fade out animation in milliseconds to be played when removing splash screen.
-    splashScreenFadeOutDuration: <%= splashScreenFadeOutDuration %>
+    splashScreenFadeOutDuration: <%= splashScreenFadeOutDuration %>,
+    generatorApp: '<%= generatorApp %>' // Apllication that generated the Android Project
 ]
 
 android {
@@ -108,6 +109,8 @@ android {
         // The splashScreenFadeOutDuration resource is used to set the duration of fade out animation in milliseconds
         // to be played when removing splash screen. The default is 0 (no animation).
         resValue "integer", "splashScreenFadeOutDuration", twaManifest.splashScreenFadeOutDuration.toString()
+
+        resValue "string", "generatorApp", twaManifest.generatorApp
     }
     buildTypes {
         release {
