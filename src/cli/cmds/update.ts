@@ -18,7 +18,7 @@ import * as path from 'path';
 import {TwaGenerator} from '../../lib/TwaGenerator';
 import {TwaManifest} from '../../lib/TwaManifest';
 import {ParsedArgs} from 'minimist';
-import {APP_NAME} from '../consts';
+import {APP_NAME} from '../constants';
 
 export async function update(args: ParsedArgs): Promise<void> {
   const targetDirectory = args.directory || process.cwd();

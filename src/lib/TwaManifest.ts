@@ -29,6 +29,19 @@ const DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX = /[^ a-zA-Z0-9_\.]/;
 // The minimum size needed for the app icon.
 const MIN_ICON_SIZE = 512;
 
+// Default values used on the Twa Manifest
+const DEFAULT_SPLASHSCREEN_FADEOUT_DURATION = 300;
+const DEFAULT_APP_NAME = 'My TWA';
+const DEFAULT_THEME_COLOR = '#FFFFFF';
+const DEFAULT_NAVIGATION_COLOR = '#000000';
+const DEFAULT_BACKGROUND_COLOR = '#FFFFFF';
+const DEFAULT_APP_VERSION = '1.0.0';
+const DEFAULT_SIGNING_KEY_PATH = './android.keystore';
+const DEFAULT_SIGNING_KEY_ALIAS = 'android';
+const DEFAULT_USE_BROWSER_ON_CHROMEOS = true;
+const DEFAULT_ENABLE_NOTIFICATIONS = false;
+const DEFAULT_GENERATOR_APP_NAME = 'unknown';
+
 /**
  * Generates an Android Application Id / Package Name, using the reverse hostname as a base
  * and appending `.twa` to the end.
@@ -139,7 +152,7 @@ export class TwaManifest {
     this.signingKey = data.signingKey;
     this.appVersion = data.appVersion;
     this.shortcuts = data.shortcuts;
-    this.generatorApp = data.generatorApp || 'unknown';
+    this.generatorApp = data.generatorApp || DEFAULT_GENERATOR_APP_NAME;
   }
 
   /**
@@ -213,23 +226,23 @@ export class TwaManifest {
     const twaManifest = new TwaManifest({
       packageId: generatePackageId(webManifestUrl.host),
       host: webManifestUrl.host,
-      name: webManifest['name'] || webManifest['short_name'] || 'My TWA',
-      launcherName: webManifest['short_name'] || webManifest['name'] || 'My TWA',
-      themeColor: webManifest['theme_color'] || '#FFFFFF',
-      navigationColor: '#000000',
-      backgroundColor: webManifest['background_color'] || '#FFFFFF',
+      name: webManifest['name'] || webManifest['short_name'] || DEFAULT_APP_NAME,
+      launcherName: webManifest['short_name'] || webManifest['name'] || DEFAULT_APP_NAME,
+      themeColor: webManifest['theme_color'] || DEFAULT_THEME_COLOR,
+      navigationColor: DEFAULT_NAVIGATION_COLOR,
+      backgroundColor: webManifest['background_color'] || DEFAULT_BACKGROUND_COLOR,
       startUrl: fullStartUrl.pathname + fullStartUrl.search,
       iconUrl: icon ? new URL(icon.src, webManifestUrl).toString() : undefined,
       maskableIconUrl:
          maskableIcon ? new URL(maskableIcon.src, webManifestUrl).toString() : undefined,
-      appVersion: '1.0.0',
+      appVersion: DEFAULT_APP_VERSION,
       signingKey: {
-        path: './android.keystore',
-        alias: 'android',
+        path: DEFAULT_SIGNING_KEY_PATH,
+        alias: DEFAULT_SIGNING_KEY_ALIAS,
       },
-      useBrowserOnChromeOS: true,
-      splashScreenFadeOutDuration: 300,
-      enableNotifications: false,
+      useBrowserOnChromeOS: DEFAULT_USE_BROWSER_ON_CHROMEOS,
+      splashScreenFadeOutDuration: DEFAULT_SPLASHSCREEN_FADEOUT_DURATION,
+      enableNotifications: DEFAULT_ENABLE_NOTIFICATIONS,
       shortcuts: JSON.stringify(shortcuts, undefined, 2),
     });
     return twaManifest;

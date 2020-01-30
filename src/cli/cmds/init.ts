@@ -25,7 +25,7 @@ import {TwaGenerator} from '../../lib/TwaGenerator';
 import {TwaManifest} from '../../lib/TwaManifest';
 import {validateColor, validatePassword, validateUrl, notEmpty} from '../inputHelpers';
 import {ParsedArgs} from 'minimist';
-import {APP_NAME} from '../consts';
+import {APP_NAME} from '../constants';
 
 const log = new Log('init');
 
