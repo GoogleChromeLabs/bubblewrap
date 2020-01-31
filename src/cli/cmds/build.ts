@@ -103,7 +103,7 @@ export async function build(config: Config, log = new Log('build')): Promise<voi
       twaManifest.signingKey.path,
       passwords.keystorePassword, // keystore password
       twaManifest.signingKey.alias, // alias
-      passwords.keystorePassword, // key password
+      passwords.keyPassword, // key password
       './app-release-unsigned-aligned.apk', // input file path
       outputFile, // output file path
   );
