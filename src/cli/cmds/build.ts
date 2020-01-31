@@ -32,8 +32,8 @@ interface SigningKeyPasswords {
  * Checks if the keystore password and the key password are part of the environment prompts the
  * user for a password otherwise.
  *
- * @returns {Promise<[string, string]>} A promise with a tuple where the first item is they
- * keystore password and the second is the key password.
+ * @returns {Promise<SigningKeyPasswords} the password information collected from enviromental
+ * variables or user input.
  */
 async function getPasswords(log: Log): Promise<SigningKeyPasswords> {
   // Check if passwords are set as environment variables.
