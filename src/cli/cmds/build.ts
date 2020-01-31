@@ -23,6 +23,11 @@ import Log from '../../lib/Log';
 import * as inquirer from 'inquirer';
 import {validatePassword} from '../inputHelpers';
 
+interface SigningKeyPasswords {
+  keystorePassword: string;
+  keyPassword: string;
+}
+
 /**
  * Checks if the keystore password and the key password are part of the environment prompts the
  * user for a password otherwise.
@@ -30,13 +35,18 @@ import {validatePassword} from '../inputHelpers';
  * @returns {Promise<[string, string]>} A promise with a tuple where the first item is they
  * keystore password and the second is the key password.
  */
-async function getPasswords(): Promise<[string, string]> {
+async function getPasswords(log: Log): Promise<SigningKeyPasswords> {
   // Check if passwords are set as environment variables.
   const envKeystorePass = process.env['LLAMA_PACK_KEYSTORE_PASSWORD'];
   const envKeyPass = process.env['LLAMA_PACK_KEY_PASSWORD'];
 
   if (envKeyPass !== undefined && envKeystorePass !== undefined) {
-    return [envKeystorePass, envKeyPass];
+    log.info('Using passwords set in the LLAMA_PACK_KEYSTORE_PASSWORD and ' +
+        'LLAMA_PACK_KEY_PASSWORD environmental variables.');
+    return {
+      keystorePassword: envKeystorePass,
+      keyPassword: envKeyPass,
+    };
   }
 
   // Ask user for the keystore password
@@ -56,7 +66,10 @@ async function getPasswords(): Promise<[string, string]> {
     },
   ]);
 
-  return [result.password, result.keypassword];
+  return {
+    keystorePassword: result.password,
+    keyPassword: result.keypassword,
+  };
 }
 
 export async function build(config: Config, log = new Log('build')): Promise<void> {
@@ -69,8 +82,7 @@ export async function build(config: Config, log = new Log('build')): Promise<voi
   }
 
   const twaManifest = await TwaManifest.fromFile('./twa-manifest.json');
-
-  const passwords = await getPasswords();
+  const passwords = await getPasswords(log);
 
   // Builds the Android Studio Project
   log.info('Building the Android App...');
@@ -89,9 +101,9 @@ export async function build(config: Config, log = new Log('build')): Promise<voi
   const outputFile = './app-release-signed.apk';
   await androidSdkTools.apksigner(
       twaManifest.signingKey.path,
-      passwords[0], // keystore password
+      passwords.keystorePassword, // keystore password
       twaManifest.signingKey.alias, // alias
-      passwords[1], // key password
+      passwords.keystorePassword, // key password
       './app-release-unsigned-aligned.apk', // input file path
       outputFile, // output file path
   );
