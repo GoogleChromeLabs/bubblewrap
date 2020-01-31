@@ -23,16 +23,31 @@ import Log from '../../lib/Log';
 import * as inquirer from 'inquirer';
 import {validatePassword} from '../inputHelpers';
 
-export async function build(config: Config, log = new Log('build')): Promise<void> {
-  const jdkHelper = new JdkHelper(process, config);
-  const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
+interface SigningKeyPasswords {
+  keystorePassword: string;
+  keyPassword: string;
+}
 
-  if (!await androidSdkTools.checkBuildTools()) {
-    console.log('Installing Android Build Tools. Please, read and accept the license agreement');
-    await androidSdkTools.installBuildTools();
+/**
+ * Checks if the keystore password and the key password are part of the environment prompts the
+ * user for a password otherwise.
+ *
+ * @returns {Promise<SigningKeyPasswords} the password information collected from enviromental
+ * variables or user input.
+ */
+async function getPasswords(log: Log): Promise<SigningKeyPasswords> {
+  // Check if passwords are set as environment variables.
+  const envKeystorePass = process.env['LLAMA_PACK_KEYSTORE_PASSWORD'];
+  const envKeyPass = process.env['LLAMA_PACK_KEY_PASSWORD'];
+
+  if (envKeyPass !== undefined && envKeystorePass !== undefined) {
+    log.info('Using passwords set in the LLAMA_PACK_KEYSTORE_PASSWORD and ' +
+        'LLAMA_PACK_KEY_PASSWORD environmental variables.');
+    return {
+      keystorePassword: envKeystorePass,
+      keyPassword: envKeyPass,
+    };
   }
-
-  const twaManifest = await TwaManifest.fromFile('./twa-manifest.json');
 
   // Ask user for the keystore password
   const result = await inquirer.prompt([
@@ -51,6 +66,24 @@ export async function build(config: Config, log = new Log('build')): Promise<voi
     },
   ]);
 
+  return {
+    keystorePassword: result.password,
+    keyPassword: result.keypassword,
+  };
+}
+
+export async function build(config: Config, log = new Log('build')): Promise<void> {
+  const jdkHelper = new JdkHelper(process, config);
+  const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
+
+  if (!await androidSdkTools.checkBuildTools()) {
+    console.log('Installing Android Build Tools. Please, read and accept the license agreement');
+    await androidSdkTools.installBuildTools();
+  }
+
+  const twaManifest = await TwaManifest.fromFile('./twa-manifest.json');
+  const passwords = await getPasswords(log);
+
   // Builds the Android Studio Project
   log.info('Building the Android App...');
   const gradleWraper = new GradleWrapper(process, androidSdkTools);
@@ -68,9 +101,9 @@ export async function build(config: Config, log = new Log('build')): Promise<voi
   const outputFile = './app-release-signed.apk';
   await androidSdkTools.apksigner(
       twaManifest.signingKey.path,
-      result.password, // keystore password
+      passwords.keystorePassword, // keystore password
       twaManifest.signingKey.alias, // alias
-      result.keypassword, // key password
+      passwords.keystorePassword, // key password
       './app-release-unsigned-aligned.apk', // input file path
       outputFile, // output file path
   );
