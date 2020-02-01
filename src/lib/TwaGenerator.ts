@@ -168,6 +168,9 @@ export class TwaGenerator {
    */
   private async fetchIcon(iconUrl: string): Promise<Icon> {
     const response = await fetch(iconUrl);
+    if (response.status !== 200) {
+      throw new Error(`Failed to download icon ${iconUrl}, with status ${response.status}`);
+    }
     const body = await response.buffer();
     return {
       url: iconUrl,
