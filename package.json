@@ -41,7 +41,7 @@
     "lodash.template": "^4.5.0",
     "minimist": "^1.2.0",
     "node-fetch": "^2.6.0",
-    "npm": "^6.13.6",
+    "npm": "^6.13.7",
     "tar": "^5.0.5",
     "typescript": "^3.7.2",
     "valid-url": "^1.0.9"
