@@ -32,7 +32,7 @@ async function updateVersions(twaManifest: TwaManifest, appVersionNameArg: strin
   const previousAppVersionCode = twaManifest.appVersionCode;
   const appVersionCode = twaManifest.appVersionCode + 1;
 
-  // If a version was passed ar parameter, use it.
+  // If a version was passed as parameter, use it.
   if (appVersionNameArg) {
     return {
       appVersionCode: appVersionCode,
