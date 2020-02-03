@@ -15,13 +15,15 @@
  */
 
 import {Cli} from './cli/';
+import Log from './lib/Log';
 
 module.exports = (): void => {
   const cli = new Cli();
+  const log = new Log('cli');
   const args = process.argv.slice(2);
   cli.run(args)
       .catch((err: Error) => {
-        console.error(err.message);
+        log.error(err.message);
         process.exit(1);
       });
 };
