@@ -35,7 +35,8 @@ const DEFAULT_APP_NAME = 'My TWA';
 const DEFAULT_THEME_COLOR = '#FFFFFF';
 const DEFAULT_NAVIGATION_COLOR = '#000000';
 const DEFAULT_BACKGROUND_COLOR = '#FFFFFF';
-const DEFAULT_APP_VERSION = '1.0.0';
+const DEFAULT_APP_VERSION_CODE = 1;
+const DEFAULT_APP_VERSION_NAME = DEFAULT_APP_VERSION_CODE.toString();
 const DEFAULT_SIGNING_KEY_PATH = './android.keystore';
 const DEFAULT_SIGNING_KEY_ALIAS = 'android';
 const DEFAULT_USE_BROWSER_ON_CHROMEOS = true;
@@ -131,7 +132,8 @@ export class TwaManifest {
   useBrowserOnChromeOS: boolean;
   splashScreenFadeOutDuration: number;
   signingKey: SigningKeyInfo;
-  appVersion: string;
+  appVersionCode: number;
+  appVersionName: string;
   shortcuts: string;
   generatorApp: string;
 
@@ -150,7 +152,8 @@ export class TwaManifest {
     this.useBrowserOnChromeOS = data.useBrowserOnChromeOS;
     this.splashScreenFadeOutDuration = data.splashScreenFadeOutDuration;
     this.signingKey = data.signingKey;
-    this.appVersion = data.appVersion;
+    this.appVersionName = data.appVersion;
+    this.appVersionCode = data.appVersionCode || DEFAULT_APP_VERSION_CODE;
     this.shortcuts = data.shortcuts;
     this.generatorApp = data.generatorApp || DEFAULT_GENERATOR_APP_NAME;
   }
@@ -166,6 +169,7 @@ export class TwaManifest {
       themeColor: this.themeColor.hex(),
       navigationColor: this.navigationColor.hex(),
       backgroundColor: this.backgroundColor.hex(),
+      appVersion: this.appVersionName,
     });
     await fs.promises.writeFile(filename, JSON.stringify(json, null, 2));
   }
@@ -235,7 +239,7 @@ export class TwaManifest {
       iconUrl: icon ? new URL(icon.src, webManifestUrl).toString() : undefined,
       maskableIconUrl:
          maskableIcon ? new URL(maskableIcon.src, webManifestUrl).toString() : undefined,
-      appVersion: DEFAULT_APP_VERSION,
+      appVersion: DEFAULT_APP_VERSION_NAME,
       signingKey: {
         path: DEFAULT_SIGNING_KEY_PATH,
         alias: DEFAULT_SIGNING_KEY_ALIAS,
@@ -290,7 +294,8 @@ export interface TwaManifestJson {
   useBrowserOnChromeOS: boolean;
   splashScreenFadeOutDuration: number;
   signingKey: SigningKeyInfo;
-  appVersion: string;
+  appVersionCode?: number; // Older Manifests may not have this field.
+  appVersion: string; // appVersionName - Old Manifests use `appVersion`. Keeping compatibility.
   shortcuts: string;
   generatorApp?: string;
 }

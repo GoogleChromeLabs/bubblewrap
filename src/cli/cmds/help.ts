@@ -50,6 +50,13 @@ const HELP_MESSAGES = new Map<string, string>(
         '',
         '',
         'llama-pack update',
+        '',
+        '',
+        'Options:',
+        '--appVersionName ........... version name to be used on on the upgrade. Ignored if ' +
+            '--skipVersionUpgrade is used',
+        '--skipVersionUpgrade ....... skips upgrading appVersion and appVersionCode',
+        '--manifest ................. directory where the client should look for twa-manifest.json',
       ].join('\n')],
     ],
 );

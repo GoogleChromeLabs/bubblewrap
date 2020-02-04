@@ -55,7 +55,8 @@ describe('TwaManifest', () => {
       expect(twaManifest.themeColor.hex()).toBe('#00FF00');
       expect(twaManifest.navigationColor.hex()).toBe('#000000');
       expect(twaManifest.backgroundColor.hex()).toBe('#7CC0FF');
-      expect(twaManifest.appVersion).toBe('1.0.0');
+      expect(twaManifest.appVersionName).toBe('1');
+      expect(twaManifest.appVersionCode).toBe(1);
       expect(twaManifest.signingKey.path).toBe('./android.keystore');
       expect(twaManifest.signingKey.alias).toBe('android');
       expect(twaManifest.splashScreenFadeOutDuration).toBe(300);
@@ -84,7 +85,8 @@ describe('TwaManifest', () => {
       expect(twaManifest.themeColor.hex()).toBe('#FFFFFF');
       expect(twaManifest.navigationColor.hex()).toBe('#000000');
       expect(twaManifest.backgroundColor.hex()).toBe('#FFFFFF');
-      expect(twaManifest.appVersion).toBe('1.0.0');
+      expect(twaManifest.appVersionName).toBe('1');
+      expect(twaManifest.appVersionCode).toBe(1);
       expect(twaManifest.signingKey.path).toBe('./android.keystore');
       expect(twaManifest.signingKey.alias).toBe('android');
       expect(twaManifest.splashScreenFadeOutDuration).toBe(300);
