@@ -76,6 +76,9 @@ const SHORTCUT_IMAGES: IconDefinition[] = [
   {dest: 'app/src/main/res/drawable-xxxhdpi/', size: 192},
 ];
 
+const WEB_MANIFEST_LOCATION = '/app/src/main/res/raw/';
+const WEB_MANIFEST_FILE_NAME = 'web_app_manifest.json';
+
 // fs.promises is marked as experimental. This should be replaced when stable.
 const fsMkDir = promisify(fs.mkdir);
 const fsCopyFile = promisify(fs.copyFile);
@@ -160,6 +163,25 @@ export class TwaGenerator {
     }));
   }
 
+  private async writeWebManifest(webManifestUrl: URL, targetDirectory: string): Promise<void> {
+    const response = await fetch(webManifestUrl);
+    if (response.status !== 200) {
+      throw new Error(`Failed to download Web Manifest ${webManifestUrl}.` +
+          `Responded with status ${response.status}`);
+    }
+
+    // We're writing as a string, but attempt to convert to check if it's a well-formed JSON.
+    const webManifestJson = await response.json();
+
+    const webManifestLocation = path.join(targetDirectory, WEB_MANIFEST_LOCATION);
+
+    // Ensures the target directory exists.
+    await fs.promises.mkdir(webManifestLocation, {recursive: true});
+
+    const webManifestFileName = path.join(webManifestLocation, WEB_MANIFEST_FILE_NAME);
+    await fs.promises.writeFile(webManifestFileName, JSON.stringify(webManifestJson));
+  }
+
   /**
    * Fetches an Icon.
    *
@@ -222,6 +244,11 @@ export class TwaGenerator {
     // Generate adaptive images
     if (twaManifest.maskableIconUrl) {
       await this.generateIcons(twaManifest.maskableIconUrl, targetDirectory, ADAPTIVE_IMAGES);
+    }
+
+    if (twaManifest.webManifestUrl) {
+      // Save the Web Manifest into the project
+      await this.writeWebManifest(twaManifest.webManifestUrl, targetDirectory);
     }
   }
 }

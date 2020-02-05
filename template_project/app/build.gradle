@@ -58,10 +58,12 @@ android {
         def launchUrl = "https://" + twaManifest.hostName + twaManifest.launchUrl
         resValue "string", "launchUrl", launchUrl
 
-        // The URL that will be opened as a Desktop PWA when the TWA is installed and
-        // run on ChromeOS. This will probably give a better user experience for non-mobile
-        // devices, but will not include any native Android interaction.
-        resValue "string", "crosLaunchUrl", launchUrl
+        <% if (webManifestUrl) { %>
+            // The URL that will be opened as a Desktop PWA when the TWA is installed and
+            // run on ChromeOS. This will probably give a better user experience for non-mobile
+            // devices, but will not include any native Android interaction.
+            resValue "string", "webManifestUrl", '<%= webManifestUrl %>'
+        <% } %>
 
         // The hostname is used when building the intent-filter, so the TWA is able to
         // handle Intents to open https://svgomg.firebaseapp.com.

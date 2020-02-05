@@ -39,7 +39,6 @@ const DEFAULT_APP_VERSION_CODE = 1;
 const DEFAULT_APP_VERSION_NAME = DEFAULT_APP_VERSION_CODE.toString();
 const DEFAULT_SIGNING_KEY_PATH = './android.keystore';
 const DEFAULT_SIGNING_KEY_ALIAS = 'android';
-const DEFAULT_USE_BROWSER_ON_CHROMEOS = true;
 const DEFAULT_ENABLE_NOTIFICATIONS = false;
 const DEFAULT_GENERATOR_APP_NAME = 'unknown';
 
@@ -129,13 +128,13 @@ export class TwaManifest {
   startUrl: string;
   iconUrl: string | undefined;
   maskableIconUrl: string | undefined;
-  useBrowserOnChromeOS: boolean;
   splashScreenFadeOutDuration: number;
   signingKey: SigningKeyInfo;
   appVersionCode: number;
   appVersionName: string;
   shortcuts: string;
   generatorApp: string;
+  webManifestUrl?: URL;
 
   constructor(data: TwaManifestJson) {
     this.packageId = data.packageId;
@@ -149,13 +148,13 @@ export class TwaManifest {
     this.startUrl = data.startUrl;
     this.iconUrl = data.iconUrl;
     this.maskableIconUrl = data.maskableIconUrl;
-    this.useBrowserOnChromeOS = data.useBrowserOnChromeOS;
     this.splashScreenFadeOutDuration = data.splashScreenFadeOutDuration;
     this.signingKey = data.signingKey;
     this.appVersionName = data.appVersion;
     this.appVersionCode = data.appVersionCode || DEFAULT_APP_VERSION_CODE;
     this.shortcuts = data.shortcuts;
     this.generatorApp = data.generatorApp || DEFAULT_GENERATOR_APP_NAME;
+    this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
   }
 
   /**
@@ -170,6 +169,7 @@ export class TwaManifest {
       navigationColor: this.navigationColor.hex(),
       backgroundColor: this.backgroundColor.hex(),
       appVersion: this.appVersionName,
+      webManifestUrl: this.webManifestUrl ? this.webManifestUrl.toString() : undefined,
     });
     await fs.promises.writeFile(filename, JSON.stringify(json, null, 2));
   }
@@ -244,10 +244,10 @@ export class TwaManifest {
         path: DEFAULT_SIGNING_KEY_PATH,
         alias: DEFAULT_SIGNING_KEY_ALIAS,
       },
-      useBrowserOnChromeOS: DEFAULT_USE_BROWSER_ON_CHROMEOS,
       splashScreenFadeOutDuration: DEFAULT_SPLASHSCREEN_FADEOUT_DURATION,
       enableNotifications: DEFAULT_ENABLE_NOTIFICATIONS,
       shortcuts: JSON.stringify(shortcuts, undefined, 2),
+      webManifestUrl: webManifestUrl.toString(),
     });
     return twaManifest;
   }
@@ -291,13 +291,13 @@ export interface TwaManifestJson {
   startUrl: string;
   iconUrl?: string;
   maskableIconUrl?: string;
-  useBrowserOnChromeOS: boolean;
   splashScreenFadeOutDuration: number;
   signingKey: SigningKeyInfo;
   appVersionCode?: number; // Older Manifests may not have this field.
   appVersion: string; // appVersionName - Old Manifests use `appVersion`. Keeping compatibility.
   shortcuts: string;
   generatorApp?: string;
+  webManifestUrl?: string;
 }
 
 export interface SigningKeyInfo {

@@ -15,6 +15,7 @@
  */
 
 import {TwaManifest, TwaManifestJson} from '../../lib/TwaManifest';
+import Color = require('color');
 
 describe('TwaManifest', () => {
   describe('#fromWebManifestJson', () => {
@@ -61,6 +62,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.signingKey.alias).toBe('android');
       expect(twaManifest.splashScreenFadeOutDuration).toBe(300);
       expect(twaManifest.enableNotifications).toBeFalse();
+      expect(twaManifest.webManifestUrl).toEqual(manifestUrl);
       expect(JSON.parse(twaManifest.shortcuts)).toEqual([
         {
           name: 'shortcut name',
@@ -91,6 +93,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.signingKey.alias).toBe('android');
       expect(twaManifest.splashScreenFadeOutDuration).toBe(300);
       expect(twaManifest.enableNotifications).toBeFalse();
+      expect(twaManifest.webManifestUrl).toEqual(manifestUrl);
       expect(twaManifest.shortcuts).toBe('[]');
     });
 
@@ -102,6 +105,79 @@ describe('TwaManifest', () => {
       const twaManifest = TwaManifest.fromWebManifestJson(manifestUrl, manifest);
       expect(twaManifest.name).toBe('PWA Directory');
       expect(twaManifest.launcherName).toBe('PWA Directory');
+    });
+  });
+
+  describe('#constructor', () => {
+    it('Builds a TwaManifest correctly', () => {
+      const twaManifestJson = {
+        packageId: 'com.pwa_directory.twa',
+        host: 'pwa-directory.com',
+        name: 'PWA Directory',
+        launcherName: 'PwaDirectory',
+        startUrl: '/',
+        iconUrl: 'https://pwa-directory.com/favicons/android-chrome-512x512.png',
+        themeColor: '#00ff00',
+        navigationColor: '#000000',
+        backgroundColor: '#0000ff',
+        appVersion: '1.0.0',
+        appVersionCode: 10,
+        signingKey: {
+          path: './my-keystore',
+          alias: 'my-alias',
+        },
+        splashScreenFadeOutDuration: 300,
+        enableNotifications: true,
+        shortcuts: '[{name: "name", url: "/", icons: [{src: "icon.png"}]}]',
+        webManifestUrl: 'https://pwa-directory.com/manifest.json',
+        generatorApp: 'test',
+      } as TwaManifestJson;
+      const twaManifest = new TwaManifest(twaManifestJson);
+      expect(twaManifest.packageId).toEqual(twaManifestJson.packageId);
+      expect(twaManifest.host).toEqual(twaManifestJson.host);
+      expect(twaManifest.name).toEqual(twaManifestJson.name);
+      expect(twaManifest.launcherName).toEqual(twaManifest.launcherName);
+      expect(twaManifest.startUrl).toEqual(twaManifest.startUrl);
+      expect(twaManifest.iconUrl).toEqual(twaManifest.iconUrl);
+      expect(twaManifest.themeColor).toEqual(new Color('#00ff00'));
+      expect(twaManifest.navigationColor).toEqual(new Color('#000000'));
+      expect(twaManifest.backgroundColor).toEqual(new Color('#0000ff'));
+      expect(twaManifest.appVersionName).toEqual(twaManifestJson.appVersion);
+      expect(twaManifest.appVersionCode).toEqual(twaManifestJson.appVersionCode!);
+      expect(twaManifest.signingKey.path).toEqual(twaManifestJson.signingKey.path);
+      expect(twaManifest.signingKey.alias).toEqual(twaManifestJson.signingKey.alias);
+      expect(twaManifest.splashScreenFadeOutDuration)
+          .toEqual(twaManifestJson.splashScreenFadeOutDuration);
+      expect(twaManifest.enableNotifications).toEqual(twaManifestJson.enableNotifications);
+      expect(twaManifest.shortcuts).toEqual(twaManifestJson.shortcuts);
+      expect(twaManifest.webManifestUrl).toEqual(new URL(twaManifestJson.webManifestUrl!));
+      expect(twaManifest.generatorApp).toEqual(twaManifestJson.generatorApp!);
+    });
+
+    it('TwaManifest.webManifestUrl defaults to undefined', () => {
+      const twaManifestJson = {
+        packageId: 'com.pwa_directory.twa',
+        host: 'pwa-directory.com',
+        name: 'PWA Directory',
+        launcherName: 'PwaDirectory',
+        startUrl: '/',
+        iconUrl: 'https://pwa-directory.com/favicons/android-chrome-512x512.png',
+        themeColor: '#00ff00',
+        navigationColor: '#000000',
+        backgroundColor: '#0000ff',
+        appVersion: '1.0.0',
+        appVersionCode: 10,
+        signingKey: {
+          path: './my-keystore',
+          alias: 'my-alias',
+        },
+        splashScreenFadeOutDuration: 300,
+        enableNotifications: true,
+        shortcuts: '[{name: "name", url: "/", icons: [{src: "icon.png"}]}]',
+        generatorApp: 'test',
+      } as TwaManifestJson;
+      const twaManifest = new TwaManifest(twaManifestJson);
+      expect(twaManifest.webManifestUrl).toBeUndefined();
     });
   });
 
