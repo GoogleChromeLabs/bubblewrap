@@ -33,9 +33,11 @@
             android:name="asset_statements"
             android:resource="@string/assetStatements" />
 
-        <meta-data
-            android:name="cros_web_alternative"
-            android:value="@string/crosLaunchUrl" />
+        <% if (webManifestUrl) { %>
+            <meta-data
+                android:name="web_manifest_url"
+                android:value="@string/webManifestUrl" />
+        <% } %>
 
         <meta-data
             android:name="twa_generator"
