@@ -19,7 +19,7 @@ import * as fs from 'fs';
 import fetch from 'node-fetch';
 import {template} from 'lodash';
 import {promisify} from 'util';
-import {TwaManifest} from './TwaManifest';
+import {TwaManifest, ShortcutInfo} from './TwaManifest';
 import Jimp = require('jimp');
 import Log from './Log';
 
@@ -232,10 +232,7 @@ export class TwaGenerator {
       await this.generateIcons(twaManifest.iconUrl, targetDirectory, IMAGES);
     }
 
-    // TODO(andreban): TwaManifest.shortcuts is a string, which is being parsed into an Object.
-    // Needs to be transformed into a proper Class.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await Promise.all(JSON.parse(twaManifest.shortcuts).map((shortcut: any, i: number) => {
+    await Promise.all(twaManifest.shortcuts.map((shortcut: ShortcutInfo, i: number) => {
       const imageDirs = SHORTCUT_IMAGES.map(
           (imageDir) => ({...imageDir, dest: `${imageDir.dest}shortcut_${i}.png`}));
       return this.generateIcons(shortcut.chosenIconUrl, targetDirectory, imageDirs);

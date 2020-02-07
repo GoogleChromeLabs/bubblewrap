@@ -148,7 +148,7 @@ task generateShorcutsFile {
                     'intent'(
                             'android:action': 'android.intent.action.MAIN',
                             'android:targetPackage': twaManifest.applicationId,
-                            'android:targetClass': 'android.support.customtabs.trusted.LauncherActivity',
+                            'android:targetClass': 'com.google.androidbrowserhelper.trusted.LauncherActivity',
                             'android:data': s.url)
                     'categories'('android:name': 'android.intent.category.LAUNCHER')
                 }

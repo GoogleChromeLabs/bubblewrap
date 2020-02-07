@@ -89,7 +89,7 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
     }, {
       name: 'shortcuts',
       type: 'confirm',
-      message: 'Include app shortcuts?\n' + twaManifest.shortcuts,
+      message: 'Include app shortcuts?\n' + JSON.stringify(twaManifest.shortcuts, null, 2),
       default: true,
     }, {
       name: 'packageId',
@@ -122,7 +122,7 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
   twaManifest.startUrl = result.startUrl;
   twaManifest.iconUrl = result.iconUrl;
   twaManifest.maskableIconUrl = result.maskableIconUrl;
-  twaManifest.shortcuts = result.shortcuts ? '[]' : twaManifest.shortcuts;
+  twaManifest.shortcuts = result.shortcuts ? twaManifest.shortcuts : [];
   twaManifest.packageId = result.packageId;
   twaManifest.signingKey = {
     alias: result.keyAlias,
