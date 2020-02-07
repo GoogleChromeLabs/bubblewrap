@@ -212,28 +212,26 @@ export class TwaManifest {
 
     const shortcuts: ShortcutInfo[] = [];
 
-    if (webManifest.shortcuts) {
-      for (const s of webManifest.shortcuts) {
-        if (!s.icons || !s.url || (!s.name && !s.short_name)) {
-          continue;
-        }
+    for (const s of webManifest.shortcuts || []) {
+      if (!s.icons || !s.url || (!s.name && !s.short_name)) {
+        continue;
+      }
 
-        const suitableIcon = util.findSuitableIcon(s.icons, 'any');
-        if (!suitableIcon) {
-          continue;
-        }
+      const suitableIcon = util.findSuitableIcon(s.icons, 'any');
+      if (!suitableIcon) {
+        continue;
+      }
 
-        const name = s.name || s.short_name;
-        const shortName = s.short_name || s.name!.substring(0, SHORT_NAME_MAX_SIZE);
-        const url = new URL(s.url, webManifestUrl).toString();
-        const iconUrl = new URL(suitableIcon.src, webManifestUrl).toString();
-        const shortcutInfo = new ShortcutInfo(name!, shortName!, url, iconUrl);
+      const name = s.name || s.short_name;
+      const shortName = s.short_name || s.name!.substring(0, SHORT_NAME_MAX_SIZE);
+      const url = new URL(s.url, webManifestUrl).toString();
+      const iconUrl = new URL(suitableIcon.src, webManifestUrl).toString();
+      const shortcutInfo = new ShortcutInfo(name!, shortName!, url, iconUrl);
 
-        shortcuts.push(shortcutInfo);
+      shortcuts.push(shortcutInfo);
 
-        if (shortcuts.length === 3) {
-          break;
-        }
+      if (shortcuts.length === 4) {
+        break;
       }
     }
 
