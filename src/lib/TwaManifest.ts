@@ -29,6 +29,9 @@ const DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX = /[^ a-zA-Z0-9_\.]/;
 // The minimum size needed for the app icon.
 const MIN_ICON_SIZE = 512;
 
+// As described on https://developer.chrome.com/apps/manifest/name#short_name
+const SHORT_NAME_MAX_SIZE = 12;
+
 // Default values used on the Twa Manifest
 const DEFAULT_SPLASHSCREEN_FADEOUT_DURATION = 300;
 const DEFAULT_APP_NAME = 'My TWA';
@@ -221,7 +224,7 @@ export class TwaManifest {
         }
 
         const name = s.name || s.short_name;
-        const shortName = s.short_name || s.name!.substring(0, 12);
+        const shortName = s.short_name || s.name!.substring(0, SHORT_NAME_MAX_SIZE);
         const url = new URL(s.url, webManifestUrl).toString();
         const iconUrl = new URL(suitableIcon.src, webManifestUrl).toString();
         const shortcutInfo = new ShortcutInfo(name!, shortName!, url, iconUrl);
@@ -238,8 +241,8 @@ export class TwaManifest {
       packageId: generatePackageId(webManifestUrl.host),
       host: webManifestUrl.host,
       name: webManifest['name'] || webManifest['short_name'] || DEFAULT_APP_NAME,
-      launcherName:
-          webManifest['short_name'] || webManifest['name']?.substring(0, 12) || DEFAULT_APP_NAME,
+      launcherName: webManifest['short_name'] ||
+          webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE) || DEFAULT_APP_NAME,
       themeColor: webManifest['theme_color'] || DEFAULT_THEME_COLOR,
       navigationColor: DEFAULT_NAVIGATION_COLOR,
       backgroundColor: webManifest['background_color'] || DEFAULT_BACKGROUND_COLOR,
