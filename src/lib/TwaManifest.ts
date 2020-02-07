@@ -73,10 +73,6 @@ export class ShortcutInfo {
    */
   constructor(readonly name: string, readonly shortName: string, readonly url: string,
         readonly chosenIconUrl: string) {
-    this.name = name;
-    this.shortName = shortName;
-    this.url = url;
-    this.chosenIconUrl = chosenIconUrl;
   }
 }
 
