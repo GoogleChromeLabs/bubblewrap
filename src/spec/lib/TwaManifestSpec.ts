@@ -63,14 +63,15 @@ describe('TwaManifest', () => {
       expect(twaManifest.splashScreenFadeOutDuration).toBe(300);
       expect(twaManifest.enableNotifications).toBeFalse();
       expect(twaManifest.webManifestUrl).toEqual(manifestUrl);
-      expect(JSON.parse(twaManifest.shortcuts)).toEqual([
-        {
-          name: 'shortcut name',
-          shortName: 'short',
-          url: 'https://pwa-directory.com/launch',
-          chosenIconUrl: 'https://pwa-directory.com/shortcut_icon.png',
-        },
-      ]);
+      expect(twaManifest.shortcuts.length).toBe(1);
+      expect(twaManifest.shortcuts[0].name).toBe('shortcut name');
+      expect(twaManifest.shortcuts[0].shortName).toBe('short');
+      expect(twaManifest.shortcuts[0].url).toBe('https://pwa-directory.com/launch');
+      expect(twaManifest.shortcuts[0].chosenIconUrl)
+          .toBe('https://pwa-directory.com/shortcut_icon.png');
+      expect(twaManifest.generateShortcuts())
+          .toBe('[[name:\'shortcut name\', short_name:\'short\',' +
+            ' url:\'https://pwa-directory.com/launch\', icon:\'shortcut_0\']]');
     });
 
     it('Sets correct defaults for unavailable fields', () => {
@@ -94,7 +95,8 @@ describe('TwaManifest', () => {
       expect(twaManifest.splashScreenFadeOutDuration).toBe(300);
       expect(twaManifest.enableNotifications).toBeFalse();
       expect(twaManifest.webManifestUrl).toEqual(manifestUrl);
-      expect(twaManifest.shortcuts).toBe('[]');
+      expect(twaManifest.shortcuts).toEqual([]);
+      expect(twaManifest.generateShortcuts()).toBe('[]');
     });
 
     it('Uses "name" when "short_name" is not available', () => {
@@ -104,7 +106,7 @@ describe('TwaManifest', () => {
       const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
       const twaManifest = TwaManifest.fromWebManifestJson(manifestUrl, manifest);
       expect(twaManifest.name).toBe('PWA Directory');
-      expect(twaManifest.launcherName).toBe('PWA Directory');
+      expect(twaManifest.launcherName).toBe('PWA Director');
     });
   });
 
@@ -128,7 +130,7 @@ describe('TwaManifest', () => {
         },
         splashScreenFadeOutDuration: 300,
         enableNotifications: true,
-        shortcuts: '[{name: "name", url: "/", icons: [{src: "icon.png"}]}]',
+        shortcuts: [{name: 'name', shortName: 'shortName', url: '/', chosenIconUrl: 'icon.png'}],
         webManifestUrl: 'https://pwa-directory.com/manifest.json',
         generatorApp: 'test',
       } as TwaManifestJson;
@@ -173,7 +175,7 @@ describe('TwaManifest', () => {
         },
         splashScreenFadeOutDuration: 300,
         enableNotifications: true,
-        shortcuts: '[{name: "name", url: "/", icons: [{src: "icon.png"}]}]',
+        shortcuts: [{name: 'name', url: '/', chosenIconUrl: 'icon.png'}],
         generatorApp: 'test',
       } as TwaManifestJson;
       const twaManifest = new TwaManifest(twaManifestJson);
@@ -205,7 +207,7 @@ describe('TwaManifest', () => {
         },
         splashScreenFadeOutDuration: 300,
         enableNotifications: true,
-        shortcuts: '[{name: "name", url: "/", icons: [{src: "icon.png"}]}]',
+        shortcuts: [{name: 'name', url: '/', chosenIconUrl: 'icon.png'}],
       } as TwaManifestJson);
       expect(twaManifest.validate()).toBeTrue();
     });
