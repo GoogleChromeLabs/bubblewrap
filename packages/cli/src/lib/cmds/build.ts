@@ -14,12 +14,8 @@
  *  limitations under the License.
  */
 
-import {AndroidSdkTools} from '../../lib/androidSdk/AndroidSdkTools';
-import {JdkHelper} from '../../lib/jdk/JdkHelper';
-import {GradleWrapper} from '../../lib/GradleWrapper';
-import {TwaManifest} from '../../lib/TwaManifest';
-import {Config} from '../../lib/Config';
-import Log from '../../lib/Log';
+import {AndroidSdkTools, Config, GradleWrapper, JdkHelper, Log, TwaManifest}
+  from '@llama-pack/core';
 import * as inquirer from 'inquirer';
 import {validatePassword} from '../inputHelpers';
 

@@ -4,9 +4,9 @@
     "target": "es5",
     "module": "commonjs",
     "declaration": true,
-    "outDir": "./dist",
+    "outDir": "dist",
     "strict": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }

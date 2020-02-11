@@ -16,9 +16,7 @@
 
 import * as inquirer from 'inquirer';
 import * as path from 'path';
-import Log from '../../lib/Log';
-import {TwaGenerator} from '../../lib/TwaGenerator';
-import {TwaManifest} from '../../lib/TwaManifest';
+import {Log, TwaGenerator, TwaManifest} from '@llama-pack/core';
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
 import {notEmpty} from '../inputHelpers';
