@@ -30,8 +30,7 @@ feature requests, and contribute with pull requests, if possible.
 
 ## llama-pack Components
 
-- **[llama-pack-core](./packages/core):** a javascript library that for generating, building and
-updating TWA projects.
+- **[llama-pack-core](./packages/core):** a javascript library for generating, building and updating TWA projects.
 - **[llama-pack-cli](./packages/cli):** a command-line version for llama-pack.
 
 ## Contributing
