@@ -194,6 +194,13 @@ export class TwaGenerator {
       throw new Error(
           `Failed to download icon ${iconUrl}. Responded with status ${response.status}`);
     }
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType?.startsWith('image/')) {
+      throw new Error(`Received icon "${iconUrl}" with invalid Content-Type.` +
+          ` Responded with Content-Type "${contentType}"`);
+    }
+
     const body = await response.buffer();
     return {
       url: iconUrl,
