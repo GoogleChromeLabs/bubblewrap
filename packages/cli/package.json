@@ -1,0 +1,41 @@
+{
+  "name": "@llama-pack/cli",
+  "version": "0.4.1",
+  "description": "CLI tool to Generate TWA projects from a Web Manifest",
+  "bin": {
+    "llama-pack": "bin/llama-pack.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint \"src/**/*.{js,ts}\"",
+    "test": ""
+  },
+  "files":[
+    "dist",
+    "bin"
+  ],
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GoogleChromeLabs/llama-pack.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@types/color": "^3.0.0",
+    "@types/inquirer": "^6.5.0",
+    "@types/minimist": "^1.2.0",
+    "@llama-pack/core": "^0.4.0",
+    "color": "^3.1.2",
+    "minimist": "^1.2.0",
+    "inquirer": "^7.0.4"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.9.0",
+    "@typescript-eslint/parser": "^2.9.0",
+    "eslint": "^6.6.0",
+    "eslint-config-google": "^0.14.0",
+    "jasmine": "^3.5.0",
+    "typescript": "^3.7.2"
+  }
+}

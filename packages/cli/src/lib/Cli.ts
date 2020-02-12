@@ -15,7 +15,7 @@
  */
 
 import * as minimist from 'minimist';
-import {Config} from '../lib/Config';
+import {Config} from '@llama-pack/core';
 import {update} from './cmds/update';
 import {help} from './cmds/help';
 import {build} from './cmds/build';

@@ -17,12 +17,7 @@
 import * as fs from 'fs';
 import Color = require('color');
 import * as inquirer from 'inquirer';
-import {Config} from '../../lib/Config';
-import {JdkHelper} from '../../lib/jdk/JdkHelper';
-import {KeyTool} from '../../lib/jdk/KeyTool';
-import Log from '../../lib/Log';
-import {TwaGenerator} from '../../lib/TwaGenerator';
-import {TwaManifest} from '../../lib/TwaManifest';
+import {Config, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest} from '@llama-pack/core';
 import {validateColor, validatePassword, validateUrl, notEmpty} from '../inputHelpers';
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';

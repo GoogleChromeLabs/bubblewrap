@@ -1,0 +1,57 @@
+{
+  "name": "@llama-pack/core",
+  "version": "0.4.1",
+  "description": "Core Library to generate, build and sign TWA projects",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint \"src/**/*.{js,ts}\"",
+    "test": "tsc && jasmine --config=jasmine.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "keywords": [
+    "twa",
+    "trusted-web-activities",
+    "pwa",
+    "progressive-web-apps",
+    "android"
+  ],
+  "files":[
+    "dist",
+    "template_project"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GoogleChromeLabs/llama-pack.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@types/color": "^3.0.0",
+    "@types/extract-zip": "^1.6.2",
+    "@types/jasmine": "^3.5.0",
+    "@types/lodash.template": "^4.4.6",
+    "@types/node": "^12.12.14",
+    "@types/node-fetch": "^2.5.4",
+    "@types/tar": "^4.0.3",
+    "@types/valid-url": "^1.0.2",
+    "@types/inquirer": "^6.5.0",
+    "extract-zip": "^1.6.7",
+    "color": "^3.1.2",
+    "jimp": "^0.9.3",
+    "lodash.template": "^4.5.0",
+    "node-fetch": "^2.6.0",
+    "npm": "^6.13.7",
+    "tar": "^5.0.5",
+    "valid-url": "^1.0.9",
+    "typescript": "^3.7.2",
+    "inquirer": "^7.0.4"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.9.0",
+    "@typescript-eslint/parser": "^2.9.0",
+    "eslint": "^6.6.0",
+    "eslint-config-google": "^0.14.0",
+    "jasmine": "^3.5.0"
+  }
+}

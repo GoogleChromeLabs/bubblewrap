@@ -14,16 +14,21 @@
  *  limitations under the License.
  */
 
-import {Cli} from './cli/';
+import {AndroidSdkTools} from './lib/androidSdk/AndroidSdkTools';
+import {Config} from './lib/Config';
+import {GradleWrapper} from './lib/GradleWrapper';
 import Log from './lib/Log';
+import {JdkHelper} from './lib/jdk/JdkHelper';
+import {KeyTool} from './lib/jdk/KeyTool';
+import {TwaManifest} from './lib/TwaManifest';
+import {TwaGenerator} from './lib/TwaGenerator';
 
-module.exports = (): void => {
-  const cli = new Cli();
-  const log = new Log('cli');
-  const args = process.argv.slice(2);
-  cli.run(args)
-      .catch((err: Error) => {
-        log.error(err.message);
-        process.exit(1);
-      });
+export {AndroidSdkTools,
+  Config,
+  GradleWrapper,
+  JdkHelper,
+  KeyTool,
+  Log,
+  TwaGenerator,
+  TwaManifest,
 };

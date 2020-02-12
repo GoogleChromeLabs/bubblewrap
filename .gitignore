@@ -4,4 +4,6 @@ node_modules
 jdk8u232-b09
 android_sdk
 dist
-
+**/node_modules
+**/dist
+lerna-debug.log
