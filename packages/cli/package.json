@@ -1,6 +1,6 @@
 {
   "name": "@llama-pack/cli",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "CLI tool to Generate TWA projects from a Web Manifest",
   "bin": {
     "llama-pack": "bin/llama-pack.js"

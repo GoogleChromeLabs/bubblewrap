@@ -1,6 +1,6 @@
 {
   "name": "@llama-pack/core",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Core Library to generate, build and sign TWA projects",
   "scripts": {
     "build": "tsc",
