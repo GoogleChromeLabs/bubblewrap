@@ -194,6 +194,20 @@ export class TwaGenerator {
       throw new Error(
           `Failed to download icon ${iconUrl}. Responded with status ${response.status}`);
     }
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType?.startsWith('image/')) {
+      throw new Error(`Received icon "${iconUrl}" with invalid Content-Type.` +
+          ` Responded with Content-Type "${contentType}"`);
+    }
+
+    // TODO(andreban): Support for image/svg being tracked in
+    // https://github.com/GoogleChromeLabs/llama-pack/issues/103
+    if (contentType.startsWith('image/svg')) {
+      throw new Error(`Received icon "${iconUrl}" with Content-Type "${contentType}",` +
+       ' which is not currently supported');
+    }
+
     const body = await response.buffer();
     return {
       url: iconUrl,

@@ -79,7 +79,7 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
       message: 'URL to an image that is at least 512x512px to be used when generating ' +
           'maskable icons',
       default: twaManifest.maskableIconUrl,
-      filter: (input): string | undefined => input.length === 0 ? undefined : input.length,
+      filter: (input): string | undefined => input.length === 0 ? undefined : input,
       validate: (input): boolean => input === undefined || validateUrl(input),
     }, {
       name: 'shortcuts',
