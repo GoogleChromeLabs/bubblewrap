@@ -15,15 +15,15 @@
  */
 
 import * as minimist from 'minimist';
-import {Config} from '@llama-pack/core';
 import {update} from './cmds/update';
 import {help} from './cmds/help';
 import {build} from './cmds/build';
 import {init} from './cmds/init';
+import {loadOrCreateConfig} from './config';
 
 export class Cli {
   async run(args: string[]): Promise<void> {
-    const config = await Config.loadOrCreate();
+    const config = await loadOrCreateConfig();
 
     const parsedArgs = minimist(args);
     const command = args[0] || 'help';
