@@ -14,15 +14,16 @@
  *  limitations under the License.
  */
 
-import * as extract from 'extract-zip';
+import * as extractZip from 'extract-zip';
 import fetch from 'node-fetch';
 import * as fs from 'fs';
-import * as util from 'util';
+import {promisify} from 'util';
 import {exec, spawn} from 'child_process';
-import * as tar from 'tar';
+import {x as extractTar} from 'tar';
 import {WebManifestIcon} from './types/WebManifest';
 
-const execPromise = util.promisify(exec);
+const execPromise = promisify(exec);
+const extractZipPromise = promisify(extractZip);
 
 export async function execute(cmd: string[], env: NodeJS.ProcessEnv): Promise<void> {
   await execPromise(cmd.join(' '), {env: env});
@@ -43,26 +44,18 @@ export async function downloadFile(url: string, path: string): Promise<void> {
   });
 }
 
-export function unzipFile(
+export async function unzipFile(
     zipFile: string, destinationPath: string, deleteZipWhenDone = false): Promise<void> {
-  return new Promise((resolve, reject) => {
-    extract(zipFile, {dir: destinationPath}, (err) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      if (deleteZipWhenDone) {
-        fs.unlinkSync(zipFile);
-      }
-      resolve();
-    });
-  });
+  await extractZipPromise(zipFile, {dir: destinationPath});
+  if (deleteZipWhenDone) {
+    fs.unlinkSync(zipFile);
+  }
 }
 
 export async function untar(
     tarFile: string, destinationPath: string, deleteZipWhenDone = false): Promise<void> {
   console.log(`Extracting ${tarFile} to ${destinationPath}`);
-  await tar.x({
+  await extractTar({
     file: tarFile,
     cwd: destinationPath,
   });
