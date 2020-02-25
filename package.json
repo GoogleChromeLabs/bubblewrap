@@ -1,12 +1,14 @@
 {
   "name": "root",
   "private": true,
-  "version": "0.4.1",
+  "version": "0.4.3",
   "description": "Generate TWA projects from a Web Manifest",
   "scripts": {
     "build": "lerna run build",
     "lint": "lerna run lint",
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "clean": "lerna clean -y",
+    "postinstall": "lerna bootstrap && lerna link"
   },
   "keywords": [
     "twa",
@@ -21,10 +23,6 @@
   },
   "author": "",
   "license": "Apache-2.0",
-  "dependencies": {
-    "@llama-pack/core": "file:packages/core",
-    "@llama-pack/cli": "file:packages/cli"
-  },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.9.0",
     "@typescript-eslint/parser": "^2.9.0",
@@ -32,6 +30,8 @@
     "eslint-config-google": "^0.14.0",
     "jasmine": "^3.5.0",
     "lerna": "^3.20.2",
-    "lerna-changelog": "^1.0.0"
+    "lerna-changelog": "^1.0.0",
+    "npm": "^6.13.7",
+    "typescript": "^3.8.2"
   }
 }
