@@ -18,13 +18,9 @@
 
 import * as fs from 'fs';
 import fetch from 'node-fetch';
-import * as util from './util';
+import {findSuitableIcon, generatePackageId} from './util';
 import Color = require('color');
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
-
-// Regex for disallowed characters on Android Packages, as per
-// https://developer.android.com/guide/topics/manifest/manifest-element.html#package
-const DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX = /[^ a-zA-Z0-9_\.]/;
 
 // The minimum size needed for the app icon.
 const MIN_ICON_SIZE = 512;
@@ -44,22 +40,6 @@ const DEFAULT_SIGNING_KEY_PATH = './android.keystore';
 const DEFAULT_SIGNING_KEY_ALIAS = 'android';
 const DEFAULT_ENABLE_NOTIFICATIONS = false;
 const DEFAULT_GENERATOR_APP_NAME = 'unknown';
-
-/**
- * Generates an Android Application Id / Package Name, using the reverse hostname as a base
- * and appending `.twa` to the end.
- *
- * Replaces invalid characters, as described in the Android documentation with `_`.
- *
- * https://developer.android.com/guide/topics/manifest/manifest-element.html#package
- *
- * @param {String} host the original hostname
- */
-function generatePackageId(host: string): string {
-  const parts = host.split('.').reverse();
-  parts.push('twa');
-  return parts.join('.').replace(DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX, '_');
-}
 
 /**
  * A wrapper around the WebManifest's ShortcutInfo.
@@ -199,10 +179,10 @@ export class TwaManifest {
    */
   static fromWebManifestJson(webManifestUrl: URL, webManifest: WebManifestJson): TwaManifest {
     const icon: WebManifestIcon | null = webManifest.icons ?
-      util.findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE) : null;
+      findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE) : null;
 
     const maskableIcon: WebManifestIcon | null = webManifest.icons ?
-      util.findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE) : null;
+      findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE) : null;
 
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
 
@@ -213,7 +193,7 @@ export class TwaManifest {
         continue;
       }
 
-      const suitableIcon = util.findSuitableIcon(s.icons, 'any');
+      const suitableIcon = findSuitableIcon(s.icons, 'any');
       if (!suitableIcon) {
         continue;
       }
