@@ -15,10 +15,11 @@
 -->
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt">
-    <background>
+    <background android:drawable="@android:color/white" />
+    <foreground>
         <aapt:attr name="android:drawable">
             <layer-list>
-                <item android:drawable="@android:color/black" />
+                <item android:drawable="@android:color/white" />
                 <item android:drawable="@mipmap/ic_maskable"
 					android:top="12.75dp"
 					android:right="12.75dp"
@@ -26,6 +27,5 @@
 					android:bottom="12.75dp" />
             </layer-list>
         </aapt:attr>
-    </background>
-    <foreground android:drawable="@android:color/transparent" />
+    </foreground>
 </adaptive-icon>
