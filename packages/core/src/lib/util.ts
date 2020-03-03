@@ -27,7 +27,7 @@ const extractZipPromise = promisify(extractZip);
 
 // Regex for disallowed characters on Android Packages, as per
 // https://developer.android.com/guide/topics/manifest/manifest-element.html#package
-const DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX = /[^ a-zA-Z0-9_\.]/g;
+const DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX = /[^a-zA-Z0-9_\.]/g;
 
 export async function execute(cmd: string[], env: NodeJS.ProcessEnv): Promise<void> {
   await execPromise(cmd.join(' '), {env: env});

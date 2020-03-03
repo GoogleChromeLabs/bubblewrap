@@ -132,5 +132,9 @@ describe('util', () => {
       const result = util.generatePackageId('pwa-directory-test.appspot.com');
       expect(result).toBe('com.appspot.pwa_directory_test.twa');
     });
+    it('handles URL with spaces', () => {
+      const result = util.generatePackageId('pwa directory test.appspot.com');
+      expect(result).toBe('com.appspot.pwa_directory_test.twa');
+    });
   });
 });
