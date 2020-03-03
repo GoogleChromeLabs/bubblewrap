@@ -15,8 +15,7 @@
 -->
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt">
-    <background android:drawable="@android:color/white" />
-    <foreground>
+    <background>
         <aapt:attr name="android:drawable">
             <layer-list>
                 <item android:drawable="@android:color/white" />
@@ -27,5 +26,6 @@
 					android:bottom="12.75dp" />
             </layer-list>
         </aapt:attr>
-    </foreground>
+    </background>
+    <foreground android:drawable="@android:color/transparent" />
 </adaptive-icon>
