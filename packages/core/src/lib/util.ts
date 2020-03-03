@@ -25,6 +25,10 @@ import {WebManifestIcon} from './types/WebManifest';
 const execPromise = promisify(exec);
 const extractZipPromise = promisify(extractZip);
 
+// Regex for disallowed characters on Android Packages, as per
+// https://developer.android.com/guide/topics/manifest/manifest-element.html#package
+const DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX = /[^a-zA-Z0-9_\.]/g;
+
 export async function execute(cmd: string[], env: NodeJS.ProcessEnv): Promise<void> {
   await execPromise(cmd.join(' '), {env: env});
 }
@@ -113,4 +117,20 @@ export function findSuitableIcon(
 
   largestIcon.size = largestIconSize;
   return largestIcon;
+}
+
+/**
+ * Generates an Android Application Id / Package Name, using the reverse hostname as a base
+ * and appending `.twa` to the end.
+ *
+ * Replaces invalid characters, as described in the Android documentation with `_`.
+ *
+ * https://developer.android.com/guide/topics/manifest/manifest-element.html#package
+ *
+ * @param {String} host the original hostname
+ */
+export function generatePackageId(host: string): string {
+  const parts = host.split('.').reverse();
+  parts.push('twa');
+  return parts.join('.').replace(DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX, '_');
 }

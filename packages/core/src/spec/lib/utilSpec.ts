@@ -17,111 +17,124 @@
 import * as util from '../../lib/util';
 
 describe('util', () => {
-  it('returns null for an empty icon list', () => {
-    const result = util.findSuitableIcon([], 'any');
-    expect(result).toBeNull();
+  describe('#findSuitableIcon', () => {
+    it('returns null for an empty icon list', () => {
+      const result = util.findSuitableIcon([], 'any');
+      expect(result).toBeNull();
+    });
+
+    it('returns any icon if no minSize is provided', () => {
+      const result = util.findSuitableIcon(
+          [{
+            'src': '/favicons/android-chrome-192x192.png',
+            'sizes': '192x192',
+            'mimeType': 'image/png',
+          }], 'any');
+      expect(result).not.toBeNull();
+      // The test aborts when the expectation above fails, but `tsc` doesn't now it
+      // and compilation fails pointing that `result` could be null on the tests below.
+      //
+      // TODO(andreban): Investigate if it's possible to get `tsc` to understand the tests below
+      // don't run if the test above fails.
+      if (result === null) return;
+      expect(result.src).toBe('/favicons/android-chrome-192x192.png');
+      expect(result.sizes).toBe('192x192');
+      expect(result.mimeType).toBe('image/png');
+      expect(result.size).toBe(192);
+    });
+
+    it('returns any icon if `sizes` is undefined', () => {
+      const result = util.findSuitableIcon(
+          [{
+            'src': '/favicons/android-chrome-192x192.png',
+            'mimeType': 'image/png',
+          }], 'any');
+      expect(result).not.toBeNull();
+
+      // The test aborts when the expectation above fails, but `tsc` doesn't now it
+      // and compilation fails pointing that `result` could be null on the tests below.
+      //
+      // TODO(andreban): Investigate if it's possible to get `tsc` to understand the tests below
+      // don't run if the test above fails.
+      if (result === null) return;
+      expect(result.src).toBe('/favicons/android-chrome-192x192.png');
+      expect(result.mimeType).toBe('image/png');
+      expect(result.size).toBe(0);
+    });
+
+    it('returns null if an icon larger than minSize is not found', () => {
+      const result = util.findSuitableIcon(
+          [{
+            'src': '/favicons/android-chrome-192x192.png',
+            'sizes': '192x192',
+            'mimeType': 'image/png',
+          }], 'any', 512);
+      expect(result).toBeNull();
+    });
+
+    it('returns a icon suitable icon', () => {
+      const result = util.findSuitableIcon([{
+        'src': '/favicons/android-chrome-512x512.png',
+        'sizes': '512x512',
+        'mimeType': 'image/png',
+      }], 'any', 512);
+      expect(result).not.toBeNull();
+      // The test aborts when the expectation above fails, but `tsc` doesn't now it
+      // and compilation fails pointing that `result` could be null on the tests below.
+      //
+      // TODO(andreban): Investigate if it's possible to get `tsc` to understand the tests below
+      // don't run if the test above fails.
+      if (result === null) return;
+      expect(result.src).toBe('/favicons/android-chrome-512x512.png');
+      expect(result.sizes).toBe('512x512');
+      expect(result.mimeType).toBe('image/png');
+      expect(result.size).toBe(512);
+    });
+
+    it('returns null when no maskable icon is available', () => {
+      const result = util.findSuitableIcon(
+          [{
+            'src': '/favicons/android-chrome-512x512.png',
+            'sizes': '512x512',
+            'mimeType': 'image/png',
+          }], 'maskable', 512);
+      expect(result).toBeNull();
+    });
+
+    it('returns icon when a maskable icon is available', () => {
+      const result = util.findSuitableIcon([{
+        'src': '/favicons/android-chrome-512x512.png',
+        'sizes': '512x512',
+        'mimeType': 'image/png',
+      }, {
+        'src': '/favicons/icon-maskable-7a2eb399.png',
+        'sizes': '512x512',
+        'mimeType': 'image/png',
+        'purpose': 'maskable',
+      }], 'maskable', 512);
+      expect(result).not.toBeNull();
+      // The test aborts when the expectation above fails, but `tsc` doesn't now it
+      // and compilation fails pointing that `result` could be null on the tests below.
+      //
+      // TODO(andreban): Investigate if it's possible to get `tsc` to understand the tests below
+      // don't run if the test above fails.
+      if (result === null) return;
+      expect(result.src).toBe('/favicons/icon-maskable-7a2eb399.png');
+      expect(result.sizes).toBe('512x512');
+      expect(result.mimeType).toBe('image/png');
+      expect(result.purpose).toBe('maskable');
+      expect(result.size).toBe(512);
+    });
   });
 
-  it('returns any icon if no minSize is provided', () => {
-    const result = util.findSuitableIcon(
-        [{
-          'src': '/favicons/android-chrome-192x192.png',
-          'sizes': '192x192',
-          'mimeType': 'image/png',
-        }], 'any');
-    expect(result).not.toBeNull();
-    // The test aborts when the expectation above fails, but `tsc` doesn't now it
-    // and compilation fails pointing that `result` could be null on the tests below.
-    //
-    // TODO(andreban): Investigate if it's possible to get `tsc` to understand the tests below
-    // don't run if the test above fails.
-    if (result === null) return;
-    expect(result.src).toBe('/favicons/android-chrome-192x192.png');
-    expect(result.sizes).toBe('192x192');
-    expect(result.mimeType).toBe('image/png');
-    expect(result.size).toBe(192);
-  });
-
-  it('returns any icon if `sizes` is undefined', () => {
-    const result = util.findSuitableIcon(
-        [{
-          'src': '/favicons/android-chrome-192x192.png',
-          'mimeType': 'image/png',
-        }], 'any');
-    expect(result).not.toBeNull();
-
-    // The test aborts when the expectation above fails, but `tsc` doesn't now it
-    // and compilation fails pointing that `result` could be null on the tests below.
-    //
-    // TODO(andreban): Investigate if it's possible to get `tsc` to understand the tests below
-    // don't run if the test above fails.
-    if (result === null) return;
-    expect(result.src).toBe('/favicons/android-chrome-192x192.png');
-    expect(result.mimeType).toBe('image/png');
-    expect(result.size).toBe(0);
-  });
-
-  it('returns null if an icon larger than minSize is not found', () => {
-    const result = util.findSuitableIcon(
-        [{
-          'src': '/favicons/android-chrome-192x192.png',
-          'sizes': '192x192',
-          'mimeType': 'image/png',
-        }], 'any', 512);
-    expect(result).toBeNull();
-  });
-
-  it('returns a icon suitable icon', () => {
-    const result = util.findSuitableIcon([{
-      'src': '/favicons/android-chrome-512x512.png',
-      'sizes': '512x512',
-      'mimeType': 'image/png',
-    }], 'any', 512);
-    expect(result).not.toBeNull();
-    // The test aborts when the expectation above fails, but `tsc` doesn't now it
-    // and compilation fails pointing that `result` could be null on the tests below.
-    //
-    // TODO(andreban): Investigate if it's possible to get `tsc` to understand the tests below
-    // don't run if the test above fails.
-    if (result === null) return;
-    expect(result.src).toBe('/favicons/android-chrome-512x512.png');
-    expect(result.sizes).toBe('512x512');
-    expect(result.mimeType).toBe('image/png');
-    expect(result.size).toBe(512);
-  });
-
-  it('returns null when no maskable icon is available', () => {
-    const result = util.findSuitableIcon(
-        [{
-          'src': '/favicons/android-chrome-512x512.png',
-          'sizes': '512x512',
-          'mimeType': 'image/png',
-        }], 'maskable', 512);
-    expect(result).toBeNull();
-  });
-
-  it('returns icon when a maskable icon is available', () => {
-    const result = util.findSuitableIcon([{
-      'src': '/favicons/android-chrome-512x512.png',
-      'sizes': '512x512',
-      'mimeType': 'image/png',
-    }, {
-      'src': '/favicons/icon-maskable-7a2eb399.png',
-      'sizes': '512x512',
-      'mimeType': 'image/png',
-      'purpose': 'maskable',
-    }], 'maskable', 512);
-    expect(result).not.toBeNull();
-    // The test aborts when the expectation above fails, but `tsc` doesn't now it
-    // and compilation fails pointing that `result` could be null on the tests below.
-    //
-    // TODO(andreban): Investigate if it's possible to get `tsc` to understand the tests below
-    // don't run if the test above fails.
-    if (result === null) return;
-    expect(result.src).toBe('/favicons/icon-maskable-7a2eb399.png');
-    expect(result.sizes).toBe('512x512');
-    expect(result.mimeType).toBe('image/png');
-    expect(result.purpose).toBe('maskable');
-    expect(result.size).toBe(512);
+  describe('#generatePackageId', () => {
+    it('handles URL with multiple dashes', () => {
+      const result = util.generatePackageId('pwa-directory-test.appspot.com');
+      expect(result).toBe('com.appspot.pwa_directory_test.twa');
+    });
+    it('handles URL with spaces', () => {
+      const result = util.generatePackageId('pwa directory test.appspot.com');
+      expect(result).toBe('com.appspot.pwa_directory_test.twa');
+    });
   });
 });
