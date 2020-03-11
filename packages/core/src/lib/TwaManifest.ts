@@ -20,6 +20,7 @@ import * as fs from 'fs';
 import fetch from 'node-fetch';
 import {findSuitableIcon, generatePackageId} from './util';
 import Color = require('color');
+import Log from './Log';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 
 // The minimum size needed for the app icon.
@@ -99,6 +100,8 @@ export class TwaManifest {
   shortcuts: ShortcutInfo[];
   generatorApp: string;
   webManifestUrl?: URL;
+
+  private static log: Log = new Log('twa-manifest');
 
   constructor(data: TwaManifestJson) {
     this.packageId = data.packageId;
@@ -188,13 +191,17 @@ export class TwaManifest {
 
     const shortcuts: ShortcutInfo[] = [];
 
-    for (const s of webManifest.shortcuts || []) {
+    for (let i = 0; i < (webManifest.shortcuts || []).length; i++) {
+      const s = webManifest.shortcuts![i];
+
       if (!s.icons || !s.url || (!s.name && !s.short_name)) {
+        TwaManifest.log.warn(`Skipping shortcut[${i}] for missing metadata.`);
         continue;
       }
 
       const suitableIcon = findSuitableIcon(s.icons, 'any');
       if (!suitableIcon) {
+        TwaManifest.log.warn(`Skipping shortcut[${i}] for not finding a suitable icon.`);
         continue;
       }
 
