@@ -1,3 +1,17 @@
+## v0.5.2 (2020-03-11)
+
+#### :rocket: Enhancement
+* `core`
+  * [#122](https://github.com/GoogleChromeLabs/bubblewrap/pull/122) Add console warnings if a shortcut has been skipped. ([@rayankans](https://github.com/rayankans))
+  * [#120](https://github.com/GoogleChromeLabs/bubblewrap/pull/120) Increases minSdkVersion to 19 ([@andreban](https://github.com/andreban))
+
+#### :memo: Documentation
+* `cli`, `core`
+  * [#121](https://github.com/GoogleChromeLabs/bubblewrap/pull/121) Renames llama-pack => BubbleWrap ([@andreban](https://github.com/andreban))
+
+#### Committers: 2
+- André Cipriani Bandarra ([@andreban](https://github.com/andreban))
+- Rayan Kanso ([@rayankans](https://github.com/rayankans))
 ## v0.5.0 (2020-03-03)
 
 #### :boom: Breaking Change
