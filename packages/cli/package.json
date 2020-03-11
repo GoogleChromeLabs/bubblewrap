@@ -1,5 +1,5 @@
 {
-  "name": "@llama-pack/cli",
+  "name": "@bubblewrap/cli",
   "version": "0.5.1",
   "description": "CLI tool to Generate TWA projects from a Web Manifest",
   "bin": {
