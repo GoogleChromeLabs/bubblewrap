@@ -56,3 +56,8 @@ See [CONTRIBUTING](../../CONTRIBUTING.md) for more.
 ## License
 
 See [LICENSE](../../LICENSE) for more.
+
+## Disclaimer	
+
+This is not a Google product.
+
