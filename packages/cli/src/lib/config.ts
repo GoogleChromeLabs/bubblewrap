@@ -17,7 +17,7 @@
 import {existsSync} from 'fs';
 import {join} from 'path';
 import {homedir} from 'os';
-import {Config} from '@llama-pack/core';
+import {Config} from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
 
 const DEFAULT_CONFIG_PATH = join(homedir(), '/.llama-pack/llama-pack-config.json');
