@@ -14,16 +14,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-# 🦙Llama Pack CLI
-![Node CI Status](https://github.com/GoogleChromeLabs/llama-pack/workflows/Node%20CI/badge.svg)
+# Bubblewrap CLI
+![Node CI Status](https://github.com/GoogleChromeLabs/bubblewrap/workflows/Node%20CI/badge.svg)
 
-Llama Pack is a Command Line Interface (CLI) that helps developers to create
+Bubblewrap is a Command Line Interface (CLI) that helps developers to create
 a Project for an Android application that launches an existing Progressive Web App (PWA) using a
 [Trusted Web Activity (TWA)](https://developers.google.com/web/updates/2019/02/using-twa).
-
-**Important:** llama-pack is still under active development. The tool hasn't been tested on a wide
-range of Web APKs, and bootstraping a new project may fail in those cases. Please, file issues,
-feature requests, and contribute with pull requests, if possible.
 
 ## Requirements
 - [Node.js](https://nodejs.org/en/) 10.0 or above
@@ -32,7 +28,7 @@ feature requests, and contribute with pull requests, if possible.
 
 ### Get the Java Development Kit (JDK) 8.
 The Android Command line tools requires the correct version of the JDK to run. To prevent version
-conflicts with a JDK version that is already installed, llama-pack uses a JDK that can unzipped in
+conflicts with a JDK version that is already installed, Bubblewrap uses a JDK that can unzipped in
 a separate folder.
 
 Download a version of JDK 8 that is compatible with your OS from
@@ -47,27 +43,27 @@ Download a version of Android command line tools that is compatible with your OS
 [https://developer.android.com/studio#command-tools](https://developer.android.com/studio#command-tools).
 Create a folder and extract the downloaded file into it.
 
-### Tell llama-pack where the JDK and Android command line tools are
-When running `llama-pack` for the first time, it will ask where it can find the JDK and Android command
+### Tell Bubblewrap where the JDK and Android command line tools are
+When running `bubblewrap` for the first time, it will ask where it can find the JDK and Android command
 line tools. So, take note of the location where both were decompressed.
 
 
-## Using llama-pack
+## Using Bubblewrap
 
-### Installing llama-pack
+### Installing Bubblewrap
 
 ```shell
-npm i -g @llama-pack/cli
+npm i -g @bubblewrap/cli
 ```
 
 ### Initializing an Android Project
 Generate an Android project from an existing Web Manifest:
 
 ```shell
-llama-pack init --manifest https://my-twa.com/manifest.json
+bubblewrap init --manifest https://my-twa.com/manifest.json
 ```
 
-When initalizing a project, llama-pack will download the Web Manifest and ask you to confirm
+When initalizing a project, Bubblewrap will download the Web Manifest and ask you to confirm
 the values that should be used when building the Android project.
 
 It will also ask you for the details needed to generate a signing key, used to sign the
@@ -75,7 +71,7 @@ app before uploading to the Play Store.
 
 ### Building the Android Project
 ```shell
-llama-pack build
+bubblewrap build
 ```
 
 When building the project for the first time, the Android Build Tools will need to be installed.

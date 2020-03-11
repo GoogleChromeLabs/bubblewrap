@@ -3,7 +3,7 @@
   "version": "0.5.1",
   "description": "CLI tool to Generate TWA projects from a Web Manifest",
   "bin": {
-    "llama-pack": "bin/llama-pack.js"
+    "bubblewrap": "bin/bubblewrap.js"
   },
   "scripts": {
     "build": "tsc",
@@ -17,7 +17,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GoogleChromeLabs/llama-pack.git"
+    "url": "git+https://github.com/GoogleChromeLabs/bubblewrap.git"
   },
   "author": "",
   "license": "Apache-2.0",
