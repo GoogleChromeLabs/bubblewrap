@@ -202,7 +202,7 @@ export class TwaGenerator {
     }
 
     // TODO(andreban): Support for image/svg being tracked in
-    // https://github.com/GoogleChromeLabs/llama-pack/issues/103
+    // https://github.com/GoogleChromeLabs/bubblewrap/issues/103
     if (contentType.startsWith('image/svg')) {
       throw new Error(`Received icon "${iconUrl}" with Content-Type "${contentType}",` +
        ' which is not currently supported');

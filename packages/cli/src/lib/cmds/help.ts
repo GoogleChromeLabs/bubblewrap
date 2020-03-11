@@ -20,19 +20,19 @@ import {ParsedArgs} from 'minimist';
 const HELP_MESSAGES = new Map<string, string>(
     [
       ['main', [
-        'llama-pack [command] <options>',
+        'bubblewrap [command] <options>',
         '',
         '',
         'build ............... generates an Android APK from a TWA Project',
         'help ................ shows this menu',
         'init ................ initializes a new TWA Project',
-        'update .............. updates an existing TWA Project with the latest llama-pack template',
+        'update .............. updates an existing TWA Project with the latest bubblewrap template',
       ].join('\n')],
       ['init', [
         'Usage:',
         '',
         '',
-        'lama-pack init --manifest=[web-manifest-url]',
+        'bubblewrap init --manifest=[web-manifest-url]',
         '',
         '',
         'Options:',
@@ -43,13 +43,13 @@ const HELP_MESSAGES = new Map<string, string>(
         'Usage:',
         '',
         '',
-        'llama-pack build',
+        'bubblewrap build',
       ].join('\n')],
       ['update', [
         'Usage:',
         '',
         '',
-        'llama-pack update',
+        'bubblewrap update',
         '',
         '',
         'Options:',

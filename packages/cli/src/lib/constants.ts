@@ -14,4 +14,4 @@
  *  limitations under the License.
  */
 
-export const APP_NAME = 'llama-pack-cli';
+export const APP_NAME = 'bubblewrap-cli';

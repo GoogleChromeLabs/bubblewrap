@@ -40,7 +40,7 @@ export class AndroidSdkTools {
    * Constructs a new instance of AndroidSdkTools.
    *
    * @param {NodeJS.Process} process information from the OS process
-   * @param {Config} config the llama-pack general configuration
+   * @param {Config} config the bubblewrap general configuration
    * @param {jdkHelper} jdkHelper the JDK information to be used by the Android SDK
    */
   constructor(process: NodeJS.Process, config: Config, jdkHelper: JdkHelper) {
