@@ -14,16 +14,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-# 🦙Llama Pack Core
-![Node CI Status](https://github.com/GoogleChromeLabs/llama-pack/workflows/Node%20CI/badge.svg)
+# Bubblewrap Core
+![Node CI Status](https://github.com/GoogleChromeLabs/bubblewrap/workflows/Node%20CI/badge.svg)
 
-Llama Pack Core is a NodeJS library that helps developers to create a Project for an Android
+Bubblewrap Core is a NodeJS library that helps developers to create a Project for an Android
 application that launches an existing Progressive Web App (PWA) using a
 [Trusted Web Activity (TWA)](https://developers.google.com/web/updates/2019/02/using-twa).
-
-**Important:** llama-pack is still under active development. The tool hasn't been tested on a wide
-range of Web APKs, and bootstraping a new project may fail in those cases. Please, file issues,
-feature requests, and contribute with pull requests, if possible.
 
 ## Requirements
 - [Node.js](https://nodejs.org/en/) 10.0 or above
@@ -32,7 +28,7 @@ feature requests, and contribute with pull requests, if possible.
 
 ### Get the Java Development Kit (JDK) 8.
 The Android Command line tools requires the correct version of the JDK to run. To prevent version
-conflicts with a JDK version that is already installed, llama-pack uses a JDK that can unzipped in
+conflicts with a JDK version that is already installed, Bubblewrap uses a JDK that can unzipped in
 a separate folder.
 
 Download a version of JDK 8 that is compatible with your OS from
@@ -47,10 +43,10 @@ Download a version of Android command line tools that is compatible with your OS
 [https://developer.android.com/studio#command-tools](https://developer.android.com/studio#command-tools).
 Create a folder and extract the downloaded file into it.
 
-## Using llama-pack-core in a NodeJs project
+## Using @bubblewrap/core in a NodeJs project
 
 ```shell
-npm i -g @llama-pack/core
+npm i -g @bubblewrap/core
 ```
 
 ## Contributing
@@ -64,3 +60,4 @@ See [LICENSE](../../LICENSE) for more.
 ## Disclaimer
 
 This is not a Google product.
+

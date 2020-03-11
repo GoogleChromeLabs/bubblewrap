@@ -33,12 +33,12 @@ interface SigningKeyPasswords {
  */
 async function getPasswords(log: Log): Promise<SigningKeyPasswords> {
   // Check if passwords are set as environment variables.
-  const envKeystorePass = process.env['LLAMA_PACK_KEYSTORE_PASSWORD'];
-  const envKeyPass = process.env['LLAMA_PACK_KEY_PASSWORD'];
+  const envKeystorePass = process.env['BUBBLEWRAP_KEYSTORE_PASSWORD'];
+  const envKeyPass = process.env['BUBBLEWRAP_KEY_PASSWORD'];
 
   if (envKeyPass !== undefined && envKeystorePass !== undefined) {
-    log.info('Using passwords set in the LLAMA_PACK_KEYSTORE_PASSWORD and ' +
-        'LLAMA_PACK_KEY_PASSWORD environmental variables.');
+    log.info('Using passwords set in the BUBBLEWRAP_KEYSTORE_PASSWORD and ' +
+        'BUBBLEWRAP_KEY_PASSWORD environmental variables.');
     return {
       keystorePassword: envKeystorePass,
       keyPassword: envKeyPass,

@@ -34,7 +34,7 @@ export class JdkHelper {
    * Constructs a new instance of JdkHelper.
    *
    * @param {NodeJS.Process} process information from the OS process
-   * @param {Config} config the llama-pack general configuration
+   * @param {Config} config the bubblewrap general configuration
    */
   constructor(process: NodeJS.Process, config: Config) {
     this.process = process;
