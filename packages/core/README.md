@@ -19,7 +19,7 @@
 
 Bubblewrap Core is a NodeJS library that helps developers to create a Project for an Android
 application that launches an existing Progressive Web App (PWA) using a
-[Trusted Web Activity (TWA)](https://developers.google.com/web/updates/2019/02/using-twa).
+[Trusted Web Activity (TWA)](https://developers.google.com/web/android/trusted-web-activity/).
 
 ## Requirements
 - [Node.js](https://nodejs.org/en/) 10.0 or above
