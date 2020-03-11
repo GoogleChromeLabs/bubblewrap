@@ -17,7 +17,7 @@
 import * as fs from 'fs';
 import Color = require('color');
 import * as inquirer from 'inquirer';
-import {Config, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest} from '@llama-pack/core';
+import {Config, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest} from '@bubblewrap/core';
 import {validateColor, validatePassword, validateUrl, notEmpty} from '../inputHelpers';
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';

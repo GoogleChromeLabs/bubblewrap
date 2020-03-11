@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import {Log} from '@llama-pack/core';
+import {Log} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
 
 const HELP_MESSAGES = new Map<string, string>(

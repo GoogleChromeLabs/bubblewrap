@@ -15,7 +15,7 @@
  */
 
 import {Cli} from './lib/Cli';
-import {Log} from '@llama-pack/core';
+import {Log} from '@bubblewrap/core';
 
 module.exports = (): void => {
   const cli = new Cli();

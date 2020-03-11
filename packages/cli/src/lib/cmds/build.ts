@@ -15,7 +15,7 @@
  */
 
 import {AndroidSdkTools, Config, GradleWrapper, JdkHelper, Log, TwaManifest}
-  from '@llama-pack/core';
+  from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
 import {validatePassword} from '../inputHelpers';
 
