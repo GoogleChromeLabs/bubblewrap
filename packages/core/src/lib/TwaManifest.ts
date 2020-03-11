@@ -188,13 +188,17 @@ export class TwaManifest {
 
     const shortcuts: ShortcutInfo[] = [];
 
-    for (const s of webManifest.shortcuts || []) {
+    for (let i = 0; i < (webManifest.shortcuts || []).length; i++) {
+      const s = webManifest.shortcuts![i];
+  
       if (!s.icons || !s.url || (!s.name && !s.short_name)) {
+        console.error(`Skipping shortcut[${i}] for missing metadata.`);
         continue;
       }
 
       const suitableIcon = findSuitableIcon(s.icons, 'any');
       if (!suitableIcon) {
+        console.error(`Skipping shortcut[${i}] for not finding a suitable icon.`);
         continue;
       }
 
