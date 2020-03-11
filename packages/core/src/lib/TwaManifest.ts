@@ -190,7 +190,7 @@ export class TwaManifest {
 
     for (let i = 0; i < (webManifest.shortcuts || []).length; i++) {
       const s = webManifest.shortcuts![i];
-  
+
       if (!s.icons || !s.url || (!s.name && !s.short_name)) {
         console.error(`Skipping shortcut[${i}] for missing metadata.`);
         continue;
