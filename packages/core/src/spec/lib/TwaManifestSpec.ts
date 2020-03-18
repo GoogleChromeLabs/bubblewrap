@@ -134,6 +134,7 @@ describe('TwaManifest', () => {
         shortcuts: [{name: 'name', shortName: 'shortName', url: '/', chosenIconUrl: 'icon.png'}],
         webManifestUrl: 'https://pwa-directory.com/manifest.json',
         generatorApp: 'test',
+        fallbackType: 'webview',
       } as TwaManifestJson;
       const twaManifest = new TwaManifest(twaManifestJson);
       expect(twaManifest.packageId).toEqual(twaManifestJson.packageId);
@@ -155,9 +156,10 @@ describe('TwaManifest', () => {
       expect(twaManifest.shortcuts).toEqual(twaManifestJson.shortcuts);
       expect(twaManifest.webManifestUrl).toEqual(new URL(twaManifestJson.webManifestUrl!));
       expect(twaManifest.generatorApp).toEqual(twaManifestJson.generatorApp!);
+      expect(twaManifest.fallbackType).toBe('webview');
     });
 
-    it('TwaManifest.webManifestUrl defaults to undefined', () => {
+    it('Sets correct default values for optional fields', () => {
       const twaManifestJson = {
         packageId: 'com.pwa_directory.twa',
         host: 'pwa-directory.com',
@@ -181,6 +183,7 @@ describe('TwaManifest', () => {
       } as TwaManifestJson;
       const twaManifest = new TwaManifest(twaManifestJson);
       expect(twaManifest.webManifestUrl).toBeUndefined();
+      expect(twaManifest.fallbackType).toBe('customtabs');
     });
   });
 

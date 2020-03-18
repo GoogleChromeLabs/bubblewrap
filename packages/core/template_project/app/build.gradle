@@ -36,7 +36,7 @@ def twaManifest = [
     shortcuts: <%= generateShortcuts() %>,
     // The duration of fade out animation in milliseconds to be played when removing splash screen.
     splashScreenFadeOutDuration: <%= splashScreenFadeOutDuration %>,
-    generatorApp: '<%= generatorApp %>', // Apllication that generated the Android Project
+    generatorApp: '<%= generatorApp %>', // Application that generated the Android Project
     // The fallback strategy for when Trusted Web Activity is not avilable. Possible values are
     // 'customtabs' and 'webview'.
     fallbackType: '<%= fallbackType %>'

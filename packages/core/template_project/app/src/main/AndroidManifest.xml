@@ -21,7 +21,10 @@
      the abbreviated format. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="<%= packageId %>">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <% if (fallbackType === 'webview') { %>
+        <uses-permission android:name="android.permission.INTERNET"/>
+    <% }%>
 
     <application
         android:allowBackup="true"
