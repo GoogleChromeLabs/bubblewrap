@@ -36,7 +36,10 @@ def twaManifest = [
     shortcuts: <%= generateShortcuts() %>,
     // The duration of fade out animation in milliseconds to be played when removing splash screen.
     splashScreenFadeOutDuration: <%= splashScreenFadeOutDuration %>,
-    generatorApp: '<%= generatorApp %>' // Apllication that generated the Android Project
+    generatorApp: '<%= generatorApp %>', // Application that generated the Android Project
+    // The fallback strategy for when Trusted Web Activity is not avilable. Possible values are
+    // 'customtabs' and 'webview'.
+    fallbackType: '<%= fallbackType %>'
 ]
 
 android {
@@ -110,6 +113,8 @@ android {
         resValue "integer", "splashScreenFadeOutDuration", twaManifest.splashScreenFadeOutDuration.toString()
 
         resValue "string", "generatorApp", twaManifest.generatorApp
+
+        resValue "string", "fallbackType", twaManifest.fallbackType
     }
     buildTypes {
         release {
@@ -161,5 +166,5 @@ preBuild.dependsOn(generateShorcutsFile)
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:1.1.0'
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:1.2.0'
 }

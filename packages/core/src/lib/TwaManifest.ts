@@ -42,6 +42,8 @@ const DEFAULT_SIGNING_KEY_ALIAS = 'android';
 const DEFAULT_ENABLE_NOTIFICATIONS = false;
 const DEFAULT_GENERATOR_APP_NAME = 'unknown';
 
+export type FallbackType = 'customtabs' | 'webview';
+
 /**
  * A wrapper around the WebManifest's ShortcutInfo.
  */
@@ -100,6 +102,7 @@ export class TwaManifest {
   shortcuts: ShortcutInfo[];
   generatorApp: string;
   webManifestUrl?: URL;
+  fallbackType: FallbackType;
 
   private static log: Log = new Log('twa-manifest');
 
@@ -122,6 +125,7 @@ export class TwaManifest {
     this.shortcuts = data.shortcuts;
     this.generatorApp = data.generatorApp || DEFAULT_GENERATOR_APP_NAME;
     this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
+    this.fallbackType = data.fallbackType || 'customtabs';
   }
 
   /**
@@ -290,6 +294,7 @@ export interface TwaManifestJson {
   shortcuts: ShortcutInfo[];
   generatorApp?: string;
   webManifestUrl?: string;
+  fallbackType?: FallbackType;
 }
 
 export interface SigningKeyInfo {
