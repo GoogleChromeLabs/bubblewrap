@@ -21,6 +21,7 @@
      the abbreviated format. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="<%= packageId %>">
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -70,6 +71,9 @@
 
             <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
 
+            <meta-data android:name="android.support.customtabs.trusted.FALLBACK_STRATEGY"
+                android:value="@string/fallbackType" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -85,6 +89,9 @@
         </activity>
 
         <activity android:name="com.google.androidbrowserhelper.trusted.FocusActivity" />
+
+        <activity android:name="com.google.androidbrowserhelper.trusted.WebViewFallbackActivity"
+            android:configChanges="orientation|screenSize" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

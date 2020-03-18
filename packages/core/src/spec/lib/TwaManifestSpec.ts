@@ -72,6 +72,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.generateShortcuts())
           .toBe('[[name:\'shortcut name\', short_name:\'short\',' +
             ' url:\'https://pwa-directory.com/launch\', icon:\'shortcut_0\']]');
+      expect(twaManifest.fallbackType).toBe('customtabs');
     });
 
     it('Sets correct defaults for unavailable fields', () => {
