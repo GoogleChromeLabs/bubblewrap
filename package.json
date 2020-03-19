@@ -24,8 +24,8 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.22.0",
-    "@typescript-eslint/parser": "^2.22.0",
+    "@typescript-eslint/eslint-plugin": "^2.24.0",
+    "@typescript-eslint/parser": "^2.24.0",
     "eslint": "^6.6.0",
     "eslint-config-google": "^0.14.0",
     "jasmine": "^3.5.0",
