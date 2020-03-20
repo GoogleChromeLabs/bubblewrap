@@ -7,7 +7,7 @@
     "build": "lerna run build",
     "lint": "lerna run lint",
     "test": "lerna run test",
-    "clean": "lerna clean -y && lerna run clean",
+    "clean": "lerna clean -y",
     "postinstall": "lerna bootstrap && lerna link"
   },
   "keywords": [
