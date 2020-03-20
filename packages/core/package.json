@@ -41,10 +41,10 @@
     "color": "^3.1.2",
     "extract-zip": "^1.6.7",
     "inquirer": "^7.0.4",
-    "jimp": "^0.9.3",
+    "jimp": "^0.9.6",
     "lodash.template": "^4.5.0",
     "node-fetch": "^2.6.0",
-    "tar": "^5.0.5",
+    "tar": "^6.0.1",
     "valid-url": "^1.0.9"
   }
 }
