@@ -1,3 +1,16 @@
+## v0.6.0 (2020-03-23)
+
+#### :rocket: Enhancement
+* `core`
+  * [#126](https://github.com/GoogleChromeLabs/bubblewrap/pull/126) Updates android-browser-helper and enables WebView fallback on config ([@andreban](https://github.com/andreban))
+
+#### :house: Internal
+* `cli`, `core`
+  * [#128](https://github.com/GoogleChromeLabs/bubblewrap/pull/128) Runs npm audit fix and npm update ([@andreban](https://github.com/andreban))
+
+#### Committers: 1
+- André Cipriani Bandarra ([@andreban](https://github.com/andreban))
+
 ## v0.5.2 (2020-03-11)
 
 #### :rocket: Enhancement
