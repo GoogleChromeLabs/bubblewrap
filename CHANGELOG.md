@@ -51,32 +51,6 @@
 - André Cipriani Bandarra ([@andreban](https://github.com/andreban))
 - Tiger Oakes ([@NotWoods](https://github.com/NotWoods))
 
-
-## 0.5.0 (2020-03-03)
-
-#### :boom: Breaking Change
-* `cli`, `core`
-  * [#109](https://github.com/GoogleChromeLabs/bubblewrap/pull/109) Move Config read/write into cli ([@NotWoods](https://github.com/NotWoods))
-
-#### :rocket: Enhancement
-* `core`
-  * [#117](https://github.com/GoogleChromeLabs/bubblewrap/pull/117) Adaptative Icons Improvements ([@andreban](https://github.com/andreban))
-* `cli`, `core`
-  * [#108](https://github.com/GoogleChromeLabs/bubblewrap/pull/108) Reduce package size by omitting tests & build tools ([@NotWoods](https://github.com/NotWoods))
-
-#### :bug: Bug Fix
-* `core`
-  * [#114](https://github.com/GoogleChromeLabs/bubblewrap/pull/114) Fix packageName generation ([@andreban](https://github.com/andreban))
-
-#### :house: Internal
-* `cli`, `core`
-  * [#109](https://github.com/GoogleChromeLabs/bubblewrap/pull/109) Move Config read/write into cli ([@NotWoods](https://github.com/NotWoods))
-
-#### Committers: 2
-- André Cipriani Bandarra ([@andreban](https://github.com/andreban))
-- Tiger Oakes ([@NotWoods](https://github.com/NotWoods))
-
-
 ## v0.4.3 (2020-02-13)
 
 #### :boom: Breaking Change
