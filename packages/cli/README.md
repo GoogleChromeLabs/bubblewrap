@@ -48,7 +48,7 @@ When running `bubblewrap` for the first time, it will ask where it can find the 
 line tools. So, take note of the location where both were decompressed.
 
 ### Updating the location of the JDK and / or the Android command line tools.
-If the locatoin for the JDK or the Android command line tools have been setup with the wrong path or
+If the location for the JDK or the Android command line tools have been setup with the wrong path or
 if their location has changed after the initial configuration, the location for either of those can
 be changed by editing the configuration file at `${USER_HOME}/.llama-pack/llama-pack-config.json`.
 
