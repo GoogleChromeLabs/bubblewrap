@@ -19,6 +19,7 @@ import {update} from './cmds/update';
 import {help} from './cmds/help';
 import {build} from './cmds/build';
 import {init} from './cmds/init';
+import {validate} from './cmds/validate';
 import {loadOrCreateConfig} from './config';
 
 export class Cli {
@@ -36,6 +37,8 @@ export class Cli {
         return await update(parsedArgs);
       case 'build':
         return await build(config);
+      case 'validate':
+        return await validate(parsedArgs);
       default:
         throw new Error(`"${command}" is not a valid command!`);
     }

@@ -27,6 +27,8 @@ const HELP_MESSAGES = new Map<string, string>(
         'help ................ shows this menu',
         'init ................ initializes a new TWA Project',
         'update .............. updates an existing TWA Project with the latest bubblewrap template',
+        'validate ............ validates if an URL matches the PWA Quality Criteria for Trusted' +
+            ' Web Activity',
       ].join('\n')],
       ['init', [
         'Usage:',
@@ -57,6 +59,12 @@ const HELP_MESSAGES = new Map<string, string>(
             '--skipVersionUpgrade is used',
         '--skipVersionUpgrade ....... skips upgrading appVersion and appVersionCode',
         '--manifest ................. directory where the client should look for twa-manifest.json',
+      ].join('\n')],
+      ['validate', [
+        'Usage:',
+        '',
+        '',
+        'bubblewrap validate --url=[pwa-url]',
       ].join('\n')],
     ],
 );
