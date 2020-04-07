@@ -26,6 +26,9 @@ function mockPsiResult(performanceScore: number, pwaScore: number): PsiResult {
         performance: {
           score: performanceScore,
         },
+        accessibility: {
+          score: 0,
+        },
       },
     },
   } as PsiResult;
