@@ -195,7 +195,7 @@ async function createSigningKey(twaManifest: TwaManifest, config: Config): Promi
   });
 }
 
-export async function init(args: ParsedArgs, config: Config): Promise<void> {
+export async function init(args: ParsedArgs, config: Config): Promise<boolean> {
   log.info('Fetching Manifest: ', args.manifest);
   let twaManifest = await TwaManifest.fromWebManifest(args.manifest);
   twaManifest = await confirmTwaConfig(twaManifest);
@@ -204,4 +204,5 @@ export async function init(args: ParsedArgs, config: Config): Promise<void> {
   await twaManifest.saveToFile('./twa-manifest.json');
   await twaGenerator.createTwaProject(targetDirectory, twaManifest);
   await createSigningKey(twaManifest, config);
+  return true;
 }

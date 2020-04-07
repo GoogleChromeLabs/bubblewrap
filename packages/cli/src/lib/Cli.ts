@@ -23,7 +23,7 @@ import {validate} from './cmds/validate';
 import {loadOrCreateConfig} from './config';
 
 export class Cli {
-  async run(args: string[]): Promise<void> {
+  async run(args: string[]): Promise<boolean> {
     const config = await loadOrCreateConfig();
 
     const parsedArgs = minimist(args);
@@ -36,7 +36,7 @@ export class Cli {
       case 'update':
         return await update(parsedArgs);
       case 'build':
-        return await build(config);
+        return await build(config, parsedArgs);
       case 'validate':
         return await validate(parsedArgs);
       default:

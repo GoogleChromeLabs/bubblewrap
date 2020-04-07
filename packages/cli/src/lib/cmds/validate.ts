@@ -17,11 +17,13 @@
 import {PwaValidator} from '@bubblewrap/validator';
 import {Log} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
+import {printValidationResult} from '../pwaValidationHelper';
 
 const log = new Log('validate');
 
-export async function validate(args: ParsedArgs): Promise<void> {
+export async function validate(args: ParsedArgs): Promise<boolean> {
   log.info('Validating URL: ', args.url);
   const validationResult = await PwaValidator.validate(new URL(args.url));
-  console.log(validationResult);
+  printValidationResult(validationResult, log);
+  return validationResult.status === 'PASS';
 }

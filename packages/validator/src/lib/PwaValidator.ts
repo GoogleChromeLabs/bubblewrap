@@ -17,12 +17,23 @@
 import {PsiRequestBuilder, PageSpeedInsights} from './psi';
 
 const MIN_PERFORMANCE_SCORE = 0.8;
-const REQUIRED_PWA_SCORE = 1;
+const MIN_PWA_SCORE = 1;
+
+type ValidationResult = 'PASS' | 'FAIL';
+
+type ScoreResult = {
+  value: number;
+  printValue: string;
+  status: ValidationResult;
+}
 
 export type PwaValidationResult = {
-  readonly performanceScore: number;
-  readonly pwaScore: number;
-  readonly passed: boolean;
+  readonly scores: {
+    pwa: ScoreResult;
+    performance: ScoreResult;
+    accessibility: ScoreResult;
+  };
+  readonly status: ValidationResult;
 }
 
 /**
@@ -46,17 +57,37 @@ export class PwaValidator {
     const psiRequest = new PsiRequestBuilder(url)
         .addCategory('performance')
         .addCategory('pwa')
+        .addCategory('accessibility')
         .setStrategy('mobile')
         .build();
 
     const psiResult = await this.psi.runPageSpeedInsights(psiRequest);
     const pwaScore = psiResult.lighthouseResult.categories.pwa.score;
     const performanceScore = psiResult.lighthouseResult.categories.performance.score;
-    const passed = pwaScore >= REQUIRED_PWA_SCORE && performanceScore >= MIN_PERFORMANCE_SCORE;
+    const pwaPass = pwaScore >= MIN_PWA_SCORE;
+    const performancePass = performanceScore >= MIN_PERFORMANCE_SCORE;
+    const passed = pwaPass && performancePass;
+    const accessibilityScore = psiResult.lighthouseResult.categories.accessibility.score;
+
     return {
-      performanceScore: performanceScore,
-      pwaScore: pwaScore,
-      passed: passed,
+      status: passed ? 'PASS' : 'FAIL',
+      scores: {
+        accessibility: {
+          value: accessibilityScore,
+          printValue: (Math.trunc(accessibilityScore * 100)).toString(),
+          status: 'PASS',
+        },
+        pwa: {
+          value: pwaScore,
+          printValue: pwaPass ? 'YES' : 'NO',
+          status: pwaPass ? 'PASS' : 'FAIL',
+        },
+        performance: {
+          value: pwaScore,
+          printValue: (Math.trunc(performanceScore * 100)).toString(),
+          status: pwaPass ? 'PASS' : 'FAIL',
+        },
+      },
     };
   }
 

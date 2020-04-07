@@ -46,6 +46,10 @@ const HELP_MESSAGES = new Map<string, string>(
         '',
         '',
         'bubblewrap build',
+        '',
+        '',
+        'Options:',
+        '--skipPwaValidation ....... skips validating the wrapped PWA against the Quality Criteria',
       ].join('\n')],
       ['update', [
         'Usage:',
@@ -69,12 +73,12 @@ const HELP_MESSAGES = new Map<string, string>(
     ],
 );
 
-export async function help(args: ParsedArgs, log = new Log('help')): Promise<void> {
+export async function help(args: ParsedArgs, log = new Log('help')): Promise<boolean> {
   // minimist uses an `_` object to store details.
   const command = args._[1];
   const message = HELP_MESSAGES.get(command) || HELP_MESSAGES.get('main');
 
   // We know we have a message for 'main', in case the command is invalid.
   log.info(message!);
-  return;
+  return true;
 }

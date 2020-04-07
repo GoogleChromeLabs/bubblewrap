@@ -17,7 +17,11 @@
 import {AndroidSdkTools, Config, GradleWrapper, JdkHelper, Log, TwaManifest}
   from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
+import * as path from 'path';
 import {validatePassword} from '../inputHelpers';
+import {PwaValidator, PwaValidationResult} from '@bubblewrap/validator';
+import {printValidationResult} from '../pwaValidationHelper';
+import {ParsedArgs} from 'minimist';
 
 interface SigningKeyPasswords {
   keystorePassword: string;
@@ -68,7 +72,19 @@ async function getPasswords(log: Log): Promise<SigningKeyPasswords> {
   };
 }
 
-export async function build(config: Config, log = new Log('build')): Promise<void> {
+async function startValidation(): Promise<PwaValidationResult> {
+  const manifestFile = path.join(process.cwd(), 'twa-manifest.json');
+  const twaManifest = await TwaManifest.fromFile(manifestFile);
+  return PwaValidator.validate(new URL(twaManifest.startUrl, twaManifest.webManifestUrl));
+}
+
+export async function build(
+    config: Config, args: ParsedArgs, log = new Log('build')): Promise<boolean> {
+  let pwaValidationPromise;
+  if (!args.skipPwaValidation) {
+    pwaValidationPromise = startValidation();
+  }
+
   const jdkHelper = new JdkHelper(process, config);
   const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
 
@@ -92,6 +108,16 @@ export async function build(config: Config, log = new Log('build')): Promise<voi
       './app-release-unsigned-aligned.apk', // output file
   );
 
+  if (!args.skipPwaValidation) {
+    log.info('Checking PWA Quality Criteria...');
+    const pwaValidationResult = (await pwaValidationPromise)!;
+    printValidationResult(pwaValidationResult, log);
+    if (pwaValidationResult.status === 'FAIL') {
+      log.error('PWA Quality Criteria check failed. Aborting build.');
+      return false;
+    }
+  }
+
   // And sign APK
   log.info('Signing...');
   const outputFile = './app-release-signed.apk';
@@ -105,4 +131,5 @@ export async function build(config: Config, log = new Log('build')): Promise<voi
   );
 
   log.info(`Signed Android App generated at "${outputFile}"`);
+  return true;
 }

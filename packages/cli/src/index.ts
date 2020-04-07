@@ -22,6 +22,11 @@ module.exports = (): void => {
   const log = new Log('cli');
   const args = process.argv.slice(2);
   cli.run(args)
+      .then((result) => {
+        if (!result) {
+          process.exit(1);
+        }
+      })
       .catch((err: Error) => {
         log.error(err.message);
         process.exit(1);

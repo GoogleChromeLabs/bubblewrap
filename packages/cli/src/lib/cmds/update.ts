@@ -70,7 +70,7 @@ async function updateVersions(twaManifest: TwaManifest, appVersionNameArg: strin
  * @param {string} [args.appVersionName] Value to be used for appVersionName when upgrading
  * versions. Ignored if `args.skipVersionUpgrade` is set to true.
  */
-export async function update(args: ParsedArgs): Promise<void> {
+export async function update(args: ParsedArgs): Promise<boolean> {
   const targetDirectory = args.directory || process.cwd();
   const manifestFile = args.manifest || path.join(process.cwd(), 'twa-manifest.json');
   const twaManifest = await TwaManifest.fromFile(manifestFile);
@@ -86,5 +86,6 @@ export async function update(args: ParsedArgs): Promise<void> {
   }
 
   const twaGenerator = new TwaGenerator();
-  return await twaGenerator.createTwaProject(targetDirectory, twaManifest);
+  await twaGenerator.createTwaProject(targetDirectory, twaManifest);
+  return true;
 }

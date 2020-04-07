@@ -30,7 +30,7 @@ projects for Android Applications that launch Progressive Web App (PWA) using
 updating TWA projects.
 - **[bubblewrap/cli](./packages/cli):** a command-line version of Bubblewrap.
 - **[bubblewrap/validator](./packages/validator):** library to validate the correctness and
-compare Trusted Web Activitty projects against the quality criteria.
+compare Trusted Web Activity projects against the quality criteria.
 
 ## Contributing
 

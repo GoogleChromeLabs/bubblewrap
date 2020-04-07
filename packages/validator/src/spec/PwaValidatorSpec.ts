@@ -44,22 +44,22 @@ describe('PwaValidator', () => {
     it('pass is true when lighthouse score >= 0.8 and pwa >= 1.0', async () => {
       const pwaValidator = mockPwaValidator(0.8, 1.0);
       const result = await pwaValidator.validate(new URL('https://example.com'));
-      expect(result.passed).toBeTrue();
+      expect(result.status).toBe('PASS');
     });
     it('pass is false when lighthouse score < 0.8 and pwa >= 1.0', async () => {
       const pwaValidator = mockPwaValidator(0.7, 1.0);
       const result = await pwaValidator.validate(new URL('https://example.com'));
-      expect(result.passed).toBeFalse();
+      expect(result.status).toBe('FAIL');
     });
     it('pass is false when lighthouse score >= 0.8 and pwa < 1.0', async () => {
       const pwaValidator = mockPwaValidator(1.0, 0.99);
       const result = await pwaValidator.validate(new URL('https://example.com'));
-      expect(result.passed).toBeFalse();
+      expect(result.status).toBe('FAIL');
     });
     it('pass is false when lighthouse score < 0.8 and pwa < 1.0', async () => {
       const pwaValidator = mockPwaValidator(0.0, 0.0);
       const result = await pwaValidator.validate(new URL('https://example.com'));
-      expect(result.passed).toBeFalse();
+      expect(result.status).toBe('FAIL');
     });
   });
 });
