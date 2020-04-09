@@ -33,6 +33,7 @@ export type PwaValidationResult = {
     performance: ScoreResult;
     accessibility: ScoreResult;
   };
+  readonly psiWebUrl: string;
   readonly status: ValidationResult;
 }
 
@@ -73,9 +74,12 @@ export class PwaValidator {
     const performancePass = performanceScore >= MIN_PERFORMANCE_SCORE;
     const passed = pwaPass && performancePass;
     const accessibilityScore = psiResult.lighthouseResult.categories.accessibility.score;
+    const psiWebUrl = new URL('https://developers.google.com/speed/pagespeed/insights/');
+    psiWebUrl.searchParams.append('url', url.toString());
 
     return {
       status: passed ? 'PASS' : 'FAIL',
+      psiWebUrl: psiWebUrl.toString(),
       scores: {
         accessibility: {
           value: accessibilityScore,

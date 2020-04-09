@@ -91,5 +91,13 @@ describe('PwaValidator', () => {
       await expectAsync(pwaValidator.validate(new URL('https://example.com')))
           .toBeRejectedWithError();
     });
+    it('returns the correct PSI url', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0);
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.psiWebUrl)
+          .toBe('https://developers.google.com/speed/pagespeed/insights/' +
+              '?url=https%3A%2F%2Fexample.com%2F');
+    });
   });
 });

@@ -3,6 +3,11 @@ import {red, green, bold, underline, gray} from 'colors';
 import {Log} from '@bubblewrap/core';
 
 export function printValidationResult(validationResult: PwaValidationResult, log: Log): void {
+  log.info('');
+  log.info('Check the full PageSpeed Insights report at:');
+  log.info(`- ${validationResult.psiWebUrl}`);
+  log.info('');
+
   const performanceValue = validationResult.scores.performance.status === 'PASS' ?
   green(validationResult.scores.performance.printValue) :
   red(validationResult.scores.performance.printValue);
