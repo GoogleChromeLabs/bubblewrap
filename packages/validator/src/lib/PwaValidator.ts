@@ -64,6 +64,11 @@ export class PwaValidator {
     const psiResult = await this.psi.runPageSpeedInsights(psiRequest);
     const pwaScore = psiResult.lighthouseResult.categories.pwa.score;
     const performanceScore = psiResult.lighthouseResult.categories.performance.score;
+    if (pwaScore === null || performanceScore === null || isNaN(pwaScore) ||
+        isNaN(performanceScore)) {
+      throw new Error(`Invalid scores received. PWA Score: ${pwaScore}. ` +
+          `Performance Score: ${performanceScore}`);
+    }
     const pwaPass = pwaScore >= MIN_PWA_SCORE;
     const performancePass = performanceScore >= MIN_PERFORMANCE_SCORE;
     const passed = pwaPass && performancePass;

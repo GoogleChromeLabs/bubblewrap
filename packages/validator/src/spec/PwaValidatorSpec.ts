@@ -16,7 +16,7 @@
 import {PwaValidator} from '../lib/PwaValidator';
 import {PsiResult} from '../lib/psi';
 
-function mockPsiResult(performanceScore: number, pwaScore: number): PsiResult {
+function mockPsiResult(performanceScore: number | null, pwaScore: number | null): PsiResult {
   return {
     lighthouseResult: {
       categories: {
@@ -34,10 +34,10 @@ function mockPsiResult(performanceScore: number, pwaScore: number): PsiResult {
   } as PsiResult;
 };
 
-function mockPwaValidator(pwaScore: number, performanceScore: number): PwaValidator {
+function mockPwaValidator(result: PsiResult): PwaValidator {
   return new PwaValidator({
     runPageSpeedInsights: async (): Promise<PsiResult> => {
-      return mockPsiResult(pwaScore, performanceScore);
+      return result;
     },
   });
 }
@@ -45,24 +45,51 @@ function mockPwaValidator(pwaScore: number, performanceScore: number): PwaValida
 describe('PwaValidator', () => {
   describe('#validate', () => {
     it('pass is true when lighthouse score >= 0.8 and pwa >= 1.0', async () => {
-      const pwaValidator = mockPwaValidator(0.8, 1.0);
+      const psiResult = mockPsiResult(0.8, 1.0);
+      const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
       expect(result.status).toBe('PASS');
     });
     it('pass is false when lighthouse score < 0.8 and pwa >= 1.0', async () => {
-      const pwaValidator = mockPwaValidator(0.7, 1.0);
+      const psiResult = mockPsiResult(0.7, 1.0);
+      const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
       expect(result.status).toBe('FAIL');
     });
     it('pass is false when lighthouse score >= 0.8 and pwa < 1.0', async () => {
-      const pwaValidator = mockPwaValidator(1.0, 0.99);
+      const psiResult = mockPsiResult(1.0, 0.99);
+      const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
       expect(result.status).toBe('FAIL');
     });
     it('pass is false when lighthouse score < 0.8 and pwa < 1.0', async () => {
-      const pwaValidator = mockPwaValidator(0.0, 0.0);
+      const psiResult = mockPsiResult(0.0, 0.0);
+      const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
       expect(result.status).toBe('FAIL');
+    });
+    it('pass is false when lighthouse scores are negative', async () => {
+      const psiResult = mockPsiResult(-100.0, -10.0);
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.status).toBe('FAIL');
+    });
+    it('throws an Error if score values are NaN', async () => {
+      const psiResult = mockPsiResult(NaN, NaN);
+      const pwaValidator = mockPwaValidator(psiResult);
+      await expectAsync(pwaValidator.validate(new URL('https://example.com')))
+          .toBeRejectedWithError();
+    });
+    it('throws an Error if score values are NaN', async () => {
+      const psiResult = mockPsiResult(null, null);
+      const pwaValidator = mockPwaValidator(psiResult);
+      await expectAsync(pwaValidator.validate(new URL('https://example.com')))
+          .toBeRejectedWithError();
+    });
+    it('throws an Error for an empty PsiResult', async () => {
+      const pwaValidator = mockPwaValidator({} as PsiResult);
+      await expectAsync(pwaValidator.validate(new URL('https://example.com')))
+          .toBeRejectedWithError();
     });
   });
 });
