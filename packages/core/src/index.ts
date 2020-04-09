@@ -22,6 +22,7 @@ import {JdkHelper} from './lib/jdk/JdkHelper';
 import {KeyTool} from './lib/jdk/KeyTool';
 import {TwaManifest} from './lib/TwaManifest';
 import {TwaGenerator} from './lib/TwaGenerator';
+import * as util from './lib/util';
 
 export {AndroidSdkTools,
   Config,
@@ -31,4 +32,5 @@ export {AndroidSdkTools,
   Log,
   TwaGenerator,
   TwaManifest,
+  util,
 };

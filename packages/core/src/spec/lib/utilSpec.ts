@@ -137,4 +137,34 @@ describe('util', () => {
       expect(result).toBe('com.appspot.pwa_directory_test.twa');
     });
   });
+
+  describe('#validatePackageId', () => {
+    it('returns true for valid packages', () => {
+      expect(util.validatePackageId('com.pwa_directory.appspot.com')).toBeTrue();
+      expect(util.validatePackageId('com.pwa1directory.appspot.com')).toBeTrue();
+    });
+
+    it('returns false for packages with invalid characters', () => {
+      expect(util.validatePackageId('com.pwa-directory.appspot.com')).toBeFalse();
+      expect(util.validatePackageId('com.pwa@directory.appspot.com')).toBeFalse();
+      expect(util.validatePackageId('com.pwa*directory.appspot.com')).toBeFalse();
+    });
+
+    it('returns false for packages empty sections', () => {
+      expect(util.validatePackageId('com.example.')).toBeFalse();
+      expect(util.validatePackageId('.com.example')).toBeFalse();
+      expect(util.validatePackageId('com..example')).toBeFalse();
+    });
+
+    it('packages with less than 2 sections return false', () => {
+      expect(util.validatePackageId('com')).toBeFalse();
+      expect(util.validatePackageId('')).toBeFalse();
+    });
+
+    it('packages starting with non-letters return false', () => {
+      expect(util.validatePackageId('com.1char.twa')).toBeFalse();
+      expect(util.validatePackageId('1com.char.twa')).toBeFalse();
+      expect(util.validatePackageId('com.char.1twa')).toBeFalse();
+    });
+  });
 });

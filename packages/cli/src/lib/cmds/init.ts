@@ -17,7 +17,7 @@
 import * as fs from 'fs';
 import Color = require('color');
 import * as inquirer from 'inquirer';
-import {Config, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest} from '@bubblewrap/core';
+import {Config, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest, util} from '@bubblewrap/core';
 import {validateColor, validatePassword, validateUrl, notEmpty} from '../inputHelpers';
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
@@ -36,19 +36,34 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
       type: 'input',
       message: 'Domain being opened in the TWA:',
       default: twaManifest.host,
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => {
+        if (notEmpty(input)) {
+          return true;
+        }
+        throw new Error('host cannot be empty');
+      },
     }, {
       name: 'name',
       type: 'input',
       message: 'Name of the application:',
       default: twaManifest.name,
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => {
+        if (notEmpty(input)) {
+          return true;
+        }
+        throw new Error('name cannot be empty');
+      },
     }, {
       name: 'launcherName',
       type: 'input',
       message: 'Name to be shown on the Android Launcher:',
       default: twaManifest.launcherName,
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => {
+        if (notEmpty(input)) {
+          return true;
+        }
+        throw new Error('Launcher name cannot be empty');
+      },
     }, {
       name: 'themeColor',
       type: 'input',
@@ -66,7 +81,12 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
       type: 'input',
       message: 'Relative path to open the TWA:',
       default: twaManifest.startUrl,
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => {
+        if (notEmpty(input)) {
+          return true;
+        }
+        throw new Error('URL cannot be empty');
+      },
     }, {
       name: 'iconUrl',
       type: 'input',
@@ -91,19 +111,35 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
       type: 'input',
       message: 'Android Package Name (or Application ID):',
       default: twaManifest.packageId,
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => {
+        if (!util.validatePackageId(input)) {
+          throw new Error('Invalid Application Id. Check requiements at ' +
+              'https://developer.android.com/studio/build/application-id');
+        }
+        return true;
+      },
     }, {
       name: 'keyPath',
       type: 'input',
       message: 'Location of the Signing Key:',
       default: twaManifest.signingKey.path,
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => {
+        if (notEmpty(input)) {
+          return true;
+        }
+        throw new Error('KeyStore location cannot be empty');
+      },
     }, {
       name: 'keyAlias',
       type: 'input',
       message: 'Key name:',
       default: twaManifest.signingKey.alias,
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => {
+        if (notEmpty(input)) {
+          return true;
+        }
+        throw new Error('Key alias cannot be empty');
+      },
     },
   ]);
 

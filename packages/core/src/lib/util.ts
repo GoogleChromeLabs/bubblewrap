@@ -28,6 +28,7 @@ const extractZipPromise = promisify(extractZip);
 // Regex for disallowed characters on Android Packages, as per
 // https://developer.android.com/guide/topics/manifest/manifest-element.html#package
 const DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX = /[^a-zA-Z0-9_\.]/g;
+const VALID_PACKAGE_ID_SEGMENT_REGEX = /^[a-zA-Z][A-Za-z0-9_]*$/;
 
 export async function execute(cmd: string[], env: NodeJS.ProcessEnv): Promise<void> {
   await execPromise(cmd.join(' '), {env: env});
@@ -133,4 +134,34 @@ export function generatePackageId(host: string): string {
   const parts = host.split('.').reverse();
   parts.push('twa');
   return parts.join('.').replace(DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX, '_');
+}
+
+/**
+ * Validates a Package Id, according to the documentation at:
+ * https://developer.android.com/studio/build/application-id
+ *
+ * Rules summary for the Package Id:
+ * - It must have at least two segments (one or more dots).
+ * - Each segment must start with a leter.
+ * - All characters must be alphanumeric or an underscore [a-zA-Z0-9_].
+ *
+ * @param {string} input the package name to be validated
+ */
+export function validatePackageId(input: string): boolean {
+  if (input.length <= 0) {
+    return false;
+  }
+
+  const parts = input.split('.');
+  if (parts.length < 2) {
+    return false;
+  }
+
+  for (const part of parts) {
+    if (part.match(VALID_PACKAGE_ID_SEGMENT_REGEX) === null) {
+      return false;
+    }
+  }
+
+  return true;
 }
