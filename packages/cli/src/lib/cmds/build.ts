@@ -113,8 +113,7 @@ export async function build(
     const pwaValidationResult = (await pwaValidationPromise)!;
     printValidationResult(pwaValidationResult, log);
     if (pwaValidationResult.status === 'FAIL') {
-      log.error('PWA Quality Criteria check failed. Aborting build.');
-      return false;
+      log.warn('PWA Quality Criteria check failed.');
     }
   }
 

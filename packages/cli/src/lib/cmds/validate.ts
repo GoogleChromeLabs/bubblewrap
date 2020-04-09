@@ -21,6 +21,11 @@ import {printValidationResult} from '../pwaValidationHelper';
 
 const log = new Log('validate');
 
+/**
+ * Runs the PwaValidator to check a given URL agains the Quality criteria. More information on the
+ * Quality Criteria available at: https://web.dev/using-a-pwa-in-your-android-app/#quality-criteria
+ * @param {ParsedArgs} args
+ */
 export async function validate(args: ParsedArgs): Promise<boolean> {
   log.info('Validating URL: ', args.url);
   const validationResult = await PwaValidator.validate(new URL(args.url));

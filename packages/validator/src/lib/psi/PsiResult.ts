@@ -54,7 +54,9 @@ export type PsiLighthouseResult = {
 };
 
 /**
- * Defines the types fro the PSI API response.
+ * Defines the types from the PageSpeed Insights API response, relevant to the Trusted Web Activity
+ * validation. A comprehensive documentation on fields available for the API response is available
+ * at https://developers.google.com/speed/docs/insights/v5/reference/pagespeedapi/runpagespeed#response_1.
  */
 export type PsiResult = {
   captchaResult: string;

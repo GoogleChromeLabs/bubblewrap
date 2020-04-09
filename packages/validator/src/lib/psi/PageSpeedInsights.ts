@@ -34,7 +34,8 @@ export class PsiRequest {
 }
 
 /**
- * Builds requests for the PSI endpoint;
+ * Builds requests for the PSI endpoint. A full list of parameters is available at
+ * https://developers.google.com/speed/docs/insights/v5/reference/pagespeedapi/runpagespeed
  */
 export class PsiRequestBuilder {
   private url: URL;
@@ -89,12 +90,17 @@ export class PsiRequestBuilder {
 /**
  * A Wrapper for the PageSpeedInsights API.
  *
- * More information on the API is available on the following link:
+ * More information on the API is available at:
  * - https://developers.google.com/speed/docs/insights/v5/get-started
  */
 export class PageSpeedInsights {
   async runPageSpeedInsights(request: PsiRequest): Promise<PsiResult> {
-    const result = await fetch(request.url);
-    return (await result.json()) as PsiResult;
+    const response = await fetch(request.url);
+    if (response.status !== 200) {
+      throw new Error(
+          `Failed to run the PageSpeed Insight report for ${request.url}. ` +
+          `Server responded with status ${response.status}`);
+    }
+    return (await response.json()) as PsiResult;
   }
 }
