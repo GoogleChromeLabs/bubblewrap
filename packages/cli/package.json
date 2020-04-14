@@ -23,11 +23,13 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@bubblewrap/core": "^0.6.0",
+    "@bubblewrap/validator": "^0.6.0",
     "@types/color": "^3.0.0",
     "@types/inquirer": "^6.5.0",
     "@types/minimist": "^1.2.0",
     "@types/valid-url": "^1.0.2",
     "color": "^3.1.2",
+    "colors": "^1.4.0",
     "inquirer": "^7.0.4",
     "minimist": "^1.2.2",
     "valid-url": "^1.0.9"

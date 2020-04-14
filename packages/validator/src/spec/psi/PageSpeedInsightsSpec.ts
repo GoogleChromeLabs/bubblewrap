@@ -14,26 +14,19 @@
  *  limitations under the License.
  */
 
-import {Cli} from './lib/Cli';
-import {Log} from '@bubblewrap/core';
+import {PsiRequestBuilder} from '../../lib/psi';
 
-module.exports = async (): Promise<void> => {
-  const cli = new Cli();
-  const log = new Log('cli');
-  const args = process.argv.slice(2);
-
-  let success;
-  try {
-    success = await cli.run(args);
-  } catch (err) {
-    log.error(err.message);
-    success = false;
-  }
-
-  // If running the command fails, we terminate the process signaling an error has occured.
-  // This helps if the CLI is being used as part of a build process and depends on its result
-  // to abort the build.
-  if (!success) {
-    process.exit(1);
-  }
-};
+describe('PsiRequestBuilder', () => {
+  describe('#build', () => {
+    it('builds a correct request', () => {
+      const psiRequest = new PsiRequestBuilder(new URL('https://example.com'))
+          .addCategory('pwa')
+          .addCategory('performance')
+          .setStrategy('mobile')
+          .build();
+      const expectedUrl = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?' +
+          'url=https%3A%2F%2Fexample.com%2F&category=pwa&category=performance&strategy=mobile';
+      expect(psiRequest.url.toString()).toBe(expectedUrl);
+    });
+  });
+});

@@ -26,8 +26,11 @@ projects for Android Applications that launch Progressive Web App (PWA) using
 
 ## Bubblewrap Components
 
-- **[bubblewrap/core](./packages/core):** a javascript library for generating, building and updating TWA projects.
+- **[bubblewrap/core](./packages/core):** a javascript library for generating, building and
+updating TWA projects.
 - **[bubblewrap/cli](./packages/cli):** a command-line version of Bubblewrap.
+- **[bubblewrap/validator](./packages/validator):** library to validate the correctness and
+compare Trusted Web Activity projects against the quality criteria.
 
 ## Contributing
 

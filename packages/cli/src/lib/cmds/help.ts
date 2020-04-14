@@ -27,6 +27,8 @@ const HELP_MESSAGES = new Map<string, string>(
         'help ................ shows this menu',
         'init ................ initializes a new TWA Project',
         'update .............. updates an existing TWA Project with the latest bubblewrap template',
+        'validate ............ validates if an URL matches the PWA Quality Criteria for Trusted' +
+            ' Web Activity',
       ].join('\n')],
       ['init', [
         'Usage:',
@@ -44,6 +46,10 @@ const HELP_MESSAGES = new Map<string, string>(
         '',
         '',
         'bubblewrap build',
+        '',
+        '',
+        'Options:',
+        '--skipPwaValidation ....... skips validating the wrapped PWA against the Quality Criteria',
       ].join('\n')],
       ['update', [
         'Usage:',
@@ -58,15 +64,21 @@ const HELP_MESSAGES = new Map<string, string>(
         '--skipVersionUpgrade ....... skips upgrading appVersion and appVersionCode',
         '--manifest ................. directory where the client should look for twa-manifest.json',
       ].join('\n')],
+      ['validate', [
+        'Usage:',
+        '',
+        '',
+        'bubblewrap validate --url=[pwa-url]',
+      ].join('\n')],
     ],
 );
 
-export async function help(args: ParsedArgs, log = new Log('help')): Promise<void> {
+export async function help(args: ParsedArgs, log = new Log('help')): Promise<boolean> {
   // minimist uses an `_` object to store details.
   const command = args._[1];
   const message = HELP_MESSAGES.get(command) || HELP_MESSAGES.get('main');
 
   // We know we have a message for 'main', in case the command is invalid.
   log.info(message!);
-  return;
+  return true;
 }

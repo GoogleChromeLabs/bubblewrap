@@ -19,10 +19,11 @@ import {update} from './cmds/update';
 import {help} from './cmds/help';
 import {build} from './cmds/build';
 import {init} from './cmds/init';
+import {validate} from './cmds/validate';
 import {loadOrCreateConfig} from './config';
 
 export class Cli {
-  async run(args: string[]): Promise<void> {
+  async run(args: string[]): Promise<boolean> {
     const config = await loadOrCreateConfig();
 
     const parsedArgs = minimist(args);
@@ -35,7 +36,9 @@ export class Cli {
       case 'update':
         return await update(parsedArgs);
       case 'build':
-        return await build(config);
+        return await build(config, parsedArgs);
+      case 'validate':
+        return await validate(parsedArgs);
       default:
         throw new Error(`"${command}" is not a valid command!`);
     }
