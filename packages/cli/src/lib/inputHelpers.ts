@@ -26,11 +26,11 @@ export async function validateKeyPassword(input: string): Promise<boolean> {
   return true;
 }
 
-export async function notEmpty(input: string, errorMessage: string): Promise<boolean> {
+export async function notEmpty(input: string, fieldName: string): Promise<boolean> {
   if (input.trim().length > 0) {
     return true;
   }
-  throw new Error(errorMessage);
+  throw new Error(`${fieldName} cannot be empty`);
 }
 
 export async function validateColor(color: string): Promise<boolean> {

@@ -53,7 +53,7 @@ async function updateVersions(twaManifest: TwaManifest, appVersionNameArg: strin
     message: 'versionName for the new App version:',
     default: twaManifest.appVersionName,
     validate: async (input): Promise<boolean> =>
-      notEmpty(input, 'versionName can\'t be empty'),
+      notEmpty(input, 'versionName'),
   }]);
 
   return {

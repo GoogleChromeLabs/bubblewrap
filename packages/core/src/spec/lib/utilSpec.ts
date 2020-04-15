@@ -148,6 +148,7 @@ describe('util', () => {
       expect(util.validatePackageId('com.pwa-directory.appspot.com')).toBeFalse();
       expect(util.validatePackageId('com.pwa@directory.appspot.com')).toBeFalse();
       expect(util.validatePackageId('com.pwa*directory.appspot.com')).toBeFalse();
+      expect(util.validatePackageId('com․pwa-directory.appspot.com')).toBeFalse();
     });
 
     it('returns false for packages empty sections', () => {
@@ -165,6 +166,7 @@ describe('util', () => {
       expect(util.validatePackageId('com.1char.twa')).toBeFalse();
       expect(util.validatePackageId('1com.char.twa')).toBeFalse();
       expect(util.validatePackageId('com.char.1twa')).toBeFalse();
+      expect(util.validatePackageId('_com.char.1twa')).toBeFalse();
     });
   });
 });

@@ -34,14 +34,14 @@ describe('inputHelpers', () => {
       await expectAsync(inputHelpers.validateKeyPassword(' ')).toBeRejectedWithError();
     });
 
-    it('throws Error for empty string', async () => {
+    it('throws Error input with less than 6 characters', async () => {
       await expectAsync(inputHelpers.validateKeyPassword('a')).toBeRejectedWithError();
       await expectAsync(inputHelpers.validateKeyPassword('abc')).toBeRejectedWithError();
       await expectAsync(inputHelpers.validateKeyPassword('abcde')).toBeRejectedWithError();
       await expectAsync(inputHelpers.validateKeyPassword('abcde ')).toBeRejectedWithError();
     });
 
-    it('throws Error for empty string', async () => {
+    it('returns true for valid input', async () => {
       expect(await inputHelpers.validateKeyPassword('abcdef')).toBeTrue();
       expect(await inputHelpers.validateKeyPassword('abcdef ')).toBeTrue();
     });
