@@ -17,23 +17,34 @@
 import Color = require('color');
 import {isWebUri} from 'valid-url';
 
-export function validatePassword(input: string): boolean {
-  return input.length > 0;
+const MIN_KEY_PASSWORD_LENGTH = 6;
+
+export async function validateKeyPassword(input: string): Promise<boolean> {
+  if (input.trim().length < MIN_KEY_PASSWORD_LENGTH) {
+    throw new Error(`Password must be at least ${MIN_KEY_PASSWORD_LENGTH} characters long`);
+  }
+  return true;
 }
 
-export function notEmpty(input: string): boolean {
-  return input.trim().length > 0;
+export async function notEmpty(input: string, errorMessage: string): Promise<boolean> {
+  if (input.trim().length > 0) {
+    return true;
+  }
+  throw new Error(errorMessage);
 }
 
-export function validateColor(color: string): boolean {
+export async function validateColor(color: string): Promise<boolean> {
   try {
     new Color(color);
     return true;
   } catch (_) {
-    return false;
+    throw new Error(`Invalid Color ${color}. Try using hexadecimal representation. eg: #FF3300`);
   }
 };
 
-export function validateUrl(url: string): boolean {
-  return isWebUri(url) !== undefined;
+export async function validateUrl(url: string): Promise<boolean> {
+  if (isWebUri(url) === undefined) {
+    throw new Error(`${url} is not an URL`);
+  }
+  return true;
 }

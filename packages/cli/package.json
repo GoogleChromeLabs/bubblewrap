@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint \"src/**/*.{js,ts}\"",
-    "test": ""
+    "test": "tsc && jasmine --config=jasmine.json"
   },
   "files": [
     "dist",
@@ -21,6 +21,9 @@
   },
   "author": "",
   "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/jasmine": "^3.5.0"    
+  },
   "dependencies": {
     "@bubblewrap/core": "^0.6.0",
     "@bubblewrap/validator": "^0.6.0",

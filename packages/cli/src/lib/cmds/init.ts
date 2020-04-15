@@ -18,7 +18,7 @@ import * as fs from 'fs';
 import Color = require('color');
 import * as inquirer from 'inquirer';
 import {Config, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest, util} from '@bubblewrap/core';
-import {validateColor, validatePassword, validateUrl, notEmpty} from '../inputHelpers';
+import {validateColor, validateKeyPassword, validateUrl, notEmpty} from '../inputHelpers';
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
 
@@ -36,34 +36,19 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
       type: 'input',
       message: 'Domain being opened in the TWA:',
       default: twaManifest.host,
-      validate: async (input): Promise<boolean> => {
-        if (notEmpty(input)) {
-          return true;
-        }
-        throw new Error('host cannot be empty');
-      },
+      validate: async (input): Promise<boolean> => notEmpty(input, 'host cannot be empty'),
     }, {
       name: 'name',
       type: 'input',
       message: 'Name of the application:',
       default: twaManifest.name,
-      validate: async (input): Promise<boolean> => {
-        if (notEmpty(input)) {
-          return true;
-        }
-        throw new Error('name cannot be empty');
-      },
+      validate: async (input): Promise<boolean> => notEmpty(input, 'name cannot be empty'),
     }, {
       name: 'launcherName',
       type: 'input',
       message: 'Name to be shown on the Android Launcher:',
       default: twaManifest.launcherName,
-      validate: async (input): Promise<boolean> => {
-        if (notEmpty(input)) {
-          return true;
-        }
-        throw new Error('Launcher name cannot be empty');
-      },
+      validate: async (input): Promise<boolean> => notEmpty(input, 'Launcher name cannot be empty'),
     }, {
       name: 'themeColor',
       type: 'input',
@@ -81,12 +66,7 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
       type: 'input',
       message: 'Relative path to open the TWA:',
       default: twaManifest.startUrl,
-      validate: async (input): Promise<boolean> => {
-        if (notEmpty(input)) {
-          return true;
-        }
-        throw new Error('URL cannot be empty');
-      },
+      validate: async (input): Promise<boolean> => notEmpty(input, 'URL cannot be empty'),
     }, {
       name: 'iconUrl',
       type: 'input',
@@ -100,7 +80,7 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
           'maskable icons',
       default: twaManifest.maskableIconUrl,
       filter: (input): string | undefined => input.length === 0 ? undefined : input,
-      validate: (input): boolean => input === undefined || validateUrl(input),
+      validate: async (input): Promise<boolean> => input === undefined || await validateUrl(input),
     }, {
       name: 'shortcuts',
       type: 'confirm',
@@ -123,23 +103,14 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
       type: 'input',
       message: 'Location of the Signing Key:',
       default: twaManifest.signingKey.path,
-      validate: async (input): Promise<boolean> => {
-        if (notEmpty(input)) {
-          return true;
-        }
-        throw new Error('KeyStore location cannot be empty');
-      },
+      validate: async (input): Promise<boolean> =>
+        notEmpty(input, 'KeyStore location cannot be empty'),
     }, {
       name: 'keyAlias',
       type: 'input',
       message: 'Key name:',
       default: twaManifest.signingKey.alias,
-      validate: async (input): Promise<boolean> => {
-        if (notEmpty(input)) {
-          return true;
-        }
-        throw new Error('Key alias cannot be empty');
-      },
+      validate: async (input): Promise<boolean> => notEmpty(input, 'Key alias cannot be empty'),
     },
   ]);
 
@@ -190,32 +161,36 @@ async function createSigningKey(twaManifest: TwaManifest, config: Config): Promi
       name: 'fullName',
       type: 'input',
       message: 'First and Last names (eg: John Doe):',
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> =>
+        notEmpty(input, 'First and Last names can\'t be empty'),
     }, {
       name: 'organizationalUnit',
       type: 'input',
       message: 'Organizational Unit (eg: Engineering Dept):',
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> =>
+        notEmpty(input, 'Organizational Unit can\'t be empty'),
     }, {
       name: 'organization',
       type: 'input',
       message: 'Organization (eg: Company Name):',
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> =>
+        notEmpty(input, 'Organization can\'t be empty'),
     }, {
       name: 'country',
       type: 'input',
       message: 'Country (2 letter code):',
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> =>
+        notEmpty(input, 'Country can\'t be empty'),
     }, {
       name: 'password',
       type: 'password',
       message: 'Password for the Key Store:',
-      validate: validatePassword,
+      validate: validateKeyPassword,
     }, {
       name: 'keypassword',
       type: 'password',
       message: 'Password for the Key:',
-      validate: validatePassword,
+      validate: validateKeyPassword,
     },
   ]);
 
@@ -240,5 +215,7 @@ export async function init(args: ParsedArgs, config: Config): Promise<boolean> {
   await twaManifest.saveToFile('./twa-manifest.json');
   await twaGenerator.createTwaProject(targetDirectory, twaManifest);
   await createSigningKey(twaManifest, config);
+  log.info('');
+  log.info('Project generated successfully. Build it by running "@bubblewrap/cli build"');
   return true;
 }
