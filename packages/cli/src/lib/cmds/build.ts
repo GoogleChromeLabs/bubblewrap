@@ -18,7 +18,7 @@ import {AndroidSdkTools, Config, GradleWrapper, JdkHelper, Log, TwaManifest}
   from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
 import * as path from 'path';
-import {validatePassword} from '../inputHelpers';
+import {validateKeyPassword} from '../inputHelpers';
 import {PwaValidator, PwaValidationResult} from '@bubblewrap/validator';
 import {printValidationResult} from '../pwaValidationHelper';
 import {ParsedArgs} from 'minimist';
@@ -55,13 +55,13 @@ async function getPasswords(log: Log): Promise<SigningKeyPasswords> {
       name: 'password',
       type: 'password',
       message: 'KeyStore password:',
-      validate: validatePassword,
+      validate: validateKeyPassword,
       mask: '*',
     }, {
       name: 'keypassword',
       type: 'password',
       message: 'Key password:',
-      validate: validatePassword,
+      validate: validateKeyPassword,
       mask: '*',
     },
   ]);

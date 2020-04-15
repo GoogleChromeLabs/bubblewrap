@@ -17,8 +17,8 @@
 import * as fs from 'fs';
 import Color = require('color');
 import * as inquirer from 'inquirer';
-import {Config, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest} from '@bubblewrap/core';
-import {validateColor, validatePassword, validateUrl, notEmpty} from '../inputHelpers';
+import {Config, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest, util} from '@bubblewrap/core';
+import {validateColor, validateKeyPassword, validateUrl, notEmpty} from '../inputHelpers';
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
 
@@ -36,19 +36,19 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
       type: 'input',
       message: 'Domain being opened in the TWA:',
       default: twaManifest.host,
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => notEmpty(input, 'host'),
     }, {
       name: 'name',
       type: 'input',
       message: 'Name of the application:',
       default: twaManifest.name,
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => notEmpty(input, 'name'),
     }, {
       name: 'launcherName',
       type: 'input',
       message: 'Name to be shown on the Android Launcher:',
       default: twaManifest.launcherName,
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => notEmpty(input, 'Launcher name'),
     }, {
       name: 'themeColor',
       type: 'input',
@@ -66,7 +66,7 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
       type: 'input',
       message: 'Relative path to open the TWA:',
       default: twaManifest.startUrl,
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => notEmpty(input, 'URL'),
     }, {
       name: 'iconUrl',
       type: 'input',
@@ -80,7 +80,7 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
           'maskable icons',
       default: twaManifest.maskableIconUrl,
       filter: (input): string | undefined => input.length === 0 ? undefined : input,
-      validate: (input): boolean => input === undefined || validateUrl(input),
+      validate: async (input): Promise<boolean> => input === undefined || await validateUrl(input),
     }, {
       name: 'shortcuts',
       type: 'confirm',
@@ -91,19 +91,26 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
       type: 'input',
       message: 'Android Package Name (or Application ID):',
       default: twaManifest.packageId,
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => {
+        if (!util.validatePackageId(input)) {
+          throw new Error('Invalid Application Id. Check requiements at ' +
+              'https://developer.android.com/studio/build/application-id');
+        }
+        return true;
+      },
     }, {
       name: 'keyPath',
       type: 'input',
       message: 'Location of the Signing Key:',
       default: twaManifest.signingKey.path,
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> =>
+        notEmpty(input, 'KeyStore location'),
     }, {
       name: 'keyAlias',
       type: 'input',
       message: 'Key name:',
       default: twaManifest.signingKey.alias,
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => notEmpty(input, 'Key alias'),
     },
   ]);
 
@@ -154,32 +161,32 @@ async function createSigningKey(twaManifest: TwaManifest, config: Config): Promi
       name: 'fullName',
       type: 'input',
       message: 'First and Last names (eg: John Doe):',
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => notEmpty(input, 'First and Last names'),
     }, {
       name: 'organizationalUnit',
       type: 'input',
       message: 'Organizational Unit (eg: Engineering Dept):',
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => notEmpty(input, 'Organizational Unit'),
     }, {
       name: 'organization',
       type: 'input',
       message: 'Organization (eg: Company Name):',
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => notEmpty(input, 'Organization'),
     }, {
       name: 'country',
       type: 'input',
       message: 'Country (2 letter code):',
-      validate: notEmpty,
+      validate: async (input): Promise<boolean> => notEmpty(input, 'Country'),
     }, {
       name: 'password',
       type: 'password',
       message: 'Password for the Key Store:',
-      validate: validatePassword,
+      validate: validateKeyPassword,
     }, {
       name: 'keypassword',
       type: 'password',
       message: 'Password for the Key:',
-      validate: validatePassword,
+      validate: validateKeyPassword,
     },
   ]);
 
@@ -204,5 +211,7 @@ export async function init(args: ParsedArgs, config: Config): Promise<boolean> {
   await twaManifest.saveToFile('./twa-manifest.json');
   await twaGenerator.createTwaProject(targetDirectory, twaManifest);
   await createSigningKey(twaManifest, config);
+  log.info('');
+  log.info('Project generated successfully. Build it by running "@bubblewrap/cli build"');
   return true;
 }
