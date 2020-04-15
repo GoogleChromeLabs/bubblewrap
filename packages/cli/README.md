@@ -52,7 +52,7 @@ If the location for the JDK or the Android command line tools have been setup wi
 if their location has changed after the initial configuration, the location for either of those can
 be changed by editing the configuration file at `${USER_HOME}/.llama-pack/llama-pack-config.json`.
 
-## Using Bubblewrap
+## Quickstart Guide
 
 ### Installing Bubblewrap
 
@@ -87,6 +87,72 @@ that can be uploaded to the Play Store. You will also need to deploy a Digital A
 validate your domain. The
 [TWA Quick Start Guide](https://developers.google.com/web/updates/2019/08/twas-quickstart#creating-your-asset-link-file)
 explains how to extract the information needed to generate it.
+
+## Commands
+
+## `init`
+
+Usage:
+
+Initializes an Android project for Trusted Web Activity from a Web Manifest. The init script will
+parse the Web manifest and generate default valuers for the Android project, where possible. It
+will prompt the user to confirm or input values where one could not be generated.
+
+```
+bubblewrap init --manifest="<web-manifest-url>" [--directory="<path-to-output-location>"]
+```
+
+Options:
+  - `--directory`: path where to generate the project. Defaults to the current directory.
+
+## `build`
+
+Builds the project into a final APK that can be uploaded to the Play Store.
+
+Usage:
+
+```
+bubblewrap build [--skipPwaValidation]
+```
+
+Options: 
+  - `--skipPwaValidation`: skips validating the wrapped PWA against the Quality Criteria. 
+
+
+## `update`
+
+Regenerates the Android project files from a `twa-manifest.json` file.
+
+Usage:
+
+```
+bubblewrap update [--appVersionName="<version-string>"] [--skipVersionUpgrade] [--manifest="<path-twa-manifest>"]
+```
+
+Options:
+ - `--appVersionName`: version name to be used on on the upgrade. Ignored if `--skipVersionUpgrade` is used.
+ - `--skipVersionUpgrade`: skips upgrading `appVersion` and `appVersionCode`.
+ - `--manifest`: directory where the client should look for `twa-manifest.json`.
+
+## `validate`
+
+Validates a PWA agains the Quality Criteria for being using in a Trusted Web Activity.
+
+Usage:
+
+```
+bubblewrap validate --url=[pwa-url]
+```
+
+## `help`
+
+Displays a list of commands and options.
+
+Usage:
+
+```
+bubblewrap help
+```
 
 ## Contributing
 
