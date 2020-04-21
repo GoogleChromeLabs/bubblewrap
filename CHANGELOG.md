@@ -1,3 +1,24 @@
+## v1.0.0 (2020-04-21)
+
+#### :rocket: Enhancement
+* `cli`, `core`
+  * [#135](https://github.com/GoogleChromeLabs/bubblewrap/pull/135) Implements input validation for the AplicationId ([@andreban](https://github.com/andreban))
+* `cli`, `validator`
+  * [#134](https://github.com/GoogleChromeLabs/bubblewrap/pull/134) Adds a validator module to Bubblewrap ([@andreban](https://github.com/andreban))
+* `cli`
+  * [#133](https://github.com/GoogleChromeLabs/bubblewrap/pull/133) Adds instructions to update the CLI config ([@andreban](https://github.com/andreban))
+
+#### :memo: Documentation
+* `cli`
+  * [#137](https://github.com/GoogleChromeLabs/bubblewrap/pull/137) Adds CLI commands documentation ([@andreban](https://github.com/andreban))
+
+#### :house: Internal
+* [#129](https://github.com/GoogleChromeLabs/bubblewrap/pull/129) Bump actions/checkout from v1 to v2 ([@imbsky](https://github.com/imbsky))
+
+#### Committers: 2
+- André Cipriani Bandarra ([@andreban](https://github.com/andreban))
+- BSKY ([@imbsky](https://github.com/imbsky))
+
 ## v0.6.0 (2020-03-23)
 
 #### :rocket: Enhancement
