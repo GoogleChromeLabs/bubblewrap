@@ -130,10 +130,41 @@ export function findSuitableIcon(
  *
  * @param {String} host the original hostname
  */
-export function generatePackageId(host: string): string {
+export function generatePackageId(host: string): string | null {
+  host = host.trim();
+  if (host.length === 0) {
+    return null;
+  }
+
   const parts = host.split('.').reverse();
-  parts.push('twa');
-  return parts.join('.').replace(DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX, '_');
+  const packageId = [];
+  for (const part of parts) {
+    if (part.trim().length === 0) {
+      continue;
+    }
+    packageId.push(part);
+  }
+
+  if (packageId.length === 0) {
+    return null;
+  }
+
+  packageId.push('twa');
+  return packageId.join('.').replace(DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX, '_');
+}
+
+/**
+ * Validates if a string is not null and not empty.
+ * @param input the string to be validated
+ * @param fieldName the field represented by the string
+ * @returns {string | null} a description of the error or null if no erro is found.
+ */
+export function validateNotEmpty(
+    input: string | null | undefined, fieldName: string): string | null {
+  if (input === null || input === undefined || input.trim().length <= 0) {
+    return `${fieldName} cannot be empty`;
+  }
+  return null;
 }
 
 /**
@@ -142,26 +173,29 @@ export function generatePackageId(host: string): string {
  *
  * Rules summary for the Package Id:
  * - It must have at least two segments (one or more dots).
- * - Each segment must start with a leter.
+ * - Each segment must start with a letter [a-zA-Z].
  * - All characters must be alphanumeric or an underscore [a-zA-Z0-9_].
  *
  * @param {string} input the package name to be validated
+ * @returns {string | null} a description of the error or null if no erro is found.
  */
-export function validatePackageId(input: string): boolean {
-  if (input.length <= 0) {
-    return false;
+export function validatePackageId(input: string): string | null{
+  const error = validateNotEmpty(input, 'packageId');
+  if (error !== null) {
+    return error;
   }
 
   const parts = input.split('.');
   if (parts.length < 2) {
-    return false;
+    return 'packageId must have at least 2 sections separated by "."';
   }
 
   for (const part of parts) {
     if (part.match(VALID_PACKAGE_ID_SEGMENT_REGEX) === null) {
-      return false;
+      return `Invalid packageId section: "${part}". Only alphanumeric characters and ` +
+          'underscore [a-zA-Z0-9_] are allowed in packageId sections. Each section must ' +
+          'start with a letter [a-zA-Z]';
     }
   }
-
-  return true;
+  return null;
 }

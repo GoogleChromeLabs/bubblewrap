@@ -18,7 +18,7 @@
 
 import * as fs from 'fs';
 import fetch from 'node-fetch';
-import {findSuitableIcon, generatePackageId} from './util';
+import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
 import Color = require('color');
 import Log from './Log';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
@@ -148,25 +148,36 @@ export class TwaManifest {
   /**
    * Validates if the Manifest has all the fields needed to generate a TWA project and if the
    * values for those fields are valid.
+   *
+   * @returns {string | null} the error, if any field has an error or null if all fields are valid.
    */
-  validate(): boolean {
-    if (!this.host) {
-      return false;
+  validate(): string | null {
+    let error;
+
+    error = validateNotEmpty(this.host, 'host');
+    if (error != null) {
+      return error;
     }
 
-    if (!this.name) {
-      return false;
+    error = validateNotEmpty(this.name, 'name');
+    if (error != null) {
+      return error;
     }
 
-    if (!this.startUrl) {
-      return false;
+    error = validateNotEmpty(this.startUrl, 'startUrl');
+    if (error != null) {
+      return error;
     }
 
     if (!this.iconUrl) {
-      return false;
+      return 'iconUrl cannot be empty';
     }
 
-    return true;
+    error = validateNotEmpty(this.iconUrl, 'iconUrl');
+    if (error != null) {
+      return error;
+    }
+    return error;
   }
 
   generateShortcuts(): string {
@@ -223,7 +234,7 @@ export class TwaManifest {
     }
 
     const twaManifest = new TwaManifest({
-      packageId: generatePackageId(webManifestUrl.host),
+      packageId: generatePackageId(webManifestUrl.host) || '',
       host: webManifestUrl.host,
       name: webManifest['name'] || webManifest['short_name'] || DEFAULT_APP_NAME,
       launcherName: webManifest['short_name'] ||

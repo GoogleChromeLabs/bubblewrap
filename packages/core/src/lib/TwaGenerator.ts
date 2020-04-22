@@ -222,9 +222,10 @@ export class TwaGenerator {
    * @param {Object} twaManifest configurations values for the project.
    */
   async createTwaProject(targetDirectory: string, twaManifest: TwaManifest): Promise<void> {
-    if (!twaManifest.validate()) {
-      throw new Error('Invalid TWA Manifest. Missing or incorrect fields.');
-    };
+    const error = twaManifest.validate();
+    if (error !== null) {
+      throw new Error(`Invalid TWA Manifest: ${error}`);
+    }
 
     this.log.info('Generating Android Project files:');
     const templateDirectory = path.join(__dirname, '../../template_project');
