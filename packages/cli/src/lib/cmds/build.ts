@@ -94,7 +94,6 @@ export async function build(
   }
 
   const twaManifest = await TwaManifest.fromFile('./twa-manifest.json');
-  twaManifest.validate();
 
   const passwords = await getPasswords(log);
 
