@@ -92,9 +92,9 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
       message: 'Android Package Name (or Application ID):',
       default: twaManifest.packageId,
       validate: async (input): Promise<boolean> => {
-        if (!util.validatePackageId(input)) {
-          throw new Error('Invalid Application Id. Check requiements at ' +
-              'https://developer.android.com/studio/build/application-id');
+        const result = util.validatePackageId(input);
+        if (result !== null) {
+          throw new Error(result);
         }
         return true;
       },

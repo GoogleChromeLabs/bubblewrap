@@ -128,45 +128,77 @@ describe('util', () => {
   });
 
   describe('#generatePackageId', () => {
-    it('handles URL with multiple dashes', () => {
+    it('returns null for empty input', () => {
+      expect(util.generatePackageId('')).toBeNull();
+    });
+
+    it('returns null for input that generates an empty package', () => {
+      expect(util.generatePackageId('..')).toBeNull();
+    });
+
+    it('returns null for input that outputs packages with sectons starting with numbers', () => {
+      expect(util.generatePackageId('1pwadirectory')).toBe('1pwadirectory.twa');
+    });
+
+    it('handles input with multiple dashes', () => {
       const result = util.generatePackageId('pwa-directory-test.appspot.com');
       expect(result).toBe('com.appspot.pwa_directory_test.twa');
     });
-    it('handles URL with spaces', () => {
+
+    it('handles input with spaces', () => {
       const result = util.generatePackageId('pwa directory test.appspot.com');
       expect(result).toBe('com.appspot.pwa_directory_test.twa');
+    });
+
+    it('handles input that generates empty section', () => {
+      expect(util.generatePackageId('.pwadirectory')).toBe('pwadirectory.twa');
+      expect(util.generatePackageId('pwadirectory.')).toBe('pwadirectory.twa');
+      expect(util.generatePackageId('pwa..directory.')).toBe('directory.pwa.twa');
+    });
+  });
+
+  describe('#validateNotEmpty', () => {
+    it('throws Error for empty strings', async () => {
+      expect(util.validateNotEmpty('', 'Error')).not.toBeNull();
+      expect(util.validateNotEmpty('  ', 'Error')).not.toBeNull();
+      expect(util.validateNotEmpty(null, 'Error')).not.toBeNull();
+      expect(util.validateNotEmpty(undefined, 'Error')).not.toBeNull();
+    });
+
+    it('returns true for non-empty input', async () => {
+      expect(util.validateNotEmpty('a', 'Error')).toBeNull();
     });
   });
 
   describe('#validatePackageId', () => {
     it('returns true for valid packages', () => {
-      expect(util.validatePackageId('com.pwa_directory.appspot.com')).toBeTrue();
-      expect(util.validatePackageId('com.pwa1directory.appspot.com')).toBeTrue();
+      expect(util.validatePackageId('com.pwa_directory.appspot.com')).toBeNull();
+      expect(util.validatePackageId('com.pwa1directory.appspot.com')).toBeNull();
     });
 
     it('returns false for packages with invalid characters', () => {
-      expect(util.validatePackageId('com.pwa-directory.appspot.com')).toBeFalse();
-      expect(util.validatePackageId('com.pwa@directory.appspot.com')).toBeFalse();
-      expect(util.validatePackageId('com.pwa*directory.appspot.com')).toBeFalse();
-      expect(util.validatePackageId('com․pwa-directory.appspot.com')).toBeFalse();
+      expect(util.validatePackageId('com.pwa-directory.appspot.com')).not.toBeNull();
+      expect(util.validatePackageId('com.pwa@directory.appspot.com')).not.toBeNull();
+      expect(util.validatePackageId('com.pwa*directory.appspot.com')).not.toBeNull();
+      expect(util.validatePackageId('com․pwa-directory.appspot.com')).not.toBeNull();
     });
 
     it('returns false for packages empty sections', () => {
-      expect(util.validatePackageId('com.example.')).toBeFalse();
-      expect(util.validatePackageId('.com.example')).toBeFalse();
-      expect(util.validatePackageId('com..example')).toBeFalse();
+      expect(util.validatePackageId('com.example.')).not.toBeNull();
+      expect(util.validatePackageId('.com.example')).not.toBeNull();
+      expect(util.validatePackageId('com..example')).not.toBeNull();
     });
 
     it('packages with less than 2 sections return false', () => {
-      expect(util.validatePackageId('com')).toBeFalse();
-      expect(util.validatePackageId('')).toBeFalse();
+      expect(util.validatePackageId('com')).not.toBeNull();
+      expect(util.validatePackageId('')).not.toBeNull();
     });
 
     it('packages starting with non-letters return false', () => {
-      expect(util.validatePackageId('com.1char.twa')).toBeFalse();
-      expect(util.validatePackageId('1com.char.twa')).toBeFalse();
-      expect(util.validatePackageId('com.char.1twa')).toBeFalse();
-      expect(util.validatePackageId('_com.char.1twa')).toBeFalse();
+      expect(util.validatePackageId('com.1char.twa')).not.toBeNull();
+      expect(util.validatePackageId('1com.char.twa')).not.toBeNull();
+      expect(util.validatePackageId('com.char.1twa')).not.toBeNull();
+      expect(util.validatePackageId('_com.char.1twa')).not.toBeNull();
     });
   });
 });

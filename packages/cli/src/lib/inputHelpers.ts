@@ -16,6 +16,7 @@
 
 import Color = require('color');
 import {isWebUri} from 'valid-url';
+import {util} from '@bubblewrap/core';
 
 const MIN_KEY_PASSWORD_LENGTH = 6;
 
@@ -27,10 +28,11 @@ export async function validateKeyPassword(input: string): Promise<boolean> {
 }
 
 export async function notEmpty(input: string, fieldName: string): Promise<boolean> {
-  if (input.trim().length > 0) {
-    return true;
+  const error = util.validateNotEmpty(input, fieldName);
+  if (error) {
+    throw new Error(error);
   }
-  throw new Error(`${fieldName} cannot be empty`);
+  return true;
 }
 
 export async function validateColor(color: string): Promise<boolean> {

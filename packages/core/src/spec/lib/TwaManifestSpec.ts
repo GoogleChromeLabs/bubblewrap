@@ -190,7 +190,7 @@ describe('TwaManifest', () => {
   describe('#validate', () => {
     it('Returns false for an empty TWA Manifest', () => {
       const twaManifest = new TwaManifest({} as TwaManifestJson);
-      expect(twaManifest.validate()).toBeFalse();
+      expect(twaManifest.validate()).not.toBeNull();
     });
 
     it('Returns true a correct TWA Manifest', () => {
@@ -213,7 +213,7 @@ describe('TwaManifest', () => {
         enableNotifications: true,
         shortcuts: [{name: 'name', url: '/', chosenIconUrl: 'icon.png'}],
       } as TwaManifestJson);
-      expect(twaManifest.validate()).toBeTrue();
+      expect(twaManifest.validate()).toBeNull();
     });
   });
 });

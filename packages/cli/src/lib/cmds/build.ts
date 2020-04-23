@@ -94,6 +94,7 @@ export async function build(
   }
 
   const twaManifest = await TwaManifest.fromFile('./twa-manifest.json');
+
   const passwords = await getPasswords(log);
 
   // Builds the Android Studio Project
