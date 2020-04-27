@@ -91,11 +91,14 @@ describe('AndroidSdkTools', () => {
   describe('#installBuildTools', () => {
     const tests = [
       {platform: 'linux',
-        expectedAndroidHome: '/home/user/android-sdk/tools/bin/sdkmanager'},
+        expectedAndroidHome: '/home/user/android-sdk/',
+        expectedCwd: '/home/user/android-sdk/tools/bin/sdkmanager'},
       {platform: 'darwin',
-        expectedAndroidHome: '/home/user/android-sdk/tools/bin/sdkmanager'},
+        expectedAndroidHome: '/home/user/android-sdk/',
+        expectedCwd: '/home/user/android-sdk/tools/bin/sdkmanager'},
       {platform: 'win32',
-        expectedAndroidHome: 'C:\\Users\\user\\android-sdk\\tools\\bin\\sdkmanager'},
+        expectedAndroidHome: 'C:\\Users\\user\\android-sdk\\',
+        expectedCwd: 'C:\\Users\\user\\android-sdk\\tools\\bin\\sdkmanager'},
     ];
 
     tests.forEach((test) => {
@@ -107,8 +110,8 @@ describe('AndroidSdkTools', () => {
         spyOn(util, 'execInteractive').and.stub();
         androidSdkTools.installBuildTools();
         expect(util.execInteractive).toHaveBeenCalledWith(
-            test.expectedAndroidHome,
-            ['--install', '"build-tools;29.0.2"'],
+            test.expectedCwd,
+            ['--install', '"build-tools;29.0.2"', `--sdk_root="${test.expectedAndroidHome}"`],
             androidSdkTools.getEnv());
       });
     });
