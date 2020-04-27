@@ -66,7 +66,10 @@ export class AndroidSdkTools {
     await util.execInteractive(
         this.pathJoin(this.getAndroidHome(), '/tools/bin/sdkmanager'),
         ['--install',
-          `"build-tools;${BUILD_TOOLS_VERSION}"`],
+          `"build-tools;${BUILD_TOOLS_VERSION}"`,
+          // setting ANDROID_HOME via this.getEnv() should be enough, but version 6200805 of the
+          // the Android Command Line tools don't work properly if sdk_root is not set.
+          `--sdk_root="${this.getAndroidHome()}"`],
         env,
     );
   }
