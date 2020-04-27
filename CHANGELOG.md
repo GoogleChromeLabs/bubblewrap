@@ -1,3 +1,20 @@
+## v1.1.0 (2020-04-27)
+
+#### :boom: Breaking Change
+* `cli`, `core`
+  * [#142](https://github.com/GoogleChromeLabs/bubblewrap/pull/142) Improves packageId generation / validation ([@andreban](https://github.com/andreban))
+
+#### :rocket: Enhancement
+* `cli`, `core`
+  * [#142](https://github.com/GoogleChromeLabs/bubblewrap/pull/142) Improves packageId generation / validation ([@andreban](https://github.com/andreban))
+
+#### :bug: Bug Fix
+* `core`
+  * [#145](https://github.com/GoogleChromeLabs/bubblewrap/pull/145) Fix for CLI to work on latest Android CLI Tools ([@andreban](https://github.com/andreban))
+
+#### Committers: 1
+- André Cipriani Bandarra ([@andreban](https://github.com/andreban))
+
 ## v1.0.0 (2020-04-21)
 
 #### :rocket: Enhancement
