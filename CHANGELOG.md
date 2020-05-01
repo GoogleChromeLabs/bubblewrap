@@ -1,3 +1,11 @@
+## v1.1.2 (2020-05-01)
+
+#### :bug: Bug Fix
+* `core`
+  * [#148](https://github.com/GoogleChromeLabs/bubblewrap/pull/148) Fixes --sdk_root parameter on Windows ([@andreban](https://github.com/andreban))
+
+#### Committers: 1
+- André Cipriani Bandarra ([@andreban](https://github.com/andreban))
 ## v1.1.0 (2020-04-27)
 
 #### :boom: Breaking Change
