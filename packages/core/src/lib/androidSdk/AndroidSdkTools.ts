@@ -68,7 +68,7 @@ export class AndroidSdkTools {
     // TODO(andreban): Check for spaces in the path and throw an Error if one is found.
     let sdkRootEscapeChar = '"';
     if (this.process.platform === 'win32') {
-      sdkRootEscapeChar = "";
+      sdkRootEscapeChar = '';
     }
 
     console.log('Installing Build Tools');
