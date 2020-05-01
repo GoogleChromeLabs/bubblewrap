@@ -62,6 +62,15 @@ export class AndroidSdkTools {
   async installBuildTools(): Promise<void> {
     const env = this.getEnv();
 
+    // The escape char allows us to pass a directory with spaces as sdk_root. On Windows,
+    // those are not properly handled by the Android SDK, so we try running without wrapping the
+    // value.
+    // TODO(andreban): Check for spaces in the path and throw an Error if one is found.
+    let sdkRootEscapeChar = '"';
+    if (this.process.platform === 'win32') {
+      sdkRootEscapeChar = '';
+    }
+
     console.log('Installing Build Tools');
     await util.execInteractive(
         this.pathJoin(this.getAndroidHome(), '/tools/bin/sdkmanager'),
@@ -69,7 +78,7 @@ export class AndroidSdkTools {
           `"build-tools;${BUILD_TOOLS_VERSION}"`,
           // setting ANDROID_HOME via this.getEnv() should be enough, but version 6200805 of the
           // the Android Command Line tools don't work properly if sdk_root is not set.
-          `--sdk_root="${this.getAndroidHome()}"`],
+          `--sdk_root=${sdkRootEscapeChar}${this.getAndroidHome()}${sdkRootEscapeChar}`],
         env,
     );
   }
