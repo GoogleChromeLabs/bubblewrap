@@ -41,17 +41,27 @@ versions are incompatible with the Android command line tools.
 ### Get the Android command line tools
 Download a version of Android command line tools that is compatible with your OS from
 [https://developer.android.com/studio#command-tools](https://developer.android.com/studio#command-tools).
-Create a folder and extract the downloaded file into it.
+Create a folder and extract the downloaded file into it. This will further install the androidSdk and android SDK manager without needing to install the whole Android IDE.
 
 ### Tell Bubblewrap where the JDK and Android command line tools are
 When running `bubblewrap` for the first time, it will ask where it can find the JDK and Android command
 line tools. So, take note of the location where both were decompressed.
+- The **OpenJDK** path should contain `bin,com,include ..`
+- The **AndroidSDK** path should contain `tools` which should have `bin, cli`
 
 ### Updating the location of the JDK and / or the Android command line tools.
 If the location for the JDK or the Android command line tools have been setup with the wrong path or
 if their location has changed after the initial configuration, the location for either of those can
 be changed by editing the configuration file at `${USER_HOME}/.llama-pack/llama-pack-config.json`.
 
+#### Sample llama-pack-config.json
+```
+{ 
+"jdkPath":"..\\openjdk",
+  "androidSdkPath":"..\\android-cli"
+  }
+
+```
 ## Quickstart Guide
 
 ### Installing Bubblewrap
@@ -80,7 +90,7 @@ bubblewrap build
 
 When building the project for the first time, the Android Build Tools will need to be installed.
 The tool will inkove the installation process for the build tools. Make sure to read and accept
-the license agreement before proceeding.
+the license agreement before proceeding. This process will install the other required files inside the root decompressed directory of the android CLI package.
 
 As a result of the build step, the tool will generate a signed APK (`app-release-signed.apk`)
 that can be uploaded to the Play Store. You will also need to deploy a Digital Asset Links file to
