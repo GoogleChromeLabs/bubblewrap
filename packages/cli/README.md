@@ -46,6 +46,8 @@ Create a folder and extract the downloaded file into it. This will further insta
 ### Tell Bubblewrap where the JDK and Android command line tools are
 When running `bubblewrap` for the first time, it will ask where it can find the JDK and Android command
 line tools. So, take note of the location where both were decompressed.
+
+To ensure if you are taking note of the correct location, check if each directory contains the following files:
 - The **OpenJDK** path should contain `bin,com,include ..`
 - The **AndroidSDK** path should contain `tools` which should have `bin, cli`
 
@@ -57,9 +59,9 @@ be changed by editing the configuration file at `${USER_HOME}/.llama-pack/llama-
 #### Sample llama-pack-config.json
 ```
 { 
-"jdkPath":"..\\openjdk",
-  "androidSdkPath":"..\\android-cli"
-  }
+  "jdkPath":"\\user\\home\\bubblewrap-user\\open-jdk",
+  "androidSdkPath":"\\user\\home\\bubblewrap-user\\android-cli"
+ }
 
 ```
 ## Quickstart Guide
@@ -90,7 +92,7 @@ bubblewrap build
 
 When building the project for the first time, the Android Build Tools will need to be installed.
 The tool will inkove the installation process for the build tools. Make sure to read and accept
-the license agreement before proceeding. This process will install the other required files inside the root decompressed directory of the android CLI package.
+the license agreement before proceeding. This process will install the other required files inside the `directory/decompressed` root directory of the android CLI package.
 
 As a result of the build step, the tool will generate a signed APK (`app-release-signed.apk`)
 that can be uploaded to the Play Store. You will also need to deploy a Digital Asset Links file to
