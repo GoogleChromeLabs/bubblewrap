@@ -86,7 +86,7 @@ export async function build(
   }
 
   const jdkHelper = new JdkHelper(process, config);
-  const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
+  const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper, log);
 
   if (!await androidSdkTools.checkBuildTools()) {
     console.log('Installing Android Build Tools. Please, read and accept the license agreement');

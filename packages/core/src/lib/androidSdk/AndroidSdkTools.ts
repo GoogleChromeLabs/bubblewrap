@@ -22,6 +22,7 @@ import {exec} from 'child_process';
 import util = require('../util');
 import {Config} from '../Config';
 import {JdkHelper} from '../jdk/JdkHelper';
+import Log from '../../lib/Log';
 
 const execPromise = promisify(exec);
 
@@ -43,7 +44,11 @@ export class AndroidSdkTools {
    * @param {Config} config the bubblewrap general configuration
    * @param {jdkHelper} jdkHelper the JDK information to be used by the Android SDK
    */
-  constructor(process: NodeJS.Process, config: Config, jdkHelper: JdkHelper) {
+  constructor(process: NodeJS.Process, config: Config, jdkHelper: JdkHelper,
+       readonly log = new Log('AndroidSdkTools')) {
+    if (!fs.existsSync(config.androidSdkPath)) {
+      throw new Error(`androidSdkPath does not exist: ${config.androidSdkPath}`);
+    }
     this.process = process;
     this.config = config;
     this.jdkHelper = jdkHelper;
@@ -67,13 +72,19 @@ export class AndroidSdkTools {
     // value.
     // TODO(andreban): Check for spaces in the path and throw an Error if one is found.
     let sdkRootEscapeChar = '"';
+    let sdkManagerPath = this.pathJoin(this.getAndroidHome(), '/tools/bin/sdkmanager');
     if (this.process.platform === 'win32') {
       sdkRootEscapeChar = '';
+      sdkManagerPath += '.bat';
     }
 
-    console.log('Installing Build Tools');
+    if (!fs.existsSync(sdkManagerPath)) {
+      throw new Error(`Could not find sdkmanager at: ${sdkManagerPath}`);
+    }
+
+    this.log.info('Installing Build Tools');
     await util.execInteractive(
-        this.pathJoin(this.getAndroidHome(), '/tools/bin/sdkmanager'),
+        sdkManagerPath,
         ['--install',
           `"build-tools;${BUILD_TOOLS_VERSION}"`,
           // setting ANDROID_HOME via this.getEnv() should be enough, but version 6200805 of the
@@ -118,7 +129,7 @@ export class AndroidSdkTools {
   async zipalign(input: string, output: string): Promise<void> {
     const env = this.getEnv();
     const zipalignCmd = [
-      `"${this.pathJoin(this.getAndroidHome(), '/build-tools/29.0.2/zipalign')}"`,
+      `"${this.pathJoin(this.getAndroidHome(), `/build-tools/${BUILD_TOOLS_VERSION}/zipalign`)}"`,
       '-v -f -p 4',
       input,
       output,
@@ -139,7 +150,7 @@ export class AndroidSdkTools {
       output: string): Promise<void> {
     const env = this.getEnv();
     const apksignerCmd = [
-      `"${this.pathJoin(this.getAndroidHome(), '/build-tools/29.0.2/apksigner')}"`,
+      `"${this.pathJoin(this.getAndroidHome(), `/build-tools/${BUILD_TOOLS_VERSION}/apksigner`)}"`,
       `sign --ks ${keystore}`,
       `--ks-key-alias ${alias}`,
       `--ks-pass pass:${ksPass}`,

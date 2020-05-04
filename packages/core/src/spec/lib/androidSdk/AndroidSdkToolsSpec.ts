@@ -18,6 +18,7 @@ import {Config} from '../../../lib/Config';
 import {JdkHelper} from '../../../lib/jdk/JdkHelper';
 import {AndroidSdkTools} from '../../../lib/androidSdk/AndroidSdkTools';
 import util = require('../../../lib/util');
+import * as fs from 'fs';
 
 function buildMockConfig(platform: string): Config {
   if (platform === 'linux' || platform == 'darwin') {
@@ -69,6 +70,18 @@ function buildMockProcess(platform: string): NodeJS.Process {
 }
 
 describe('AndroidSdkTools', () => {
+  describe('#constructor', () => {
+    it('Throws Error when the path to AndroidSdkHome doesn\'t exist', () => {
+      spyOn(fs, 'existsSync').and.returnValue(false);
+      const config = buildMockConfig('linux');
+      const process = buildMockProcess('linux');
+      const jdkHelper = new JdkHelper(process, config);
+      expect(() => {
+        new AndroidSdkTools(process, config, jdkHelper);
+      }).toThrowError();
+    });
+  });
+
   describe('#getEnv()', () => {
     const tests = [
       {platform: 'linux', expectedAndroidHome: '/home/user/android-sdk/'},
@@ -78,6 +91,7 @@ describe('AndroidSdkTools', () => {
 
     tests.forEach((test) => {
       it(`Sets the correct ANDROID_HOME on ${test.platform}`, () => {
+        spyOn(fs, 'existsSync').and.returnValue(true);
         const config = buildMockConfig(test.platform);
         const process = buildMockProcess(test.platform);
         const jdkHelper = new JdkHelper(process, config);
@@ -98,22 +112,38 @@ describe('AndroidSdkTools', () => {
         expectedCwd: '/home/user/android-sdk/tools/bin/sdkmanager'},
       {platform: 'win32',
         expectedSdkRoot: 'C:\\Users\\user\\android-sdk\\',
-        expectedCwd: 'C:\\Users\\user\\android-sdk\\tools\\bin\\sdkmanager'},
+        expectedCwd: 'C:\\Users\\user\\android-sdk\\tools\\bin\\sdkmanager.bat'},
     ];
 
     tests.forEach((test) => {
-      it(`Build the correct command-line on ${test.platform}`, () => {
+      it(`Build the correct command-line on ${test.platform}`, async () => {
+        spyOn(fs, 'existsSync').and.returnValue(true);
         const config = buildMockConfig(test.platform);
         const process = buildMockProcess(test.platform);
         const jdkHelper = new JdkHelper(process, config);
         const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
         spyOn(util, 'execInteractive').and.stub();
-        androidSdkTools.installBuildTools();
+        await androidSdkTools.installBuildTools();
         expect(util.execInteractive).toHaveBeenCalledWith(
             test.expectedCwd,
             ['--install', '"build-tools;29.0.2"', `--sdk_root=${test.expectedSdkRoot}`],
             androidSdkTools.getEnv());
       });
+    });
+
+    it('Throws an Error when sdkmanager doesn\'t exist in the filesystem', () => {
+      const fsSpy = spyOn(fs, 'existsSync');
+
+      // Set existsSync to return true so the AndroidSdkTools can be created.
+      fsSpy.and.returnValue(true);
+      const config = buildMockConfig(tests[0].platform);
+      const process = buildMockProcess(tests[0].platform);
+      const jdkHelper = new JdkHelper(process, config);
+      const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
+
+      // Set existsSync to return false so check for sdkmanager fails.
+      fsSpy.and.returnValue(false);
+      expectAsync(androidSdkTools.installBuildTools()).toBeRejectedWithError();
     });
   });
 });
