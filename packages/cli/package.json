@@ -30,11 +30,13 @@
     "@types/color": "^3.0.0",
     "@types/inquirer": "^6.5.0",
     "@types/minimist": "^1.2.0",
+    "@types/semver": "^7.1.0",
     "@types/valid-url": "^1.0.2",
     "color": "^3.1.2",
     "colors": "^1.4.0",
     "inquirer": "^7.0.4",
     "minimist": "^1.2.2",
+    "semver": "^7.3.2",
     "valid-url": "^1.0.9"
   }
 }
