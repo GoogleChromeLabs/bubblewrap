@@ -27,7 +27,7 @@ export class Cli {
   async run(args: string[]): Promise<boolean> {
     if (major(process.versions.node) < 10) {
       throw new Error(`Current Node.js version is ${process.versions.node}.` +
-          'Node.js version 10 or above is required to run bubblewrap');
+          ' Node.js version 10 or above is required to run bubblewrap');
     }
     const config = await loadOrCreateConfig();
 
