@@ -21,9 +21,14 @@ import {build} from './cmds/build';
 import {init} from './cmds/init';
 import {validate} from './cmds/validate';
 import {loadOrCreateConfig} from './config';
+import {major} from 'semver';
 
 export class Cli {
   async run(args: string[]): Promise<boolean> {
+    if (major(process.versions.node) < 10) {
+      throw new Error(`Current Node.js version is ${process.versions.node}.` +
+          ' Node.js version 10 or above is required to run bubblewrap.');
+    }
     const config = await loadOrCreateConfig();
 
     const parsedArgs = minimist(args);
