@@ -29,6 +29,7 @@ const HELP_MESSAGES = new Map<string, string>(
         'update .............. updates an existing TWA Project with the latest bubblewrap template',
         'validate ............ validates if an URL matches the PWA Quality Criteria for Trusted' +
             ' Web Activity',
+        'install ............. installs the output application to a connected device',
       ].join('\n')],
       ['init', [
         'Usage:',
@@ -69,6 +70,17 @@ const HELP_MESSAGES = new Map<string, string>(
         '',
         '',
         'bubblewrap validate --url=[pwa-url]',
+      ].join('\n')],
+      ['install', [
+        'Usage:',
+        '',
+        '',
+        'bubblewrap install',
+        '',
+        '',
+        'Options: ',
+        '--apkFile ................. path to the APK file to be isntalled. Defaults to ' +
+            '"./app-release-signed.apk"',
       ].join('\n')],
     ],
 );

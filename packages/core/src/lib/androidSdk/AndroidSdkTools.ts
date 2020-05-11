@@ -160,4 +160,22 @@ export class AndroidSdkTools {
     ];
     await execPromise(apksignerCmd.join(' '), {env: env});
   }
+
+  /**
+   * Installs an APK on an a device connected to the computer.
+   * @param apkFilePath the path to the APK to be installed
+   */
+  async install(apkFilePath: string, passthroughArgs: string[] = []): Promise<void> {
+    if (!fs.existsSync(apkFilePath)) {
+      throw new Error(`Could not find APK file at ${apkFilePath}`);
+    }
+    const env = this.getEnv();
+    const installCmd = [
+      `"${this.pathJoin(this.getAndroidHome(), '/platform-tools/adb')}"`,
+      ...passthroughArgs,
+      'install',
+      apkFilePath,
+    ];
+    await util.execute(installCmd, env);
+  }
 }

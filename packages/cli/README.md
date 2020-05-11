@@ -156,6 +156,16 @@ Usage:
 bubblewrap validate --url=[pwa-url]
 ```
 
+## `install`
+
+Install the application generated in the output command to a device connected for debugging.
+
+Usage:
+
+```
+bubblewrap install [--apkFile="/path-to-apk/apkfile.apk"]
+```
+
 ## `help`
 
 Displays a list of commands and options.
