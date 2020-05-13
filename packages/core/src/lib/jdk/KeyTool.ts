@@ -19,16 +19,24 @@ import {execute} from '../util';
 import {JdkHelper} from './JdkHelper';
 import Log from '../Log';
 
-export interface CreateKeyOptions {
+export interface KeyInfo {
+  fingerprints: Map<string, string>;
+}
+
+export interface KeyOptions {
   path: string;
   alias: string;
+  keypassword: string;
+  password: string;
+}
+
+export interface CreateKeyOptions extends KeyOptions {
   fullName: string;
   organizationalUnit: string;
   organization: string;
   country: string;
-  keypassword: string;
-  password: string;
 }
+
 /**
  * A Wrapper of the Java keytool command-line tool
  */
@@ -76,5 +84,63 @@ export class KeyTool {
     const env = this.jdkHelper.getEnv();
     await execute(keytoolCmd, env);
     this.log.info('Signing Key created successfully');
+  }
+
+  /**
+   * Runs `keytool --list` on the keystore / alias provided on the {@link KeyOptions}.
+   *
+   * @param {KeyOptions} keyOptions parameters for they key to be listed.
+   * @returns {Promise<string>} the raw output of the `keytool --list` command
+   */
+  async list(keyOptions: KeyOptions): Promise<string> {
+    const keyListCmd = [
+      'keytool',
+      '-list',
+      '-v',
+      `-keystore \"${keyOptions.path}\"`,
+      `-alias \"${keyOptions.alias}\"`,
+      `-storepass \"${keyOptions.password}\"`,
+      `-keypass \"${keyOptions.keypassword}\"`,
+    ];
+    const env = this.jdkHelper.getEnv();
+    const result = await execute(keyListCmd, env);
+    return result.stdout;
+  }
+
+  /**
+   * Runs `keytool --list` on the keystore / alias provided on the {@link KeyOptions}. Currently,
+   * only extracting fingerprints is implemented.
+   *
+   * @param {KeyOptions} keyOptions parameters for they key to be listed.
+   * @returns {Promise<KeyInfo>} the parsed output of the `keytool --list` command
+   */
+  async keyInfo(keyOptions: KeyOptions): Promise<KeyInfo> {
+    const rawKeyInfo = await this.list(keyOptions);
+    return KeyTool.parseKeyInfo(rawKeyInfo);
+  }
+
+  /**
+   * Parses the output of `keytool --list` and returns a structured {@link KeyInfo}. Currently,
+   * only extracts the fingerprints.
+   */
+  static parseKeyInfo(rawKeyInfo: string): KeyInfo {
+    const lines = rawKeyInfo.split('\n');
+    const fingerprints: Map<string, string> = new Map();
+    const fingerprintTags = ['SHA1', 'SHA256'];
+
+    lines.forEach((line) => {
+      line = line.trim();
+      fingerprintTags.forEach((tag) => {
+        if (line.startsWith(tag)) {
+          // a fingerprint line has the format <tag>: <value>. So, we account for the extra colon
+          // when substringing and then trim to remove whitespaces.
+          const value = line.substring(tag.length + 1, line.length).trim();
+          fingerprints.set(tag, value);
+        }
+      });
+    });
+    return {
+      fingerprints: fingerprints,
+    } as KeyInfo;
   }
 }
