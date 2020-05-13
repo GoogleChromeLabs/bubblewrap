@@ -176,6 +176,6 @@ export class AndroidSdkTools {
       'install',
       apkFilePath,
     ];
-    await util.execute(installCmd, env);
+    await util.execute(installCmd, env, this.log);
   }
 }

@@ -170,7 +170,7 @@ describe('AndroidSdkTools', () => {
     ];
 
     tests.forEach((test) => {
-      it(`Build the correct install commandon ${test.platform}`, async () => {
+      it(`Build the correct install command on ${test.platform}`, async () => {
         spyOn(fs, 'existsSync').and.returnValue(true);
         const config = buildMockConfig(test.platform);
         const process = buildMockProcess(test.platform);

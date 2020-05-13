@@ -81,6 +81,7 @@ const HELP_MESSAGES = new Map<string, string>(
         'Options: ',
         '--apkFile ................. path to the APK file to be isntalled. Defaults to ' +
             '"./app-release-signed.apk"',
+        '--verbose ................. prints the adb command being executed',
       ].join('\n')],
     ],
 );

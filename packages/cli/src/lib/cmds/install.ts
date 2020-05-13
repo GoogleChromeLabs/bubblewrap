@@ -17,19 +17,24 @@
 import {AndroidSdkTools, Config, JdkHelper, Log} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
 
-const APK_FILE_PARAM='--apkFile';
+const APK_FILE_PARAM = '--apkFile';
+const VERBOSE_PARAM = '--verbose';
 const DEFAULT_APK_FILE = './app-release-signed.apk';
 
 export async function install(
-    args: ParsedArgs, config: Config, log = new Log('build')): Promise<boolean> {
+    args: ParsedArgs, config: Config, log = new Log('install')): Promise<boolean> {
   const jdkHelper = new JdkHelper(process, config);
   const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper, log);
   const apkFile = args.apkFile || DEFAULT_APK_FILE;
+  if (args.verbose) {
+    log.verbose = true;
+  }
 
   // parameter 0 would be the path to 'node', followed by `bubblewrap.js` at 1, then `install` at
   // 2. So, we want to start collecting args from parameter 3 and ignore any a possible
   // `--apkFile`, which is specific to install. Extra parameters are passed through to `adb`.
-  const originalArgs = process.argv.slice(3).filter((v) => !v.startsWith(APK_FILE_PARAM));
+  const originalArgs = process.argv.slice(3).filter(
+      (v) => !v.startsWith(APK_FILE_PARAM) && !v.startsWith(VERBOSE_PARAM));
   await androidSdkTools.install(apkFile, originalArgs);
   return true;
 }
