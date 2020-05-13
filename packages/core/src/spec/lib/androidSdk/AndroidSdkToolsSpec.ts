@@ -19,6 +19,7 @@ import {JdkHelper} from '../../../lib/jdk/JdkHelper';
 import {AndroidSdkTools} from '../../../lib/androidSdk/AndroidSdkTools';
 import util = require('../../../lib/util');
 import * as fs from 'fs';
+import {Log} from '../../..';
 
 function buildMockConfig(platform: string): Config {
   if (platform === 'linux' || platform == 'darwin') {
@@ -144,6 +145,55 @@ describe('AndroidSdkTools', () => {
       // Set existsSync to return false so check for sdkmanager fails.
       fsSpy.and.returnValue(false);
       expectAsync(androidSdkTools.installBuildTools()).toBeRejectedWithError();
+    });
+  });
+
+  describe('#install', () => {
+    const tests = [
+      {platform: 'linux',
+        expectedCwd: [
+          '"/home/user/android-sdk/platform-tools/adb"',
+          'install',
+          'app-release-signed.apk',
+        ]},
+      {platform: 'darwin',
+        expectedCwd: [
+          '"/home/user/android-sdk/platform-tools/adb"',
+          'install',
+          'app-release-signed.apk',
+        ]},
+      {platform: 'win32',
+        expectedCwd: [
+          '"C:\\Users\\user\\android-sdk\\platform-tools\\adb"',
+          'install',
+          'app-release-signed.apk',
+        ]},
+    ];
+
+    tests.forEach((test) => {
+      it(`Build the correct install command on ${test.platform}`, async () => {
+        spyOn(fs, 'existsSync').and.returnValue(true);
+        const config = buildMockConfig(test.platform);
+        const process = buildMockProcess(test.platform);
+        const jdkHelper = new JdkHelper(process, config);
+        const log = new Log('test');
+        const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper, log);
+        spyOn(util, 'execute').and.stub();
+        await androidSdkTools.install('app-release-signed.apk');
+        expect(util.execute).toHaveBeenCalledWith(test.expectedCwd, androidSdkTools.getEnv(), log);
+      });
+    });
+
+    it('Throws an error when the APK file name doesn\'t exist', () => {
+      const fsSpy = spyOn(fs, 'existsSync');
+      fsSpy.and.returnValue(true);
+
+      const config = buildMockConfig(tests[0].platform);
+      const process = buildMockProcess(tests[0].platform);
+      const jdkHelper = new JdkHelper(process, config);
+      const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
+      fsSpy.and.returnValue(false);
+      expectAsync(androidSdkTools.install('./app-release-signed.apk')).toBeRejectedWithError();
     });
   });
 });

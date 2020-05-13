@@ -21,6 +21,7 @@ import {promisify} from 'util';
 import {exec, spawn} from 'child_process';
 import {x as extractTar} from 'tar';
 import {WebManifestIcon} from './types/WebManifest';
+import Log from './Log';
 
 const execPromise = promisify(exec);
 const extractZipPromise = promisify(extractZip);
@@ -30,8 +31,13 @@ const extractZipPromise = promisify(extractZip);
 const DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX = /[^a-zA-Z0-9_\.]/g;
 const VALID_PACKAGE_ID_SEGMENT_REGEX = /^[a-zA-Z][A-Za-z0-9_]*$/;
 
-export async function execute(cmd: string[], env: NodeJS.ProcessEnv): Promise<void> {
-  await execPromise(cmd.join(' '), {env: env});
+export async function execute(
+    cmd: string[], env: NodeJS.ProcessEnv, log?: Log): Promise<void> {
+  const joinedCmd = cmd.join(' ');
+  if (log) {
+    log.debug(`Executing command: ${joinedCmd}`);
+  }
+  await execPromise(joinedCmd, {env: env});
 }
 
 export async function downloadFile(url: string, path: string): Promise<void> {

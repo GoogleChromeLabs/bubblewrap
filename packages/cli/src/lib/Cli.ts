@@ -20,6 +20,7 @@ import {help} from './cmds/help';
 import {build} from './cmds/build';
 import {init} from './cmds/init';
 import {validate} from './cmds/validate';
+import {install} from './cmds/install';
 import {loadOrCreateConfig} from './config';
 import {major} from 'semver';
 
@@ -44,6 +45,8 @@ export class Cli {
         return await build(config, parsedArgs);
       case 'validate':
         return await validate(parsedArgs);
+      case 'install':
+        return await install(parsedArgs, config);
       default:
         throw new Error(`"${command}" is not a valid command!`);
     }
