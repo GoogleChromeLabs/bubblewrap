@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import {existsSync, promises, fstat} from 'fs';
+import {existsSync, promises} from 'fs';
 import {execute} from '../util';
 import {JdkHelper} from './JdkHelper';
 import Log from '../Log';
