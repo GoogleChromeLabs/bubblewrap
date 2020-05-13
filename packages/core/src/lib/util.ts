@@ -32,12 +32,12 @@ const DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX = /[^a-zA-Z0-9_\.]/g;
 const VALID_PACKAGE_ID_SEGMENT_REGEX = /^[a-zA-Z][A-Za-z0-9_]*$/;
 
 export async function execute(
-    cmd: string[], env: NodeJS.ProcessEnv, log?: Log): Promise<void> {
+    cmd: string[], env: NodeJS.ProcessEnv, log?: Log): Promise<{stdout: string; stderr: string}> {
   const joinedCmd = cmd.join(' ');
   if (log) {
     log.debug(`Executing command: ${joinedCmd}`);
   }
-  await execPromise(joinedCmd, {env: env});
+  return await execPromise(joinedCmd, {env: env});
 }
 
 export async function downloadFile(url: string, path: string): Promise<void> {
