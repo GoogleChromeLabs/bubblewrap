@@ -20,7 +20,10 @@ import util = require('../../../lib/util');
 import {JdkHelper} from '../../../lib/jdk/JdkHelper';
 import * as fs from 'fs';
 
-/* eslint-disable max-len */
+const SHA1 = '38:03:D6:95:91:7C:9C:EE:4A:A0:58:43:A7:43:A5:D2:76:52:EF:9B';
+const SHA256 = 'F5:08:9F:8A:D4:C8:4A:15:6D:0A:B1:3F:61:96:BE:C7:87:8C:DE:05:59:92:B2:A3:2D:05:' +
+    '05:A5:62:A5:2F:34';
+
 const LIST_OUTPUT = `Alias name: key0
 Creation date: 28 Jan 2019
 Entry type: PrivateKeyEntry
@@ -31,13 +34,12 @@ Issuer: CN=Test Test, OU=Test, O=Test, L=London, ST=London, C=GB
 Serial number: ea67d3d
 Valid from: Mon Jan 28 14:58:00 GMT 2019 until: Fri Jan 22 14:58:00 GMT 2044
 Certificate fingerprints:
-   SHA1: 38:03:D6:95:91:7C:9C:EE:4A:A0:58:43:A7:43:A5:D2:76:52:EF:9B
-   SHA256: F5:08:9F:8A:D4:C8:4A:15:6D:0A:B1:3F:61:96:BE:C7:87:8C:DE:05:59:92:B2:A3:2D:05:05:A5:62:A5:2F:34
+   SHA1: ${SHA1}
+   SHA256: ${SHA256}
 Signature algorithm name: SHA256withRSA
 Subject Public Key Algorithm: 2048-bit RSA key
 Version: 3
 `;
-/* eslint-enable max-len */
 
 describe('KeyTool', () => {
   const config = new Config('/home/user/jdk8', '/home/user/sdktools');
@@ -134,10 +136,8 @@ describe('KeyTool', () => {
     it('parses fingerprints', () => {
       const keyInfo = KeyTool.parseKeyInfo(LIST_OUTPUT);
       expect(keyInfo.fingerprints.size).toBe(2);
-      expect(keyInfo.fingerprints.get('SHA1')).toBe(
-          '38:03:D6:95:91:7C:9C:EE:4A:A0:58:43:A7:43:A5:D2:76:52:EF:9B');
-      expect(keyInfo.fingerprints.get('SHA256')).toBe('F5:08:9F:8A:D4:C8:4A:15:6D:0A:B1:3F:61:96' +
-          ':BE:C7:87:8C:DE:05:59:92:B2:A3:2D:05:05:A5:62:A5:2F:34');
+      expect(keyInfo.fingerprints.get('SHA1')).toBe(SHA1);
+      expect(keyInfo.fingerprints.get('SHA256')).toBe(SHA256);
     });
   });
 });
