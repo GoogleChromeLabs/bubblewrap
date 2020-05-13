@@ -19,6 +19,7 @@ import {JdkHelper} from '../../../lib/jdk/JdkHelper';
 import {AndroidSdkTools} from '../../../lib/androidSdk/AndroidSdkTools';
 import util = require('../../../lib/util');
 import * as fs from 'fs';
+import { Log } from '../../..';
 
 function buildMockConfig(platform: string): Config {
   if (platform === 'linux' || platform == 'darwin') {
@@ -175,10 +176,11 @@ describe('AndroidSdkTools', () => {
         const config = buildMockConfig(test.platform);
         const process = buildMockProcess(test.platform);
         const jdkHelper = new JdkHelper(process, config);
-        const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
+        const log = new Log('test');
+        const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper, log);
         spyOn(util, 'execute').and.stub();
         await androidSdkTools.install('app-release-signed.apk');
-        expect(util.execute).toHaveBeenCalledWith(test.expectedCwd, androidSdkTools.getEnv());
+        expect(util.execute).toHaveBeenCalledWith(test.expectedCwd, androidSdkTools.getEnv(), log);
       });
     });
 
