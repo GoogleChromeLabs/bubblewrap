@@ -19,7 +19,7 @@ import {JdkHelper} from '../../../lib/jdk/JdkHelper';
 import {AndroidSdkTools} from '../../../lib/androidSdk/AndroidSdkTools';
 import util = require('../../../lib/util');
 import * as fs from 'fs';
-import { Log } from '../../..';
+import {Log} from '../../..';
 
 function buildMockConfig(platform: string): Config {
   if (platform === 'linux' || platform == 'darwin') {
