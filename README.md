@@ -24,6 +24,10 @@ projects for Android Applications that launch Progressive Web App (PWA) using
 ## Requirements
 - [Node.js](https://nodejs.org/en/) 10.0 or above
 
+## Getting Started
+- To get started with building an application using Bubblewrap, check the [Trusted Web Activity
+Quick Start Guide][1] or the [bubblewrap/cli](./packages/cli) documentation.
+
 ## Bubblewrap Components
 
 - **[bubblewrap/core](./packages/core):** a javascript library for generating, building and
@@ -43,3 +47,5 @@ See [LICENSE](./LICENSE) for more.
 ## Disclaimer
 
 This is not a Google product.
+
+[1]: https://developers.google.com/web/android/trusted-web-activity/quick-start
