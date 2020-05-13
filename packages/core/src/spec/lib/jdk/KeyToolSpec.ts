@@ -106,8 +106,10 @@ describe('KeyTool', () => {
       keypassword: 'keypass',
       password: 'pass',
     } as KeyOptions;
+
     it('Executes the correct command to list keys', async () => {
       const keyTool = new KeyTool(jdkHelper);
+      spyOn(fs, 'existsSync').and.returnValue(true);
       spyOn(util, 'execute').and.resolveTo({stdout: '', stderr: ''});
       await keyTool.list(keyOptions);
       expect(util.execute).toHaveBeenCalledWith([
@@ -119,6 +121,12 @@ describe('KeyTool', () => {
         '-storepass "pass"',
         '-keypass "keypass"',
       ], jdkHelper.getEnv());
+    });
+
+    it('Throws error if keyOptions.path doesn\'t exist', async () => {
+      const keyTool = new KeyTool(jdkHelper);
+      spyOn(fs, 'existsSync').and.returnValue(false);
+      expectAsync(keyTool.list(keyOptions)).toBeRejectedWithError();
     });
   });
 

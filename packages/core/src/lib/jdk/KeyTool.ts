@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import {existsSync, promises} from 'fs';
+import {existsSync, promises, fstat} from 'fs';
 import {execute} from '../util';
 import {JdkHelper} from './JdkHelper';
 import Log from '../Log';
@@ -93,6 +93,9 @@ export class KeyTool {
    * @returns {Promise<string>} the raw output of the `keytool --list` command
    */
   async list(keyOptions: KeyOptions): Promise<string> {
+    if (!existsSync(keyOptions.path)) {
+      throw new Error(`Couldn't find signing key at "${keyOptions.path}"`);
+    }
     const keyListCmd = [
       'keytool',
       '-list',
