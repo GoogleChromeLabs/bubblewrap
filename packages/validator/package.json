@@ -21,7 +21,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@types/jasmine": "^3.5.0",
-    "@types/node-fetch": "^2.5.5",
+    "@types/node-fetch": "^2.5.7",
     "node-fetch": "^2.6.0"
   }
 }
