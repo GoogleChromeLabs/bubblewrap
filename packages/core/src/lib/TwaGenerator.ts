@@ -238,6 +238,9 @@ export class TwaGenerator {
     // Copy Project Files
     await this.copyStaticFiles(templateDirectory, targetDirectory, Array.from(copyFileList));
 
+    // Apply proper permissions to gradlew. See https://nodejs.org/api/fs.html#fs_file_modes
+    await fs.promises.chmod(path.join(targetDirectory, 'gradlew'), '755');
+
     // Generate templated files
     await this.applyTemplates(
         templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, twaManifest);
