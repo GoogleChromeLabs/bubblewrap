@@ -1,3 +1,32 @@
+## v1.2.0 (2020-05-14)
+
+#### :rocket: Enhancement
+* `cli`, `core`
+  * [#161](https://github.com/GoogleChromeLabs/bubblewrap/pull/161) Adds a `bubblewrap install` command ([@andreban](https://github.com/andreban))
+  * [#157](https://github.com/GoogleChromeLabs/bubblewrap/pull/157) Improves AndroidSdkTools errors ([@andreban](https://github.com/andreban))
+* `cli`
+  * [#160](https://github.com/GoogleChromeLabs/bubblewrap/pull/160) CLI checks minimum supported Node.js version ([@andreban](https://github.com/andreban))
+
+#### :bug: Bug Fix
+* `core`
+  * [#170](https://github.com/GoogleChromeLabs/bubblewrap/pull/170) Ensure gradlew has execute permission ([@andreban](https://github.com/andreban))
+
+#### :memo: Documentation
+* Other
+  * [#164](https://github.com/GoogleChromeLabs/bubblewrap/pull/164) Update main README.md to help devs get started ([@andreban](https://github.com/andreban))
+* `cli`
+  * [#158](https://github.com/GoogleChromeLabs/bubblewrap/pull/158) Updated Documentation for more detailed steps on requirements ([@amanintech](https://github.com/amanintech))
+
+#### :house: Internal
+* `cli`, `core`, `validator`
+  * [#165](https://github.com/GoogleChromeLabs/bubblewrap/pull/165) Runs npm update and npm audit fix ([@andreban](https://github.com/andreban))
+* `core`
+  * [#162](https://github.com/GoogleChromeLabs/bubblewrap/pull/162)  Extract information from signing keys ([@andreban](https://github.com/andreban))
+
+#### Committers: 2
+- Aman Sharma ([@amanintech](https://github.com/amanintech))
+- André Cipriani Bandarra ([@andreban](https://github.com/andreban))
+
 ## v1.1.2 (2020-05-01)
 
 #### :bug: Bug Fix
