@@ -1,3 +1,13 @@
+## v1.2.1 (2020-05-18)
+
+#### :house: Internal
+* `core`
+  * [#174](https://github.com/GoogleChromeLabs/bubblewrap/pull/174) Updates android-browser-helper version ([@andreban](https://github.com/andreban))
+
+#### Committers: 1
+- André Cipriani Bandarra ([@andreban](https://github.com/andreban))
+
+
 ## v1.2.0 (2020-05-14)
 
 #### :rocket: Enhancement
