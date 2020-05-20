@@ -1,3 +1,12 @@
+## v1.2.2 (2020-05-20)
+
+#### :bug: Bug Fix
+* `cli`, `core`, `validator`
+  * [#178](https://github.com/GoogleChromeLabs/bubblewrap/pull/178) Prevent build failing when PSI fails ([@andreban](https://github.com/andreban))
+
+#### Committers: 1
+- André Cipriani Bandarra ([@andreban](https://github.com/andreban))
+
 ## v1.2.1 (2020-05-18)
 
 #### :house: Internal
