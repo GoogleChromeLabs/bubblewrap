@@ -14,25 +14,12 @@
  *  limitations under the License.
  */
 
-import {AndroidSdkTools} from './lib/androidSdk/AndroidSdkTools';
-import {Config} from './lib/Config';
-import {GradleWrapper} from './lib/GradleWrapper';
-import Log from './lib/Log';
-import {JdkHelper} from './lib/jdk/JdkHelper';
-import {KeyTool} from './lib/jdk/KeyTool';
-import {TwaManifest} from './lib/TwaManifest';
-import {TwaGenerator} from './lib/TwaGenerator';
-import {DigitalAssetLinks} from './lib/DigitalAssetLinks';
-import * as util from './lib/util';
-
-export {AndroidSdkTools,
-  Config,
-  DigitalAssetLinks,
-  GradleWrapper,
-  JdkHelper,
-  KeyTool,
-  Log,
-  TwaGenerator,
-  TwaManifest,
-  util,
-};
+export class DigitalAssetLinks {
+  static generateAssetLinks(applicationId: string, sha256Fingerprint: string): string {
+    return `[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target" : { "namespace": "android_app", "package_name": "${applicationId}",
+                   "sha256_cert_fingerprints": ["${sha256Fingerprint}"] }
+    }]\n`;
+  }
+}

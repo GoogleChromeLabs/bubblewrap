@@ -14,10 +14,11 @@
  *  limitations under the License.
  */
 
-import {AndroidSdkTools, Config, GradleWrapper, JdkHelper, Log, TwaManifest}
-  from '@bubblewrap/core';
+import {AndroidSdkTools, Config, DigitalAssetLinks, GradleWrapper, JdkHelper, Log, TwaManifest,
+  KeyTool} from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
 import * as path from 'path';
+import * as fs from 'fs';
 import {validateKeyPassword} from '../inputHelpers';
 import {PwaValidator, PwaValidationResult} from '@bubblewrap/validator';
 import {printValidationResult} from '../pwaValidationHelper';
@@ -87,6 +88,7 @@ export async function build(
 
   const jdkHelper = new JdkHelper(process, config);
   const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper, log);
+  const keyTool = new KeyTool(jdkHelper, log);
 
   if (!await androidSdkTools.checkBuildTools()) {
     console.log('Installing Android Build Tools. Please, read and accept the license agreement');
@@ -137,5 +139,31 @@ export async function build(
   );
 
   log.info(`Signed Android App generated at "${outputFile}"`);
+
+  try {
+    const digitalAssetLinksFile = './assetlinks.json';
+    const keyInfo = await keyTool.keyInfo({
+      path: twaManifest.signingKey.path,
+      alias: twaManifest.signingKey.alias,
+      keypassword: passwords.keyPassword,
+      password: passwords.keystorePassword,
+    });
+
+    const sha256Fingerprint = keyInfo.fingerprints.get('SHA256');
+    if (!sha256Fingerprint) {
+      log.warn('Could not find SHA256 fingerprint. Skipping generating "assetlinks.json"');
+    } else {
+      const digitalAssetLinks =
+      DigitalAssetLinks.generateAssetLinks(twaManifest.packageId, sha256Fingerprint);
+
+      await fs.promises.writeFile(digitalAssetLinksFile, digitalAssetLinks);
+
+      log.info(`Digital Asset Links file generated at ${digitalAssetLinksFile}`);
+      log.warn('If opting into "App Signing by Google Play" when uploading the Android app for ' +
+          'the first time, the SHA-256 fingerprint will differ.');
+    }
+  } catch (e) {
+    log.warn('Error generating "assetlinks.json"', e);
+  }
   return true;
 }
