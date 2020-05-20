@@ -18,7 +18,6 @@ import {AndroidSdkTools, Config, JdkHelper, Log} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
 
 const APK_FILE_PARAM = '--apkFile';
-const VERBOSE_PARAM = '--verbose';
 const DEFAULT_APK_FILE = './app-release-signed.apk';
 
 const PARAMETERS_TO_IGNORE = ['--verbose', '-r'];
