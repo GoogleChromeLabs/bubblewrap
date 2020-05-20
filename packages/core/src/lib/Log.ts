@@ -76,9 +76,9 @@ export default class Log {
    * @param args extra arguments for the console.
    */
   error(message: string, ...args: string[]): void {
-    this.output.log('\n');
+    this.output.error('\n');
     this.log(this.output.error, this.red('ERROR ' + message), ...args);
-    this.output.log('\n');
+    this.output.error('\n');
   }
 
   /**

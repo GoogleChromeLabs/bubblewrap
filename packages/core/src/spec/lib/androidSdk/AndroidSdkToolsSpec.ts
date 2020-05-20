@@ -154,18 +154,21 @@ describe('AndroidSdkTools', () => {
         expectedCwd: [
           '"/home/user/android-sdk/platform-tools/adb"',
           'install',
+          '-r',
           'app-release-signed.apk',
         ]},
       {platform: 'darwin',
         expectedCwd: [
           '"/home/user/android-sdk/platform-tools/adb"',
           'install',
+          '-r',
           'app-release-signed.apk',
         ]},
       {platform: 'win32',
         expectedCwd: [
           '"C:\\Users\\user\\android-sdk\\platform-tools\\adb"',
           'install',
+          '-r',
           'app-release-signed.apk',
         ]},
     ];
