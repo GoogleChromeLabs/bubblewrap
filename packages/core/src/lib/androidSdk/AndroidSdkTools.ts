@@ -172,8 +172,9 @@ export class AndroidSdkTools {
     const env = this.getEnv();
     const installCmd = [
       `"${this.pathJoin(this.getAndroidHome(), '/platform-tools/adb')}"`,
-      ...passthroughArgs,
       'install',
+      '-r', // Replace app if another with the same package id already installed.
+      ...passthroughArgs,
       apkFilePath,
     ];
     await util.execute(installCmd, env, this.log);

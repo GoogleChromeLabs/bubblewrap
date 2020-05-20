@@ -111,10 +111,16 @@ export async function build(
 
   if (!args.skipPwaValidation) {
     log.info('Checking PWA Quality Criteria...');
-    const pwaValidationResult = (await pwaValidationPromise)!;
-    printValidationResult(pwaValidationResult, log);
-    if (pwaValidationResult.status === 'FAIL') {
-      log.warn('PWA Quality Criteria check failed.');
+    try {
+      const pwaValidationResult = (await pwaValidationPromise)!;
+      printValidationResult(pwaValidationResult, log);
+      if (pwaValidationResult.status === 'FAIL') {
+        log.warn('PWA Quality Criteria check failed.');
+      }
+    } catch (e) {
+      const message = 'Failed to run the PWA Quality Criteria checks. Skipping.';
+      log.debug(e);
+      log.warn(message);
     }
   }
 

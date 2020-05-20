@@ -62,7 +62,13 @@ export class PwaValidator {
         .setStrategy('mobile')
         .build();
 
-    const psiResult = await this.psi.runPageSpeedInsights(psiRequest);
+    let psiResult;
+    try {
+      psiResult = await this.psi.runPageSpeedInsights(psiRequest);
+    } catch (e) {
+      throw new Error('Error calling the PageSpeed Insights API: ' + e);
+    }
+
     const pwaScore = psiResult.lighthouseResult.categories.pwa.score;
     const performanceScore = psiResult.lighthouseResult.categories.performance.score;
     if (pwaScore === null || performanceScore === null || isNaN(pwaScore) ||

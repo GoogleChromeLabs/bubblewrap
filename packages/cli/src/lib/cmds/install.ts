@@ -21,6 +21,8 @@ const APK_FILE_PARAM = '--apkFile';
 const VERBOSE_PARAM = '--verbose';
 const DEFAULT_APK_FILE = './app-release-signed.apk';
 
+const PARAMETERS_TO_IGNORE = ['--verbose', '-r'];
+
 export async function install(
     args: ParsedArgs, config: Config, log = new Log('install')): Promise<boolean> {
   const jdkHelper = new JdkHelper(process, config);
@@ -34,7 +36,7 @@ export async function install(
   // 2. So, we want to start collecting args from parameter 3 and ignore any a possible
   // `--apkFile`, which is specific to install. Extra parameters are passed through to `adb`.
   const originalArgs = process.argv.slice(3).filter(
-      (v) => !v.startsWith(APK_FILE_PARAM) && !v.startsWith(VERBOSE_PARAM));
+      (v) => !v.startsWith(APK_FILE_PARAM) && PARAMETERS_TO_IGNORE.indexOf(v) < 0);
   await androidSdkTools.install(apkFile, originalArgs);
   return true;
 }
