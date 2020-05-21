@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-import {AndroidSdkTools, Config, DigitalAssetLinks, GradleWrapper, JdkHelper, Log, TwaManifest,
-  KeyTool} from '@bubblewrap/core';
+import {AndroidSdkTools, Config, DigitalAssetLinks, GradleWrapper, JdkHelper, KeyTool, Log,
+  TwaManifest} from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -79,6 +79,36 @@ async function startValidation(): Promise<PwaValidationResult> {
   return PwaValidator.validate(new URL(twaManifest.startUrl, twaManifest.webManifestUrl));
 }
 
+async function generateAssetLinks(keyTool: KeyTool, twaManifest: TwaManifest,
+    passwords: SigningKeyPasswords, log: Log): Promise<void> {
+  try {
+    const digitalAssetLinksFile = './assetlinks.json';
+    const keyInfo = await keyTool.keyInfo({
+      path: twaManifest.signingKey.path,
+      alias: twaManifest.signingKey.alias,
+      keypassword: passwords.keyPassword,
+      password: passwords.keystorePassword,
+    });
+
+    const sha256Fingerprint = keyInfo.fingerprints.get('SHA256');
+    if (!sha256Fingerprint) {
+      log.warn('Could not find SHA256 fingerprint. Skipping generating "assetlinks.json"');
+      return;
+    }
+
+    const digitalAssetLinks =
+    DigitalAssetLinks.generateAssetLinks(twaManifest.packageId, sha256Fingerprint);
+
+    await fs.promises.writeFile(digitalAssetLinksFile, digitalAssetLinks);
+
+    log.info(`Digital Asset Links file generated at ${digitalAssetLinksFile}`);
+    log.info('Read more about setting up Digital Asset Links at https://developers.google.com' +
+        '/web/android/trusted-web-activity/quick-start#creating-your-asset-link-file');
+  } catch (e) {
+    log.warn('Error generating "assetlinks.json"', e);
+  }
+}
+
 export async function build(
     config: Config, args: ParsedArgs, log = new Log('build')): Promise<boolean> {
   let pwaValidationPromise;
@@ -140,30 +170,6 @@ export async function build(
 
   log.info(`Signed Android App generated at "${outputFile}"`);
 
-  try {
-    const digitalAssetLinksFile = './assetlinks.json';
-    const keyInfo = await keyTool.keyInfo({
-      path: twaManifest.signingKey.path,
-      alias: twaManifest.signingKey.alias,
-      keypassword: passwords.keyPassword,
-      password: passwords.keystorePassword,
-    });
-
-    const sha256Fingerprint = keyInfo.fingerprints.get('SHA256');
-    if (!sha256Fingerprint) {
-      log.warn('Could not find SHA256 fingerprint. Skipping generating "assetlinks.json"');
-    } else {
-      const digitalAssetLinks =
-      DigitalAssetLinks.generateAssetLinks(twaManifest.packageId, sha256Fingerprint);
-
-      await fs.promises.writeFile(digitalAssetLinksFile, digitalAssetLinks);
-
-      log.info(`Digital Asset Links file generated at ${digitalAssetLinksFile}`);
-      log.warn('If opting into "App Signing by Google Play" when uploading the Android app for ' +
-          'the first time, the SHA-256 fingerprint will differ.');
-    }
-  } catch (e) {
-    log.warn('Error generating "assetlinks.json"', e);
-  }
+  await generateAssetLinks(keyTool, twaManifest, passwords, log);
   return true;
 }
