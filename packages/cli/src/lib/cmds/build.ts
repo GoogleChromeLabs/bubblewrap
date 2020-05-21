@@ -97,7 +97,7 @@ async function generateAssetLinks(keyTool: KeyTool, twaManifest: TwaManifest,
     }
 
     const digitalAssetLinks =
-    DigitalAssetLinks.generateAssetLinks(twaManifest.packageId, sha256Fingerprint);
+      DigitalAssetLinks.generateAssetLinks(twaManifest.packageId, sha256Fingerprint);
 
     await fs.promises.writeFile(digitalAssetLinksFile, digitalAssetLinks);
 
