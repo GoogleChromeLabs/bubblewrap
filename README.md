@@ -15,7 +15,7 @@
    limitations under the License.
 -->
 # Bubblewrap
-![Node CI Status](https://github.com/GoogleChromeLabs/bubblewrap/workflows/Node%20CI/badge.svg)
+[![Node CI Status](https://github.com/GoogleChromeLabs/bubblewrap/workflows/Node%20CI/badge.svg)](https://github.com/GoogleChromeLabs/bubblewrap/actions?query=workflow%3A%22Node+CI%22)
 
 Bubblewrap is a set of tools and libraries designed to help developers to create, build and update
 projects for Android Applications that launch Progressive Web App (PWA) using
