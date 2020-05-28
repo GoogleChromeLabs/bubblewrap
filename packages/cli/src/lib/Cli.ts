@@ -48,7 +48,6 @@ export class Cli {
       command = parsedArgs._[0];
     }
 
-    console.log(parsedArgs);
     switch (command) {
       case 'help':
         return await help(parsedArgs);
