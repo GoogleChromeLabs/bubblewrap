@@ -24,5 +24,4 @@ export async function version(log = new Log('version')): Promise<boolean> {
   const packageJson = JSON.parse(packageJsonContents);
   log.info(packageJson.version);
   return true;
-  return true;
 }
