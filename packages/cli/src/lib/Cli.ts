@@ -15,6 +15,8 @@
  */
 
 import * as minimist from 'minimist';
+import * as fs from 'fs';
+import * as path from 'path';
 import {update} from './cmds/update';
 import {help} from './cmds/help';
 import {build} from './cmds/build';
@@ -33,7 +35,20 @@ export class Cli {
     const config = await loadOrCreateConfig();
 
     const parsedArgs = minimist(args);
-    const command = args[0] || 'help';
+
+    let command;
+    if (parsedArgs._.length === 0) {
+      // Accept --version and --help alternatives for the help and version commands.
+      if (parsedArgs.version) {
+        command = 'version';
+      } else if (parsedArgs.help) {
+        command = 'help';
+      }
+    } else {
+      command = parsedArgs._[0];
+    }
+
+    console.log(parsedArgs);
     switch (command) {
       case 'help':
         return await help(parsedArgs);
@@ -45,10 +60,18 @@ export class Cli {
         return await build(config, parsedArgs);
       case 'validate':
         return await validate(parsedArgs);
+      case 'version': {
+        const packageJsonFile = path.join(__dirname, '../../package.json');
+        const packageJsonContents = await (await fs.promises.readFile(packageJsonFile)).toString();
+        const packageJson = JSON.parse(packageJsonContents);
+        console.log(packageJson.version);
+        return true;
+      }
       case 'install':
         return await install(parsedArgs, config);
       default:
-        throw new Error(`"${command}" is not a valid command!`);
+        throw new Error(
+            `"${command}" is not a valid command! Use 'bubblewrap help' for a list of commands`);
     }
   }
 }

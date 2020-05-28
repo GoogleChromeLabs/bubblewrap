@@ -12,7 +12,8 @@
   },
   "files": [
     "dist",
-    "bin"
+    "bin",
+    "package.json"
   ],
   "keywords": [],
   "repository": {
