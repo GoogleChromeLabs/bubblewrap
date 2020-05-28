@@ -15,8 +15,6 @@
  */
 
 import * as minimist from 'minimist';
-import * as fs from 'fs';
-import * as path from 'path';
 import {update} from './cmds/update';
 import {help} from './cmds/help';
 import {build} from './cmds/build';
@@ -25,6 +23,7 @@ import {validate} from './cmds/validate';
 import {install} from './cmds/install';
 import {loadOrCreateConfig} from './config';
 import {major} from 'semver';
+import {version} from './cmds/version';
 
 export class Cli {
   async run(args: string[]): Promise<boolean> {
@@ -60,11 +59,7 @@ export class Cli {
       case 'validate':
         return await validate(parsedArgs);
       case 'version': {
-        const packageJsonFile = path.join(__dirname, '../../package.json');
-        const packageJsonContents = await (await fs.promises.readFile(packageJsonFile)).toString();
-        const packageJson = JSON.parse(packageJsonContents);
-        console.log(packageJson.version);
-        return true;
+        return await version();
       }
       case 'install':
         return await install(parsedArgs, config);
