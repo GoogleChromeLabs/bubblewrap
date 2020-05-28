@@ -23,6 +23,7 @@ import {validate} from './cmds/validate';
 import {install} from './cmds/install';
 import {loadOrCreateConfig} from './config';
 import {major} from 'semver';
+import {version} from './cmds/version';
 
 export class Cli {
   async run(args: string[]): Promise<boolean> {
@@ -33,7 +34,19 @@ export class Cli {
     const config = await loadOrCreateConfig();
 
     const parsedArgs = minimist(args);
-    const command = args[0] || 'help';
+
+    let command;
+    if (parsedArgs._.length === 0) {
+      // Accept --version and --help alternatives for the help and version commands.
+      if (parsedArgs.version) {
+        command = 'version';
+      } else if (parsedArgs.help) {
+        command = 'help';
+      }
+    } else {
+      command = parsedArgs._[0];
+    }
+
     switch (command) {
       case 'help':
         return await help(parsedArgs);
@@ -45,10 +58,14 @@ export class Cli {
         return await build(config, parsedArgs);
       case 'validate':
         return await validate(parsedArgs);
+      case 'version': {
+        return await version();
+      }
       case 'install':
         return await install(parsedArgs, config);
       default:
-        throw new Error(`"${command}" is not a valid command!`);
+        throw new Error(
+            `"${command}" is not a valid command! Use 'bubblewrap help' for a list of commands`);
     }
   }
 }
