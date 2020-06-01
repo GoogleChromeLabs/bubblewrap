@@ -14,9 +14,17 @@
  *  limitations under the License.
  */
 import {PwaValidator} from '../lib/PwaValidator';
-import {PsiResult} from '../lib/psi';
+import {PsiResult, LighthouseAuditDetailsItem} from '../lib/psi';
 
-function mockPsiResult(performanceScore: number | null, pwaScore: number | null): PsiResult {
+const WEB_VITALS_SCORES = {
+  firstContentfulPaint: 0,
+  largestContentfulPaint: 0,
+  maxPotentialFID: 0,
+  cumulativeLayoutShift: 0,
+} as LighthouseAuditDetailsItem;
+
+function mockPsiResult(performanceScore: number | null, pwaScore: number | null,
+    webVitalsScores = WEB_VITALS_SCORES): PsiResult {
   return {
     lighthouseResult: {
       categories: {
@@ -28,6 +36,13 @@ function mockPsiResult(performanceScore: number | null, pwaScore: number | null)
         },
         accessibility: {
           score: 0,
+        },
+      },
+      audits: {
+        metrics: {
+          details: {
+            items: [webVitalsScores],
+          },
         },
       },
     },
@@ -98,6 +113,146 @@ describe('PwaValidator', () => {
       expect(result.psiWebUrl)
           .toBe('https://developers.google.com/speed/pagespeed/insights/' +
               '?url=https%3A%2F%2Fexample.com%2F');
+    });
+
+    // FCP Tests
+    it('FCP is PASS when 0', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0, {
+        firstContentfulPaint: 0,
+        largestContentfulPaint: 0,
+        maxPotentialFID: 0,
+        cumulativeLayoutShift: 0,
+      });
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.scores.firstContentfulPaint.status).toBe('PASS');
+      expect(result.scores.firstContentfulPaint.printValue).toBe('0.0 s');
+    });
+    it('FCP is PASS when 10s', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0, {
+        firstContentfulPaint: 10000,
+        largestContentfulPaint: 0,
+        maxPotentialFID: 0,
+        cumulativeLayoutShift: 0,
+      });
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.scores.firstContentfulPaint.status).toBe('PASS');
+      expect(result.scores.firstContentfulPaint.printValue).toBe('10.0 s');
+    });
+
+    // LCP Tests
+    it('LCP is PASS when 2.5 s', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0, {
+        firstContentfulPaint: 0,
+        largestContentfulPaint: 2500,
+        maxPotentialFID: 0,
+        cumulativeLayoutShift: 0,
+      });
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.scores.largestContentfulPaint.status).toBe('PASS');
+      expect(result.scores.largestContentfulPaint.printValue).toBe('2.5 s');
+    });
+    it('LCP is WARN when 4s', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0, {
+        firstContentfulPaint: 0,
+        largestContentfulPaint: 4000,
+        maxPotentialFID: 0,
+        cumulativeLayoutShift: 0,
+      });
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.scores.largestContentfulPaint.status).toBe('WARN');
+      expect(result.scores.largestContentfulPaint.printValue).toBe('4.0 s');
+    });
+    it('LCP is FAIL when 10s', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0, {
+        firstContentfulPaint: 0,
+        largestContentfulPaint: 10000,
+        maxPotentialFID: 0,
+        cumulativeLayoutShift: 0,
+      });
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.scores.largestContentfulPaint.status).toBe('FAIL');
+      expect(result.scores.largestContentfulPaint.printValue).toBe('10.0 s');
+    });
+
+    // FID Tests
+    it('FID is PASS when 100 ms', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0, {
+        firstContentfulPaint: 0,
+        largestContentfulPaint: 0,
+        maxPotentialFID: 100,
+        cumulativeLayoutShift: 0,
+      });
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.scores.firstInputDelay.status).toBe('PASS');
+      expect(result.scores.firstInputDelay.printValue).toBe('100 ms');
+    });
+    it('FID is WARN when 300 ms', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0, {
+        firstContentfulPaint: 0,
+        largestContentfulPaint: 0,
+        maxPotentialFID: 300,
+        cumulativeLayoutShift: 0,
+      });
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.scores.firstInputDelay.status).toBe('WARN');
+      expect(result.scores.firstInputDelay.printValue).toBe('300 ms');
+    });
+    it('FID is FAIL when 500 ms', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0, {
+        firstContentfulPaint: 0,
+        largestContentfulPaint: 0,
+        maxPotentialFID: 500,
+        cumulativeLayoutShift: 0,
+      });
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.scores.firstInputDelay.status).toBe('FAIL');
+      expect(result.scores.firstInputDelay.printValue).toBe('500 ms');
+    });
+
+    // CLS Tests
+    it('CLS is PASS when 0.1', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0, {
+        firstContentfulPaint: 0,
+        largestContentfulPaint: 0,
+        maxPotentialFID: 0,
+        cumulativeLayoutShift: 0.1,
+      });
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.scores.cumulativeLayoutShift.status).toBe('PASS');
+      expect(result.scores.cumulativeLayoutShift.printValue).toBe('0.10');
+    });
+    it('CLS is WARN when 0.25', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0, {
+        firstContentfulPaint: 0,
+        largestContentfulPaint: 0,
+        maxPotentialFID: 0,
+        cumulativeLayoutShift: 0.25,
+      });
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.scores.cumulativeLayoutShift.status).toBe('WARN');
+      expect(result.scores.cumulativeLayoutShift.printValue).toBe('0.25');
+    });
+    it('CLS is FAIL when 0.3', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0, {
+        firstContentfulPaint: 0,
+        largestContentfulPaint: 0,
+        maxPotentialFID: 0,
+        cumulativeLayoutShift: 0.3,
+      });
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.scores.cumulativeLayoutShift.status).toBe('FAIL');
+      expect(result.scores.cumulativeLayoutShift.printValue).toBe('0.30');
     });
   });
 });
