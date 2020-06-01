@@ -19,9 +19,18 @@ import {PsiRequestBuilder, PageSpeedInsights} from './psi';
 const MIN_PERFORMANCE_SCORE = 0.8;
 const MIN_PWA_SCORE = 1;
 
-type ValidationResult = 'PASS' | 'FAIL';
+// Web Vitals thresholds, as described at https://web.dev/vitals/
+const MIN_LCP_PASS_SCORE = 2500;
+const MIN_LCP_WARN_SCORE = 4000;
+const MIN_FID_PASS_SCORE = 100;
+const MIN_FID_WARN_SCORE = 300;
+const MIN_CLS_PASS_SCORE = 0.1;
+const MIN_CLS_WARN_SCORE = 0.25;
 
-type ScoreResult = {
+
+export type ValidationResult = 'PASS' | 'FAIL' | 'WARN';
+
+export type ScoreResult = {
   value: number;
   printValue: string;
   status: ValidationResult;
@@ -32,6 +41,10 @@ export type PwaValidationResult = {
     pwa: ScoreResult;
     performance: ScoreResult;
     accessibility: ScoreResult;
+    firstContentfulPaint: ScoreResult;
+    largestContentfulPaint: ScoreResult;
+    firstInputDelay: ScoreResult;
+    cumulativeLayoutShift: ScoreResult;
   };
   readonly psiWebUrl: string;
   readonly status: ValidationResult;
@@ -80,6 +93,26 @@ export class PwaValidator {
     const performancePass = performanceScore >= MIN_PERFORMANCE_SCORE;
     const passed = pwaPass && performancePass;
     const accessibilityScore = psiResult.lighthouseResult.categories.accessibility.score;
+
+    // Web Vitals Scores
+    const fcpScore =
+      psiResult.lighthouseResult.audits.metrics.details.items[0]['firstContentfulPaint'];
+    const fcpStatus = 'PASS';
+
+    const lcpScore =
+      psiResult.lighthouseResult.audits.metrics.details.items[0]['largestContentfulPaint'];
+    const lcpStatus =
+        this.getStatus(lcpScore, MIN_LCP_PASS_SCORE, MIN_LCP_WARN_SCORE);
+
+    const fidScore =
+        psiResult.lighthouseResult.audits.metrics.details.items[0]['maxPotentialFID'];
+    const fidStatus =
+        this.getStatus(fidScore, MIN_FID_PASS_SCORE, MIN_FID_WARN_SCORE);
+
+    const clsScore =
+        psiResult.lighthouseResult.audits.metrics.details.items[0]['cumulativeLayoutShift'];
+    const clsStatus = this.getStatus(clsScore, MIN_CLS_PASS_SCORE, MIN_CLS_WARN_SCORE);
+
     const psiWebUrl = new URL('https://developers.google.com/speed/pagespeed/insights/');
     psiWebUrl.searchParams.append('url', url.toString());
 
@@ -100,7 +133,27 @@ export class PwaValidator {
         performance: {
           value: pwaScore,
           printValue: (Math.trunc(performanceScore * 100)).toString(),
-          status: pwaPass ? 'PASS' : 'FAIL',
+          status: performancePass ? 'PASS' : 'FAIL',
+        },
+        firstContentfulPaint: {
+          value: fcpScore,
+          printValue: (fcpScore / 1000).toFixed(1) + ' s',
+          status: fcpStatus,
+        },
+        largestContentfulPaint: {
+          value: lcpScore,
+          printValue: (lcpScore / 1000).toFixed(1) + ' s',
+          status: lcpStatus,
+        },
+        firstInputDelay: {
+          value: fidScore,
+          printValue: fidScore.toString() + ' ms',
+          status: fidStatus,
+        },
+        cumulativeLayoutShift: {
+          value: clsScore,
+          printValue: clsScore.toFixed(2),
+          status: clsStatus,
         },
       },
     };
@@ -115,5 +168,9 @@ export class PwaValidator {
   static async validate(url: URL): Promise<PwaValidationResult> {
     const validator = new PwaValidator(new PageSpeedInsights());
     return await validator.validate(url);
+  }
+
+  getStatus(value: number, minPassScore: number, minWarnScore: number): ValidationResult {
+    return value <= minPassScore ? 'PASS' : value <= minWarnScore ? 'WARN' : 'FAIL';
   }
 }
