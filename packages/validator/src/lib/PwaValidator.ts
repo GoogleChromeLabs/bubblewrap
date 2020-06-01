@@ -102,7 +102,7 @@ export class PwaValidator {
     const lcpScore =
       psiResult.lighthouseResult.audits.metrics.details.items[0]['largestContentfulPaint'];
     const lcpStatus =
-        this.getStatus(lcpScore, MIN_LCP_PASS_SCORE, MIN_LCP_WARN_SCORE);
+        this.getStatus(Math.round(lcpScore / 100) * 100, MIN_LCP_PASS_SCORE, MIN_LCP_WARN_SCORE);
 
     const fidScore =
         psiResult.lighthouseResult.audits.metrics.details.items[0]['maxPotentialFID'];
@@ -137,12 +137,12 @@ export class PwaValidator {
         },
         firstContentfulPaint: {
           value: fcpScore,
-          printValue: (fcpScore / 1000).toFixed(1) + ' s',
+          printValue: (Math.round((fcpScore / 100)) / 10).toFixed(1) + ' s',
           status: fcpStatus,
         },
         largestContentfulPaint: {
           value: lcpScore,
-          printValue: (lcpScore / 1000).toFixed(1) + ' s',
+          printValue: (Math.round((lcpScore / 100)) / 10).toFixed(1) + ' s',
           status: lcpStatus,
         },
         firstInputDelay: {

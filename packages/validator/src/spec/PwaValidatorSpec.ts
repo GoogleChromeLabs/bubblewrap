@@ -154,6 +154,30 @@ describe('PwaValidator', () => {
       expect(result.scores.largestContentfulPaint.status).toBe('PASS');
       expect(result.scores.largestContentfulPaint.printValue).toBe('2.5 s');
     });
+    it('LCP is PASS when 2.549 s', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0, {
+        firstContentfulPaint: 0,
+        largestContentfulPaint: 2549,
+        maxPotentialFID: 0,
+        cumulativeLayoutShift: 0,
+      });
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.scores.largestContentfulPaint.status).toBe('PASS');
+      expect(result.scores.largestContentfulPaint.printValue).toBe('2.5 s');
+    });
+    it('LCP is WARN when 2.550 s', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0, {
+        firstContentfulPaint: 0,
+        largestContentfulPaint: 2550,
+        maxPotentialFID: 0,
+        cumulativeLayoutShift: 0,
+      });
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.scores.largestContentfulPaint.status).toBe('WARN');
+      expect(result.scores.largestContentfulPaint.printValue).toBe('2.6 s');
+    });
     it('LCP is WARN when 4s', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
         firstContentfulPaint: 0,
@@ -165,6 +189,30 @@ describe('PwaValidator', () => {
       const result = await pwaValidator.validate(new URL('https://example.com'));
       expect(result.scores.largestContentfulPaint.status).toBe('WARN');
       expect(result.scores.largestContentfulPaint.printValue).toBe('4.0 s');
+    });
+    it('LCP is WARN when 4.049s', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0, {
+        firstContentfulPaint: 0,
+        largestContentfulPaint: 4049,
+        maxPotentialFID: 0,
+        cumulativeLayoutShift: 0,
+      });
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.scores.largestContentfulPaint.status).toBe('WARN');
+      expect(result.scores.largestContentfulPaint.printValue).toBe('4.0 s');
+    });
+    it('LCP is FAIL when 4.050s', async () => {
+      const psiResult = mockPsiResult(0.8, 1.0, {
+        firstContentfulPaint: 0,
+        largestContentfulPaint: 4050,
+        maxPotentialFID: 0,
+        cumulativeLayoutShift: 0,
+      });
+      const pwaValidator = mockPwaValidator(psiResult);
+      const result = await pwaValidator.validate(new URL('https://example.com'));
+      expect(result.scores.largestContentfulPaint.status).toBe('FAIL');
+      expect(result.scores.largestContentfulPaint.printValue).toBe('4.1 s');
     });
     it('LCP is FAIL when 10s', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
