@@ -199,4 +199,60 @@ describe('AndroidSdkTools', () => {
       expectAsync(androidSdkTools.install('./app-release-signed.apk')).toBeRejectedWithError();
     });
   });
+
+  describe('#apksigner', () => {
+    const tests = [
+      {platform: 'linux',
+        expectedCwd: [
+          '"/home/user/android-sdk/build-tools/29.0.2/apksigner"',
+          'sign --ks /path/to/keystore.ks',
+          '--ks-key-alias alias',
+          '--ks-pass pass:kspass',
+          '--key-pass pass:keypass',
+          '--out signed.apk',
+          'unsigned.apk',
+        ]},
+      {platform: 'darwin',
+        expectedCwd: [
+          '"/home/user/android-sdk/build-tools/29.0.2/apksigner"',
+          'sign --ks /path/to/keystore.ks',
+          '--ks-key-alias alias',
+          '--ks-pass pass:kspass',
+          '--key-pass pass:keypass',
+          '--out signed.apk',
+          'unsigned.apk',
+        ]},
+      {platform: 'win32',
+        expectedCwd: [
+          '"C:\\Users\\user\\jdk8\\bin\\java.exe"',
+          '-Xmx1024M',
+          '-Xss1m',
+          '-jar',
+          '"C:\\Users\\user\\android-sdk\\build-tools\\29.0.2\\lib\\apksigner.jar"',
+          'sign --ks /path/to/keystore.ks',
+          '--ks-key-alias alias',
+          '--ks-pass pass:kspass',
+          '--key-pass pass:keypass',
+          '--out signed.apk',
+          'unsigned.apk',
+        ]},
+    ];
+
+    tests.forEach((test) => {
+      it(`Build the correct apksigner command on ${test.platform}`, async () => {
+        spyOn(fs, 'existsSync').and.returnValue(true);
+        const config = buildMockConfig(test.platform);
+        const process = buildMockProcess(test.platform);
+        const jdkHelper = new JdkHelper(process, config);
+        const log = new Log('test');
+        const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper, log);
+        spyOn(util, 'execute').and.stub();
+        await androidSdkTools.apksigner(
+            '/path/to/keystore.ks', 'kspass', 'alias', 'keypass', 'unsigned.apk', 'signed.apk');
+        const expectedEnv = test.platform === 'win32' ?
+            jdkHelper.getEnv() : androidSdkTools.getEnv();
+        expect(util.execute).toHaveBeenCalledWith(test.expectedCwd, expectedEnv);
+      });
+    });
+  });
 });
