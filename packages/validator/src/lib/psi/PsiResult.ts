@@ -18,6 +18,9 @@ export type LighthouseCategoryName =
     'accessibility' | 'best-practices' | 'performance' | 'pwa' | 'seo';
 export type LighthouseEmulatedFormFactor = 'desktop' | 'mobile';
 
+export type LighthouseMetricAuditNames = 'firstContentfulPaint' | 'largestContentfulPaint' |
+    'maxPotentialFID' | 'cumulativeLayoutShift';
+
 export type LighthouseCategory = {
   id: LighthouseCategoryName;
   title: string;
@@ -30,17 +33,18 @@ export type LighthouseCategories = {
   [key in LighthouseCategoryName]: LighthouseCategory;
 };
 
-export type LighthouseAuditDetailsItem = {
-  [key: string]: number;
+export type LighthouseMetricAudit = {
+  [key in LighthouseMetricAuditNames]: number;
 }
 
-export type LighthouseAudit = {
+export type LighthouseMetricsAudit = {
   id: string;
   title: string;
   description: string;
   details: {
     type: string;
-    items: LighthouseAuditDetailsItem[];
+    // The API returns an array, but are only interested in the first item.
+    items: LighthouseMetricAudit[];
   };
 };
 
@@ -62,7 +66,7 @@ export type PsiLighthouseResult = {
     channel: string;
   };
   audits: {
-    metrics: LighthouseAudit;
+    metrics: LighthouseMetricsAudit;
   };
   categories: LighthouseCategories;
   timing: {

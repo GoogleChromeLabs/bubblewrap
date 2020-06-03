@@ -27,7 +27,6 @@ const MIN_FID_WARN_SCORE = 300;
 const MIN_CLS_PASS_SCORE = 0.1;
 const MIN_CLS_WARN_SCORE = 0.25;
 
-
 export type ValidationResult = 'PASS' | 'FAIL' | 'WARN';
 
 export type ScoreResult = {
@@ -95,22 +94,20 @@ export class PwaValidator {
     const accessibilityScore = psiResult.lighthouseResult.categories.accessibility.score;
 
     // Web Vitals Scores
-    const fcpScore =
-      psiResult.lighthouseResult.audits.metrics.details.items[0]['firstContentfulPaint'];
+    const lighthouseAuditMetrics = psiResult.lighthouseResult.audits.metrics.details.items[0];
+    const fcpScore = lighthouseAuditMetrics.firstContentfulPaint;
+    const roundedFcpScore = PwaValidator.roundToNearestMultiple(fcpScore, 100);
     const fcpStatus = 'PASS';
 
-    const lcpScore =
-      psiResult.lighthouseResult.audits.metrics.details.items[0]['largestContentfulPaint'];
-    const lcpStatus =
-        this.getStatus(Math.round(lcpScore / 100) * 100, MIN_LCP_PASS_SCORE, MIN_LCP_WARN_SCORE);
+    const lcpScore = lighthouseAuditMetrics.largestContentfulPaint;
+    const roundedLcpScore = PwaValidator.roundToNearestMultiple(lcpScore, 100);
+    const lcpStatus = this.getStatus(roundedLcpScore, MIN_LCP_PASS_SCORE, MIN_LCP_WARN_SCORE);
 
-    const fidScore =
-        psiResult.lighthouseResult.audits.metrics.details.items[0]['maxPotentialFID'];
+    const fidScore = lighthouseAuditMetrics.maxPotentialFID;
     const fidStatus =
         this.getStatus(fidScore, MIN_FID_PASS_SCORE, MIN_FID_WARN_SCORE);
 
-    const clsScore =
-        psiResult.lighthouseResult.audits.metrics.details.items[0]['cumulativeLayoutShift'];
+    const clsScore = lighthouseAuditMetrics.cumulativeLayoutShift;
     const clsStatus = this.getStatus(clsScore, MIN_CLS_PASS_SCORE, MIN_CLS_WARN_SCORE);
 
     const psiWebUrl = new URL('https://developers.google.com/speed/pagespeed/insights/');
@@ -137,12 +134,12 @@ export class PwaValidator {
         },
         firstContentfulPaint: {
           value: fcpScore,
-          printValue: (Math.round((fcpScore / 100)) / 10).toFixed(1) + ' s',
+          printValue: (roundedFcpScore / 1000).toFixed(1) + ' s',
           status: fcpStatus,
         },
         largestContentfulPaint: {
           value: lcpScore,
-          printValue: (Math.round((lcpScore / 100)) / 10).toFixed(1) + ' s',
+          printValue: (roundedLcpScore / 1000).toFixed(1) + ' s',
           status: lcpStatus,
         },
         firstInputDelay: {
@@ -157,6 +154,16 @@ export class PwaValidator {
         },
       },
     };
+  }
+
+  /**
+   * Rounds a value nearest multiple of multiple.
+   * Examples:
+   *  - roundToNearestMultiple(2549, 100) returns 2500
+   *  - roundToNearestMultiple(2550, 100) returns 2600
+   */
+  private static roundToNearestMultiple(value: number, multiple: number): number {
+    return Math.round(value / multiple) * multiple;
   }
 
   /**

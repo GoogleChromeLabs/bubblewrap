@@ -14,14 +14,14 @@
  *  limitations under the License.
  */
 import {PwaValidator} from '../lib/PwaValidator';
-import {PsiResult, LighthouseAuditDetailsItem} from '../lib/psi';
+import {PsiResult, LighthouseMetricAudit} from '../lib/psi';
 
 const WEB_VITALS_SCORES = {
   firstContentfulPaint: 0,
   largestContentfulPaint: 0,
   maxPotentialFID: 0,
   cumulativeLayoutShift: 0,
-} as LighthouseAuditDetailsItem;
+} as LighthouseMetricAudit;
 
 function mockPsiResult(performanceScore: number | null, pwaScore: number | null,
     webVitalsScores = WEB_VITALS_SCORES): PsiResult {
@@ -118,10 +118,8 @@ describe('PwaValidator', () => {
     // FCP Tests
     it('FCP is PASS when 0', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
+        ...WEB_VITALS_SCORES,
         firstContentfulPaint: 0,
-        largestContentfulPaint: 0,
-        maxPotentialFID: 0,
-        cumulativeLayoutShift: 0,
       });
       const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
@@ -130,10 +128,8 @@ describe('PwaValidator', () => {
     });
     it('FCP is PASS when 10s', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
+        ...WEB_VITALS_SCORES,
         firstContentfulPaint: 10000,
-        largestContentfulPaint: 0,
-        maxPotentialFID: 0,
-        cumulativeLayoutShift: 0,
       });
       const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
@@ -144,10 +140,8 @@ describe('PwaValidator', () => {
     // LCP Tests
     it('LCP is PASS when 2.5 s', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
-        firstContentfulPaint: 0,
+        ...WEB_VITALS_SCORES,
         largestContentfulPaint: 2500,
-        maxPotentialFID: 0,
-        cumulativeLayoutShift: 0,
       });
       const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
@@ -156,10 +150,8 @@ describe('PwaValidator', () => {
     });
     it('LCP is PASS when 2.549 s', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
-        firstContentfulPaint: 0,
+        ...WEB_VITALS_SCORES,
         largestContentfulPaint: 2549,
-        maxPotentialFID: 0,
-        cumulativeLayoutShift: 0,
       });
       const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
@@ -168,10 +160,8 @@ describe('PwaValidator', () => {
     });
     it('LCP is WARN when 2.550 s', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
-        firstContentfulPaint: 0,
+        ...WEB_VITALS_SCORES,
         largestContentfulPaint: 2550,
-        maxPotentialFID: 0,
-        cumulativeLayoutShift: 0,
       });
       const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
@@ -180,10 +170,8 @@ describe('PwaValidator', () => {
     });
     it('LCP is WARN when 4s', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
-        firstContentfulPaint: 0,
+        ...WEB_VITALS_SCORES,
         largestContentfulPaint: 4000,
-        maxPotentialFID: 0,
-        cumulativeLayoutShift: 0,
       });
       const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
@@ -192,10 +180,8 @@ describe('PwaValidator', () => {
     });
     it('LCP is WARN when 4.049s', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
-        firstContentfulPaint: 0,
+        ...WEB_VITALS_SCORES,
         largestContentfulPaint: 4049,
-        maxPotentialFID: 0,
-        cumulativeLayoutShift: 0,
       });
       const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
@@ -204,10 +190,8 @@ describe('PwaValidator', () => {
     });
     it('LCP is FAIL when 4.050s', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
-        firstContentfulPaint: 0,
+        ...WEB_VITALS_SCORES,
         largestContentfulPaint: 4050,
-        maxPotentialFID: 0,
-        cumulativeLayoutShift: 0,
       });
       const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
@@ -216,10 +200,8 @@ describe('PwaValidator', () => {
     });
     it('LCP is FAIL when 10s', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
-        firstContentfulPaint: 0,
+        ...WEB_VITALS_SCORES,
         largestContentfulPaint: 10000,
-        maxPotentialFID: 0,
-        cumulativeLayoutShift: 0,
       });
       const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
@@ -230,10 +212,8 @@ describe('PwaValidator', () => {
     // FID Tests
     it('FID is PASS when 100 ms', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
-        firstContentfulPaint: 0,
-        largestContentfulPaint: 0,
+        ...WEB_VITALS_SCORES,
         maxPotentialFID: 100,
-        cumulativeLayoutShift: 0,
       });
       const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
@@ -242,10 +222,8 @@ describe('PwaValidator', () => {
     });
     it('FID is WARN when 300 ms', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
-        firstContentfulPaint: 0,
-        largestContentfulPaint: 0,
+        ...WEB_VITALS_SCORES,
         maxPotentialFID: 300,
-        cumulativeLayoutShift: 0,
       });
       const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
@@ -254,10 +232,8 @@ describe('PwaValidator', () => {
     });
     it('FID is FAIL when 500 ms', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
-        firstContentfulPaint: 0,
-        largestContentfulPaint: 0,
+        ...WEB_VITALS_SCORES,
         maxPotentialFID: 500,
-        cumulativeLayoutShift: 0,
       });
       const pwaValidator = mockPwaValidator(psiResult);
       const result = await pwaValidator.validate(new URL('https://example.com'));
@@ -268,9 +244,7 @@ describe('PwaValidator', () => {
     // CLS Tests
     it('CLS is PASS when 0.1', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
-        firstContentfulPaint: 0,
-        largestContentfulPaint: 0,
-        maxPotentialFID: 0,
+        ...WEB_VITALS_SCORES,
         cumulativeLayoutShift: 0.1,
       });
       const pwaValidator = mockPwaValidator(psiResult);
@@ -280,9 +254,7 @@ describe('PwaValidator', () => {
     });
     it('CLS is WARN when 0.25', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
-        firstContentfulPaint: 0,
-        largestContentfulPaint: 0,
-        maxPotentialFID: 0,
+        ...WEB_VITALS_SCORES,
         cumulativeLayoutShift: 0.25,
       });
       const pwaValidator = mockPwaValidator(psiResult);
@@ -292,9 +264,7 @@ describe('PwaValidator', () => {
     });
     it('CLS is FAIL when 0.3', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {
-        firstContentfulPaint: 0,
-        largestContentfulPaint: 0,
-        maxPotentialFID: 0,
+        ...WEB_VITALS_SCORES,
         cumulativeLayoutShift: 0.3,
       });
       const pwaValidator = mockPwaValidator(psiResult);
