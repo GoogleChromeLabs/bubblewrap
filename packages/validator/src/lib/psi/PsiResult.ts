@@ -18,9 +18,6 @@ export type LighthouseCategoryName =
     'accessibility' | 'best-practices' | 'performance' | 'pwa' | 'seo';
 export type LighthouseEmulatedFormFactor = 'desktop' | 'mobile';
 
-export type LighthouseMetricAuditNames = 'firstContentfulPaint' | 'largestContentfulPaint' |
-    'maxPotentialFID' | 'cumulativeLayoutShift';
-
 export type LighthouseCategory = {
   id: LighthouseCategoryName;
   title: string;
@@ -34,7 +31,10 @@ export type LighthouseCategories = {
 };
 
 export type LighthouseMetricAudit = {
-  [key in LighthouseMetricAuditNames]: number;
+  firstContentfulPaint: number;
+  largestContentfulPaint: number;
+  maxPotentialFID: number;
+  cumulativeLayoutShift: number;
 }
 
 export type LighthouseMetricsAudit = {

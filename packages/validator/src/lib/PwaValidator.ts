@@ -40,7 +40,6 @@ export type PwaValidationResult = {
     pwa: ScoreResult;
     performance: ScoreResult;
     accessibility: ScoreResult;
-    firstContentfulPaint: ScoreResult;
     largestContentfulPaint: ScoreResult;
     firstInputDelay: ScoreResult;
     cumulativeLayoutShift: ScoreResult;
@@ -95,9 +94,6 @@ export class PwaValidator {
 
     // Web Vitals Scores
     const lighthouseAuditMetrics = psiResult.lighthouseResult.audits.metrics.details.items[0];
-    const fcpScore = lighthouseAuditMetrics.firstContentfulPaint;
-    const roundedFcpScore = PwaValidator.roundToNearestMultiple(fcpScore, 100);
-    const fcpStatus = 'PASS';
 
     const lcpScore = lighthouseAuditMetrics.largestContentfulPaint;
     const roundedLcpScore = PwaValidator.roundToNearestMultiple(lcpScore, 100);
@@ -131,11 +127,6 @@ export class PwaValidator {
           value: pwaScore,
           printValue: (Math.trunc(performanceScore * 100)).toString(),
           status: performancePass ? 'PASS' : 'FAIL',
-        },
-        firstContentfulPaint: {
-          value: fcpScore,
-          printValue: (roundedFcpScore / 1000).toFixed(1) + ' s',
-          status: fcpStatus,
         },
         largestContentfulPaint: {
           value: lcpScore,

@@ -115,28 +115,6 @@ describe('PwaValidator', () => {
               '?url=https%3A%2F%2Fexample.com%2F');
     });
 
-    // FCP Tests
-    it('FCP is PASS when 0', async () => {
-      const psiResult = mockPsiResult(0.8, 1.0, {
-        ...WEB_VITALS_SCORES,
-        firstContentfulPaint: 0,
-      });
-      const pwaValidator = mockPwaValidator(psiResult);
-      const result = await pwaValidator.validate(new URL('https://example.com'));
-      expect(result.scores.firstContentfulPaint.status).toBe('PASS');
-      expect(result.scores.firstContentfulPaint.printValue).toBe('0.0 s');
-    });
-    it('FCP is PASS when 10s', async () => {
-      const psiResult = mockPsiResult(0.8, 1.0, {
-        ...WEB_VITALS_SCORES,
-        firstContentfulPaint: 10000,
-      });
-      const pwaValidator = mockPwaValidator(psiResult);
-      const result = await pwaValidator.validate(new URL('https://example.com'));
-      expect(result.scores.firstContentfulPaint.status).toBe('PASS');
-      expect(result.scores.firstContentfulPaint.printValue).toBe('10.0 s');
-    });
-
     // LCP Tests
     it('LCP is PASS when 2.5 s', async () => {
       const psiResult = mockPsiResult(0.8, 1.0, {

@@ -25,25 +25,23 @@ export function printValidationResult(validationResult: PwaValidationResult, log
 
   const accessibilityValue = validationResult.scores.accessibility.printValue;
 
-  const fcpValue = getColor(validationResult.scores.firstContentfulPaint);
   const lcpValue = getColor(validationResult.scores.largestContentfulPaint);
   const fidValue = getColor(validationResult.scores.firstInputDelay);
   const clsValue = getColor(validationResult.scores.cumulativeLayoutShift);
 
   log.info('');
   log.info(underline('Quality Criteria scores'));
-  log.info(`Lighthouse Performance score: ......... ${performanceValue}`);
-  log.info(`Lighthouse PWA check: ................. ${pwaValue}`);
+  log.info(`Lighthouse Performance score: ................... ${performanceValue}`);
+  log.info(`Lighthouse PWA check: ........................... ${pwaValue}`);
   log.info('');
   log.info(underline('Web Vitals'));
-  log.info(`First Contentful Paint (FCP) .......... ${fcpValue}`);
-  log.info(`Largest Contentful Paint (LCP) ........ ${lcpValue}`);
-  log.info(`First Input Delay (FID) ............... ${fidValue}`);
-  log.info(`Cumulative Layout Shift (CLS) ......... ${clsValue}`);
+  log.info(`Largest Contentful Paint (LCP) .................. ${lcpValue}`);
+  log.info(`Maximum Potential First Input Delay (Max FID) ... ${fidValue}`);
+  log.info(`Cumulative Layout Shift (CLS) ................... ${clsValue}`);
   log.info('');
   log.info(underline('Other scores'));
-  log.info(`Lighthouse Accessibility score......... ${accessibilityValue}`);
+  log.info(`Lighthouse Accessibility score................... ${accessibilityValue}`);
   log.info('');
   log.info(underline('Summary'));
-  log.info(bold(`Overall result: ....................... ${overallStatus}`));
+  log.info(bold(`Overall result: ................................. ${overallStatus}`));
 }
