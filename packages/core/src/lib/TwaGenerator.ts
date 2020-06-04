@@ -23,7 +23,6 @@ import {promisify} from 'util';
 import {TwaManifest, ShortcutInfo} from './TwaManifest';
 import Log from './Log';
 
-
 const COPY_FILE_LIST = [
   'settings.gradle',
   'gradle.properties',
