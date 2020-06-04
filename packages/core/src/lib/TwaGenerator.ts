@@ -143,11 +143,10 @@ export class TwaGenerator {
   }
 
   private async saveIcon(data: Buffer, size: number, fileName: string): Promise<void> {
-    const image = await sharp(data)
-      .resize(size)
-      .png()
-      .toFile(fileName);
-  
+    await sharp(data)
+        .resize(size)
+        .png()
+        .toFile(fileName);
   }
 
   private async generateIcon(
