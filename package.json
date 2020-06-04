@@ -35,6 +35,6 @@
     "typescript": "^3.9.2"
   },
   "dependencies": {
-    "sharp": "^0.25.3"
+    "@types/sharp": "^0.25.0"
   }
 }

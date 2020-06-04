@@ -16,12 +16,13 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
+import * as sharp from 'sharp';
 import fetch from 'node-fetch';
 import {template} from 'lodash';
 import {promisify} from 'util';
 import {TwaManifest, ShortcutInfo} from './TwaManifest';
 import Log from './Log';
-const sharp = require('sharp');
+
 
 const COPY_FILE_LIST = [
   'settings.gradle',
@@ -142,11 +143,10 @@ export class TwaGenerator {
   }
 
   private async saveIcon(data: Buffer, size: number, fileName: string): Promise<void> {
-    console.log("ss");
-    const image =await sharp(data)
-    .resize(size)
-    .png()
-    .toFile(fileName);
+    const image = await sharp(data)
+      .resize(size)
+      .png()
+      .toFile(fileName);
   
   }
 
