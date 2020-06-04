@@ -38,6 +38,7 @@
     "@types/node-fetch": "^2.5.7",
     "@types/tar": "^4.0.3",
     "@types/valid-url": "^1.0.3",
+    "@types/sharp": "^0.25.0",
     "color": "^3.1.2",
     "extract-zip": "^1.7.0",
     "inquirer": "^7.0.4",

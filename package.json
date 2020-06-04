@@ -33,8 +33,5 @@
     "lerna-changelog": "^1.0.1",
     "npm": "^6.14.5",
     "typescript": "^3.9.2"
-  },
-  "dependencies": {
-    "@types/sharp": "^0.25.0"
   }
 }
