@@ -29,6 +29,9 @@ const MIN_ICON_SIZE = 512;
 // As described on https://developer.chrome.com/apps/manifest/name#short_name
 const SHORT_NAME_MAX_SIZE = 12;
 
+// The minimum size needed for the shortcut icon
+const MIN_SHORTCUT_ICON_SIZE = 96;
+
 // Default values used on the Twa Manifest
 const DEFAULT_SPLASHSCREEN_FADEOUT_DURATION = 300;
 const DEFAULT_APP_NAME = 'My TWA';
@@ -214,7 +217,7 @@ export class TwaManifest {
         continue;
       }
 
-      const suitableIcon = findSuitableIcon(s.icons, 'any');
+      const suitableIcon = findSuitableIcon(s.icons, 'any', MIN_SHORTCUT_ICON_SIZE);
       if (!suitableIcon) {
         TwaManifest.log.warn(`Skipping shortcut[${i}] for not finding a suitable icon.`);
         continue;
