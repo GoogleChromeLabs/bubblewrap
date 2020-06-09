@@ -141,7 +141,7 @@ export class TwaGenerator {
     }));
   }
 
-  private async saveIcon(data: Buffer, size: number, fileName: string): Promise<void> { 
+  private async saveIcon(data: Buffer, size: number, fileName: string): Promise<void> {
     await sharp(data, {density: 2400})
         .resize(size)
         .png()
