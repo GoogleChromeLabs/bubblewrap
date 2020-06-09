@@ -1,0 +1,60 @@
+{
+    "logs": [
+        {
+            "outputFile": "/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-az/values-az.xml",
+            "map": [
+                {
+                    "source": "/usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8bb87a481e569a8e0e4ba92f809d1c33/browser-1.2.0/res/values-az/values-az.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,151,255,363",
+                        "endColumns": "95,103,107,101",
+                        "endOffsets": "146,250,358,460"
+                    },
+                    "to": {
+                        "startLines": "29,30,31,32",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "2820,2916,3020,3128",
+                        "endColumns": "95,103,107,101",
+                        "endOffsets": "2911,3015,3123,3225"
+                    }
+                },
+                {
+                    "source": "/usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8dca7814ee2bb9f90ee3f0ba01d547b8/core-1.1.0/res/values-az/values-az.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "34",
+                        "startColumns": "4",
+                        "startOffsets": "3313",
+                        "endColumns": "100",
+                        "endOffsets": "3409"
+                    }
+                },
+                {
+                    "source": "/usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/cd9a11efb8824141eae6177e48d8bb33/appcompat-1.0.2/res/values-az/values-az.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,213,312,424,512,619,733,814,893,984,1077,1172,1271,1372,1465,1560,1655,1746,1838,1923,2030,2137,2237,2346,2450,2560,2718,2820",
+                        "endColumns": "107,98,111,87,106,113,80,78,90,92,94,98,100,92,94,94,90,91,84,106,106,99,108,103,109,157,101,82",
+                        "endOffsets": "208,307,419,507,614,728,809,888,979,1072,1167,1266,1367,1460,1555,1650,1741,1833,1918,2025,2132,2232,2341,2445,2555,2713,2815,2898"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,33",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,213,312,424,512,619,733,814,893,984,1077,1172,1271,1372,1465,1560,1655,1746,1838,1923,2030,2137,2237,2346,2450,2560,2718,3230",
+                        "endColumns": "107,98,111,87,106,113,80,78,90,92,94,98,100,92,94,94,90,91,84,106,106,99,108,103,109,157,101,82",
+                        "endOffsets": "208,307,419,507,614,728,809,888,979,1072,1167,1266,1367,1460,1555,1650,1741,1833,1918,2025,2132,2232,2341,2445,2555,2713,2815,3308"
+                    }
+                }
+            ]
+        }
+    ]
+}

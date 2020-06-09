@@ -1,0 +1,60 @@
+{
+    "logs": [
+        {
+            "outputFile": "/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-vi/values-vi.xml",
+            "map": [
+                {
+                    "source": "/usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8dca7814ee2bb9f90ee3f0ba01d547b8/core-1.1.0/res/values-vi/values-vi.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "34",
+                        "startColumns": "4",
+                        "startOffsets": "3335",
+                        "endColumns": "100",
+                        "endOffsets": "3431"
+                    }
+                },
+                {
+                    "source": "/usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8bb87a481e569a8e0e4ba92f809d1c33/browser-1.2.0/res/values-vi/values-vi.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,166,271,385",
+                        "endColumns": "110,104,113,103",
+                        "endOffsets": "161,266,380,484"
+                    },
+                    "to": {
+                        "startLines": "29,30,31,32",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "2817,2928,3033,3147",
+                        "endColumns": "110,104,113,103",
+                        "endOffsets": "2923,3028,3142,3246"
+                    }
+                },
+                {
+                    "source": "/usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/cd9a11efb8824141eae6177e48d8bb33/appcompat-1.0.2/res/values-vi/values-vi.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,219,327,436,520,623,742,819,896,987,1080,1176,1270,1371,1464,1559,1657,1748,1839,1923,2027,2136,2237,2342,2456,2561,2718,2817",
+                        "endColumns": "113,107,108,83,102,118,76,76,90,92,95,93,100,92,94,97,90,90,83,103,108,100,104,113,104,156,98,83",
+                        "endOffsets": "214,322,431,515,618,737,814,891,982,1075,1171,1265,1366,1459,1554,1652,1743,1834,1918,2022,2131,2232,2337,2451,2556,2713,2812,2896"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,33",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,219,327,436,520,623,742,819,896,987,1080,1176,1270,1371,1464,1559,1657,1748,1839,1923,2027,2136,2237,2342,2456,2561,2718,3251",
+                        "endColumns": "113,107,108,83,102,118,76,76,90,92,95,93,100,92,94,97,90,90,83,103,108,100,104,113,104,156,98,83",
+                        "endOffsets": "214,322,431,515,618,737,814,891,982,1075,1171,1265,1366,1459,1554,1652,1743,1834,1918,2022,2131,2232,2337,2451,2556,2713,2812,3330"
+                    }
+                }
+            ]
+        }
+    ]
+}

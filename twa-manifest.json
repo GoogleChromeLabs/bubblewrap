@@ -1,0 +1,24 @@
+{
+  "packageId": "io.github.chenlevy24.twa",
+  "host": "chenlevy24.github.io",
+  "name": "chenlevy24",
+  "launcherName": "chenlevy24",
+  "themeColor": "#FFFFFF",
+  "navigationColor": "#000000",
+  "backgroundColor": "#FFFFFF",
+  "enableNotifications": false,
+  "startUrl": "/",
+  "iconUrl": "https://d2f7anuvnar8n5.cloudfront.net/p/assets/animations/hurricane_1e8e060c71635d9c72b776820991d419.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "alias": "android",
+    "path": "./android.keystore"
+  },
+  "appVersionName": "1",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://chenlevy24.github.io/manifest.json",
+  "fallbackType": "customtabs",
+  "appVersion": "1"
+}

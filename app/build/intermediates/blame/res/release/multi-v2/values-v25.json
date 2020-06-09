@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-v25/values-v25.xml",
+            "map": [
+                {
+                    "source": "/usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/cd9a11efb8824141eae6177e48d8bb33/appcompat-1.0.2/res/values-v25/values-v25.xml",
+                    "from": {
+                        "startLines": "2,3,4,6",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,126,209,308",
+                        "endLines": "2,3,5,7",
+                        "endColumns": "70,82,12,12",
+                        "endOffsets": "121,204,303,414"
+                    }
+                }
+            ]
+        }
+    ]
+}

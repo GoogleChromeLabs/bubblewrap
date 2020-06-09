@@ -1,0 +1,5 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target" : { "namespace": "android_app", "package_name": "io.github.chenlevy24.twa",
+                   "sha256_cert_fingerprints": ["BD:F0:70:B2:04:08:72:FD:00:D3:82:DD:D9:F5:DF:AE:8B:51:75:50:B0:58:BB:B8:62:5B:F1:BF:1F:15:DE:DE"] }
+    }]

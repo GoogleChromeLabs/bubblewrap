@@ -1,0 +1,38 @@
+{
+    "logs": [
+        {
+            "outputFile": "/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-v16/values-v16.xml",
+            "map": [
+                {
+                    "source": "/usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/cd9a11efb8824141eae6177e48d8bb33/appcompat-1.0.2/res/values-v16/values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "5",
+                        "endColumns": "12",
+                        "endOffsets": "223"
+                    },
+                    "to": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "121",
+                        "endLines": "6",
+                        "endColumns": "12",
+                        "endOffsets": "289"
+                    }
+                },
+                {
+                    "source": "/usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8dca7814ee2bb9f90ee3f0ba01d547b8/core-1.1.0/res/values-v16/values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "65",
+                        "endOffsets": "116"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,60 @@
+{
+    "logs": [
+        {
+            "outputFile": "/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-ms/values-ms.xml",
+            "map": [
+                {
+                    "source": "/usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/cd9a11efb8824141eae6177e48d8bb33/appcompat-1.0.2/res/values-ms/values-ms.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,216,321,429,516,620,731,809,888,979,1072,1167,1261,1360,1453,1548,1642,1733,1824,1904,2016,2125,2222,2331,2434,2541,2700,2801",
+                        "endColumns": "110,104,107,86,103,110,77,78,90,92,94,93,98,92,94,93,90,90,79,111,108,96,108,102,106,158,100,79",
+                        "endOffsets": "211,316,424,511,615,726,804,883,974,1067,1162,1256,1355,1448,1543,1637,1728,1819,1899,2011,2120,2217,2326,2429,2536,2695,2796,2876"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,33",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,216,321,429,516,620,731,809,888,979,1072,1167,1261,1360,1453,1548,1642,1733,1824,1904,2016,2125,2222,2331,2434,2541,2700,3226",
+                        "endColumns": "110,104,107,86,103,110,77,78,90,92,94,93,98,92,94,93,90,90,79,111,108,96,108,102,106,158,100,79",
+                        "endOffsets": "211,316,424,511,615,726,804,883,974,1067,1162,1256,1355,1448,1543,1637,1728,1819,1899,2011,2120,2217,2326,2429,2536,2695,2796,3301"
+                    }
+                },
+                {
+                    "source": "/usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8bb87a481e569a8e0e4ba92f809d1c33/browser-1.2.0/res/values-ms/values-ms.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,160,260,379",
+                        "endColumns": "104,99,118,100",
+                        "endOffsets": "155,255,374,475"
+                    },
+                    "to": {
+                        "startLines": "29,30,31,32",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "2801,2906,3006,3125",
+                        "endColumns": "104,99,118,100",
+                        "endOffsets": "2901,3001,3120,3221"
+                    }
+                },
+                {
+                    "source": "/usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8dca7814ee2bb9f90ee3f0ba01d547b8/core-1.1.0/res/values-ms/values-ms.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "34",
+                        "startColumns": "4",
+                        "startOffsets": "3306",
+                        "endColumns": "100",
+                        "endOffsets": "3402"
+                    }
+                }
+            ]
+        }
+    ]
+}

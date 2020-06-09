@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Automatically generated file. DO NOT MODIFY -->
+
+    <!-- Values from default config. -->
+    <string name="appName" translatable="false">chenlevy24</string>
+    <string name="assetStatements" translatable="false">[{ \"relation\": [\"delegate_permission/common.handle_all_urls\"],\"target\": {\"namespace\": \"web\", \"site\": \"https://chenlevy24.github.io\"}}]</string>
+
+    <color name="backgroundColor">#FFFFFF</color>
+    <color name="colorPrimary">#FFFFFF</color>
+
+    <bool name="enableNotification">false</bool>
+
+    <string name="fallbackType" translatable="false">customtabs</string>
+    <string name="generatorApp" translatable="false">bubblewrap-cli</string>
+    <string name="hostName" translatable="false">chenlevy24.github.io</string>
+    <string name="launchUrl" translatable="false">https://chenlevy24.github.io/</string>
+    <string name="launcherName" translatable="false">chenlevy24</string>
+
+    <color name="navigationColor">#000000</color>
+
+    <string name="providerAuthority" translatable="false">io.github.chenlevy24.twa.fileprovider</string>
+
+    <integer name="splashScreenFadeOutDuration">300</integer>
+
+    <string name="webManifestUrl" translatable="false">https://chenlevy24.github.io/manifest.json</string>
+
+</resources>

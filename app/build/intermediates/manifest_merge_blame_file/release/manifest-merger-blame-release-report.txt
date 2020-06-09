@@ -1,0 +1,210 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<!--
+3    Copyright 2019 Google Inc. All Rights Reserved.
+4
+5     Licensed under the Apache License, Version 2.0 (the "License");
+6     you may not use this file except in compliance with the License.
+7     You may obtain a copy of the License at
+8
+9         http://www.apache.org/licenses/LICENSE-2.0
+10
+11     Unless required by applicable law or agreed to in writing, software
+12     distributed under the License is distributed on an "AS IS" BASIS,
+13     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+14     See the License for the specific language governing permissions and
+15     limitations under the License.
+16-->
+17<!--
+18 The "package" attribute is rewritten by the Gradle build with the value of applicationId.
+19     It is still required here, as it is used to derive paths, for instance when referring
+20     to an Activity by ".MyActivity" instead of the full name. If more Activities are added to the
+21     application, the package attribute will need to reflect the correct path in order to use
+22     the abbreviated format.
+23-->
+24<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+25    package="io.github.chenlevy24.twa"
+26    android:versionCode="1"
+27    android:versionName="1" >
+28
+29    <uses-sdk
+30        android:minSdkVersion="19"
+30-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+31        android:targetSdkVersion="29" />
+31-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+32
+33    <application
+33-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:27:5-118:19
+34        android:allowBackup="true"
+34-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:28:9-35
+35        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+35-->[androidx.core:core:1.1.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8dca7814ee2bb9f90ee3f0ba01d547b8/core-1.1.0/AndroidManifest.xml:24:18-86
+36        android:icon="@mipmap/ic_launcher"
+36-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:29:9-43
+37        android:label="@string/appName"
+37-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:30:9-40
+38        android:supportsRtl="true"
+38-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:31:9-35
+39        android:theme="@style/Theme.LauncherActivity" >
+39-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:32:9-54
+40        <meta-data
+40-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:34:9-36:58
+41            android:name="asset_statements"
+41-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:35:13-44
+42            android:resource="@string/assetStatements" />
+42-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:36:13-55
+43        <meta-data
+43-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:39:13-41:58
+44            android:name="web_manifest_url"
+44-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:40:17-48
+45            android:value="@string/webManifestUrl" />
+45-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:41:17-55
+46        <meta-data
+46-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:44:9-46:52
+47            android:name="twa_generator"
+47-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:45:13-41
+48            android:value="@string/generatorApp" />
+48-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:46:13-49
+49
+50        <activity
+50-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:48:9-90:20
+51            android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
+51-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:48:19-90
+52            android:label="@string/launcherName" >
+52-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:49:13-49
+53            <meta-data
+53-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:50:13-51:53
+54                android:name="android.support.customtabs.trusted.DEFAULT_URL"
+54-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:50:24-85
+55                android:value="@string/launchUrl" />
+55-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:51:17-50
+56            <meta-data
+56-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:53:13-55:58
+57                android:name="android.support.customtabs.trusted.STATUS_BAR_COLOR"
+57-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:54:17-83
+58                android:resource="@color/colorPrimary" />
+58-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:55:17-55
+59            <meta-data
+59-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:57:13-59:61
+60                android:name="android.support.customtabs.trusted.NAVIGATION_BAR_COLOR"
+60-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:58:17-87
+61                android:resource="@color/navigationColor" />
+61-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:59:17-58
+62            <meta-data
+62-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:61:13-62:54
+63                android:name="android.support.customtabs.trusted.SPLASH_IMAGE_DRAWABLE"
+63-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:61:24-95
+64                android:resource="@drawable/splash" />
+64-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:62:17-52
+65            <meta-data
+65-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:64:13-65:60
+66                android:name="android.support.customtabs.trusted.SPLASH_SCREEN_BACKGROUND_COLOR"
+66-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:64:24-104
+67                android:resource="@color/backgroundColor" />
+67-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:65:17-58
+68            <meta-data
+68-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:67:13-68:71
+69                android:name="android.support.customtabs.trusted.SPLASH_SCREEN_FADE_OUT_DURATION"
+69-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:67:24-105
+70                android:value="@integer/splashScreenFadeOutDuration" />
+70-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:68:17-69
+71            <meta-data
+71-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:70:13-71:60
+72                android:name="android.support.customtabs.trusted.FILE_PROVIDER_AUTHORITY"
+72-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:70:24-97
+73                android:value="@string/providerAuthority" />
+73-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:71:17-58
+74            <meta-data
+74-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:73:13-97
+75                android:name="android.app.shortcuts"
+75-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:73:24-60
+76                android:resource="@xml/shortcuts" />
+76-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:73:61-94
+77            <meta-data
+77-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:75:13-76:56
+78                android:name="android.support.customtabs.trusted.FALLBACK_STRATEGY"
+78-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:75:24-91
+79                android:value="@string/fallbackType" />
+79-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:76:17-53
+80
+81            <intent-filter>
+81-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:78:13-81:29
+82                <action android:name="android.intent.action.MAIN" />
+82-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:79:17-69
+82-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:79:25-66
+83
+84                <category android:name="android.intent.category.LAUNCHER" />
+84-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:80:17-77
+84-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:80:27-74
+85            </intent-filter>
+86            <intent-filter android:autoVerify="true" >
+86-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:83:13-89:29
+86-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:83:28-53
+87                <action android:name="android.intent.action.VIEW" />
+87-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:84:17-68
+87-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:84:25-66
+88
+89                <category android:name="android.intent.category.DEFAULT" />
+89-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:85:17-76
+89-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:85:27-73
+90                <category android:name="android.intent.category.BROWSABLE" />
+90-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:86:17-77
+90-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:86:27-75
+91
+92                <data
+92-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:87:17-88:54
+93                    android:host="@string/hostName"
+93-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:88:21-52
+94                    android:scheme="https" />
+94-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:87:23-45
+95            </intent-filter>
+96        </activity>
+97        <activity android:name="com.google.androidbrowserhelper.trusted.FocusActivity" />
+97-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:92:9-90
+97-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:92:19-87
+98        <activity
+98-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:94:9-95:62
+99            android:name="com.google.androidbrowserhelper.trusted.WebViewFallbackActivity"
+99-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:94:19-97
+100            android:configChanges="orientation|screenSize" />
+100-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:95:13-59
+101
+102        <provider
+102-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:97:9-105:20
+103            android:name="androidx.core.content.FileProvider"
+103-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:98:13-62
+104            android:authorities="@string/providerAuthority"
+104-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:99:13-60
+105            android:exported="false"
+105-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:101:13-37
+106            android:grantUriPermissions="true" >
+106-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:100:13-47
+107            <meta-data
+107-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:102:13-104:53
+108                android:name="android.support.FILE_PROVIDER_PATHS"
+108-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:103:17-67
+109                android:resource="@xml/filepaths" />
+109-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:104:17-50
+110        </provider>
+111
+112        <service
+112-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:107:9-116:20
+113            android:name="com.google.androidbrowserhelper.trusted.DelegationService"
+113-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:108:14-86
+114            android:enabled="@bool/enableNotification"
+114-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:109:14-56
+115            android:exported="@bool/enableNotification" >
+115-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:110:14-57
+116            <intent-filter>
+116-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:112:14-115:30
+117                <action android:name="android.support.customtabs.trusted.TRUSTED_WEB_ACTIVITY_SERVICE" />
+117-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:113:18-106
+117-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:113:26-104
+118
+119                <category android:name="android.intent.category.DEFAULT" />
+119-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:85:17-76
+119-->/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:85:27-73
+120            </intent-filter>
+121        </service>
+122    </application>
+123
+124</manifest>

@@ -1,0 +1,4 @@
+#Tue Jun 09 07:48:33 UTC 2020
+base.0=/usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/build/intermediates/transforms/r8/release/0/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

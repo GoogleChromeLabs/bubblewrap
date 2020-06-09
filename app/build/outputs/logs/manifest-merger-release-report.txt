@@ -1,0 +1,289 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:22:1-119:12
+INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:22:1-119:12
+INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:22:1-119:12
+INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:22:1-119:12
+MERGED from [com.google.androidbrowserhelper:androidbrowserhelper:1.3.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/55e48e5aafe2662b666e5be86ed8a2da/androidbrowserhelper-1.3.0/AndroidManifest.xml:17:1-26:12
+MERGED from [androidx.appcompat:appcompat:1.0.2] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/cd9a11efb8824141eae6177e48d8bb33/appcompat-1.0.2/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.browser:browser:1.2.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8bb87a481e569a8e0e4ba92f809d1c33/browser-1.2.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.fragment:fragment:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8718f4f7a722839a38426b146f3f6f34/fragment-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/567fd739800f82c71b580894f2791c7f/vectordrawable-animated-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/372f1851f6c6b75b0a489f964ad6567d/legacy-support-core-ui-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/db09c15dc86bb6913d7cfdcedae7a056/cursoradapter-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/85bbff83789aeb9567b897c0dac0cb29/legacy-support-core-utils-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/6b8a7a9dec05a093d5b815b08e1dadbf/vectordrawable-1.0.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/2a0695b9cdbc81496a72abec933fd4cc/loader-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/9ed93176a4348f800a2900a803da116b/viewpager-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/b7f8b3bde8fc71abce0f8aa3dfaea343/coordinatorlayout-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/26d8c35eb94256b0364d6414a498192a/drawerlayout-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/1c32f3dc3fdc526563ccbd1ed861d5ba/slidingpanelayout-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/b4c074b6f4352d3a610ce15aa84bf1d0/customview-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/39bac379aa3d8f6e886ea62b5f5c0b56/swiperefreshlayout-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/7be8fad4d0d4c39ae540ff1cf8ca0dbe/asynclayoutinflater-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core:1.1.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8dca7814ee2bb9f90ee3f0ba01d547b8/core-1.1.0/AndroidManifest.xml:17:1-26:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/208371745c4658fe8633bf3d644bf6e5/versionedparcelable-1.1.0/AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/d4828e4502ab73e05365e335f44ea99b/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.documentfile:documentfile:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/bb04335d7717ef51310584bb421fb1e7/documentfile-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/ac3eb8f4bbecfb715d88581d5203c33e/localbroadcastmanager-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.print:print:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/503d83e1cf90061dbee16155c9c96f40/print-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/51e22be4a1348c0519daa7caf7d2b9ee/lifecycle-viewmodel-2.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/4f4028e35a4066d5bcda0d833a102c19/lifecycle-runtime-2.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/311501f952435c5b879fdf21b71e9a0b/lifecycle-livedata-2.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/4c348d7ab662aecd144684d8549db796/lifecycle-livedata-core-2.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.arch.core:core-runtime:2.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/61f00780d08bc7c8506a1055176e8bb7/core-runtime-2.0.0/AndroidManifest.xml:17:1-22:12
+INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:22:1-119:12
+INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:22:1-119:12
+INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:22:1-119:12
+	package
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:23:5-39
+		INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+		INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:22:1-119:12
+		INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:22:1-119:12
+		INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:22:11-69
+application
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:27:5-118:19
+MERGED from [androidx.core:core:1.1.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8dca7814ee2bb9f90ee3f0ba01d547b8/core-1.1.0/AndroidManifest.xml:24:5-89
+MERGED from [androidx.core:core:1.1.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8dca7814ee2bb9f90ee3f0ba01d547b8/core-1.1.0/AndroidManifest.xml:24:5-89
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/208371745c4658fe8633bf3d644bf6e5/versionedparcelable-1.1.0/AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/208371745c4658fe8633bf3d644bf6e5/versionedparcelable-1.1.0/AndroidManifest.xml:24:5-25:19
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.1.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8dca7814ee2bb9f90ee3f0ba01d547b8/core-1.1.0/AndroidManifest.xml:24:18-86
+	android:supportsRtl
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:31:9-35
+	android:label
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:30:9-40
+	android:icon
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:29:9-43
+	android:allowBackup
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:28:9-35
+	android:theme
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:32:9-54
+meta-data#asset_statements
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:34:9-36:58
+	android:resource
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:36:13-55
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:35:13-44
+meta-data#web_manifest_url
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:39:13-41:58
+	android:value
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:41:17-55
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:40:17-48
+meta-data#twa_generator
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:44:9-46:52
+	android:value
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:46:13-49
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:45:13-41
+activity#com.google.androidbrowserhelper.trusted.LauncherActivity
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:48:9-90:20
+	android:label
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:49:13-49
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:48:19-90
+meta-data#android.support.customtabs.trusted.DEFAULT_URL
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:50:13-51:53
+	android:value
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:51:17-50
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:50:24-85
+meta-data#android.support.customtabs.trusted.STATUS_BAR_COLOR
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:53:13-55:58
+	android:resource
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:55:17-55
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:54:17-83
+meta-data#android.support.customtabs.trusted.NAVIGATION_BAR_COLOR
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:57:13-59:61
+	android:resource
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:59:17-58
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:58:17-87
+meta-data#android.support.customtabs.trusted.SPLASH_IMAGE_DRAWABLE
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:61:13-62:54
+	android:resource
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:62:17-52
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:61:24-95
+meta-data#android.support.customtabs.trusted.SPLASH_SCREEN_BACKGROUND_COLOR
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:64:13-65:60
+	android:resource
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:65:17-58
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:64:24-104
+meta-data#android.support.customtabs.trusted.SPLASH_SCREEN_FADE_OUT_DURATION
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:67:13-68:71
+	android:value
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:68:17-69
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:67:24-105
+meta-data#android.support.customtabs.trusted.FILE_PROVIDER_AUTHORITY
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:70:13-71:60
+	android:value
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:71:17-58
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:70:24-97
+meta-data#android.app.shortcuts
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:73:13-97
+	android:resource
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:73:61-94
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:73:24-60
+meta-data#android.support.customtabs.trusted.FALLBACK_STRATEGY
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:75:13-76:56
+	android:value
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:76:17-53
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:75:24-91
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:78:13-81:29
+action#android.intent.action.MAIN
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:79:17-69
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:79:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:80:17-77
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:80:27-74
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:host:@string/hostName+data:scheme:https
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:83:13-89:29
+	android:autoVerify
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:83:28-53
+action#android.intent.action.VIEW
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:84:17-68
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:84:25-66
+category#android.intent.category.DEFAULT
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:85:17-76
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:85:27-73
+category#android.intent.category.BROWSABLE
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:86:17-77
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:86:27-75
+data
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:87:17-88:54
+	android:host
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:88:21-52
+	android:scheme
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:87:23-45
+activity#com.google.androidbrowserhelper.trusted.FocusActivity
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:92:9-90
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:92:19-87
+activity#com.google.androidbrowserhelper.trusted.WebViewFallbackActivity
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:94:9-95:62
+	android:configChanges
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:95:13-59
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:94:19-97
+provider#androidx.core.content.FileProvider
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:97:9-105:20
+	android:grantUriPermissions
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:100:13-47
+	android:authorities
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:99:13-60
+	android:exported
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:101:13-37
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:98:13-62
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:102:13-104:53
+	android:resource
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:104:17-50
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:103:17-67
+service#com.google.androidbrowserhelper.trusted.DelegationService
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:107:9-116:20
+	android:enabled
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:109:14-56
+	android:exported
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:110:14-57
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:108:14-86
+intent-filter#action:name:android.support.customtabs.trusted.TRUSTED_WEB_ACTIVITY_SERVICE+category:name:android.intent.category.DEFAULT
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:112:14-115:30
+action#android.support.customtabs.trusted.TRUSTED_WEB_ACTIVITY_SERVICE
+ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:113:18-106
+	android:name
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml:113:26-104
+uses-sdk
+INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+MERGED from [com.google.androidbrowserhelper:androidbrowserhelper:1.3.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/55e48e5aafe2662b666e5be86ed8a2da/androidbrowserhelper-1.3.0/AndroidManifest.xml:22:5-24:41
+MERGED from [com.google.androidbrowserhelper:androidbrowserhelper:1.3.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/55e48e5aafe2662b666e5be86ed8a2da/androidbrowserhelper-1.3.0/AndroidManifest.xml:22:5-24:41
+MERGED from [androidx.appcompat:appcompat:1.0.2] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/cd9a11efb8824141eae6177e48d8bb33/appcompat-1.0.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.0.2] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/cd9a11efb8824141eae6177e48d8bb33/appcompat-1.0.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.browser:browser:1.2.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8bb87a481e569a8e0e4ba92f809d1c33/browser-1.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.browser:browser:1.2.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8bb87a481e569a8e0e4ba92f809d1c33/browser-1.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8718f4f7a722839a38426b146f3f6f34/fragment-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.fragment:fragment:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8718f4f7a722839a38426b146f3f6f34/fragment-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/567fd739800f82c71b580894f2791c7f/vectordrawable-animated-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/567fd739800f82c71b580894f2791c7f/vectordrawable-animated-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/372f1851f6c6b75b0a489f964ad6567d/legacy-support-core-ui-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/372f1851f6c6b75b0a489f964ad6567d/legacy-support-core-ui-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/db09c15dc86bb6913d7cfdcedae7a056/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/db09c15dc86bb6913d7cfdcedae7a056/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/85bbff83789aeb9567b897c0dac0cb29/legacy-support-core-utils-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/85bbff83789aeb9567b897c0dac0cb29/legacy-support-core-utils-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/6b8a7a9dec05a093d5b815b08e1dadbf/vectordrawable-1.0.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/6b8a7a9dec05a093d5b815b08e1dadbf/vectordrawable-1.0.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/2a0695b9cdbc81496a72abec933fd4cc/loader-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/2a0695b9cdbc81496a72abec933fd4cc/loader-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/9ed93176a4348f800a2900a803da116b/viewpager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/9ed93176a4348f800a2900a803da116b/viewpager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/b7f8b3bde8fc71abce0f8aa3dfaea343/coordinatorlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/b7f8b3bde8fc71abce0f8aa3dfaea343/coordinatorlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/26d8c35eb94256b0364d6414a498192a/drawerlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/26d8c35eb94256b0364d6414a498192a/drawerlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/1c32f3dc3fdc526563ccbd1ed861d5ba/slidingpanelayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/1c32f3dc3fdc526563ccbd1ed861d5ba/slidingpanelayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/b4c074b6f4352d3a610ce15aa84bf1d0/customview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/b4c074b6f4352d3a610ce15aa84bf1d0/customview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/39bac379aa3d8f6e886ea62b5f5c0b56/swiperefreshlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/39bac379aa3d8f6e886ea62b5f5c0b56/swiperefreshlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/7be8fad4d0d4c39ae540ff1cf8ca0dbe/asynclayoutinflater-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/7be8fad4d0d4c39ae540ff1cf8ca0dbe/asynclayoutinflater-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.1.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8dca7814ee2bb9f90ee3f0ba01d547b8/core-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core:1.1.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/8dca7814ee2bb9f90ee3f0ba01d547b8/core-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/208371745c4658fe8633bf3d644bf6e5/versionedparcelable-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/208371745c4658fe8633bf3d644bf6e5/versionedparcelable-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.interpolator:interpolator:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/d4828e4502ab73e05365e335f44ea99b/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/d4828e4502ab73e05365e335f44ea99b/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/bb04335d7717ef51310584bb421fb1e7/documentfile-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/bb04335d7717ef51310584bb421fb1e7/documentfile-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/ac3eb8f4bbecfb715d88581d5203c33e/localbroadcastmanager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/ac3eb8f4bbecfb715d88581d5203c33e/localbroadcastmanager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/503d83e1cf90061dbee16155c9c96f40/print-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/503d83e1cf90061dbee16155c9c96f40/print-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/51e22be4a1348c0519daa7caf7d2b9ee/lifecycle-viewmodel-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/51e22be4a1348c0519daa7caf7d2b9ee/lifecycle-viewmodel-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/4f4028e35a4066d5bcda0d833a102c19/lifecycle-runtime-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/4f4028e35a4066d5bcda0d833a102c19/lifecycle-runtime-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/311501f952435c5b879fdf21b71e9a0b/lifecycle-livedata-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/311501f952435c5b879fdf21b71e9a0b/lifecycle-livedata-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/4c348d7ab662aecd144684d8549db796/lifecycle-livedata-core-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/4c348d7ab662aecd144684d8549db796/lifecycle-livedata-core-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/61f00780d08bc7c8506a1055176e8bb7/core-runtime-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] /usr/local/google/home/chenlevy/.gradle/caches/transforms-2/files-2.1/61f00780d08bc7c8506a1055176e8bb7/core-runtime-2.0.0/AndroidManifest.xml:20:5-44
+INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+		INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+		ADDED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
+		INJECTED from /usr/local/google/home/chenlevy/program_files/bubblewrap/bubblewrap/app/src/main/AndroidManifest.xml
