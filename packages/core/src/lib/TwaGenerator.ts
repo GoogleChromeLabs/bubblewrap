@@ -142,7 +142,8 @@ export class TwaGenerator {
   }
 
   private async saveIcon(data: Buffer, size: number, fileName: string): Promise<void> {
-    await sharp(data)
+    // 2400 is the maximal density which gets the best quality.
+    await sharp(data, {density: 2400})
         .resize(size)
         .png()
         .toFile(fileName);
