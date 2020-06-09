@@ -30,6 +30,24 @@ export type LighthouseCategories = {
   [key in LighthouseCategoryName]: LighthouseCategory;
 };
 
+export type LighthouseMetricAudit = {
+  firstContentfulPaint: number;
+  largestContentfulPaint: number;
+  maxPotentialFID: number;
+  cumulativeLayoutShift: number;
+}
+
+export type LighthouseMetricsAudit = {
+  id: string;
+  title: string;
+  description: string;
+  details: {
+    type: string;
+    // The API returns an array, but are only interested in the first item.
+    items: LighthouseMetricAudit[];
+  };
+};
+
 export type PsiLighthouseResult = {
   requestedUrl: string;
   finalUrl: string;
@@ -47,6 +65,9 @@ export type PsiLighthouseResult = {
     onlyCategories: LighthouseCategoryName[];
     channel: string;
   };
+  audits: {
+    metrics: LighthouseMetricsAudit;
+  };
   categories: LighthouseCategories;
   timing: {
     total: number;
@@ -62,7 +83,7 @@ export type PsiResult = {
   captchaResult: string;
   kind: string;
   id: string;
-  loadingExperiente: {
+  loadingExperience: {
     initial_url: string;
   };
   lighthouseResult: PsiLighthouseResult;

@@ -41,6 +41,7 @@ describe('TwaManifest', () => {
           'url': '/launch',
           'icons': [{
             'src': '/shortcut_icon.png',
+            'sizes': '96x96',
           }],
         }],
       };
@@ -108,6 +109,25 @@ describe('TwaManifest', () => {
       const twaManifest = TwaManifest.fromWebManifestJson(manifestUrl, manifest);
       expect(twaManifest.name).toBe('PWA Directory');
       expect(twaManifest.launcherName).toBe('PWA Director');
+    });
+
+    it('Ignores shortcuts if icon size is empty or too small', () => {
+      const manifest = {
+        'shortcuts': [{
+          'name': 'invalid',
+          'url': '/invalid',
+          'icons': [{
+            'src': '/no_size.png',
+          }, {
+            'src': '/small_size.png',
+            'sizes': '95x95',
+          }],
+        }],
+      };
+      const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
+      const twaManifest = TwaManifest.fromWebManifestJson(manifestUrl, manifest);
+      expect(twaManifest.shortcuts).toEqual([]);
+      expect(twaManifest.generateShortcuts()).toBe('[]');
     });
   });
 

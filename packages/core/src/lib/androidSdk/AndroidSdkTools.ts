@@ -16,15 +16,10 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import {promisify} from 'util';
-import {exec} from 'child_process';
-
 import util = require('../util');
 import {Config} from '../Config';
 import {JdkHelper} from '../jdk/JdkHelper';
 import Log from '../../lib/Log';
-
-const execPromise = promisify(exec);
 
 const BUILD_TOOLS_VERSION = '29.0.2';
 
@@ -134,7 +129,7 @@ export class AndroidSdkTools {
       input,
       output,
     ];
-    await execPromise(zipalignCmd.join(' '), {env: env});
+    await util.execute(zipalignCmd, env);
   }
 
   /**
@@ -149,8 +144,8 @@ export class AndroidSdkTools {
   async apksigner(keystore: string, ksPass: string, alias: string, keyPass: string, input: string,
       output: string): Promise<void> {
     const env = this.getEnv();
-    const apksignerCmd = [
-      `"${this.pathJoin(this.getAndroidHome(), `/build-tools/${BUILD_TOOLS_VERSION}/apksigner`)}"`,
+
+    const apkSignerParams = [
       `sign --ks ${keystore}`,
       `--ks-key-alias ${alias}`,
       `--ks-pass pass:${ksPass}`,
@@ -158,7 +153,28 @@ export class AndroidSdkTools {
       `--out ${output}`,
       input,
     ];
-    await execPromise(apksignerCmd.join(' '), {env: env});
+
+    // This is a workaround for https://issuetracker.google.com/issues/150888434, where
+    // find_java.bat is unable to find the java command on Windows.
+    // We run apksigner.jar directly instead of invoking the bat.
+    if (this.process.platform === 'win32') {
+      const javaCmd = [
+        '-Xmx1024M',
+        '-Xss1m',
+        '-jar',
+        `"${this.pathJoin(this.getAndroidHome(),
+            `/build-tools/${BUILD_TOOLS_VERSION}/lib/apksigner.jar`)}"`,
+      ];
+      javaCmd.push(...apkSignerParams);
+      await this.jdkHelper.runJava(javaCmd);
+      return;
+    }
+
+    const apksignerCmd = [
+      `"${this.pathJoin(this.getAndroidHome(), `/build-tools/${BUILD_TOOLS_VERSION}/apksigner`)}"`,
+    ];
+    apksignerCmd.push(...apkSignerParams);
+    await util.execute(apksignerCmd, env);
   }
 
   /**

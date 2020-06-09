@@ -1,3 +1,33 @@
+## v1.3.1 (2020-06-04)
+
+#### :rocket: Enhancement
+* `cli`, `validator`
+  * [#189](https://github.com/GoogleChromeLabs/bubblewrap/pull/189) Adds Web Vitals metrics to validation ([@andreban](https://github.com/andreban))
+* `cli`
+  * [#186](https://github.com/GoogleChromeLabs/bubblewrap/pull/186) Adds version, --version and --help commands ([@andreban](https://github.com/andreban))
+
+#### :bug: Bug Fix
+* `core`
+  * [#191](https://github.com/GoogleChromeLabs/bubblewrap/pull/191) Runs `apksigner.jar` instead of `apksigner.bat` on win32 ([@andreban](https://github.com/andreban))
+
+#### Committers: 1
+- André Cipriani Bandarra ([@andreban](https://github.com/andreban))
+
+
+## v1.3.0 (2020-05-27)
+
+#### :rocket: Enhancement
+* `cli`, `core`
+  * [#179](https://github.com/GoogleChromeLabs/bubblewrap/pull/179) Generates assetlinks.json when building the App ([@andreban](https://github.com/andreban))
+
+#### :memo: Documentation
+* [#182](https://github.com/GoogleChromeLabs/bubblewrap/pull/182) Link badge to workflow page ([@Maxim-Mazurok](https://github.com/Maxim-Mazurok))
+
+#### Committers: 2
+- André Cipriani Bandarra ([@andreban](https://github.com/andreban))
+- Maxim Mazurok ([@Maxim-Mazurok](https://github.com/Maxim-Mazurok))
+
+
 ## v1.2.2 (2020-05-20)
 
 #### :bug: Bug Fix
