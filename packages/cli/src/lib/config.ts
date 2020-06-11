@@ -14,13 +14,14 @@
  *  limitations under the License.
  */
 
-import {existsSync} from 'fs';
+
 import {join} from 'path';
 import {homedir} from 'os';
 import {Config} from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
+import {existsSync, promises} from 'fs';
 
-const DEFAULT_CONFIG_PATH = join(homedir(), '/.llama-pack/llama-pack-config.json');
+const DEFAULT_CONFIG_PATH = join(homedir(), '/.bubblewrap-config/bubblewrap-config.json');
 
 async function createConfig(): Promise<Config> {
   const result = await inquirer.prompt([
@@ -38,6 +39,14 @@ async function createConfig(): Promise<Config> {
 }
 
 export async function loadOrCreateConfig(path = DEFAULT_CONFIG_PATH): Promise<Config> {
+  if (!existsSync(path)) {
+    // no new named config file found
+    if (existsSync(join(homedir(), '/.llama-pack/llama-pack-config.json'))) {
+      // old named config file found - rename it and it's folder
+      promises.rename((join(homedir(), '/.llama-pack/llama-pack-config.json')), path);
+      promises.rename((join(homedir(), '/.llama-pack')), (join(homedir(), '/.bubblewrap-config')));
+    }
+  }
   const existingConfig = await Config.loadConfig(path);
   if (existingConfig) return existingConfig;
 
