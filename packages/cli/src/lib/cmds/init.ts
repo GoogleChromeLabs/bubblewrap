@@ -212,6 +212,6 @@ export async function init(args: ParsedArgs, config: Config): Promise<boolean> {
   await twaGenerator.createTwaProject(targetDirectory, twaManifest);
   await createSigningKey(twaManifest, config);
   log.info('');
-  log.info('Project generated successfully. Build it by running "@bubblewrap/cli build"');
+  log.info('Project generated successfully. Build it by running "bubblewrap build"');
   return true;
 }
