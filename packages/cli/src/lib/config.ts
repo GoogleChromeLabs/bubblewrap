@@ -43,8 +43,8 @@ export async function loadOrCreateConfig(path = DEFAULT_CONFIG_PATH): Promise<Co
     // no new named config file found
     if (existsSync(join(homedir(), '/.llama-pack/llama-pack-config.json'))) {
       // old named config file found - rename it and it's folder
-      promises.rename((join(homedir(), '/.llama-pack/llama-pack-config.json')), path);
       promises.rename((join(homedir(), '/.llama-pack')), (join(homedir(), '/.bubblewrap-config')));
+      promises.rename((join(homedir(), '/.bubblewrap-config/llama-pack-config.json')), path);
     }
   }
   const existingConfig = await Config.loadConfig(path);
