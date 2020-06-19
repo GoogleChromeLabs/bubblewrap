@@ -54,6 +54,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.iconUrl)
           .toBe('https://pwa-directory.com/favicons/android-chrome-512x512.png');
       expect(twaManifest.maskableIconUrl).toBeUndefined();
+      expect(twaManifest.monochromeIconUrl).toBeUndefined();
       expect(twaManifest.themeColor.hex()).toBe('#00FF00');
       expect(twaManifest.navigationColor.hex()).toBe('#000000');
       expect(twaManifest.backgroundColor.hex()).toBe('#7CC0FF');
@@ -87,6 +88,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.startUrl).toBe('/');
       expect(twaManifest.iconUrl).toBeUndefined();
       expect(twaManifest.maskableIconUrl).toBeUndefined();
+      expect(twaManifest.monochromeIconUrl).toBeUndefined();
       expect(twaManifest.themeColor.hex()).toBe('#FFFFFF');
       expect(twaManifest.navigationColor.hex()).toBe('#000000');
       expect(twaManifest.backgroundColor.hex()).toBe('#FFFFFF');

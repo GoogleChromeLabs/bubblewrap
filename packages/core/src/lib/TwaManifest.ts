@@ -32,6 +32,9 @@ const SHORT_NAME_MAX_SIZE = 12;
 // The minimum size needed for the shortcut icon
 const MIN_SHORTCUT_ICON_SIZE = 96;
 
+// The minimum size needed for the notification icon
+const MIN_NOTIFICATION_ICON_SIZE = 48;
+
 // Default values used on the Twa Manifest
 const DEFAULT_SPLASHSCREEN_FADEOUT_DURATION = 300;
 const DEFAULT_APP_NAME = 'My TWA';
@@ -98,6 +101,7 @@ export class TwaManifest {
   startUrl: string;
   iconUrl: string | undefined;
   maskableIconUrl: string | undefined;
+  monochromeIconUrl: string | undefined;
   splashScreenFadeOutDuration: number;
   signingKey: SigningKeyInfo;
   appVersionCode: number;
@@ -121,6 +125,7 @@ export class TwaManifest {
     this.startUrl = data.startUrl;
     this.iconUrl = data.iconUrl;
     this.maskableIconUrl = data.maskableIconUrl;
+    this.monochromeIconUrl = data.monochromeIconUrl;
     this.splashScreenFadeOutDuration = data.splashScreenFadeOutDuration;
     this.signingKey = data.signingKey;
     this.appVersionName = data.appVersion;
@@ -205,6 +210,9 @@ export class TwaManifest {
     const maskableIcon: WebManifestIcon | null = webManifest.icons ?
       findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE) : null;
 
+    const monochromeIcon: WebManifestIcon | null = webManifest.icons ?
+      findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE) : null;
+
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
 
     const shortcuts: ShortcutInfo[] = [];
@@ -236,19 +244,23 @@ export class TwaManifest {
       }
     }
 
+    function resolveIconUrl(icon: WebManifestIcon | null): string | undefined {
+      return icon ? new URL(icon.src, webManifestUrl).toString() : undefined;
+    }
+
     const twaManifest = new TwaManifest({
       packageId: generatePackageId(webManifestUrl.host) || '',
       host: webManifestUrl.host,
       name: webManifest['name'] || webManifest['short_name'] || DEFAULT_APP_NAME,
       launcherName: webManifest['short_name'] ||
-          webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE) || DEFAULT_APP_NAME,
+        webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE) || DEFAULT_APP_NAME,
       themeColor: webManifest['theme_color'] || DEFAULT_THEME_COLOR,
       navigationColor: DEFAULT_NAVIGATION_COLOR,
       backgroundColor: webManifest['background_color'] || DEFAULT_BACKGROUND_COLOR,
       startUrl: fullStartUrl.pathname + fullStartUrl.search,
-      iconUrl: icon ? new URL(icon.src, webManifestUrl).toString() : undefined,
-      maskableIconUrl:
-         maskableIcon ? new URL(maskableIcon.src, webManifestUrl).toString() : undefined,
+      iconUrl: resolveIconUrl(icon),
+      maskableIconUrl: resolveIconUrl(maskableIcon),
+      monochromeIconUrl: resolveIconUrl(monochromeIcon),
       appVersion: DEFAULT_APP_VERSION_NAME,
       signingKey: {
         path: DEFAULT_SIGNING_KEY_PATH,
@@ -301,6 +313,7 @@ export interface TwaManifestJson {
   startUrl: string;
   iconUrl?: string;
   maskableIconUrl?: string;
+  monochromeIconUrl?: string;
   splashScreenFadeOutDuration: number;
   signingKey: SigningKeyInfo;
   appVersionCode?: number; // Older Manifests may not have this field.

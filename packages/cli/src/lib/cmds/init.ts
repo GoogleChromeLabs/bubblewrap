@@ -82,6 +82,14 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
       filter: (input): string | undefined => input.length === 0 ? undefined : input,
       validate: async (input): Promise<boolean> => input === undefined || await validateUrl(input),
     }, {
+      name: 'monochromeIconUrl',
+      type: 'input',
+      message: 'URL to an image that is at least 48x48px to be used when generating ' +
+          'monochrome icons',
+      default: twaManifest.monochromeIconUrl,
+      filter: (input): string | undefined => input.length === 0 ? undefined : input,
+      validate: async (input): Promise<boolean> => input === undefined || await validateUrl(input),
+    }, {
       name: 'shortcuts',
       type: 'confirm',
       message: 'Include app shortcuts?\n' + JSON.stringify(twaManifest.shortcuts, null, 2),
@@ -124,6 +132,7 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
   twaManifest.startUrl = result.startUrl;
   twaManifest.iconUrl = result.iconUrl;
   twaManifest.maskableIconUrl = result.maskableIconUrl;
+  twaManifest.monochromeIconUrl = result.monochromeIconUrl;
   twaManifest.shortcuts = result.shortcuts ? twaManifest.shortcuts : [];
   twaManifest.packageId = result.packageId;
   twaManifest.signingKey = {

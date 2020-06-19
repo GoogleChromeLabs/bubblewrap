@@ -76,6 +76,14 @@ const SHORTCUT_IMAGES: IconDefinition[] = [
   {dest: 'app/src/main/res/drawable-xxxhdpi/', size: 192},
 ];
 
+const NOTIFICATION_IMAGES: IconDefinition[] = [
+  {dest: 'app/src/main/res/drawable-mdpi/ic_notification_icon.png', size: 24},
+  {dest: 'app/src/main/res/drawable-hdpi/ic_notification_icon.png', size: 36},
+  {dest: 'app/src/main/res/drawable-xhdpi/ic_notification_icon.png', size: 48},
+  {dest: 'app/src/main/res/drawable-xxhdpi/ic_notification_icon.png', size: 72},
+  {dest: 'app/src/main/res/drawable-xxxhdpi/ic_notification_icon.png', size: 96},
+];
+
 const WEB_MANIFEST_LOCATION = '/app/src/main/res/raw/';
 const WEB_MANIFEST_FILE_NAME = 'web_app_manifest.json';
 
@@ -254,6 +262,11 @@ export class TwaGenerator {
     // Generate adaptive images
     if (twaManifest.maskableIconUrl) {
       await this.generateIcons(twaManifest.maskableIconUrl, targetDirectory, ADAPTIVE_IMAGES);
+    }
+
+    // Generate notification images
+    if (twaManifest.monochromeIconUrl) {
+      await this.generateIcons(twaManifest.monochromeIconUrl, targetDirectory, NOTIFICATION_IMAGES);
     }
 
     if (twaManifest.webManifestUrl) {
