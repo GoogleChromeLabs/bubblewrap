@@ -131,6 +131,40 @@ describe('TwaManifest', () => {
       expect(twaManifest.shortcuts).toEqual([]);
       expect(twaManifest.generateShortcuts()).toBe('[]');
     });
+
+    it('resolves URLs for maskable and monochrome icons', () => {
+      const manifest = {
+        'name': 'PWA Directory',
+        'short_name': 'PwaDirectory',
+        'start_url': '/?utm_source=homescreen',
+        'icons': [{
+          'src': '/favicons/any.png',
+          'sizes': '512x512',
+          'type': 'image/png',
+          'purpose': 'any',
+        }, {
+          'src': '/favicons/maskable.png',
+          'sizes': '512x512',
+          'type': 'image/png',
+          'purpose': 'maskable',
+        }, {
+          'src': '/favicons/monochrome.png',
+          'sizes': '512x512',
+          'type': 'image/png',
+          'purpose': 'monochrome',
+        }],
+      };
+      const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
+      const twaManifest = TwaManifest.fromWebManifestJson(manifestUrl, manifest);
+      expect(twaManifest.packageId).toBe('com.pwa_directory.twa');
+      expect(twaManifest.name).toBe('PWA Directory');
+      expect(twaManifest.launcherName).toBe('PwaDirectory');
+      expect(twaManifest.startUrl).toBe('/?utm_source=homescreen');
+      expect(twaManifest.iconUrl)
+          .toBe('https://pwa-directory.com/favicons/any.png');
+      expect(twaManifest.maskableIconUrl).toBe('https://pwa-directory.com/favicons/maskable.png');
+      expect(twaManifest.monochromeIconUrl).toBe('https://pwa-directory.com/favicons/monochrome.png');
+    });
   });
 
   describe('#constructor', () => {
