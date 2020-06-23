@@ -85,8 +85,11 @@ the values that should be used when building the Android project.
 It will also ask you for the details needed to generate a signing key, used to sign the
 app before uploading to the Play Store.
 
-> :grey_exclamation: The output from the `init` command is a regular Android project that can be opened
-and built using [Android Studio](https://developer.android.com/studio/).
+> :grey_exclamation: Even though we recommend Bubblewrap for building and generating a signed
+APK, the output from the `init` command is a regular Android project that can be opened
+and built using [Android Studio](https://developer.android.com/studio/). Please, refer to the
+[documentation]( https://developer.android.com/studio/publish/app-signing#sign-apk) to build and sign
+applications using Android Studio.
 
 ### Building the Android Project
 ```shell
