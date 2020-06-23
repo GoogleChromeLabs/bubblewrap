@@ -45,7 +45,7 @@
 
         <meta-data
             android:name="twa_generator"
-            android:value="@string/generatorApp" />            
+            android:value="@string/generatorApp" />
 
         <activity android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
             android:label="@string/launcherName">
@@ -107,14 +107,20 @@
         </provider>
 
         <service
-             android:name="com.google.androidbrowserhelper.trusted.DelegationService"
-             android:enabled="@bool/enableNotification"
-             android:exported="@bool/enableNotification">
+            android:name="com.google.androidbrowserhelper.trusted.DelegationService"
+            android:enabled="@bool/enableNotification"
+            android:exported="@bool/enableNotification">
 
-             <intent-filter>
-                 <action android:name="android.support.customtabs.trusted.TRUSTED_WEB_ACTIVITY_SERVICE"/>
-                 <category android:name="android.intent.category.DEFAULT"/>
-             </intent-filter>
+            <% if (monochromeIconUrl) { %>
+                <meta-data
+                    android:name="android.support.customtabs.trusted.SMALL_ICON"
+                    android:value="@drawable/ic_notification_icon" />
+            <% } %>
+
+            <intent-filter>
+                <action android:name="android.support.customtabs.trusted.TRUSTED_WEB_ACTIVITY_SERVICE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
          </service>
 
     </application>

@@ -76,9 +76,21 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
     }, {
       name: 'maskableIconUrl',
       type: 'input',
-      message: 'URL to an image that is at least 512x512px to be used when generating ' +
-          'maskable icons',
+      message:
+        'URL to an image that is at least 512x512px to be used when generating maskable icons.' +
+        '\n\nMaskable icons should look good when their edges are removed by an icon mask. ' +
+        'They will be used to display adaptive launcher icons on the Android home screen.',
       default: twaManifest.maskableIconUrl,
+      filter: (input): string | undefined => input.length === 0 ? undefined : input,
+      validate: async (input): Promise<boolean> => input === undefined || await validateUrl(input),
+    }, {
+      name: 'monochromeIconUrl',
+      type: 'input',
+      message:
+        'URL to an image that is at least 48x48px to be used when generating monochrome icons.' +
+        '\n\nMonochrome icons should look good when displayed with a single color,' +
+        'the PWA\' theme_color. They will be used for notification icons.',
+      default: twaManifest.monochromeIconUrl,
       filter: (input): string | undefined => input.length === 0 ? undefined : input,
       validate: async (input): Promise<boolean> => input === undefined || await validateUrl(input),
     }, {
@@ -124,6 +136,7 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
   twaManifest.startUrl = result.startUrl;
   twaManifest.iconUrl = result.iconUrl;
   twaManifest.maskableIconUrl = result.maskableIconUrl;
+  twaManifest.monochromeIconUrl = result.monochromeIconUrl;
   twaManifest.shortcuts = result.shortcuts ? twaManifest.shortcuts : [];
   twaManifest.packageId = result.packageId;
   twaManifest.signingKey = {
