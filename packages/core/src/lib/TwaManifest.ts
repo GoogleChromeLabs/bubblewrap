@@ -56,6 +56,7 @@ const DEFAULT_APP_VERSION_NAME = DEFAULT_APP_VERSION_CODE.toString();
 const DEFAULT_SIGNING_KEY_PATH = './android.keystore';
 const DEFAULT_SIGNING_KEY_ALIAS = 'android';
 const DEFAULT_ENABLE_NOTIFICATIONS = false;
+const DEFAULT_ENABLE_LOCATIONS = false;
 const DEFAULT_GENERATOR_APP_NAME = 'unknown';
 
 export type FallbackType = 'customtabs' | 'webview';
@@ -110,6 +111,7 @@ export class TwaManifest {
   navigationColor: Color;
   backgroundColor: Color;
   enableNotifications: boolean;
+  enableLocation: boolean;
   startUrl: string;
   iconUrl: string | undefined;
   maskableIconUrl: string | undefined;
@@ -137,6 +139,7 @@ export class TwaManifest {
     this.navigationColor = new Color(data.navigationColor);
     this.backgroundColor = new Color(data.backgroundColor);
     this.enableNotifications = data.enableNotifications;
+    this.enableLocation = data.enableLocation;
     this.startUrl = data.startUrl;
     this.iconUrl = data.iconUrl;
     this.maskableIconUrl = data.maskableIconUrl;
@@ -284,6 +287,7 @@ export class TwaManifest {
       },
       splashScreenFadeOutDuration: DEFAULT_SPLASHSCREEN_FADEOUT_DURATION,
       enableNotifications: DEFAULT_ENABLE_NOTIFICATIONS,
+      enableLocation: DEFAULT_ENABLE_LOCATIONS,
       shortcuts: shortcuts,
       webManifestUrl: webManifestUrl.toString(),
     });
@@ -327,6 +331,7 @@ export interface TwaManifestJson {
   navigationColor: string;
   backgroundColor: string;
   enableNotifications: boolean;
+  enableLocation: boolean;
   startUrl: string;
   iconUrl?: string;
   maskableIconUrl?: string;
