@@ -19,9 +19,13 @@ import {join} from 'path';
 import {homedir} from 'os';
 import {Config} from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
-import {existsSync, promises} from 'fs';
+import {existsSync} from 'fs';
+import {promises as fsPromises} from 'fs';
 
-const DEFAULT_CONFIG_PATH = join(homedir(), '/.bubblewrap-config/bubblewrap-config.json');
+const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap-config');
+const DEFAULT_CONFIG_NAME = 'bubblewrap-config.json';
+const LEGACY_CONFIG_FOLDER = join(homedir(), '.llama-pack');
+const LEGACY_CONFIG_NAME = 'llama-pack-config.json';
 
 async function createConfig(): Promise<Config> {
   const result = await inquirer.prompt([
@@ -38,15 +42,30 @@ async function createConfig(): Promise<Config> {
   return new Config(result.jdkPath, result.androidSdkPath);
 }
 
-export async function loadOrCreateConfig(path = DEFAULT_CONFIG_PATH): Promise<Config> {
-  if (!existsSync(path)) {
-    // no new named config file found
-    if (existsSync(join(homedir(), '/.llama-pack/llama-pack-config.json'))) {
-      // old named config file found - rename it and it's folder
-      promises.rename((join(homedir(), '/.llama-pack')), (join(homedir(), '/.bubblewrap-config')));
-      promises.rename((join(homedir(), '/.bubblewrap-config/llama-pack-config.json')), path);
-    }
+async function renameConfigIfNeeded(): Promise<void> {
+  if (existsSync(join(DEFAULT_CONFIG_FOLDER, DEFAULT_CONFIG_NAME))) return;
+  // no new named config file found
+  if (!existsSync(join(LEGACY_CONFIG_FOLDER, LEGACY_CONFIG_NAME))) return;
+  // old named config file found - rename it and its folder
+  console.log('An old named config file was found, changing it now');
+  const files = await fsPromises.readdir(LEGACY_CONFIG_FOLDER);
+  const numOfFiles = files.length;
+  if (numOfFiles != 1) {
+    // there are other files at the old config folder. we leave it and create a new one
+    await fsPromises.mkdir(DEFAULT_CONFIG_FOLDER);
+    fsPromises.rename(join(LEGACY_CONFIG_FOLDER, LEGACY_CONFIG_NAME),
+        join(DEFAULT_CONFIG_FOLDER, DEFAULT_CONFIG_NAME));
+  } else {
+    fsPromises.rename(LEGACY_CONFIG_FOLDER, DEFAULT_CONFIG_FOLDER);
+    fsPromises.rename(join(DEFAULT_CONFIG_FOLDER, LEGACY_CONFIG_NAME),
+        join(DEFAULT_CONFIG_FOLDER, DEFAULT_CONFIG_NAME));
   }
+}
+
+
+export async function loadOrCreateConfig(path =
+join(DEFAULT_CONFIG_FOLDER, DEFAULT_CONFIG_NAME)): Promise<Config> {
+  await renameConfigIfNeeded();
   const existingConfig = await Config.loadConfig(path);
   if (existingConfig) return existingConfig;
 
