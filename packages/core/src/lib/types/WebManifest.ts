@@ -34,6 +34,7 @@ export interface WebManifestJson {
   name?: string;
   short_name?: string;
   start_url?: string;
+  display?: string;
   theme_color?: string;
   background_color?: string;
   icons?: Array<WebManifestIcon>;

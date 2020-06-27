@@ -24,6 +24,7 @@ describe('TwaManifest', () => {
         'name': 'PWA Directory',
         'short_name': 'PwaDirectory',
         'start_url': '/?utm_source=homescreen',
+        'display': 'standalone',
         'icons': [{
           'src': '/favicons/android-chrome-192x192.png',
           'sizes': '192x192',
@@ -50,6 +51,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.packageId).toBe('com.pwa_directory.twa');
       expect(twaManifest.name).toBe('PWA Directory');
       expect(twaManifest.launcherName).toBe('PwaDirectory');
+      expect(twaManifest.display).toBe('standalone');
       expect(twaManifest.startUrl).toBe('/?utm_source=homescreen');
       expect(twaManifest.iconUrl)
           .toBe('https://pwa-directory.com/favicons/android-chrome-512x512.png');

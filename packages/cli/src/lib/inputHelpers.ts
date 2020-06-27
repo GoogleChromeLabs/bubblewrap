@@ -50,3 +50,11 @@ export async function validateUrl(url: string): Promise<boolean> {
   }
   return true;
 }
+
+export async function validateDisplayMode(displayMode: string): Promise<boolean> {
+  const validModes = ['browser', 'minimal-ui', 'standalone', 'fullscreen'];
+  if (!validModes.includes(displayMode)) {
+    throw new Error(`${displayMode} is not a valid display mode (${validModes.join(', ')})`);
+  }
+  return true;
+}
