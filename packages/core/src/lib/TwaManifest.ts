@@ -35,6 +35,14 @@ const MIN_SHORTCUT_ICON_SIZE = 96;
 // The minimum size needed for the notification icon
 const MIN_NOTIFICATION_ICON_SIZE = 48;
 
+// Supported display modes for TWA
+export const DISPLAY_MODES = ['standalone', 'fullscreen'];
+type DisplayMode = typeof DISPLAY_MODES[number];
+
+export function asDisplayMode(input: string): DisplayMode | null {
+  return DISPLAY_MODES.includes(input) ? input as DisplayMode : null;
+}
+
 // Default values used on the Twa Manifest
 const DEFAULT_SPLASHSCREEN_FADEOUT_DURATION = 300;
 const DEFAULT_APP_NAME = 'My TWA';
@@ -96,7 +104,7 @@ export class TwaManifest {
   host: string;
   name: string;
   launcherName: string;
-  display: string;
+  display: DisplayMode;
   themeColor: Color;
   navigationColor: Color;
   backgroundColor: Color;
@@ -120,8 +128,10 @@ export class TwaManifest {
     this.packageId = data.packageId;
     this.host = data.host;
     this.name = data.name;
-    this.launcherName = data.launcherName || data.name; // Older Manifests may not have this field.
-    this.display = data.display || DEFAULT_DISPLAY_MODE; // Older Manifests may not have this field.
+    // Older manifests may not have this field:
+    this.launcherName = data.launcherName || data.name;
+    // Older manifests may not have this field:
+    this.display = asDisplayMode(data.display!) || DEFAULT_DISPLAY_MODE;
     this.themeColor = new Color(data.themeColor);
     this.navigationColor = new Color(data.navigationColor);
     this.backgroundColor = new Color(data.backgroundColor);
@@ -258,7 +268,7 @@ export class TwaManifest {
       name: webManifest['name'] || webManifest['short_name'] || DEFAULT_APP_NAME,
       launcherName: webManifest['short_name'] ||
         webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE) || DEFAULT_APP_NAME,
-      display: webManifest['display'] || DEFAULT_DISPLAY_MODE,
+      display: asDisplayMode(webManifest['display']!) || DEFAULT_DISPLAY_MODE,
       themeColor: webManifest['theme_color'] || DEFAULT_THEME_COLOR,
       navigationColor: DEFAULT_NAVIGATION_COLOR,
       backgroundColor: webManifest['background_color'] || DEFAULT_BACKGROUND_COLOR,
