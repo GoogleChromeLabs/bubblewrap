@@ -61,17 +61,4 @@ describe('inputHelpers', () => {
           inputHelpers.validateColor('rgb(23, 0 30')).toBeRejectedWithError();
     });
   });
-
-  describe('#validateDisplayMode', () => {
-    it('returns true for valid colors', async () => {
-      expect(await inputHelpers.validateDisplayMode('browser'));
-      expect(await inputHelpers.validateDisplayMode('minimal-ui'));
-      expect(await inputHelpers.validateDisplayMode('standalone'));
-      expect(await inputHelpers.validateDisplayMode('fullscreen'));
-    });
-
-    it('throws Error for invalid display modes', async () => {
-      await expectAsync(inputHelpers.validateColor('bogus')).toBeRejectedWithError();
-    });
-  });
 });
