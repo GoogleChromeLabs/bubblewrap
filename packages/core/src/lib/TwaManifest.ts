@@ -36,11 +36,12 @@ const MIN_SHORTCUT_ICON_SIZE = 96;
 const MIN_NOTIFICATION_ICON_SIZE = 48;
 
 // Supported display modes for TWA
-export const DISPLAY_MODES = ['standalone', 'fullscreen'];
-type DisplayMode = typeof DISPLAY_MODES[number];
+const DISPLAY_MODE_VALUES = ['standalone', 'fullscreen'];
+type DisplayMode = typeof DISPLAY_MODE_VALUES[number];
+export const DisplayModes: DisplayMode[] = [...DISPLAY_MODE_VALUES];
 
 export function asDisplayMode(input: string): DisplayMode | null {
-  return DISPLAY_MODES.includes(input) ? input as DisplayMode : null;
+  return DISPLAY_MODE_VALUES.includes(input) ? input as DisplayMode : null;
 }
 
 // Default values used on the Twa Manifest

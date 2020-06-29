@@ -17,7 +17,7 @@
 import * as fs from 'fs';
 import Color = require('color');
 import * as inquirer from 'inquirer';
-import {Config, DISPLAY_MODES, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest,
+import {Config, DisplayModes, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest,
   util} from '@bubblewrap/core';
 import {validateColor, validateKeyPassword, validateUrl, notEmpty} from '../inputHelpers';
 import {ParsedArgs} from 'minimist';
@@ -55,7 +55,7 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
       type: 'list',
       message: 'Display mode to be used:',
       default: twaManifest.display,
-      choices: DISPLAY_MODES,
+      choices: DisplayModes,
     }, {
       name: 'themeColor',
       type: 'input',
