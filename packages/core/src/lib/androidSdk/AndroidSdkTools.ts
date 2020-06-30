@@ -146,11 +146,12 @@ export class AndroidSdkTools {
     const env = this.getEnv();
 
     const apkSignerParams = [
-      `sign --ks ${keystore}`,
-      `--ks-key-alias ${alias}`,
-      `--ks-pass pass:${ksPass}`,
-      `--key-pass pass:${keyPass}`,
-      `--out ${output}`,
+      'sign',
+      '--ks', keystore,
+      '--ks-key-alias', alias,
+      '--ks-pass', `pass:${ksPass}`,
+      '--key-pass', `pass:${keyPass}`,
+      '--out', output,
       input,
     ];
 
@@ -162,19 +163,17 @@ export class AndroidSdkTools {
         '-Xmx1024M',
         '-Xss1m',
         '-jar',
-        `"${this.pathJoin(this.getAndroidHome(),
-            `/build-tools/${BUILD_TOOLS_VERSION}/lib/apksigner.jar`)}"`,
+        this.pathJoin(this.getAndroidHome(),
+            `/build-tools/${BUILD_TOOLS_VERSION}/lib/apksigner.jar`),
       ];
       javaCmd.push(...apkSignerParams);
       await this.jdkHelper.runJava(javaCmd);
       return;
     }
 
-    const apksignerCmd = [
-      `"${this.pathJoin(this.getAndroidHome(), `/build-tools/${BUILD_TOOLS_VERSION}/apksigner`)}"`,
-    ];
-    apksignerCmd.push(...apkSignerParams);
-    await util.execute(apksignerCmd, env);
+    const apksignerCmd = this.pathJoin(
+        this.getAndroidHome(), `/build-tools/${BUILD_TOOLS_VERSION}/apksigner`);
+    await util.executeFile(apksignerCmd, apkSignerParams, env);
   }
 
   /**

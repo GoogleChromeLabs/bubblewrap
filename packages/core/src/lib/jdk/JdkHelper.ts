@@ -18,7 +18,7 @@
 
 import {Config} from '../Config';
 import * as path from 'path';
-import {execute} from '../util';
+import {executeFile} from '../util';
 
 /**
  * Helps getting information relevant to the JDK installed, including
@@ -56,11 +56,8 @@ export class JdkHelper {
    */
   async runJava(args: string[]): Promise<{stdout: string; stderr: string}> {
     const java = this.process.platform === 'win32' ? '/bin/java.exe' : '/bin/java';
-    const runJavaCmd = [
-      `"${this.joinPath(this.getJavaHome(), java)}"`,
-    ];
-    runJavaCmd.push(...args);
-    return await execute(runJavaCmd, this.getEnv());
+    const runJavaCmd = this.joinPath(this.getJavaHome(), java);
+    return await executeFile(runJavaCmd, args, this.getEnv());
   }
 
   /**
