@@ -44,7 +44,12 @@ export class Cli {
         command = 'help';
       }
     } else {
-      command = parsedArgs._[0] || 'help';
+      command = parsedArgs._[0];
+    }
+
+    // If no command is given, default to 'help'.
+    if (!command) {
+      command = 'help';
     }
 
     switch (command) {
