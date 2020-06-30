@@ -35,9 +35,19 @@ const MIN_SHORTCUT_ICON_SIZE = 96;
 // The minimum size needed for the notification icon
 const MIN_NOTIFICATION_ICON_SIZE = 48;
 
+// Supported display modes for TWA
+const DISPLAY_MODE_VALUES = ['standalone', 'fullscreen'];
+type DisplayMode = typeof DISPLAY_MODE_VALUES[number];
+export const DisplayModes: DisplayMode[] = [...DISPLAY_MODE_VALUES];
+
+export function asDisplayMode(input: string): DisplayMode | null {
+  return DISPLAY_MODE_VALUES.includes(input) ? input as DisplayMode : null;
+}
+
 // Default values used on the Twa Manifest
 const DEFAULT_SPLASHSCREEN_FADEOUT_DURATION = 300;
 const DEFAULT_APP_NAME = 'My TWA';
+const DEFAULT_DISPLAY_MODE = 'standalone';
 const DEFAULT_THEME_COLOR = '#FFFFFF';
 const DEFAULT_NAVIGATION_COLOR = '#000000';
 const DEFAULT_BACKGROUND_COLOR = '#FFFFFF';
@@ -72,6 +82,7 @@ export class ShortcutInfo {
  * hostName: '<%= host %>', // The domain being opened in the TWA.
  * launchUrl: '<%= startUrl %>', // The start path for the TWA. Must be relative to the domain.
  * name: '<%= name %>', // The name shown on the Android Launcher.
+ * display: '<%= display %>', // The display mode for the TWA.
  * themeColor: '<%= themeColor %>', // The color used for the status bar.
  * navigationColor: '<%= themeColor %>', // The color used for the navigation bar.
  * backgroundColor: '<%= backgroundColor %>', // The color used for the splash screen background.
@@ -94,6 +105,7 @@ export class TwaManifest {
   host: string;
   name: string;
   launcherName: string;
+  display: DisplayMode;
   themeColor: Color;
   navigationColor: Color;
   backgroundColor: Color;
@@ -117,7 +129,10 @@ export class TwaManifest {
     this.packageId = data.packageId;
     this.host = data.host;
     this.name = data.name;
-    this.launcherName = data.launcherName || data.name; // Older Manifests may not have this field.
+    // Older manifests may not have this field:
+    this.launcherName = data.launcherName || data.name;
+    // Older manifests may not have this field:
+    this.display = asDisplayMode(data.display!) || DEFAULT_DISPLAY_MODE;
     this.themeColor = new Color(data.themeColor);
     this.navigationColor = new Color(data.navigationColor);
     this.backgroundColor = new Color(data.backgroundColor);
@@ -254,6 +269,7 @@ export class TwaManifest {
       name: webManifest['name'] || webManifest['short_name'] || DEFAULT_APP_NAME,
       launcherName: webManifest['short_name'] ||
         webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE) || DEFAULT_APP_NAME,
+      display: asDisplayMode(webManifest['display']!) || DEFAULT_DISPLAY_MODE,
       themeColor: webManifest['theme_color'] || DEFAULT_THEME_COLOR,
       navigationColor: DEFAULT_NAVIGATION_COLOR,
       backgroundColor: webManifest['background_color'] || DEFAULT_BACKGROUND_COLOR,
@@ -306,6 +322,7 @@ export interface TwaManifestJson {
   host: string;
   name: string;
   launcherName?: string; // Older Manifests may not have this field.
+  display?: string; // Older Manifests may not have this field.
   themeColor: string;
   navigationColor: string;
   backgroundColor: string;

@@ -30,10 +30,13 @@ export interface WebManifestShortcutJson {
   icons?: Array<WebManifestIcon>;
 }
 
+type WebManifestDisplayMode = 'browser' | 'minimal-ui' | 'standalone' | 'fullscreen';
+
 export interface WebManifestJson {
   name?: string;
   short_name?: string;
   start_url?: string;
+  display?: WebManifestDisplayMode;
   theme_color?: string;
   background_color?: string;
   icons?: Array<WebManifestIcon>;
