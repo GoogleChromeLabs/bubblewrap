@@ -22,7 +22,7 @@ import * as inquirer from 'inquirer';
 import {existsSync} from 'fs';
 import {promises as fsPromises} from 'fs';
 
-const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap-config');
+const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap');
 const DEFAULT_CONFIG_NAME = 'bubblewrap-config.json';
 const DEFAULT_CONFIG_FILE_PATH = join(DEFAULT_CONFIG_FOLDER, DEFAULT_CONFIG_NAME);
 const LEGACY_CONFIG_FOLDER = join(homedir(), '.llama-pack');
@@ -58,14 +58,14 @@ async function renameConfigIfNeeded(log = new Log('config')): Promise<void> {
     await fsPromises.mkdir(DEFAULT_CONFIG_FOLDER);
     await fsPromises.rename(LEGACY_CONFIG_FILE_PATH, DEFAULT_CONFIG_FILE_PATH);
   } else {
-    fsPromises.rename(LEGACY_CONFIG_FOLDER, DEFAULT_CONFIG_FOLDER);
-    fsPromises.rename(join(DEFAULT_CONFIG_FOLDER, LEGACY_CONFIG_NAME), DEFAULT_CONFIG_FILE_PATH);
+    await fsPromises.rename(LEGACY_CONFIG_FOLDER, DEFAULT_CONFIG_FOLDER);
+    await fsPromises
+        .rename(join(DEFAULT_CONFIG_FOLDER, LEGACY_CONFIG_NAME), DEFAULT_CONFIG_FILE_PATH);
   }
 }
 
 
-export async function loadOrCreateConfig(path =
-join(DEFAULT_CONFIG_FOLDER, DEFAULT_CONFIG_NAME)): Promise<Config> {
+export async function loadOrCreateConfig(path = DEFAULT_CONFIG_FILE_PATH): Promise<Config> {
   await renameConfigIfNeeded();
   const existingConfig = await Config.loadConfig(path);
   if (existingConfig) return existingConfig;

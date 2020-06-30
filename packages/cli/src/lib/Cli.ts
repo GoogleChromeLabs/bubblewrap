@@ -44,7 +44,7 @@ export class Cli {
         command = 'help';
       }
     } else {
-      command = parsedArgs._[0];
+      command = parsedArgs._[0] || 'help';
     }
 
     switch (command) {
