@@ -22,8 +22,8 @@ import {loadOrCreateConfig} from '../lib/config';
 import * as mock from 'mock-fs';
 import * as inquirer from 'inquirer';
 
-const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap-config');
-const DEFAULT_CONFIG_NAME = 'bubblewrap-config.json';
+const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap');
+const DEFAULT_CONFIG_NAME = 'config.json';
 const DEFAULT_CONFIG_FILE_PATH = join(DEFAULT_CONFIG_FOLDER, DEFAULT_CONFIG_NAME);
 const LEGACY_CONFIG_FOLDER = join(homedir(), '.llama-pack');
 const LEGACY_CONFIG_NAME = 'llama-pack-config.json';
@@ -41,7 +41,7 @@ beforeAll(() => {
 describe('config', () => {
   describe('#loadOrCreateConfig', () => {
     it('checks if the file\'s name was changed in case it has the old name', async () => {
-      // Creates a mock file systes.
+      // Creates a mock file system.
       mock({
         [LEGACY_CONFIG_FOLDER]: {
           'llama-pack-config.json': '{}',
@@ -83,15 +83,15 @@ describe('config', () => {
       mock.restore();
     });
 
-    it('checks if both of the files exists in case there are old and new config files'
-        , async () => {
+    it('checks if both of the files exists in case there are old and new config files',
+        async () => {
           // Creates a mock file systes.
           mock({
             [LEGACY_CONFIG_FOLDER]: {
               'llama-pack-config.json': '{"content":"some old content"}',
             },
             [DEFAULT_CONFIG_FOLDER]: {
-              'bubblewrap-config.json': '{"content":"some new content"}',
+              'config.json': '{"content":"some new content"}',
             }});
           await loadOrCreateConfig();
           // Checks if both of the files exists.
