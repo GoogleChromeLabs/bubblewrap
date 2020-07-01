@@ -23,7 +23,7 @@ import * as mock from 'mock-fs';
 import * as inquirer from 'inquirer';
 
 const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap');
-const DEFAULT_CONFIG_NAME = 'bubblewrap-config.json';
+const DEFAULT_CONFIG_NAME = 'config.json';
 const DEFAULT_CONFIG_FILE_PATH = join(DEFAULT_CONFIG_FOLDER, DEFAULT_CONFIG_NAME);
 const LEGACY_CONFIG_FOLDER = join(homedir(), '.llama-pack');
 const LEGACY_CONFIG_NAME = 'llama-pack-config.json';
@@ -91,7 +91,7 @@ describe('config', () => {
               'llama-pack-config.json': '{"content":"some old content"}',
             },
             [DEFAULT_CONFIG_FOLDER]: {
-              'bubblewrap-config.json': '{"content":"some new content"}',
+              'config.json': '{"content":"some new content"}',
             }});
           await loadOrCreateConfig();
           // Checks if both of the files exists.
