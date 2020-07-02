@@ -24,6 +24,8 @@ import {install} from './cmds/install';
 import {loadOrCreateConfig} from './config';
 import {major} from 'semver';
 import {version} from './cmds/version';
+import {doctor} from './cmds/doctor';
+import {updateConfig} from './cmds/updateConfig';
 
 export class Cli {
   async run(args: string[]): Promise<boolean> {
@@ -48,6 +50,10 @@ export class Cli {
     }
 
     switch (command) {
+      case 'updateConfig':
+        return await updateConfig(parsedArgs);
+      case 'doctor':
+        return await doctor();
       case 'help':
         return await help(parsedArgs);
       case 'init':
