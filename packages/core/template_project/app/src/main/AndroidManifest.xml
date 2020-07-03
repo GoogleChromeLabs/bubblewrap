@@ -77,6 +77,11 @@
             <meta-data android:name="android.support.customtabs.trusted.FALLBACK_STRATEGY"
                 android:value="@string/fallbackType" />
 
+            <% if (display === 'fullscreen') { %>
+            <meta-data android:name="android.support.customtabs.trusted.DISPLAY_MODE"
+                android:value="immersive" />
+
+            <% }%>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

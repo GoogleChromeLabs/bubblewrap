@@ -20,7 +20,7 @@ import {GradleWrapper} from './lib/GradleWrapper';
 import Log from './lib/Log';
 import {JdkHelper} from './lib/jdk/JdkHelper';
 import {KeyTool} from './lib/jdk/KeyTool';
-import {TwaManifest} from './lib/TwaManifest';
+import {TwaManifest, DisplayModes} from './lib/TwaManifest';
 import {TwaGenerator} from './lib/TwaGenerator';
 import {DigitalAssetLinks} from './lib/DigitalAssetLinks';
 import * as util from './lib/util';
@@ -34,5 +34,6 @@ export {AndroidSdkTools,
   Log,
   TwaGenerator,
   TwaManifest,
+  DisplayModes,
   util,
 };

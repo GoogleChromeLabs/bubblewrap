@@ -14,7 +14,8 @@
  *  limitations under the License.
  */
 
-import {TwaManifest, TwaManifestJson} from '../../lib/TwaManifest';
+import {TwaManifest, TwaManifestJson, asDisplayMode} from '../../lib/TwaManifest';
+import {WebManifestJson} from '../../lib/types/WebManifest';
 import Color = require('color');
 
 describe('TwaManifest', () => {
@@ -24,6 +25,7 @@ describe('TwaManifest', () => {
         'name': 'PWA Directory',
         'short_name': 'PwaDirectory',
         'start_url': '/?utm_source=homescreen',
+        'display': 'fullscreen',
         'icons': [{
           'src': '/favicons/android-chrome-192x192.png',
           'sizes': '192x192',
@@ -46,10 +48,11 @@ describe('TwaManifest', () => {
         }],
       };
       const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
-      const twaManifest = TwaManifest.fromWebManifestJson(manifestUrl, manifest);
+      const twaManifest = TwaManifest.fromWebManifestJson(manifestUrl, manifest as WebManifestJson);
       expect(twaManifest.packageId).toBe('com.pwa_directory.twa');
       expect(twaManifest.name).toBe('PWA Directory');
       expect(twaManifest.launcherName).toBe('PwaDirectory');
+      expect(twaManifest.display).toBe('fullscreen');
       expect(twaManifest.startUrl).toBe('/?utm_source=homescreen');
       expect(twaManifest.iconUrl)
           .toBe('https://pwa-directory.com/favicons/android-chrome-512x512.png');
@@ -89,6 +92,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.iconUrl).toBeUndefined();
       expect(twaManifest.maskableIconUrl).toBeUndefined();
       expect(twaManifest.monochromeIconUrl).toBeUndefined();
+      expect(twaManifest.display).toBe('standalone');
       expect(twaManifest.themeColor.hex()).toBe('#FFFFFF');
       expect(twaManifest.navigationColor.hex()).toBe('#000000');
       expect(twaManifest.backgroundColor.hex()).toBe('#FFFFFF');
@@ -165,6 +169,14 @@ describe('TwaManifest', () => {
       expect(twaManifest.maskableIconUrl).toBe('https://pwa-directory.com/favicons/maskable.png');
       expect(twaManifest.monochromeIconUrl).toBe('https://pwa-directory.com/favicons/monochrome.png');
     });
+
+    it('Replaces unsupported display modes with `standalone`', () => {
+      const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
+      expect(TwaManifest.fromWebManifestJson(manifestUrl, {display: 'minimal-ui'}).display)
+          .toBe('standalone');
+      expect(TwaManifest.fromWebManifestJson(manifestUrl, {display: 'browser'}).display)
+          .toBe('standalone');
+    });
   });
 
   describe('#constructor', () => {
@@ -176,6 +188,7 @@ describe('TwaManifest', () => {
         launcherName: 'PwaDirectory',
         startUrl: '/',
         iconUrl: 'https://pwa-directory.com/favicons/android-chrome-512x512.png',
+        display: 'fullscreen',
         themeColor: '#00ff00',
         navigationColor: '#000000',
         backgroundColor: '#0000ff',
@@ -199,6 +212,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.launcherName).toEqual(twaManifest.launcherName);
       expect(twaManifest.startUrl).toEqual(twaManifest.startUrl);
       expect(twaManifest.iconUrl).toEqual(twaManifest.iconUrl);
+      expect(twaManifest.display).toEqual('fullscreen');
       expect(twaManifest.themeColor).toEqual(new Color('#00ff00'));
       expect(twaManifest.navigationColor).toEqual(new Color('#000000'));
       expect(twaManifest.backgroundColor).toEqual(new Color('#0000ff'));
@@ -240,6 +254,7 @@ describe('TwaManifest', () => {
       const twaManifest = new TwaManifest(twaManifestJson);
       expect(twaManifest.webManifestUrl).toBeUndefined();
       expect(twaManifest.fallbackType).toBe('customtabs');
+      expect(twaManifest.display).toBe('standalone');
     });
   });
 
@@ -270,6 +285,20 @@ describe('TwaManifest', () => {
         shortcuts: [{name: 'name', url: '/', chosenIconUrl: 'icon.png'}],
       } as TwaManifestJson);
       expect(twaManifest.validate()).toBeNull();
+    });
+  });
+
+  describe('#asDisplayMode', () => {
+    it('Returns display mode if it is supported', () => {
+      expect(asDisplayMode('standalone')).toBe('standalone');
+      expect(asDisplayMode('fullscreen')).toBe('fullscreen');
+    });
+
+    it('Returns null for unsupported display modes', () => {
+      expect(asDisplayMode('browser')).toBeNull();
+      expect(asDisplayMode('minimal-ui')).toBeNull();
+      expect(asDisplayMode('bogus')).toBeNull();
+      expect(asDisplayMode('')).toBeNull();
     });
   });
 });

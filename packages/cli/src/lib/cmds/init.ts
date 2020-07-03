@@ -17,7 +17,8 @@
 import * as fs from 'fs';
 import Color = require('color');
 import * as inquirer from 'inquirer';
-import {Config, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest, util} from '@bubblewrap/core';
+import {Config, DisplayModes, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest,
+  util} from '@bubblewrap/core';
 import {validateColor, validateKeyPassword, validateUrl, notEmpty} from '../inputHelpers';
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
@@ -49,6 +50,12 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
       message: 'Name to be shown on the Android Launcher:',
       default: twaManifest.launcherName,
       validate: async (input): Promise<boolean> => notEmpty(input, 'Launcher name'),
+    }, {
+      name: 'display',
+      type: 'list',
+      message: 'Display mode to be used:',
+      default: twaManifest.display,
+      choices: DisplayModes,
     }, {
       name: 'themeColor',
       type: 'input',
@@ -131,6 +138,7 @@ async function confirmTwaConfig(twaManifest: TwaManifest): Promise<TwaManifest> 
   twaManifest.host = result.host;
   twaManifest.name = result.name;
   twaManifest.launcherName = result.launcherName;
+  twaManifest.display = result.display;
   twaManifest.themeColor = new Color(result.themeColor);
   twaManifest.backgroundColor = new Color(result.backgroundColor);
   twaManifest.startUrl = result.startUrl;

@@ -47,6 +47,11 @@ export class Cli {
       command = parsedArgs._[0];
     }
 
+    // If no command is given, default to 'help'.
+    if (!command) {
+      command = 'help';
+    }
+
     switch (command) {
       case 'help':
         return await help(parsedArgs);
