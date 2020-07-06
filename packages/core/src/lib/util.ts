@@ -18,12 +18,13 @@ import * as extractZip from 'extract-zip';
 import fetch from 'node-fetch';
 import * as fs from 'fs';
 import {promisify} from 'util';
-import {exec, spawn} from 'child_process';
+import {exec, execFile, spawn} from 'child_process';
 import {x as extractTar} from 'tar';
 import {WebManifestIcon} from './types/WebManifest';
 import Log from './Log';
 
 const execPromise = promisify(exec);
+const execFilePromise = promisify(execFile);
 const extractZipPromise = promisify(extractZip);
 
 // Regex for disallowed characters on Android Packages, as per
@@ -35,9 +36,18 @@ export async function execute(
     cmd: string[], env: NodeJS.ProcessEnv, log?: Log): Promise<{stdout: string; stderr: string}> {
   const joinedCmd = cmd.join(' ');
   if (log) {
-    log.debug(`Executing command: ${joinedCmd}`);
+    log.debug(`Executing shell: ${joinedCmd}`);
   }
   return await execPromise(joinedCmd, {env: env});
+}
+
+export async function executeFile(
+    cmd: string, args: string[], env: NodeJS.ProcessEnv, log?: Log,
+): Promise<{stdout: string; stderr: string}> {
+  if (log) {
+    log.debug(`Executing command ${cmd} with args ${args}`);
+  }
+  return await execFilePromise(cmd, args, {env: env});
 }
 
 export async function downloadFile(url: string, path: string): Promise<void> {
