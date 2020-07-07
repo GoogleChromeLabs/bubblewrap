@@ -18,45 +18,38 @@ import {Config, Log} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
 import {join} from 'path';
 import {homedir} from 'os';
-import {existsSync, promises as fsPromises} from 'fs';
+import {existsSync} from 'fs';
 import {loadOrCreateConfig} from '../config';
 
 const CONFIG_FILE_PATH = join(join(homedir(), '.bubblewrap-config/bubblewrap-config.json'));
 
-async function updateAndroidSdkPath(path: string, log: Log): Promise<boolean> {
+async function updatePath(jdkOrSdk: string, path: string, log: Log): Promise<boolean> {
   if (!existsSync(path)) {
-    log.error('Please enter a valid path.');
-    return false;
-  }
-  const config = loadOrCreateConfig();
-  const jdkPath = (await config).jdkPath;
-  const newConfig = new Config(jdkPath, path);
-  fsPromises.unlink(CONFIG_FILE_PATH);
-  newConfig.saveConfig(CONFIG_FILE_PATH);
-  return true;
-}
-
-async function updateJdkPath(path: string, log: Log): Promise<boolean> {
-  if (!existsSync(path)) {
-    log.error('Please enter a valid path.');
+    log.error('Please enter a valid path for the ' + jdkOrSdk + '.');
     return false;
   }
   const config = await loadOrCreateConfig();
-  const androidSdkPath = (await config).androidSdkPath;
-  const newConfig = new Config(path, androidSdkPath);
-  fsPromises.unlink(CONFIG_FILE_PATH);
-  newConfig.saveConfig(CONFIG_FILE_PATH);
+  if (jdkOrSdk === 'jdk') {
+    const jdkPath = config.jdkPath;
+    const newConfig = new Config(jdkPath, path);
+    await newConfig.saveConfig(CONFIG_FILE_PATH);
+  } else {
+    const androidSdkPath = config.androidSdkPath;
+    const newConfig = new Config(path, androidSdkPath);
+    await newConfig.saveConfig(CONFIG_FILE_PATH);
+  }
   return true;
 }
 
 async function invoke(args: ParsedArgs, log: Log): Promise<boolean> {
   if (args.jdkPath) {
-    await updateJdkPath(args.JdkPath, log);
-  } else if (args.androidSdkPath) {
-    await updateAndroidSdkPath(args.androidSdkPath, log);
-  } else {
-    log.error('usage: bubblewrap updateConfig --jdkPath(or --androidSdkPath)' +
-      '\npath/to/location');
+    await updatePath('jdk', args.JdkPath, log);
+  }
+  if (args.androidSdkPath) {
+    await updatePath('androidSdk', args.androidSdkPath, log);
+  }
+  if (!args.jdkPath && !args.androidSdkPath) {
+    log.error('usage: bubblewrap updateConfig --jdkPath(or --androidSdkPath) new/path/to/folder');
     return false;
   }
   return true;

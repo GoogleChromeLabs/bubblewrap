@@ -24,23 +24,20 @@ async function jdkDoctor(log: Log): Promise<boolean> {
   const jdkPath = (await config).jdkPath;
   // Checks if the given path is a real path.
   if (!existsSync(jdkPath)) {
-    log.error('The jdkPath doesn\'t exist, please run the' +
-    'following command to update it:\n' +
+    log.error('The jdkPath doesn\'t exist, please run the following command to update it:\n' +
     'bubblewrap updateConfig --jdkPath path/here. after thet run bubblewrap doctor again');
     return false;
   }
   const file = await fsPromises.readFile(join(jdkPath, 'release'), 'utf-8');
   if (!file) {
-    log.error('The jdkPath isn\'t correct, please run the' +
-    'following command to update it:' +
-    '\nbubblewrap updateConfig --jdkPath path/here, such that the folder "here" ' +
-    'contains the file "release.txt". after thet run bubblewrap doctor again');
+    log.error('The jdkPath isn\'t correct, please run the following command to update it:' +
+    '\nbubblewrap updateConfig --jdkPath path/here, such that the folder "here" contains' +
+    ' the file "release". after thet run bubblewrap doctor again');
     return false;
   };
   // Checks if the jdk's version is 8 as needed.
   if (file.indexOf('JAVA_VERSION="1.8') < 0) {
-    log.error('Wrong jdk version. You should download "OpenJDK' +
-    ' 8(LTS)" at the link below: \n' +
+    log.error('Wrong jdk version. You should download "OpenJDK 8(LTS)" at the link below: \n' +
     'https://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=hotspot');
     return false;
   }
@@ -52,17 +49,15 @@ async function androidSdkDoctor(log: Log): Promise<boolean> {
   const androidSdkPath = (await config).androidSdkPath;
   // Checks if the given path is a real path.
   if (!existsSync(androidSdkPath)) {
-    log.error('The androidSdkPath doesn\'t exist, please run the' +
-    'following command to update it:\n bubblewrap updateConfig' +
-    ' --androidSdkPath path/here. after thet run bubblewrap doctor again');
+    log.error('The androidSdkPath doesn\'t exist, please run the following command to update it:' +
+    '\nbubblewrap updateConfig --androidSdkPath path/here. then run bubblewrap doctor again');
     return false;
   }
   // Checks if the path given is indeed
   if (!existsSync(join(androidSdkPath, 'build-tools'))) {
-    log.error('The androidSdkPath isn\'t correct, please run the' +
-    'following command to update it:' +
-    '\nbubblewrap updateConfig --jdkPath path/here, such that the folder "here" ' +
-    'contains the folder "build-tools". after thet run bubblewrap doctor again');
+    log.error('The androidSdkPath isn\'t correct, please run the following command to update it:' +
+    '\nbubblewrap updateConfig --jdkPath path/here, such that the folder "here" contains the ' +
+    'folder "build-tools". then run bubblewrap doctor again');
     return false;
   };
   return true;
@@ -73,4 +68,3 @@ export async function doctor(log = new Log('doctor')): Promise<boolean> {
   const androidSdkResult = androidSdkDoctor(log);
   return jdkResult && androidSdkResult;
 }
-
