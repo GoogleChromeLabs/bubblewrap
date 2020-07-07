@@ -73,7 +73,6 @@ export class Result<V, E extends Error> {
    */
   unwrap(): V {
     if (this._result.type === 'error') {
-      console.log('throwing error...');
       throw this._result.error;
     }
     return this._result.value;
