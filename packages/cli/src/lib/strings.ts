@@ -45,7 +45,7 @@ type Messages = {
   errorInvalidDisplayMode: (displayMode: string) => string;
 }
 
-export const en: Messages = {
+export const enUS: Messages = {
   promptHostMessage: 'Domain being opened in the TWA:',
   promptName: 'Name of the application:',
   promptLauncherName: 'Name to be shown on the Android Launcher:',

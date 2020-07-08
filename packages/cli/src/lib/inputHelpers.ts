@@ -19,9 +19,16 @@ import {URL} from 'url';
 import {isWebUri} from 'valid-url';
 import {Result, DisplayMode, asDisplayMode, util} from '@bubblewrap/core';
 import {ValidateFunction} from './Prompt';
-import {en as messages} from './strings';
+import {enUS as messages} from './strings';
 import {domainToASCII} from 'url';
 
+/**
+ * A {@link ValidateFunction} that receives a {@link string} as input and resolves to a
+ * {@link Color} when successful.
+ * @param {string} color a string to be converted to a {@link Color}.
+ * @returns {Result<Color, Error} a results that resolves to a {@link Color} on success or
+ * {@link Error} on failure.
+ */
 export function validateColor(color: string): Result<Color, Error> {
   try {
     return Result.ok(new Color(color));
@@ -30,6 +37,14 @@ export function validateColor(color: string): Result<Color, Error> {
   }
 };
 
+/**
+ * A {@link ValidateFunction} that receives a {@link string} as input and resolves to a
+ * {@link URL} when successful. If the string is empty, the validation fails and the the
+ * {@link Result} returned by the function is an {@link Error}.
+ * @param {string} url a string to be converted to a {@link URL}.
+ * @returns {Result<URL, Error} a results that resolves to a {@link URL} on success or
+ * {@link Error} on failure.
+ */
 export function validateUrl(url: string): Result<URL, Error> {
   if (isWebUri(url) === undefined) {
     return Result.error(new Error(messages.errorInvalidUrl(url)));
@@ -42,6 +57,15 @@ export function validateUrl(url: string): Result<URL, Error> {
   }
 }
 
+/**
+ * A {@link ValidateFunction} that receives a {@link string} as input and resolves to a
+ * {@link URL} or {@link null} when successful. If the string is empty, the validation succeeds
+ * and the {@link Result} returned by the function {@link null}. Non-empty strings are validated
+ * and a conversion is attempted.
+ * @param {string} url a string to be converted to a {@link URL}.
+ * @returns {Result<URL, Error} a results that resolves to a {@link URL} on success or
+ * {@link Error} on failure.
+ */
 export function validateOptionalUrl(input: string): Result<URL | null, Error> {
   const url = input.trim();
   if (url.length === 0) {
@@ -51,6 +75,12 @@ export function validateOptionalUrl(input: string): Result<URL | null, Error> {
   return validateUrl(url);
 }
 
+/**
+ * Creates a {@link ValidateFunction<string>} that checks the input {@link string} against the
+ * constraints provided as parameters.
+ * @param {number?} minLength optional minimum length for the string.
+ * @param {number?} maxLength optional maximum length for the string.
+ */
 export function createValidateString(
     minLength?: number, maxLength?: number): ValidateFunction<string> {
   return (input: string): Result<string, Error> => {
@@ -66,6 +96,15 @@ export function createValidateString(
   };
 };
 
+/**
+ * A {@link ValidateFunction} that receives a {@link string} as input and resolves to a
+ * {@link string} when successful. This function verifies if the input is an acceptable
+ * hostname. If a full URL is passed, it must start with `https://`. The hostname will be
+ * extracted from the full URL and returned, if the validation is successful.
+ * @param {string} input a string to be validated.
+ * @returns {Result<string, Error} a results that resolves to a {@link string} on success or
+ * {@link Error} on failure.
+ */
 export function validateHost(input: string): Result<string, Error> {
   let host = input.trim();
   if (host.length <= 0) {
@@ -105,6 +144,13 @@ export function validateHost(input: string): Result<string, Error> {
   return Result.ok(host);
 };
 
+/**
+ * A {@link ValidateFunction} that receives a {@link string} as input and resolves to a
+ * {@link DisplayMode} when successful.
+ * @param {string} input a string to be converted to a {@link DisplayMode}.
+ * @returns {Result<DisplayMode, Error} a result that resolves to a {@link DisplayMode} on
+ * success or {@link Error} on failure.
+ */
 export function validateDisplayMode(input: string): Result<DisplayMode, Error> {
   const displayMode = asDisplayMode(input);
   if (displayMode === null) {
@@ -113,6 +159,14 @@ export function validateDisplayMode(input: string): Result<DisplayMode, Error> {
   return Result.ok(displayMode);
 }
 
+/**
+ * A {@link ValidateFunction} that receives a {@link string} as input and resolves to a
+ * {@link DisplayMode} when successful. Verifies if the input is a valid Android packageId. See
+ * {@link util.validatePackageId} for more details on the packageId validation.
+ * @param {string} input a string to be validated as a packageId.
+ * @returns {Result<string, Error} a result that resolves to a {@link string} on
+ * success or {@link Error} on failure.
+ */
 export function validatePackageId(input: string): Result<string, Error> {
   const result = util.validatePackageId(input);
 

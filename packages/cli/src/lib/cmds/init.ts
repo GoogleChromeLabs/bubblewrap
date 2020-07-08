@@ -22,7 +22,7 @@ import {validateHost, validateColor, validateOptionalUrl, validateUrl, createVal
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
 import {Prompt, InquirerPrompt} from '../Prompt';
-import {en as messages} from '../strings';
+import {enUS as messages} from '../strings';
 
 const log = new Log('init');
 

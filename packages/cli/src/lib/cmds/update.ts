@@ -20,7 +20,7 @@ import {Log, TwaGenerator, TwaManifest} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
 import {createValidateString} from '../inputHelpers';
-import {en as messages} from '../strings';
+import {enUS as messages} from '../strings';
 
 const log = new Log('update');
 

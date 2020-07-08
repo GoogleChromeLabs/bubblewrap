@@ -17,39 +17,57 @@
 import {Result} from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
 
+/**
+ * A function that takes a `string`, validates and tries to convert to the type `T`, and returns a
+ * {@link Result}. If the conversion is successful, the result is `Ok` and unwrapping returns `T`.
+ * Otherwise, the result is `Error` and `unwrapError()` returns the underlying error.
+ * @param {string} input the value to be validated and converted.
+ * @returns {Result<T, Error>} an `Ok` {@link Result} that unwraps `T` if the validation and
+ * conversion are successful or an `Error` if it fails.
+ */
 export type ValidateFunction<T> = (input: string) => Result<T, Error>;
 
+/**
+ * A an interface that promps for different types of user input.
+ */
 export interface Prompt {
   /**
-   * Prompts for free text input
-   * @param message a short description of the input
-   * @param defaultValue a default value or null
-   * @param convertFunction a function that converts from the input string to the return value.
-   * @param validateFunction an option function to validate the input.
+   * Prompts for text input.
+   * @param {string} message a short description of the input.
+   * @param {string | null} defaultValue a default value or null.
+   * @param {ValidateFunction<T>} validateFunction a function to validate the input.
+   * @returns {Promise<T>} a {@link Promise} that resolves to the validated user input, converted
+   * to `T` by the `validateFunction`.
    */
   promptInput<T>(
     message: string,
     defaultValue: string | null,
-    convertFunction: ValidateFunction<T>,
+    validateFunction: ValidateFunction<T>,
   ): Promise<T>;
 
   /**
-   * Prompts for free text input
-   * @param message a short description of the input
-   * @param choices a list of choices to be displayed to the user
-   * @param defaultValue a default value or null
-   * @param convertFunction a function that converts from the input string to the return value.
-   * @param validateFunction an option function to validate the input.
+   * Displays a list of options to the user and prompts the user to choose one of them.
+   * @param {string} message a short description of the input.
+   * @param {string[]} choices a list of choices to be displayed to the user.
+   * @param {string | null} defaultValue a default value or null.
+   * @param {ValidateFunction<T>} validateFunction a function to validate the input.
+   * @returns {Promise<T>} a {@link Promise} that resolves to the validated user input, converted
+   * to `T` by the `validateFunction`.
    */
   promptChoice<T>(
     message: string,
     choices: string[],
     defaultValue: string | null,
-    convertFunction: ValidateFunction<T>,
+    validateFunction: ValidateFunction<T>,
   ): Promise<T>;
 
   /**
-   * Prompts for a password
+   * Prompts the user for a password. The text typed by the user is hidden and replaced by the `*`
+   * character.
+   * @param {string} message a short description of the input.
+   * @param {ValidateFunction<string>} validateFunction a function to validate the input.
+   * @returns {Promise<string>} a {@link Promise} that resolves to the user input validated by
+   * `validateFunction`.
    */
   promptPassword(
     message: string,
@@ -58,6 +76,10 @@ export interface Prompt {
 
   /**
    * Prompts a Yes/No dialog. Returns `true` for yes and `false` for no.
+   * @param {string} message a short description of the input.
+   * @param {boolean} defaultValue a default value.
+   * @returns {Promise<boolean>} a {@link Promise} that resolves to a {@link boolean} value. The
+   * value will the `true` if the user answers `Yes` and `false` for `No`.
    */
   promptConfirm(message: string, defaultValue: boolean): Promise<boolean>;
 }
@@ -67,10 +89,10 @@ export interface Prompt {
 // validate: (Function) Receive the user input and answers hash. Should return true if the
 //           value is valid, and an error message (String) otherwise. If false is returned,
 //           a default error message is provided.
-function buildInquirerValidate<T>(convertFunction: ValidateFunction<T>):
+function buildInquirerValidate<T>(validateFunction: ValidateFunction<T>):
     (input: string) => boolean | string {
   return (input: string): boolean | string => {
-    const result = convertFunction(input);
+    const result = validateFunction(input);
 
     if (result.isOk()) {
       return true;
@@ -80,14 +102,16 @@ function buildInquirerValidate<T>(convertFunction: ValidateFunction<T>):
   };
 }
 
+/**
+ * A {@link Prompt} implementation powered by inquirer.js (https://www.npmjs.com/package/inquirer)
+ */
 export class InquirerPrompt implements Prompt {
   async promptInput<T>(
       message: string,
       defaultValue: string | null,
-      convertFunction: ValidateFunction<T>,
+      validateFunction: ValidateFunction<T>,
   ): Promise<T> {
-    const validate = buildInquirerValidate(convertFunction);
-
+    const validate = buildInquirerValidate(validateFunction);
     const result = await inquirer.prompt({
       name: 'question',
       type: 'input',
@@ -96,16 +120,16 @@ export class InquirerPrompt implements Prompt {
       validate: validate,
     });
 
-    return convertFunction(result.question).unwrap();
+    return validateFunction(result.question).unwrap();
   }
 
   async promptChoice<T>(
       message: string,
       choices: string[],
       defaultValue: string | null,
-      convertFunction: ValidateFunction<T>,
+      validateFunction: ValidateFunction<T>,
   ): Promise<T> {
-    const validate = buildInquirerValidate(convertFunction);
+    const validate = buildInquirerValidate(validateFunction);
     const result = await inquirer.prompt({
       name: 'question',
       type: 'list',
@@ -114,7 +138,7 @@ export class InquirerPrompt implements Prompt {
       choices: choices,
       validate: validate,
     });
-    return convertFunction(result.question).unwrap();
+    return validateFunction(result.question).unwrap();
   }
 
   async promptConfirm(message: string, defaultValue: boolean): Promise<boolean> {

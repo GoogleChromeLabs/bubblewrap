@@ -18,7 +18,7 @@ import {AndroidSdkTools, Config, DigitalAssetLinks, GradleWrapper, JdkHelper, Ke
   TwaManifest} from '@bubblewrap/core';
 import * as path from 'path';
 import * as fs from 'fs';
-import {en as messages} from '../strings';
+import {enUS as messages} from '../strings';
 import {Prompt, InquirerPrompt} from '../Prompt';
 import {PwaValidator, PwaValidationResult} from '@bubblewrap/validator';
 import {printValidationResult} from '../pwaValidationHelper';
