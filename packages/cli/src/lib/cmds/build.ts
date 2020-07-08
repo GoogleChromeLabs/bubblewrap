@@ -16,13 +16,14 @@
 
 import {AndroidSdkTools, Config, DigitalAssetLinks, GradleWrapper, JdkHelper, KeyTool, Log,
   TwaManifest} from '@bubblewrap/core';
-import * as inquirer from 'inquirer';
 import * as path from 'path';
 import * as fs from 'fs';
-import {validateKeyPassword} from '../inputHelpers';
+import {en as messages} from '../strings';
+import {Prompt, InquirerPrompt} from '../Prompt';
 import {PwaValidator, PwaValidationResult} from '@bubblewrap/validator';
 import {printValidationResult} from '../pwaValidationHelper';
 import {ParsedArgs} from 'minimist';
+import {createValidateString} from '../inputHelpers';
 
 interface SigningKeyPasswords {
   keystorePassword: string;
@@ -36,7 +37,7 @@ interface SigningKeyPasswords {
  * @returns {Promise<SigningKeyPasswords} the password information collected from enviromental
  * variables or user input.
  */
-async function getPasswords(log: Log): Promise<SigningKeyPasswords> {
+async function getPasswords(log: Log, prompt: Prompt): Promise<SigningKeyPasswords> {
   // Check if passwords are set as environment variables.
   const envKeystorePass = process.env['BUBBLEWRAP_KEYSTORE_PASSWORD'];
   const envKeyPass = process.env['BUBBLEWRAP_KEY_PASSWORD'];
@@ -50,26 +51,16 @@ async function getPasswords(log: Log): Promise<SigningKeyPasswords> {
     };
   }
 
+
   // Ask user for the keystore password
-  const result = await inquirer.prompt([
-    {
-      name: 'password',
-      type: 'password',
-      message: 'KeyStore password:',
-      validate: validateKeyPassword,
-      mask: '*',
-    }, {
-      name: 'keypassword',
-      type: 'password',
-      message: 'Key password:',
-      validate: validateKeyPassword,
-      mask: '*',
-    },
-  ]);
+  const keystorePassword =
+      await prompt.promptPassword(messages.promptKeystorePassword, createValidateString(6));
+  const keyPassword =
+    await prompt.promptPassword(messages.promptKeyPassword, createValidateString(6));
 
   return {
-    keystorePassword: result.password,
-    keyPassword: result.keypassword,
+    keystorePassword: keystorePassword,
+    keyPassword: keyPassword,
   };
 }
 
@@ -109,8 +100,8 @@ async function generateAssetLinks(keyTool: KeyTool, twaManifest: TwaManifest,
   }
 }
 
-export async function build(
-    config: Config, args: ParsedArgs, log = new Log('build')): Promise<boolean> {
+export async function build(config: Config, args: ParsedArgs,
+    log = new Log('build'), prompt: Prompt = new InquirerPrompt): Promise<boolean> {
   let pwaValidationPromise;
   if (!args.skipPwaValidation) {
     pwaValidationPromise = startValidation();
@@ -127,7 +118,7 @@ export async function build(
 
   const twaManifest = await TwaManifest.fromFile('./twa-manifest.json');
 
-  const passwords = await getPasswords(log);
+  const passwords = await getPasswords(log, prompt);
 
   // Builds the Android Studio Project
   log.info('Building the Android App...');

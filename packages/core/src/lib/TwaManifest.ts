@@ -37,7 +37,7 @@ const MIN_NOTIFICATION_ICON_SIZE = 48;
 
 // Supported display modes for TWA
 const DISPLAY_MODE_VALUES = ['standalone', 'fullscreen'];
-type DisplayMode = typeof DISPLAY_MODE_VALUES[number];
+export type DisplayMode = typeof DISPLAY_MODE_VALUES[number];
 export const DisplayModes: DisplayMode[] = [...DISPLAY_MODE_VALUES];
 
 export function asDisplayMode(input: string): DisplayMode | null {
