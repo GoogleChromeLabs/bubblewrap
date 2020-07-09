@@ -32,6 +32,12 @@ export type ValidateFunction<T> = (input: string) => Result<T, Error>;
  */
 export interface Prompt {
   /**
+   * Prints a message to the user.
+   * @param message the message to be printed.
+   */
+  printMessage(message: string): Promise<void>;
+
+  /**
    * Prompts for text input.
    * @param {string} message a short description of the input.
    * @param {string | null} defaultValue a default value or null.
@@ -106,6 +112,10 @@ function buildInquirerValidate<T>(validateFunction: ValidateFunction<T>):
  * A {@link Prompt} implementation powered by inquirer.js (https://www.npmjs.com/package/inquirer)
  */
 export class InquirerPrompt implements Prompt {
+  async printMessage(message: string): Promise<void> {
+    console.log(message);
+  }
+
   async promptInput<T>(
       message: string,
       defaultValue: string | null,

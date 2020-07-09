@@ -15,7 +15,7 @@
  */
 
 import * as fs from 'fs';
-import {Config, DisplayModes, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest}
+import {Config, DisplayModes, JdkHelper, KeyTool, TwaGenerator, TwaManifest}
   from '@bubblewrap/core';
 import {validateHost, validateColor, validateOptionalUrl, validateUrl, createValidateString,
   validateDisplayMode, validatePackageId} from '../inputHelpers';
@@ -24,19 +24,25 @@ import {APP_NAME} from '../constants';
 import {Prompt, InquirerPrompt} from '../Prompt';
 import {enUS as messages} from '../strings';
 
-const log = new Log('init');
-
 export interface InitArgs {
   manifest: string;
   directory?: string;
 }
 
 async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promise<TwaManifest> {
+  // Step 1/5 - Collect information on the Web App.
+  prompt.printMessage(messages.messageWebAppDetails);
+  prompt.printMessage(messages.messageWebAppDetailsDesc);
+
   twaManifest.host = await prompt.promptInput(
-      messages.promptHostMessage,
-      twaManifest.host,
-      validateHost,
-  );
+      messages.promptHostMessage, twaManifest.host, validateHost);
+
+  twaManifest.startUrl = await prompt.promptInput(
+      messages.promptStartUrl, twaManifest.startUrl, createValidateString(1));
+
+  // Step 2/5 Collect information on the Android App.
+  prompt.printMessage(messages.messageAndroidAppDetails);
+  prompt.printMessage(messages.messageAndroidAppDetailsDesc);
 
   twaManifest.name = await prompt.promptInput(
       messages.promptName,
@@ -48,6 +54,12 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
       messages.promptLauncherName,
       twaManifest.launcherName,
       createValidateString(1, 12),
+  );
+
+  twaManifest.packageId = await prompt.promptInput(
+      messages.promptPackageId,
+      twaManifest.packageId,
+      validatePackageId,
   );
 
   twaManifest.display = await prompt.promptChoice(
@@ -63,16 +75,13 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
       validateColor,
   );
 
+  // Step 3/5 Launcher Icons and Splash Screen.
+  prompt.printMessage(messages.messageLauncherIconAndSplash);
+  prompt.printMessage(messages.messageLauncherIconAndSplashDesc);
   twaManifest.backgroundColor = await prompt.promptInput(
       messages.promptBackgroundColor,
       twaManifest.backgroundColor.hex(),
       validateColor,
-  );
-
-  twaManifest.startUrl = await prompt.promptInput(
-      messages.promptStartUrl,
-      twaManifest.startUrl,
-      createValidateString(1),
   );
 
   twaManifest.iconUrl = (await prompt.promptInput(
@@ -88,12 +97,9 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
   );
   twaManifest.maskableIconUrl = maskableIconUrl ? maskableIconUrl.toString() : undefined;
 
-  const monochromeIconUrl = await prompt.promptInput(
-      messages.promptMonochromeIconUrl,
-      twaManifest.monochromeIconUrl ? twaManifest.monochromeIconUrl : '',
-      validateOptionalUrl,
-  );
-  twaManifest.monochromeIconUrl = monochromeIconUrl ? monochromeIconUrl.toString() : undefined;
+  // Step 4/5 Optional Features.
+  prompt.printMessage(messages.messageOptionFeatures);
+  prompt.printMessage(messages.messageOptionalFeaturesDesc);
 
   if (twaManifest.shortcuts.length > 0) {
     const addShortcuts = await prompt.promptConfirm(messages.promptShortcuts, true);
@@ -102,12 +108,16 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
     }
   }
 
-  twaManifest.packageId = await prompt.promptInput(
-      messages.promptPackageId,
-      twaManifest.packageId,
-      validatePackageId,
+  const monochromeIconUrl = await prompt.promptInput(
+      messages.promptMonochromeIconUrl,
+      twaManifest.monochromeIconUrl ? twaManifest.monochromeIconUrl : '',
+      validateOptionalUrl,
   );
+  twaManifest.monochromeIconUrl = monochromeIconUrl ? monochromeIconUrl.toString() : undefined;
 
+  // Step 5/5 Signing Key Information.
+  prompt.printMessage(messages.messageSigningKeyInformation);
+  prompt.printMessage(messages.messageSigningKeyInformationDesc);
   twaManifest.signingKey.path = await prompt.promptInput(
       messages.promptKeyPath,
       twaManifest.signingKey.path,
@@ -134,8 +144,10 @@ async function createSigningKey(
   const jdkHelper = new JdkHelper(process, config);
   const keytool = new KeyTool(jdkHelper);
 
+  prompt.printMessage(messages.messageSigningKeyCreation);
+  prompt.printMessage(messages.messageSigningKeyNotFound(twaManifest.signingKey.path));
   // Ask user if they want to create a signing key now.
-  if (!await prompt.promptConfirm(messages.promptCreateKey(twaManifest.signingKey.path), true)) {
+  if (!await prompt.promptConfirm(messages.promptCreateKey, true)) {
     return;
   }
 
@@ -166,7 +178,7 @@ async function createSigningKey(
 
 export async function init(
     args: ParsedArgs, config: Config, prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
-  log.info('Fetching Manifest: ', args.manifest);
+  prompt.printMessage(messages.messageInitializingWebManifest(args.manifest));
   let twaManifest = await TwaManifest.fromWebManifest(args.manifest);
   twaManifest = await confirmTwaConfig(twaManifest, prompt);
   const twaGenerator = new TwaGenerator();
@@ -174,7 +186,6 @@ export async function init(
   await twaManifest.saveToFile('./twa-manifest.json');
   await twaGenerator.createTwaProject(targetDirectory, twaManifest);
   await createSigningKey(twaManifest, config, prompt);
-  log.info('');
-  log.info('Project generated successfully. Build it by running "bubblewrap build"');
+  prompt.printMessage(messages.messageProjectGeneratedSuccess);
   return true;
 }
