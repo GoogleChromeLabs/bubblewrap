@@ -14,4 +14,15 @@
  *  limitations under the License.
  */
 
+import {magenta} from 'colors';
+
 export const APP_NAME = 'bubblewrap-cli';
+export const BUBBLEWRAP_LOGO = magenta(
+/* eslint-disable indent */
+`,-----.        ,--.  ,--.  ,--.
+|  |) /_,--.,--|  |-.|  |-.|  |,---.,--.   ,--,--.--.,--,--.,---.
+|  .-.  |  ||  | .-. | .-. |  | .-. |  |.'.|  |  .--' ,-.  | .-. |
+|  '--' '  ''  | \`-' | \`-' |  \\   --|   .'.   |  |  \\ '-'  | '-' '
+\`------' \`----' \`---' \`---'\`--'\`----'--'   '--\`--'   \`--\`--|  |-'
+                                                           \`--\'    `);
+/* eslint-enable indent */
