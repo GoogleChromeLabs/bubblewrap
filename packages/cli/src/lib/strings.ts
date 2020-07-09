@@ -104,7 +104,7 @@ into a device:
 \t   - ${cyan('https://material.io/design/platform-guidance/android-bars.html')}.
 
 \t- ${bold('Status bar color:')} sets the status bar color used when the
-\t  application is in foreground.\n`,
+\t  application is in foreground. Example: ${cyan('#7CC0FF')}\n`,
   messageLauncherIconAndSplash: underline(`\nLauncher icons and splash screen ${green('(3/5)')}`),
   messageLauncherIconAndSplashDesc: `
 The Android app requires an image for the launcher icon. It also displays a
@@ -112,7 +112,7 @@ splash screen while the web content is loading, to avoid displaying a flash of
 a blank white page to users. 
 
 \t- ${bold('Splash screen color:')} sets the background colour used for the
-\t  splash screen.
+\t  splash screen. Example: ${cyan('#7CC0FF')}
 
 \t- ${bold('Icon URL:')} URL to an image that is at least 512x512px. Used to
 \t  generate the launcher icon for the application and the image for
