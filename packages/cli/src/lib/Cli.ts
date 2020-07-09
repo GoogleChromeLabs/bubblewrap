@@ -24,9 +24,11 @@ import {install} from './cmds/install';
 import {loadOrCreateConfig} from './config';
 import {major} from 'semver';
 import {version} from './cmds/version';
+import {BUBBLEWRAP_LOGO} from './constants';
 
 export class Cli {
   async run(args: string[]): Promise<boolean> {
+    console.log(BUBBLEWRAP_LOGO);
     if (major(process.versions.node) < 10) {
       throw new Error(`Current Node.js version is ${process.versions.node}.` +
           ' Node.js version 10 or above is required to run bubblewrap.');
