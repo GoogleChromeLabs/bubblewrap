@@ -14,16 +14,18 @@
  *  limitations under the License.
  */
 
-import * as inquirer from 'inquirer';
 import * as path from 'path';
+import {Prompt, InquirerPrompt} from '../Prompt';
 import {Log, TwaGenerator, TwaManifest} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
-import {notEmpty} from '../inputHelpers';
+import {createValidateString} from '../inputHelpers';
+import {enUS as messages} from '../strings';
 
 const log = new Log('update');
 
-async function updateVersions(twaManifest: TwaManifest, appVersionNameArg: string): Promise<{
+async function updateVersions(
+    twaManifest: TwaManifest, appVersionNameArg: string, prompt: Prompt): Promise<{
       appVersionName: string;
       appVersionCode: number;
     }> {
@@ -47,18 +49,15 @@ async function updateVersions(twaManifest: TwaManifest, appVersionNameArg: strin
   }
 
   // If not not possible, ask the user to input a new version.
-  const result = await inquirer.prompt([{
-    name: 'appVersionName',
-    type: 'input',
-    message: 'versionName for the new App version:',
-    default: twaManifest.appVersionName,
-    validate: async (input): Promise<boolean> =>
-      notEmpty(input, 'versionName'),
-  }]);
+  const appVersionName = await prompt.promptInput(
+      messages.promptNewAppVersionName,
+      null,
+      createValidateString(1),
+  );
 
   return {
     appVersionCode: appVersionCode,
-    appVersionName: result.appVersionName,
+    appVersionName: appVersionName,
   };
 }
 
@@ -71,14 +70,15 @@ async function updateVersions(twaManifest: TwaManifest, appVersionNameArg: strin
  * @param {string} [args.appVersionName] Value to be used for appVersionName when upgrading
  * versions. Ignored if `args.skipVersionUpgrade` is set to true.
  */
-export async function update(args: ParsedArgs): Promise<boolean> {
+export async function update(
+    args: ParsedArgs, prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
   const targetDirectory = args.directory || process.cwd();
   const manifestFile = args.manifest || path.join(process.cwd(), 'twa-manifest.json');
   const twaManifest = await TwaManifest.fromFile(manifestFile);
   twaManifest.generatorApp = APP_NAME;
 
   if (!args.skipVersionUpgrade) {
-    const newVersionInfo = await updateVersions(twaManifest, args.appVersionName);
+    const newVersionInfo = await updateVersions(twaManifest, args.appVersionName, prompt);
     twaManifest.appVersionName = newVersionInfo.appVersionName;
     twaManifest.appVersionCode = newVersionInfo.appVersionCode;
     log.info(`Generated new version with versionName: ${newVersionInfo.appVersionName} and ` +
