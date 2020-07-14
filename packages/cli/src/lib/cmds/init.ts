@@ -23,6 +23,7 @@ import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
 import {Prompt, InquirerPrompt} from '../Prompt';
 import {enUS as messages} from '../strings';
+import {generateTwaProject} from './shared';
 
 export interface InitArgs {
   manifest: string;
@@ -184,7 +185,7 @@ export async function init(
   const twaGenerator = new TwaGenerator();
   const targetDirectory = args.directory || process.cwd();
   await twaManifest.saveToFile('./twa-manifest.json');
-  await twaGenerator.createTwaProject(targetDirectory, twaManifest);
+  await generateTwaProject(prompt, twaGenerator, targetDirectory, twaManifest);
   await createSigningKey(twaManifest, config, prompt);
   prompt.printMessage(messages.messageProjectGeneratedSuccess);
   return true;

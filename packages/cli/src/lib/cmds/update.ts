@@ -16,13 +16,12 @@
 
 import * as path from 'path';
 import {Prompt, InquirerPrompt} from '../Prompt';
-import {Log, TwaGenerator, TwaManifest} from '@bubblewrap/core';
+import {TwaGenerator, TwaManifest} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
 import {createValidateString} from '../inputHelpers';
 import {enUS as messages} from '../strings';
-
-const log = new Log('update');
+import {generateTwaProject} from './shared';
 
 async function updateVersions(
     twaManifest: TwaManifest, appVersionNameArg: string, prompt: Prompt): Promise<{
@@ -81,12 +80,12 @@ export async function update(
     const newVersionInfo = await updateVersions(twaManifest, args.appVersionName, prompt);
     twaManifest.appVersionName = newVersionInfo.appVersionName;
     twaManifest.appVersionCode = newVersionInfo.appVersionCode;
-    log.info(`Generated new version with versionName: ${newVersionInfo.appVersionName} and ` +
-        `versionCode: ${newVersionInfo.appVersionCode}`);
+    prompt.printMessage(messages.messageGeneratedNewVersion(
+        newVersionInfo.appVersionName, newVersionInfo.appVersionCode));
     twaManifest.saveToFile(manifestFile);
   }
 
   const twaGenerator = new TwaGenerator();
-  await twaGenerator.createTwaProject(targetDirectory, twaManifest);
+  await generateTwaProject(prompt, twaGenerator, targetDirectory, twaManifest);
   return true;
 }

@@ -26,6 +26,8 @@ type Messages = {
   messageInitializingWebManifest: (manifestUrl: string) => string;
   messageAndroidAppDetails: string;
   messageAndroidAppDetailsDesc: string;
+  messageGeneratedNewVersion: (appVersionName: string, appVersionCode: number) => string;
+  messageGeneratingAndroidProject: string;
   messageLauncherIconAndSplash: string;
   messageLauncherIconAndSplashDesc: string;
   messageOptionFeatures: string;
@@ -105,6 +107,11 @@ into a device:
 
 \t- ${bold('Status bar color:')} sets the status bar color used when the
 \t  application is in foreground. Example: ${cyan('#7CC0FF')}\n`,
+  messageGeneratedNewVersion: (appVersionName: string, appVersionCode: number): string => {
+    return `Generated new version with versionName: ${appVersionName} and ` +
+        `versionCode: ${appVersionCode}`;
+  },
+  messageGeneratingAndroidProject: 'Generating Android Project.',
   messageLauncherIconAndSplash: underline(`\nLauncher icons and splash screen ${green('(3/5)')}`),
   messageLauncherIconAndSplashDesc: `
 The Android app requires an image for the launcher icon. It also displays a

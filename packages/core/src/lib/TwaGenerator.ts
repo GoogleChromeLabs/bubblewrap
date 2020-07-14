@@ -103,6 +103,10 @@ interface Icon {
   data: Buffer;
 }
 
+export type twaGeneratorProgress = (progress: number, total: number) => void;
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const noOpProgress: twaGeneratorProgress = () => {};
+
 /**
  * Generates TWA Projects from a TWA Manifest
  */
@@ -118,7 +122,6 @@ export class TwaGenerator {
       sourceDir: string, targetDir: string, filename: string): Promise<void> {
     const sourceFile = path.join(sourceDir, filename);
     const destFile = path.join(targetDir, filename);
-    this.log.info('\t', destFile);
     await fsMkDir(path.dirname(destFile), {recursive: true});
     await fsCopyFile(sourceFile, destFile);
   }
@@ -135,7 +138,6 @@ export class TwaGenerator {
       sourceDir: string, targetDir: string, filename: string, args: object): Promise<void> {
     const sourceFile = path.join(sourceDir, filename);
     const destFile = path.join(targetDir, filename);
-    this.log.info('\t', destFile);
     await fsMkDir(path.dirname(destFile), {recursive: true});
     const templateFile = await fsReadFile(sourceFile, 'utf-8');
     const output = template(templateFile)(args);
@@ -160,7 +162,6 @@ export class TwaGenerator {
   private async generateIcon(
       iconData: Icon, targetDir: string, iconDef: IconDefinition): Promise<void> {
     const destFile = path.join(targetDir, iconDef.dest);
-    this.log.info(`\t ${iconDef.size}x${iconDef.size} Icon: ${destFile}`);
     await fsMkDir(path.dirname(destFile), {recursive: true});
     return await this.saveIcon(iconData.data, iconDef.size, destFile);
   }
@@ -224,13 +225,17 @@ export class TwaGenerator {
    * @param {String} targetDirectory the directory where the project will be created
    * @param {Object} twaManifest configurations values for the project.
    */
-  async createTwaProject(targetDirectory: string, twaManifest: TwaManifest): Promise<void> {
+  async createTwaProject(targetDirectory: string, twaManifest: TwaManifest,
+      reportProgress: twaGeneratorProgress = noOpProgress): Promise<void> {
+    let currentProgress = 0;
+    const totalProgress = 8;
+
+    reportProgress(currentProgress++, totalProgress);
     const error = twaManifest.validate();
     if (error !== null) {
       throw new Error(`Invalid TWA Manifest: ${error}`);
     }
 
-    this.log.info('Generating Android Project files:');
     const templateDirectory = path.join(__dirname, '../../template_project');
 
     const copyFileList = new Set(COPY_FILE_LIST);
@@ -238,40 +243,49 @@ export class TwaGenerator {
       DELETE_FILE_LIST.forEach((file) => copyFileList.delete(file));
     }
 
+    reportProgress(currentProgress++, totalProgress);
     // Copy Project Files
     await this.copyStaticFiles(templateDirectory, targetDirectory, Array.from(copyFileList));
 
     // Apply proper permissions to gradlew. See https://nodejs.org/api/fs.html#fs_file_modes
     await fs.promises.chmod(path.join(targetDirectory, 'gradlew'), '755');
 
+    reportProgress(currentProgress++, totalProgress);
     // Generate templated files
     await this.applyTemplates(
         templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, twaManifest);
 
+    reportProgress(currentProgress++, totalProgress);
     // Generate images
     if (twaManifest.iconUrl) {
       await this.generateIcons(twaManifest.iconUrl, targetDirectory, IMAGES);
     }
 
+    reportProgress(currentProgress++, totalProgress);
     await Promise.all(twaManifest.shortcuts.map((shortcut: ShortcutInfo, i: number) => {
       const imageDirs = SHORTCUT_IMAGES.map(
           (imageDir) => ({...imageDir, dest: `${imageDir.dest}shortcut_${i}.png`}));
       return this.generateIcons(shortcut.chosenIconUrl, targetDirectory, imageDirs);
     }));
 
+    reportProgress(currentProgress++, totalProgress);
     // Generate adaptive images
     if (twaManifest.maskableIconUrl) {
       await this.generateIcons(twaManifest.maskableIconUrl, targetDirectory, ADAPTIVE_IMAGES);
     }
 
+    reportProgress(currentProgress++, totalProgress);
     // Generate notification images
     if (twaManifest.monochromeIconUrl) {
       await this.generateIcons(twaManifest.monochromeIconUrl, targetDirectory, NOTIFICATION_IMAGES);
     }
 
+    reportProgress(currentProgress++, totalProgress);
     if (twaManifest.webManifestUrl) {
       // Save the Web Manifest into the project
       await this.writeWebManifest(twaManifest.webManifestUrl, targetDirectory);
     }
+
+    reportProgress(currentProgress, totalProgress);
   }
 }
