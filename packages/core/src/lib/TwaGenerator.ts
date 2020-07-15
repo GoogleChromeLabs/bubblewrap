@@ -103,6 +103,44 @@ interface Icon {
   data: Buffer;
 }
 
+export type twaGeneratorProgress = (progress: number, total: number) => void;
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const noOpProgress: twaGeneratorProgress = () => {};
+
+/**
+ * An utilty class to help ensure progress tracking is consistent.
+ */
+class Progress {
+  private current = 0;
+  constructor(private total: number, private progress: twaGeneratorProgress) {
+    this.progress(this.current, this.total);
+  }
+
+  /**
+   * Updates the progress. Increments current by 1.
+   */
+  update(): void {
+    if (this.current === this.total) {
+      throw new Error('Progress already reached total.' +
+        ` current: ${this.current}, total: ${this.total}`);
+    }
+    this.current++;
+    this.progress(this.current, this.total);
+  }
+
+  /**
+   * Should be called for the last update. Throws an error if total !== current after incrementing
+   * current.
+   */
+  done(): void {
+    this.update();
+    if (this.current !== this.total) {
+      throw new Error('Invoked done before current equals total.' +
+        ` current: ${this.current}, total: ${this.total}`);
+    }
+  }
+}
+
 /**
  * Generates TWA Projects from a TWA Manifest
  */
@@ -118,7 +156,6 @@ export class TwaGenerator {
       sourceDir: string, targetDir: string, filename: string): Promise<void> {
     const sourceFile = path.join(sourceDir, filename);
     const destFile = path.join(targetDir, filename);
-    this.log.info('\t', destFile);
     await fsMkDir(path.dirname(destFile), {recursive: true});
     await fsCopyFile(sourceFile, destFile);
   }
@@ -135,7 +172,6 @@ export class TwaGenerator {
       sourceDir: string, targetDir: string, filename: string, args: object): Promise<void> {
     const sourceFile = path.join(sourceDir, filename);
     const destFile = path.join(targetDir, filename);
-    this.log.info('\t', destFile);
     await fsMkDir(path.dirname(destFile), {recursive: true});
     const templateFile = await fsReadFile(sourceFile, 'utf-8');
     const output = template(templateFile)(args);
@@ -160,7 +196,6 @@ export class TwaGenerator {
   private async generateIcon(
       iconData: Icon, targetDir: string, iconDef: IconDefinition): Promise<void> {
     const destFile = path.join(targetDir, iconDef.dest);
-    this.log.info(`\t ${iconDef.size}x${iconDef.size} Icon: ${destFile}`);
     await fsMkDir(path.dirname(destFile), {recursive: true});
     return await this.saveIcon(iconData.data, iconDef.size, destFile);
   }
@@ -224,54 +259,63 @@ export class TwaGenerator {
    * @param {String} targetDirectory the directory where the project will be created
    * @param {Object} twaManifest configurations values for the project.
    */
-  async createTwaProject(targetDirectory: string, twaManifest: TwaManifest): Promise<void> {
+  async createTwaProject(targetDirectory: string, twaManifest: TwaManifest,
+      reportProgress: twaGeneratorProgress = noOpProgress): Promise<void> {
+    const progress = new Progress(8, reportProgress);
     const error = twaManifest.validate();
     if (error !== null) {
       throw new Error(`Invalid TWA Manifest: ${error}`);
     }
 
-    this.log.info('Generating Android Project files:');
     const templateDirectory = path.join(__dirname, '../../template_project');
 
     const copyFileList = new Set(COPY_FILE_LIST);
     if (!twaManifest.maskableIconUrl) {
       DELETE_FILE_LIST.forEach((file) => copyFileList.delete(file));
     }
+    progress.update();
 
     // Copy Project Files
     await this.copyStaticFiles(templateDirectory, targetDirectory, Array.from(copyFileList));
 
     // Apply proper permissions to gradlew. See https://nodejs.org/api/fs.html#fs_file_modes
     await fs.promises.chmod(path.join(targetDirectory, 'gradlew'), '755');
+    progress.update();
 
     // Generate templated files
     await this.applyTemplates(
         templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, twaManifest);
+    progress.update();
 
     // Generate images
     if (twaManifest.iconUrl) {
       await this.generateIcons(twaManifest.iconUrl, targetDirectory, IMAGES);
     }
+    progress.update();
 
     await Promise.all(twaManifest.shortcuts.map((shortcut: ShortcutInfo, i: number) => {
       const imageDirs = SHORTCUT_IMAGES.map(
           (imageDir) => ({...imageDir, dest: `${imageDir.dest}shortcut_${i}.png`}));
       return this.generateIcons(shortcut.chosenIconUrl, targetDirectory, imageDirs);
     }));
+    progress.update();
 
     // Generate adaptive images
     if (twaManifest.maskableIconUrl) {
       await this.generateIcons(twaManifest.maskableIconUrl, targetDirectory, ADAPTIVE_IMAGES);
     }
+    progress.update();
 
     // Generate notification images
     if (twaManifest.monochromeIconUrl) {
       await this.generateIcons(twaManifest.monochromeIconUrl, targetDirectory, NOTIFICATION_IMAGES);
     }
+    progress.update();
 
     if (twaManifest.webManifestUrl) {
       // Save the Web Manifest into the project
       await this.writeWebManifest(twaManifest.webManifestUrl, targetDirectory);
     }
+    progress.done();
   }
 }
