@@ -54,9 +54,9 @@ To ensure if you are taking note of the correct location, check if each director
 ### Updating the location of the JDK and / or the Android command line tools.
 If the location for the JDK or the Android command line tools have been setup with the wrong path or
 if their location has changed after the initial configuration, the location for either of those can
-be changed by editing the configuration file at `${USER_HOME}/.llama-pack/llama-pack-config.json`.
+be changed by editing the configuration file at `${USER_HOME}/.bubblewrap/config.json`.
 
-#### Sample llama-pack-config.json
+#### Sample config.json
 ```
 { 
   "jdkPath":"\\user\\home\\bubblewrap-user\\open-jdk",
