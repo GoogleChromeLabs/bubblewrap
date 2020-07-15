@@ -27,7 +27,7 @@ export async function generateTwaProject(prompt: Prompt, twaGenerator: TwaGenera
     targetDirectory: string, twaManifest: TwaManifest): Promise<void> {
   prompt.printMessage(messages.messageGeneratingAndroidProject);
   const progressBar = new Bar({
-    format: ` >> [${green('{bar}')}] {percentage}% | ETA: {eta}s'`,
+    format: ` >> [${green('{bar}')}] {percentage}%`,
   }, Presets.shades_classic);
   progressBar.start(100, 0);
   const progress = (current: number, total: number): void => {
