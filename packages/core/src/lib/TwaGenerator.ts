@@ -108,6 +108,40 @@ export type twaGeneratorProgress = (progress: number, total: number) => void;
 const noOpProgress: twaGeneratorProgress = () => {};
 
 /**
+ * An utilty class to help ensure progress tracking is consistent.
+ */
+class Progress {
+  private current = 0;
+  constructor(private total: number, private progress: twaGeneratorProgress) {
+    this.progress(this.current, this.total);
+  }
+
+  /**
+   * Updates the progress. Increments current by 1.
+   */
+  update(): void {
+    if (this.current === this.total) {
+      throw new Error('Progress already reached total.' +
+        ` current: ${this.current}, total: ${this.total}`);
+    }
+    this.current++;
+    this.progress(this.current, this.total);
+  }
+
+  /**
+   * Should be called for the last update. Throws an error if total !== current after incrementing
+   * current.
+   */
+  done(): void {
+    this.update();
+    if (this.current !== this.total) {
+      throw new Error('Invoked done before current equals total.' +
+        ` current: ${this.current}, total: ${this.total}`);
+    }
+  }
+}
+
+/**
  * Generates TWA Projects from a TWA Manifest
  */
 export class TwaGenerator {
@@ -227,10 +261,7 @@ export class TwaGenerator {
    */
   async createTwaProject(targetDirectory: string, twaManifest: TwaManifest,
       reportProgress: twaGeneratorProgress = noOpProgress): Promise<void> {
-    let currentProgress = 0;
-    const totalProgress = 8;
-
-    reportProgress(currentProgress++, totalProgress);
+    const progress = new Progress(8, reportProgress);
     const error = twaManifest.validate();
     if (error !== null) {
       throw new Error(`Invalid TWA Manifest: ${error}`);
@@ -242,50 +273,49 @@ export class TwaGenerator {
     if (!twaManifest.maskableIconUrl) {
       DELETE_FILE_LIST.forEach((file) => copyFileList.delete(file));
     }
+    progress.update();
 
-    reportProgress(currentProgress++, totalProgress);
     // Copy Project Files
     await this.copyStaticFiles(templateDirectory, targetDirectory, Array.from(copyFileList));
 
     // Apply proper permissions to gradlew. See https://nodejs.org/api/fs.html#fs_file_modes
     await fs.promises.chmod(path.join(targetDirectory, 'gradlew'), '755');
+    progress.update();
 
-    reportProgress(currentProgress++, totalProgress);
     // Generate templated files
     await this.applyTemplates(
         templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, twaManifest);
+    progress.update();
 
-    reportProgress(currentProgress++, totalProgress);
     // Generate images
     if (twaManifest.iconUrl) {
       await this.generateIcons(twaManifest.iconUrl, targetDirectory, IMAGES);
     }
+    progress.update();
 
-    reportProgress(currentProgress++, totalProgress);
     await Promise.all(twaManifest.shortcuts.map((shortcut: ShortcutInfo, i: number) => {
       const imageDirs = SHORTCUT_IMAGES.map(
           (imageDir) => ({...imageDir, dest: `${imageDir.dest}shortcut_${i}.png`}));
       return this.generateIcons(shortcut.chosenIconUrl, targetDirectory, imageDirs);
     }));
+    progress.update();
 
-    reportProgress(currentProgress++, totalProgress);
     // Generate adaptive images
     if (twaManifest.maskableIconUrl) {
       await this.generateIcons(twaManifest.maskableIconUrl, targetDirectory, ADAPTIVE_IMAGES);
     }
+    progress.update();
 
-    reportProgress(currentProgress++, totalProgress);
     // Generate notification images
     if (twaManifest.monochromeIconUrl) {
       await this.generateIcons(twaManifest.monochromeIconUrl, targetDirectory, NOTIFICATION_IMAGES);
     }
+    progress.update();
 
-    reportProgress(currentProgress++, totalProgress);
     if (twaManifest.webManifestUrl) {
       // Save the Web Manifest into the project
       await this.writeWebManifest(twaManifest.webManifestUrl, targetDirectory);
     }
-
-    reportProgress(currentProgress, totalProgress);
+    progress.done();
   }
 }
