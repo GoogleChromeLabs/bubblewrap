@@ -42,7 +42,7 @@ export async function execute(
 }
 
 export async function executeFile(
-    cmd: string, args: string[], env: NodeJS.ProcessEnv, log?: Log, cwd?: string
+    cmd: string, args: string[], env: NodeJS.ProcessEnv, log?: Log, cwd?: string,
 ): Promise<{stdout: string; stderr: string}> {
   if (log) {
     log.debug(`Executing command ${cmd} with args ${args}`);

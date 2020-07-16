@@ -23,27 +23,31 @@ import * as fs from 'fs';
 
 describe('GradleWrapper', () => {
   let gradleWrapper: GradleWrapper;
+  let androidSdkTools: AndroidSdkTools;
+
+  const cwd = '/path/to/twa-project/';
+  const process = {
+    platform: 'linux',
+    env: {
+      'PATH': '',
+    },
+    cwd: () => cwd,
+  } as unknown as NodeJS.Process;
 
   beforeEach(() => {
     spyOn(fs, 'existsSync').and.returnValue(true);
     const config = new Config('/home/user/jdk8', '/home/user/sdktools');
-    const process = {
-      platform: 'linux',
-      env: {
-        'PATH': '',
-      },
-      cwd: () => '/path/to/twa-project/'
-    } as unknown as NodeJS.Process;
     const jdkHelper = new JdkHelper(process, config);
-    const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
+    androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
     gradleWrapper = new GradleWrapper(process, androidSdkTools);
   });
 
   describe('#bundleRelease', () => {
-    it('Calls "gradle bundleRelease --stacktracke"', async () => {
+    it('Calls "gradle bundleRelease --stacktrace"', async () => {
       spyOn(util, 'executeFile').and.stub();
       await gradleWrapper.bundleRelease();
-      expect(util.executeFile).toHaveBeenCalled();
+      expect(util.executeFile).toHaveBeenCalledWith('./gradlew',
+          ['bundleRelease', '--stacktrace'], androidSdkTools.getEnv(), undefined, cwd);
     });
   });
 
@@ -51,7 +55,8 @@ describe('GradleWrapper', () => {
     it('Calls "gradle assembleRelease --stacktrace"', async () => {
       spyOn(util, 'executeFile').and.stub();
       await gradleWrapper.assembleRelease();
-      expect(util.executeFile).toHaveBeenCalled();
+      expect(util.executeFile).toHaveBeenCalledWith('./gradlew',
+          ['assembleRelease', '--stacktrace'], androidSdkTools.getEnv(), undefined, cwd);
     });
   });
 });

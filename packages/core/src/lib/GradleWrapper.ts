@@ -51,7 +51,7 @@ export class GradleWrapper {
   async bundleRelease(): Promise<void> {
     const env = this.androidSdkTools.getEnv();
     await executeFile(
-      this.gradleCmd, ['bundleRelease', '--stacktrace'], env, undefined, this.projectLocation);
+        this.gradleCmd, ['bundleRelease', '--stacktrace'], env, undefined, this.projectLocation);
   }
 
   /**
@@ -60,6 +60,6 @@ export class GradleWrapper {
   async assembleRelease(): Promise<void> {
     const env = this.androidSdkTools.getEnv();
     await executeFile(
-      this.gradleCmd, ['assembleRelease', '--stacktrace'], env, undefined, this.projectLocation);
+        this.gradleCmd, ['assembleRelease', '--stacktrace'], env, undefined, this.projectLocation);
   }
 }
