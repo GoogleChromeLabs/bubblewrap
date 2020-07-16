@@ -42,12 +42,12 @@ export async function execute(
 }
 
 export async function executeFile(
-    cmd: string, args: string[], env: NodeJS.ProcessEnv, log?: Log,
+    cmd: string, args: string[], env: NodeJS.ProcessEnv, log?: Log, cwd?: string
 ): Promise<{stdout: string; stderr: string}> {
   if (log) {
     log.debug(`Executing command ${cmd} with args ${args}`);
   }
-  return await execFilePromise(cmd, args, {env: env});
+  return await execFilePromise(cmd, args, {env: env, cwd: cwd});
 }
 
 export async function downloadFile(url: string, path: string): Promise<void> {

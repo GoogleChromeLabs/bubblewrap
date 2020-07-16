@@ -14,11 +14,8 @@
  *  limitations under the License.
  */
 
-import * as util from 'util';
-import {exec} from 'child_process';
+import {executeFile} from './util';
 import {AndroidSdkTools} from './androidSdk/AndroidSdkTools';
-
-const execPromise = util.promisify(exec);
 
 /**
  * A Wrapper around the Gradle commands.
@@ -49,13 +46,20 @@ export class GradleWrapper {
   }
 
   /**
+   * Invokes `gradle bundleRelease` for the Android project.
+   */
+  async bundleRelease(): Promise<void> {
+    const env = this.androidSdkTools.getEnv();
+    await executeFile(
+      this.gradleCmd, ['bundleRelease', '--stacktrace'], env, undefined, this.projectLocation);
+  }
+
+  /**
    * Invokes `gradle assembleRelease` for the Android project.
    */
   async assembleRelease(): Promise<void> {
     const env = this.androidSdkTools.getEnv();
-    await execPromise(`${this.gradleCmd} assembleRelease --stacktrace`, {
-      env: env,
-      cwd: this.projectLocation,
-    });
+    await executeFile(
+      this.gradleCmd, ['assembleRelease', '--stacktrace'], env, undefined, this.projectLocation);
   }
 }
