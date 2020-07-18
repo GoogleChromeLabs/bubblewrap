@@ -49,7 +49,7 @@ line tools. So, take note of the location where both were decompressed.
 
 To ensure if you are taking note of the correct location, check if each directory contains the following files:
 - On **Windows** and **Linux**, the correct **OpenJDK** path should contain `bin`, `include` ,`lib`, etc. On **MacOS**,
-the directory should contains the `Content` subdirectory.
+the directory should contain the `Content` subdirectory.
 - The **AndroidSDK** path should contain `tools` which should have `bin`, `cli`
 
 ### Updating the location of the JDK and / or the Android command line tools.
