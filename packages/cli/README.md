@@ -48,8 +48,8 @@ When running `bubblewrap` for the first time, it will ask where it can find the 
 line tools. So, take note of the location where both were decompressed.
 
 To ensure if you are taking note of the correct location, check if each directory contains the following files:
-- The **OpenJDK** path should contain `bin,com,include ..`
-- The **AndroidSDK** path should contain `tools` which should have `bin, cli`
+- The **OpenJDK** path should contain `bin`, `include` ,`lib`, ...
+- The **AndroidSDK** path should contain `tools` which should have `bin`, `cli`
 
 ### Updating the location of the JDK and / or the Android command line tools.
 If the location for the JDK or the Android command line tools have been setup with the wrong path or
