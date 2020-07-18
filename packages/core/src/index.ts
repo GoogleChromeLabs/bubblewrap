@@ -18,6 +18,7 @@ import {AndroidSdkTools} from './lib/androidSdk/AndroidSdkTools';
 import {Config} from './lib/Config';
 import {GradleWrapper} from './lib/GradleWrapper';
 import Log from './lib/Log';
+import {JarSigner} from './lib/jdk/JarSigner';
 import {JdkHelper} from './lib/jdk/JdkHelper';
 import {KeyTool} from './lib/jdk/KeyTool';
 import {TwaManifest, DisplayModes, DisplayMode, asDisplayMode} from './lib/TwaManifest';
@@ -30,6 +31,7 @@ export {AndroidSdkTools,
   Config,
   DigitalAssetLinks,
   GradleWrapper,
+  JarSigner,
   JdkHelper,
   KeyTool,
   Log,
