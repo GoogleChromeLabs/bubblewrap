@@ -17,9 +17,9 @@
 import {JarSigner} from '../../../lib/jdk/JarSigner';
 import {JdkHelper} from '../../../lib/jdk/JdkHelper';
 import {Config} from '../../../lib/Config';
+import {SigningKeyInfo} from '../../../lib/TwaManifest';
 import * as util from '../../../lib/util';
 import * as fs from 'fs';
-import { SigningKeyInfo } from '../../../lib/TwaManifest';
 
 const CWD = '/path/to/twa-project/';
 const PROCESS = {
@@ -68,5 +68,5 @@ describe('JarSigner', () => {
         OUTPUT_AAB,
       ], jdkHelper.getEnv());
     });
-  })
+  });
 });

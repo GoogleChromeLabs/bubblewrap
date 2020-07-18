@@ -32,7 +32,7 @@ export class JarSigner {
    * Signs a file
    */
   async sign(signingKeyInfo: SigningKeyInfo, storepass: string, keypass: string,
-        inputFile: string, outputFile: string): Promise<void> {
+      inputFile: string, outputFile: string): Promise<void> {
     const env = this.jdkHelper.getEnv();
     await executeFile(JARSIGNER_CMD, [
       '-verbose',
