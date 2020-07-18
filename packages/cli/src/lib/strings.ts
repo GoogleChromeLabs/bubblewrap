@@ -150,7 +150,7 @@ a blank white page to users.
   messageSigningKeyCreation: underline('\nSigning key creation'),
   messageSigningKeyInformation: underline(`\nSigning key information ${green('(5/5)')}`),
   messageSigningKeyInformationDesc: `
-Please, enter information about the key store containing the that will be used
+Please, enter information about the key store containing the keys that will be used
 to sign the application. If a key store does not exist on the provided path,
 Bubblewrap will prompt for the creation of a new keystore.
 
