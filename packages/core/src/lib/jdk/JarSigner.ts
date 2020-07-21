@@ -19,8 +19,8 @@ import {executeFile} from '../util';
 import {SigningKeyInfo} from '../../lib/TwaManifest';
 
 const JARSIGNER_CMD = 'jarsigner';
-const SIGALG = 'SHA256withRSA';
-const DIGESTALG = 'SHA-256';
+const SIGNATURE_ALGORITHM = 'SHA256withRSA';
+const DIGEST_ALGORITHM = 'SHA-256';
 
 /**
  * Wraps the Java `jarsigner` CLI tool.
@@ -37,9 +37,9 @@ export class JarSigner {
     await executeFile(JARSIGNER_CMD, [
       '-verbose',
       '-sigalg',
-      SIGALG,
+      SIGNATURE_ALGORITHM,
       '-digestalg',
-      DIGESTALG,
+      DIGEST_ALGORITHM,
       '-keystore',
       signingKeyInfo.path,
       inputFile,
