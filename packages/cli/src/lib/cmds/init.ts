@@ -127,7 +127,7 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
 
   twaManifest.signingKey.alias = await prompt.promptInput(
       messages.promptKeyAlias,
-      twaManifest.signingKey.path,
+      twaManifest.signingKey.alias,
       createValidateString(1),
   );
 
