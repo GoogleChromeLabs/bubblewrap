@@ -245,8 +245,7 @@ export class TwaGenerator {
     }
 
     if (contentType.startsWith('image/svg')) {
-      throw new Error(`Received icon "${iconUrl}" with Content-Type "${contentType}",` +
-        ' which is not currently supported');
+      throw new Error('Sorry, SVGs aren\'t supported yet.');
     }
 
     const body = await response.buffer();
