@@ -32,6 +32,7 @@
     "@types/cli-progress": "^3.7.0",
     "@types/color": "^3.0.0",
     "@types/inquirer": "^6.5.0",
+    "@types/mime-types": "^2.1.0",
     "@types/minimist": "^1.2.0",
     "@types/semver": "^7.3.1",
     "@types/valid-url": "^1.0.3",
@@ -39,6 +40,7 @@
     "color": "^3.1.2",
     "colors": "^1.4.0",
     "inquirer": "^7.3.2",
+    "mime-types": "^2.1.27",
     "minimist": "^1.2.2",
     "semver": "^7.3.2",
     "valid-url": "^1.0.9"

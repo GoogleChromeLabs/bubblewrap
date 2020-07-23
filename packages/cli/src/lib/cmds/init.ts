@@ -17,8 +17,8 @@
 import * as fs from 'fs';
 import {Config, DisplayModes, JdkHelper, KeyTool, TwaGenerator, TwaManifest}
   from '@bubblewrap/core';
-import {validateHost, validateColor, validateOptionalUrl, validateUrl, createValidateString,
-  validateDisplayMode, validatePackageId} from '../inputHelpers';
+import {validateHost, validateColor, createValidateString, validateDisplayMode, validatePackageId,
+  validateImageUrl, validateOptionalImageUrl} from '../inputHelpers';
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
 import {Prompt, InquirerPrompt} from '../Prompt';
@@ -88,13 +88,13 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
   twaManifest.iconUrl = (await prompt.promptInput(
       messages.promptIconUrl,
       twaManifest.iconUrl ? twaManifest.iconUrl : '',
-      validateUrl,
+      validateImageUrl,
   )).toString();
 
   const maskableIconUrl = await prompt.promptInput(
       messages.promptMaskableIconUrl,
       twaManifest.maskableIconUrl ? twaManifest.maskableIconUrl : '',
-      validateOptionalUrl,
+      validateOptionalImageUrl,
   );
   twaManifest.maskableIconUrl = maskableIconUrl ? maskableIconUrl.toString() : undefined;
 
@@ -112,7 +112,7 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
   const monochromeIconUrl = await prompt.promptInput(
       messages.promptMonochromeIconUrl,
       twaManifest.monochromeIconUrl ? twaManifest.monochromeIconUrl : '',
-      validateOptionalUrl,
+      validateOptionalImageUrl,
   );
   twaManifest.monochromeIconUrl = monochromeIconUrl ? monochromeIconUrl.toString() : undefined;
 
