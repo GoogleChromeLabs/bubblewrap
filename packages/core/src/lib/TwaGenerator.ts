@@ -16,7 +16,7 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
-import * as sharp from 'sharp';
+import * as Jimp from 'jimp';
 import fetch from 'node-fetch';
 import {template} from 'lodash';
 import {promisify} from 'util';
@@ -186,11 +186,9 @@ export class TwaGenerator {
   }
 
   private async saveIcon(data: Buffer, size: number, fileName: string): Promise<void> {
-    // 2400 is the maximal density which gets the best quality.
-    await sharp(data, {density: 2400})
-        .resize(size)
-        .png()
-        .toFile(fileName);
+    const image = await Jimp.read(data);
+    await image.resize(size, size);
+    await image.writeAsync(fileName);
   }
 
   private async generateIcon(
@@ -244,6 +242,11 @@ export class TwaGenerator {
     if (!contentType?.startsWith('image/')) {
       throw new Error(`Received icon "${iconUrl}" with invalid Content-Type.` +
           ` Responded with Content-Type "${contentType}"`);
+    }
+
+    if (contentType.startsWith('image/svg')) {
+      throw new Error(`Received icon "${iconUrl}" with Content-Type "${contentType}",` +
+        ' which is not currently supported');
     }
 
     const body = await response.buffer();

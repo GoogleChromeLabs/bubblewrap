@@ -23,6 +23,25 @@ describe('util', () => {
       expect(result).toBeNull();
     });
 
+    it('Ignores SVG Icons by mime-type', () => {
+      const result = util.findSuitableIcon(
+          [{
+            'src': '/favicons/android-chrome-192x192.svg',
+            'sizes': '192x192',
+            'mimeType': 'image/svg',
+          }], 'any');
+      expect(result).toBeNull();
+    });
+
+    it('Ignores SVG Icons by extension', () => {
+      const result = util.findSuitableIcon(
+          [{
+            'src': '/favicons/android-chrome-192x192.svg',
+            'sizes': '192x192',
+          }], 'any');
+      expect(result).toBeNull();
+    });
+
     it('returns any icon if no minSize is provided', () => {
       const result = util.findSuitableIcon(
           [{

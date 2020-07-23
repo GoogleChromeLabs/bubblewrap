@@ -112,6 +112,51 @@ describe('inputHelpers', () => {
     });
   });
 
+  describe('#validateImageUrl', () => {
+    it('returns Ok for valid urls', () => {
+      expect(inputHelpers.validateImageUrl('https://www.example.com/test.png').isOk()).toBeTrue();
+      expect(inputHelpers.validateImageUrl('http://example.com/sub/test.jpg').isOk()).toBeTrue();
+    });
+
+    it('returns Error for invalid urls', () => {
+      expect(inputHelpers.validateImageUrl('').isError()).toBeTrue();
+      expect(inputHelpers.validateImageUrl('ftp://example.com').isError()).toBeTrue();
+    });
+
+    it('returns Error for non-image mime-types', () => {
+      expect(
+          inputHelpers.validateImageUrl('https://www.example.com/html.svg').isError()).toBeTrue();
+    });
+
+    it('returns Error for SVG images', () => {
+      expect(
+          inputHelpers.validateImageUrl('https://www.example.com/test.svg').isError()).toBeTrue();
+    });
+  });
+
+  describe('#validateOptionalImageUrl', () => {
+    it('returns Ok for valid urls', () => {
+      expect(inputHelpers.validateImageUrl('https://www.example.com/test.png').isOk()).toBeTrue();
+      expect(inputHelpers.validateImageUrl('http://example.com/sub/test.jpg').isOk()).toBeTrue();
+      expect(inputHelpers.validateOptionalUrl('').isOk()).toBeTrue();
+      expect(inputHelpers.validateOptionalUrl('').unwrap()).toBeNull();
+    });
+
+    it('returns Error for invalid urls', () => {
+      expect(inputHelpers.validateImageUrl('ftp://example.com').isError()).toBeTrue();
+    });
+
+    it('returns Error for non-image mime-types', () => {
+      expect(
+          inputHelpers.validateImageUrl('https://www.example.com/html.svg').isError()).toBeTrue();
+    });
+
+    it('returns Error for SVG images', () => {
+      expect(
+          inputHelpers.validateImageUrl('https://www.example.com/test.svg').isError()).toBeTrue();
+    });
+  });
+
   describe('#validateOptionalUrl', () => {
     it('returns Ok for valid urls', () => {
       expect(inputHelpers.validateOptionalUrl('https://www.example.com').isOk()).toBeTrue();

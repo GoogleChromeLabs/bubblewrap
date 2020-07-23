@@ -21,6 +21,7 @@ import {Result, DisplayMode, asDisplayMode, util} from '@bubblewrap/core';
 import {ValidateFunction} from './Prompt';
 import {enUS as messages} from './strings';
 import {domainToASCII} from 'url';
+import {lookup} from 'mime-types';
 
 /**
  * A {@link ValidateFunction} that receives a {@link string} as input and resolves to a
@@ -55,6 +56,52 @@ export function validateUrl(url: string): Result<URL, Error> {
   } catch (e) {
     return Result.error(new Error(messages.errorInvalidUrl(url)));
   }
+}
+
+/**
+ * A {@link ValidateFunction} that receives a {@link string} as input and resolves to a
+ * {@link URL} when successful. If the URL points to a type that doesn't resolve to a
+ * `image/*` mime-type, if it resolves to `image/svg*`, or if the string is empty, the
+ * validation fails and the {@link Result} returned by the function is an {@link Error}.
+ * @param {string} url a string to be converted to a {@link URL}.
+ * @returns {Result<URL, Error>} a results that resolves to a {@link URL} on success or
+ * {@link Error} on failure.
+ */
+export function validateImageUrl(url: string): Result<URL, Error> {
+  const mimeType = lookup(url);
+
+  // Don't validate mime-type if we are unable to find what it is.
+  if (mimeType) {
+    if (!mimeType.startsWith('image/')) {
+      return Result.error(new Error(messages.errorUrlMustBeImage(mimeType)));
+    }
+
+    if (mimeType.startsWith('image/svg')) {
+      return Result.error(new Error(messages.errorUrlMustNotBeSvg));
+    }
+  }
+  return validateUrl(url);
+}
+
+/**
+ * A {@link ValidateFunction} that receives a {@link string} as input and resolves to a
+ * {@link URL} or {@link null} when successful.
+ * If the string is empty, the validation succeeds and the {@link Result} returned by the
+ * function resolves to {@link null}.
+ * If the URL points to a type that doesn't resolve to a `image/*` mime-type or if it resolves
+ * to `image/svg*` the validation fails and the {@link Result} returned by the function is an
+ * {@link Error}.
+ * @param {string} url a string to be converted to a {@link URL}.
+ * @returns {Result<URL, Error>} a results that resolves to a {@link URL} on success or
+ * {@link Error} on failure.
+ */
+export function validateOptionalImageUrl(input: string): Result<URL | null, Error> {
+  const url = input.trim();
+  if (url.length === 0) {
+    return Result.ok(null);
+  }
+
+  return validateImageUrl(url);
 }
 
 /**

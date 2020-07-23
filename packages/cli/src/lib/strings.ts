@@ -23,6 +23,8 @@ type Messages = {
   errorInvalidUrl: (url: string) => string;
   errorInvalidColor: (color: string) => string;
   errorInvalidDisplayMode: (displayMode: string) => string;
+  errorUrlMustBeImage: (mimeType: string) => string;
+  errorUrlMustNotBeSvg: string;
   messageInitializingWebManifest: (manifestUrl: string) => string;
   messageAndroidAppDetails: string;
   messageAndroidAppDetailsDesc: string;
@@ -80,6 +82,10 @@ export const enUS: Messages = {
   errorInvalidDisplayMode: (displayMode: string): string => {
     return `Invalid display mode: ${displayMode}`;
   },
+  errorUrlMustBeImage: (mimeType: string): string => {
+    return `URL must resolve to an image/* mime-type, but resolved to ${mimeType}.`;
+  },
+  errorUrlMustNotBeSvg: 'SVG images are not supported yet.',
   messageAndroidAppDetails: underline(`\nAndroid app details ${green('(2/5)')}`),
   messageAndroidAppDetailsDesc: `
 Please, enter details regarding how the Android app will look when installed
