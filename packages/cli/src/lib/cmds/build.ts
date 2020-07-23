@@ -15,7 +15,7 @@
  */
 
 import {AndroidSdkTools, Config, DigitalAssetLinks, GradleWrapper, JdkHelper, KeyTool, Log,
-  TwaManifest} from '@bubblewrap/core';
+  TwaManifest, JarSigner, SigningKeyInfo, Result} from '@bubblewrap/core';
 import * as path from 'path';
 import * as fs from 'fs';
 import {enUS as messages} from '../strings';
@@ -30,137 +30,170 @@ interface SigningKeyPasswords {
   keyPassword: string;
 }
 
-/**
- * Checks if the keystore password and the key password are part of the environment prompts the
- * user for a password otherwise.
- *
- * @returns {Promise<SigningKeyPasswords} the password information collected from enviromental
- * variables or user input.
- */
-async function getPasswords(log: Log, prompt: Prompt): Promise<SigningKeyPasswords> {
-  // Check if passwords are set as environment variables.
-  const envKeystorePass = process.env['BUBBLEWRAP_KEYSTORE_PASSWORD'];
-  const envKeyPass = process.env['BUBBLEWRAP_KEY_PASSWORD'];
+class Build {
+  private jdkHelper: JdkHelper;
+  private androidSdkTools: AndroidSdkTools;
+  private keyTool: KeyTool;
+  private gradleWrapper: GradleWrapper;
+  private jarSigner: JarSigner;
 
-  if (envKeyPass !== undefined && envKeystorePass !== undefined) {
-    log.info('Using passwords set in the BUBBLEWRAP_KEYSTORE_PASSWORD and ' +
-        'BUBBLEWRAP_KEY_PASSWORD environmental variables.');
+  constructor(private config: Config, private args: ParsedArgs,
+      private log = new Log('build'), private prompt: Prompt = new InquirerPrompt()) {
+    this.jdkHelper = new JdkHelper(process, this.config);
+    this.androidSdkTools = new AndroidSdkTools(process, this.config, this.jdkHelper, this.log);
+    this.keyTool = new KeyTool(this.jdkHelper, this.log);
+    this.gradleWrapper = new GradleWrapper(process, this.androidSdkTools);
+    this.jarSigner = new JarSigner(this.jdkHelper);
+  }
+
+  /**
+   * Checks if the keystore password and the key password are part of the environment prompts the
+   * user for a password otherwise.
+   *
+   * @returns {Promise<SigningKeyPasswords} the password information collected from enviromental
+   * variables or user input.
+   */
+  async getPasswords(): Promise<SigningKeyPasswords> {
+    // Check if passwords are set as environment variables.
+    const envKeystorePass = process.env['BUBBLEWRAP_KEYSTORE_PASSWORD'];
+    const envKeyPass = process.env['BUBBLEWRAP_KEY_PASSWORD'];
+
+    if (envKeyPass !== undefined && envKeystorePass !== undefined) {
+      this.log.info('Using passwords set in the BUBBLEWRAP_KEYSTORE_PASSWORD and ' +
+          'BUBBLEWRAP_KEY_PASSWORD environmental variables.');
+      return {
+        keystorePassword: envKeystorePass,
+        keyPassword: envKeyPass,
+      };
+    }
+
+    // Ask user for the keystore password
+    const keystorePassword =
+        await this.prompt.promptPassword(messages.promptKeystorePassword, createValidateString(6));
+    const keyPassword =
+      await this.prompt.promptPassword(messages.promptKeyPassword, createValidateString(6));
+
     return {
-      keystorePassword: envKeystorePass,
-      keyPassword: envKeyPass,
+      keystorePassword: keystorePassword,
+      keyPassword: keyPassword,
     };
   }
 
+  async runValidation(): Promise<Result<PwaValidationResult, Error>> {
+    try {
+      const manifestFile = path.join(process.cwd(), 'twa-manifest.json');
+      const twaManifest = await TwaManifest.fromFile(manifestFile);
+      const pwaValidationResult =
+          await PwaValidator.validate(new URL(twaManifest.startUrl, twaManifest.webManifestUrl));
+      return Result.ok(pwaValidationResult);
+    } catch (e) {
+      return Result.error(e);
+    }
+  }
 
-  // Ask user for the keystore password
-  const keystorePassword =
-      await prompt.promptPassword(messages.promptKeystorePassword, createValidateString(6));
-  const keyPassword =
-    await prompt.promptPassword(messages.promptKeyPassword, createValidateString(6));
+  async generateAssetLinks(
+      twaManifest: TwaManifest, passwords: SigningKeyPasswords): Promise<void> {
+    try {
+      const digitalAssetLinksFile = './assetlinks.json';
+      const keyInfo = await this.keyTool.keyInfo({
+        path: twaManifest.signingKey.path,
+        alias: twaManifest.signingKey.alias,
+        keypassword: passwords.keyPassword,
+        password: passwords.keystorePassword,
+      });
 
-  return {
-    keystorePassword: keystorePassword,
-    keyPassword: keyPassword,
-  };
-}
+      const sha256Fingerprint = keyInfo.fingerprints.get('SHA256');
+      if (!sha256Fingerprint) {
+        this.log.warn('Could not find SHA256 fingerprint. Skipping generating "assetlinks.json"');
+        return;
+      }
 
-async function startValidation(): Promise<PwaValidationResult> {
-  const manifestFile = path.join(process.cwd(), 'twa-manifest.json');
-  const twaManifest = await TwaManifest.fromFile(manifestFile);
-  return PwaValidator.validate(new URL(twaManifest.startUrl, twaManifest.webManifestUrl));
-}
+      const digitalAssetLinks =
+        DigitalAssetLinks.generateAssetLinks(twaManifest.packageId, sha256Fingerprint);
 
-async function generateAssetLinks(keyTool: KeyTool, twaManifest: TwaManifest,
-    passwords: SigningKeyPasswords, log: Log): Promise<void> {
-  try {
-    const digitalAssetLinksFile = './assetlinks.json';
-    const keyInfo = await keyTool.keyInfo({
-      path: twaManifest.signingKey.path,
-      alias: twaManifest.signingKey.alias,
-      keypassword: passwords.keyPassword,
-      password: passwords.keystorePassword,
-    });
+      await fs.promises.writeFile(digitalAssetLinksFile, digitalAssetLinks);
 
-    const sha256Fingerprint = keyInfo.fingerprints.get('SHA256');
-    if (!sha256Fingerprint) {
-      log.warn('Could not find SHA256 fingerprint. Skipping generating "assetlinks.json"');
-      return;
+      this.log.info(`Digital Asset Links file generated at ${digitalAssetLinksFile}`);
+      this.log.info('Read more about setting up Digital Asset Links at https://developers.google.com' +
+          '/web/android/trusted-web-activity/quick-start#creating-your-asset-link-file');
+    } catch (e) {
+      this.log.warn('Error generating "assetlinks.json"', e);
+    }
+  }
+
+  async buildApk(signingKey: SigningKeyInfo, passwords: SigningKeyPasswords): Promise<void> {
+    await this.gradleWrapper.assembleRelease();
+    await this.androidSdkTools.zipalign(
+        './app/build/outputs/apk/release/app-release-unsigned.apk', // input file
+        './app-release-unsigned-aligned.apk', // output file
+    );
+    const outputFile = './app-release-signed.apk';
+    await this.androidSdkTools.apksigner(
+        signingKey.path,
+        passwords.keystorePassword, // keystore password
+        signingKey.alias, // alias
+        passwords.keyPassword, // key password
+        './app-release-unsigned-aligned.apk', // input file path
+        outputFile, // output file path
+    );
+    this.log.info(`Generated Android APK at "${outputFile}"`);
+  }
+
+  async buildAppBundle(signingKey: SigningKeyInfo, passwords: SigningKeyPasswords): Promise<void> {
+    await this.gradleWrapper.bundleRelease();
+    const inputFile = 'app/build/outputs/bundle/release/app-release.aab';
+    const outputFile = './app-release-bundle.aab';
+    await this.jarSigner.sign(
+        signingKey, passwords.keystorePassword, passwords.keyPassword, inputFile, outputFile);
+    this.log.info(`Generated Android App Bundle at "${outputFile}"`);
+  }
+
+  async build(): Promise<boolean> {
+    if (!await this.androidSdkTools.checkBuildTools()) {
+      console.log('Installing Android Build Tools. Please, read and accept the license agreement');
+      await this.androidSdkTools.installBuildTools();
     }
 
-    const digitalAssetLinks =
-      DigitalAssetLinks.generateAssetLinks(twaManifest.packageId, sha256Fingerprint);
+    let validationPromise;
+    if (!this.args.skipPwaValidation) {
+      validationPromise = this.runValidation();
+    }
 
-    await fs.promises.writeFile(digitalAssetLinksFile, digitalAssetLinks);
+    const twaManifest = await TwaManifest.fromFile('./twa-manifest.json');
+    const passwords = await this.getPasswords();
 
-    log.info(`Digital Asset Links file generated at ${digitalAssetLinksFile}`);
-    log.info('Read more about setting up Digital Asset Links at https://developers.google.com' +
-        '/web/android/trusted-web-activity/quick-start#creating-your-asset-link-file');
-  } catch (e) {
-    log.warn('Error generating "assetlinks.json"', e);
+    // Builds the Android Studio Project
+    this.log.info('Building the Android App...');
+    await this.buildApk(twaManifest.signingKey, passwords);
+
+    if (this.args.generateAppBundle) {
+      await this.buildAppBundle(twaManifest.signingKey, passwords);
+    }
+
+    await this.generateAssetLinks(twaManifest, passwords);
+
+    if (validationPromise) {
+      const result = await validationPromise;
+      if (result.isOk()) {
+        const pwaValidationResult = result.unwrap();
+        printValidationResult(pwaValidationResult, this.log);
+
+        if (pwaValidationResult.status === 'FAIL') {
+          this.log.warn('PWA Quality Criteria check failed.');
+        }
+      } else {
+        const e = result.unwrapError();
+        const message = 'Failed to run the PWA Quality Criteria checks. Skipping.';
+        this.log.debug(e.message);
+        this.log.warn(message);
+      }
+    }
+    return true;
   }
 }
 
 export async function build(config: Config, args: ParsedArgs,
-    log = new Log('build'), prompt: Prompt = new InquirerPrompt): Promise<boolean> {
-  let pwaValidationPromise;
-  if (!args.skipPwaValidation) {
-    pwaValidationPromise = startValidation();
-  }
-
-  const jdkHelper = new JdkHelper(process, config);
-  const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper, log);
-  const keyTool = new KeyTool(jdkHelper, log);
-
-  if (!await androidSdkTools.checkBuildTools()) {
-    console.log('Installing Android Build Tools. Please, read and accept the license agreement');
-    await androidSdkTools.installBuildTools();
-  }
-
-  const twaManifest = await TwaManifest.fromFile('./twa-manifest.json');
-
-  const passwords = await getPasswords(log, prompt);
-
-  // Builds the Android Studio Project
-  log.info('Building the Android App...');
-  const gradleWraper = new GradleWrapper(process, androidSdkTools);
-  await gradleWraper.assembleRelease();
-
-  // Zip Align
-  log.info('Zip Aligning...');
-  await androidSdkTools.zipalign(
-      './app/build/outputs/apk/release/app-release-unsigned.apk', // input file
-      './app-release-unsigned-aligned.apk', // output file
-  );
-
-  if (!args.skipPwaValidation) {
-    log.info('Checking PWA Quality Criteria...');
-    try {
-      const pwaValidationResult = (await pwaValidationPromise)!;
-      printValidationResult(pwaValidationResult, log);
-      if (pwaValidationResult.status === 'FAIL') {
-        log.warn('PWA Quality Criteria check failed.');
-      }
-    } catch (e) {
-      const message = 'Failed to run the PWA Quality Criteria checks. Skipping.';
-      log.debug(e);
-      log.warn(message);
-    }
-  }
-
-  // And sign APK
-  log.info('Signing...');
-  const outputFile = './app-release-signed.apk';
-  await androidSdkTools.apksigner(
-      twaManifest.signingKey.path,
-      passwords.keystorePassword, // keystore password
-      twaManifest.signingKey.alias, // alias
-      passwords.keyPassword, // key password
-      './app-release-unsigned-aligned.apk', // input file path
-      outputFile, // output file path
-  );
-
-  log.info(`Signed Android App generated at "${outputFile}"`);
-
-  await generateAssetLinks(keyTool, twaManifest, passwords, log);
-  return true;
+    log = new Log('build'), prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
+  const build = new Build(config, args, log, prompt);
+  return build.build();
 }

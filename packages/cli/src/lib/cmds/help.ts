@@ -51,6 +51,7 @@ const HELP_MESSAGES = new Map<string, string>(
         '',
         'Options:',
         '--skipPwaValidation ....... skips validating the wrapped PWA against the Quality Criteria',
+        '--generateAppBundle ....... outputs an Android App Bundle additionally to the APK',
       ].join('\n')],
       ['update', [
         'Usage:',

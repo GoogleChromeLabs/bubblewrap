@@ -21,7 +21,8 @@ import Log from './lib/Log';
 import {JarSigner} from './lib/jdk/JarSigner';
 import {JdkHelper} from './lib/jdk/JdkHelper';
 import {KeyTool} from './lib/jdk/KeyTool';
-import {TwaManifest, DisplayModes, DisplayMode, asDisplayMode} from './lib/TwaManifest';
+import {TwaManifest, DisplayModes, DisplayMode, asDisplayMode, SigningKeyInfo}
+  from './lib/TwaManifest';
 import {TwaGenerator} from './lib/TwaGenerator';
 import {DigitalAssetLinks} from './lib/DigitalAssetLinks';
 import * as util from './lib/util';
@@ -42,4 +43,5 @@ export {AndroidSdkTools,
   asDisplayMode,
   util,
   Result,
+  SigningKeyInfo,
 };
