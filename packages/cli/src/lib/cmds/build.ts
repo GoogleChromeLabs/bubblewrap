@@ -53,14 +53,13 @@ class Build {
    * @returns {Promise<SigningKeyPasswords} the password information collected from enviromental
    * variables or user input.
    */
-  async getPasswords(): Promise<SigningKeyPasswords> {
+  async getPasswords(signingKeyInfo: SigningKeyInfo): Promise<SigningKeyPasswords> {
     // Check if passwords are set as environment variables.
     const envKeystorePass = process.env['BUBBLEWRAP_KEYSTORE_PASSWORD'];
     const envKeyPass = process.env['BUBBLEWRAP_KEY_PASSWORD'];
 
     if (envKeyPass !== undefined && envKeystorePass !== undefined) {
-      this.log.info('Using passwords set in the BUBBLEWRAP_KEYSTORE_PASSWORD and ' +
-          'BUBBLEWRAP_KEY_PASSWORD environmental variables.');
+      this.prompt.printMessage(messages.messageUsingPasswordsFromEnv);
       return {
         keystorePassword: envKeystorePass,
         keyPassword: envKeyPass,
@@ -68,6 +67,8 @@ class Build {
     }
 
     // Ask user for the keystore password
+    this.prompt.printMessage(
+        messages.messageEnterPasswords(signingKeyInfo.path, signingKeyInfo.alias));
     const keystorePassword =
         await this.prompt.promptPassword(messages.promptKeystorePassword, createValidateString(6));
     const keyPassword =
@@ -104,7 +105,7 @@ class Build {
 
       const sha256Fingerprint = keyInfo.fingerprints.get('SHA256');
       if (!sha256Fingerprint) {
-        this.log.warn('Could not find SHA256 fingerprint. Skipping generating "assetlinks.json"');
+        this.prompt.printMessage(messages.messageSha256FingerprintNotFound);
         return;
       }
 
@@ -113,11 +114,9 @@ class Build {
 
       await fs.promises.writeFile(digitalAssetLinksFile, digitalAssetLinks);
 
-      this.log.info(`Digital Asset Links file generated at ${digitalAssetLinksFile}`);
-      this.log.info('Read more about setting up Digital Asset Links at https://developers.google.com' +
-          '/web/android/trusted-web-activity/quick-start#creating-your-asset-link-file');
+      this.prompt.printMessage(messages.messageDigitalAssetLinksSuccess(digitalAssetLinksFile));
     } catch (e) {
-      this.log.warn('Error generating "assetlinks.json"', e);
+      this.prompt.printMessage(messages.errorAssetLinksGeneration);
     }
   }
 
@@ -136,7 +135,7 @@ class Build {
         './app-release-unsigned-aligned.apk', // input file path
         outputFile,
     );
-    this.log.info(`Generated Android APK at "${outputFile}"`);
+    this.prompt.printMessage(messages.messageApkSucess(outputFile));
   }
 
   async buildAppBundle(signingKey: SigningKeyInfo, passwords: SigningKeyPasswords): Promise<void> {
@@ -145,12 +144,12 @@ class Build {
     const outputFile = './app-release-bundle.aab';
     await this.jarSigner.sign(
         signingKey, passwords.keystorePassword, passwords.keyPassword, inputFile, outputFile);
-    this.log.info(`Generated Android App Bundle at "${outputFile}"`);
+    this.prompt.printMessage(messages.messageAppBundleSuccess(outputFile));
   }
 
   async build(): Promise<boolean> {
     if (!await this.androidSdkTools.checkBuildTools()) {
-      console.log('Installing Android Build Tools. Please, read and accept the license agreement');
+      this.prompt.printMessage(messages.messageInstallingBuildTools);
       await this.androidSdkTools.installBuildTools();
     }
 
@@ -160,10 +159,10 @@ class Build {
     }
 
     const twaManifest = await TwaManifest.fromFile('./twa-manifest.json');
-    const passwords = await this.getPasswords();
+    const passwords = await this.getPasswords(twaManifest.signingKey);
 
     // Builds the Android Studio Project
-    this.log.info('Building the Android App...');
+    this.prompt.printMessage(messages.messageBuildingApp);
     await this.buildApk(twaManifest.signingKey, passwords);
 
     if (this.args.generateAppBundle) {
@@ -179,13 +178,12 @@ class Build {
         printValidationResult(pwaValidationResult, this.log);
 
         if (pwaValidationResult.status === 'FAIL') {
-          this.log.warn('PWA Quality Criteria check failed.');
+          this.prompt.printMessage(messages.warnPwaFailedQuality);
         }
       } else {
         const e = result.unwrapError();
-        const message = 'Failed to run the PWA Quality Criteria checks. Skipping.';
         this.log.debug(e.message);
-        this.log.warn(message);
+        this.prompt.printMessage(messages.errorFailedToRunQualityCriteria);
       }
     }
     return true;
