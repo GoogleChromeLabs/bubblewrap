@@ -130,11 +130,11 @@ class Build {
     const outputFile = './app-release-signed.apk';
     await this.androidSdkTools.apksigner(
         signingKey.path,
-        passwords.keystorePassword, // keystore password
-        signingKey.alias, // alias
-        passwords.keyPassword, // key password
+        passwords.keystorePassword,
+        signingKey.alias,
+        passwords.keyPassword,
         './app-release-unsigned-aligned.apk', // input file path
-        outputFile, // output file path
+        outputFile,
     );
     this.log.info(`Generated Android APK at "${outputFile}"`);
   }
@@ -154,7 +154,7 @@ class Build {
       await this.androidSdkTools.installBuildTools();
     }
 
-    let validationPromise;
+    let validationPromise = null;
     if (!this.args.skipPwaValidation) {
       validationPromise = this.runValidation();
     }
@@ -172,7 +172,7 @@ class Build {
 
     await this.generateAssetLinks(twaManifest, passwords);
 
-    if (validationPromise) {
+    if (validationPromise !== null) {
       const result = await validationPromise;
       if (result.isOk()) {
         const pwaValidationResult = result.unwrap();
