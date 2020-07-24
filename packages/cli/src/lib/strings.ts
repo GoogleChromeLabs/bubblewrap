@@ -78,7 +78,7 @@ type Messages = {
 
 export const enUS: Messages = {
   errorAssetLinksGeneration: 'Error generating "assetlinks.json"',
-  errorFailedToRunQualityCriteria: 
+  errorFailedToRunQualityCriteria:
       yellow('\nFailed to run the PWA Quality Criteria checks. Skipping.'),
   errorMaxLength: (maxLength, actualLength): string => {
     return `Maximum length is ${maxLength} but input is ${actualLength}.`;
@@ -130,7 +130,7 @@ into a device:
   messageApkSucess: (filename: string): string => {
     return `\t- Generated Android APK at ${cyan(filename)}`;
   },
-  messageAppBundleSuccess: (filename: string): string => { 
+  messageAppBundleSuccess: (filename: string): string => {
     return `\t- Generated Android App Bundle at ${cyan(filename)}`;
   },
   messageBuildingApp: '\nBuilding the Android App...',
@@ -149,7 +149,7 @@ ${cyan(keyalias)}.\n`;
         `versionCode: ${appVersionCode}`;
   },
   messageGeneratingAndroidProject: 'Generating Android Project.',
-  messageInstallingBuildTools: 'Installing Android Build Tools. Please, read and accept the ' + 
+  messageInstallingBuildTools: 'Installing Android Build Tools. Please, read and accept the ' +
       'license agreement.',
   messageLauncherIconAndSplash: underline(`\nLauncher icons and splash screen ${green('(3/5)')}`),
   messageLauncherIconAndSplashDesc: `
