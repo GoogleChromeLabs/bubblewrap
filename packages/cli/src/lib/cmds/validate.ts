@@ -15,7 +15,7 @@
  */
 
 import {PwaValidator} from '@bubblewrap/validator';
-import {Log} from '@bubblewrap/core';
+import {Log, consoleLog} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
 import {printValidationResult} from '../pwaValidationHelper';
 

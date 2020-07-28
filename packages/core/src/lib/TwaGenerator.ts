@@ -22,6 +22,7 @@ import {template} from 'lodash';
 import {promisify} from 'util';
 import {TwaManifest, ShortcutInfo} from './TwaManifest';
 import Log from './Log';
+import consoleLog from './Log';
 
 const COPY_FILE_LIST = [
   'settings.gradle',

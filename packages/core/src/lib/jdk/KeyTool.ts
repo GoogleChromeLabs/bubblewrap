@@ -18,6 +18,7 @@ import {existsSync, promises} from 'fs';
 import {execute} from '../util';
 import {JdkHelper} from './JdkHelper';
 import Log from '../Log';
+import consoleLog from '../Log';
 
 export interface KeyInfo {
   fingerprints: Map<string, string>;

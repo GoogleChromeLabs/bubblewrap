@@ -21,6 +21,7 @@ import fetch from 'node-fetch';
 import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
 import Color = require('color');
 import Log from './Log';
+import consoleLog from './Log';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 
 // The minimum size needed for the app icon.

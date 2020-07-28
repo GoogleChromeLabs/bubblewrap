@@ -20,6 +20,7 @@ import util = require('../util');
 import {Config} from '../Config';
 import {JdkHelper} from '../jdk/JdkHelper';
 import Log from '../../lib/Log';
+import consoleLog from '../../lib/Log';
 
 const BUILD_TOOLS_VERSION = '29.0.2';
 

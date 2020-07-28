@@ -38,6 +38,10 @@
   },
   "dependencies": {
     "@bubblewrap/core": "^1.4.0",
+    "@types/cli-progress": "^3.7.0",
+    "@types/mime-types": "^2.1.0",
+    "cli-progress": "^3.8.2",
+    "jimp": "^0.14.0",
     "mock-fs": "^4.12.0"
   }
 }
