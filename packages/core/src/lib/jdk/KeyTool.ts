@@ -18,7 +18,7 @@ import {existsSync, promises} from 'fs';
 import {execute} from '../util';
 import {JdkHelper} from './JdkHelper';
 import Log from '../Log';
-import consoleLog from '../Log';
+import {consoleLog} from '../consoleLog';
 
 export interface KeyInfo {
   fingerprints: Map<string, string>;
@@ -45,7 +45,7 @@ export class KeyTool {
   private jdkHelper: JdkHelper;
   private log: Log;
 
-  constructor(jdkHelper: JdkHelper, log = new Log('keytool')) {
+  constructor(jdkHelper: JdkHelper, log = new consoleLog('keytool')) {
     this.jdkHelper = jdkHelper;
     this.log = log;
   }

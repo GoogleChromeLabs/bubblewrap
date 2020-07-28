@@ -14,7 +14,8 @@
  *  limitations under the License.
  */
 
-import {Log, consoleLog} from '@bubblewrap/core';
+import { Log } from '@bubblewrap/core';
+import { consoleLog } from '@bubblewrap/core/dist/lib/consoleLog';
 import {ParsedArgs} from 'minimist';
 
 const HELP_MESSAGES = new Map<string, string>(
@@ -106,7 +107,7 @@ const HELP_MESSAGES = new Map<string, string>(
     ],
 );
 
-export async function help(args: ParsedArgs, log: Log = new Log('help')): Promise<boolean> {
+export async function help(args: ParsedArgs, log: Log = new consoleLog('help')): Promise<boolean> {
   // minimist uses an `_` object to store details.
   const command = args._[1];
   const message = HELP_MESSAGES.get(command) || HELP_MESSAGES.get('main');

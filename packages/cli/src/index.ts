@@ -19,7 +19,7 @@ import {Log, consoleLog} from '@bubblewrap/core';
 
 module.exports = async (): Promise<void> => {
   const cli = new Cli();
-  const log = new Log('cli');
+  const log = new consoleLog('cli');
   const args = process.argv.slice(2);
 
   let success;

@@ -21,7 +21,7 @@ import fetch from 'node-fetch';
 import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
 import Color = require('color');
 import Log from './Log';
-import consoleLog from './Log';
+import {consoleLog} from './consoleLog';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 
 // The minimum size needed for the app icon.
@@ -124,7 +124,7 @@ export class TwaManifest {
   webManifestUrl?: URL;
   fallbackType: FallbackType;
 
-  private static log: Log = new Log('twa-manifest');
+  private static log: Log = new consoleLog('twa-manifest');
 
   constructor(data: TwaManifestJson) {
     this.packageId = data.packageId;

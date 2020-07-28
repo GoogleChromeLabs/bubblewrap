@@ -16,6 +16,7 @@
 
 import {AndroidSdkTools, Config, DigitalAssetLinks, GradleWrapper, JdkHelper, KeyTool, Log,
   TwaManifest, JarSigner, SigningKeyInfo, Result} from '@bubblewrap/core';
+import { consoleLog } from '@bubblewrap/core/dist/lib/consoleLog';
 import * as path from 'path';
 import * as fs from 'fs';
 import {enUS as messages} from '../strings';
@@ -38,7 +39,7 @@ class Build {
   private jarSigner: JarSigner;
 
   constructor(private config: Config, private args: ParsedArgs,
-      private log = new Log('build'), private prompt: Prompt = new InquirerPrompt()) {
+      private log = new consoleLog('build'), private prompt: Prompt = new InquirerPrompt()) {
     this.jdkHelper = new JdkHelper(process, this.config);
     this.androidSdkTools = new AndroidSdkTools(process, this.config, this.jdkHelper, this.log);
     this.keyTool = new KeyTool(this.jdkHelper, this.log);
@@ -191,7 +192,7 @@ class Build {
 }
 
 export async function build(config: Config, args: ParsedArgs,
-    log = new Log('build'), prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
+    log = new consoleLog('build'), prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
   const build = new Build(config, args, log, prompt);
   return build.build();
 }

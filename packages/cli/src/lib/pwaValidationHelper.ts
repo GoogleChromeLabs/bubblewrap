@@ -11,7 +11,7 @@ function getColor(score: ScoreResult): string {
   }
 }
 
-export function printValidationResult(validationResult: PwaValidationResult, log: Log): void {
+export function printValidationResult(validationResult: PwaValidationResult, log: consoleLog): void {
   log.info('');
   log.info('Check the full PageSpeed Insights report at:');
   log.info(`- ${validationResult.psiWebUrl}`);
