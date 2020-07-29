@@ -36,6 +36,18 @@ updating TWA projects.
 - **[bubblewrap/validator](./packages/validator):** library to validate the correctness and
 compare Trusted Web Activity projects against the quality criteria.
 
+## Community
+
+We welcome anyone who wants to contribute with issues, feedback, feature requests or just
+generally discuss Bubblewrap. There are a couple of other ways developers can participate
+on the conversation:
+
+ - Join the public monthly office hours, which hosted on every first Thursday at 5PM, London
+ time. Check when the next office hours is going to happen via [this calendar][5] and join
+ the meeting via [this link][3].
+ - Join the conversation on the [#bubblewrap][4] channel on the [chromiumdev slack][6].
+ If not already a member, request an invite via [this link][2].
+
 ## Contributing
 
 See [CONTRIBUTING](./CONTRIBUTING.md) for more.
@@ -49,3 +61,8 @@ See [LICENSE](./LICENSE) for more.
 This is not a Google product.
 
 [1]: https://developers.google.com/web/android/trusted-web-activity/quick-start
+[2]: https://join.slack.com/t/chromiumdev/shared_invite/zt-4b4af0yu-1mZ7uF6pCjYMC4poRr8Bkg
+[3]: https://meet.google.com/hps-wjke-qac
+[4]: https://chromiumdev.slack.com/archives/C01829L0URJ
+[5]: https://calendar.google.com/calendar/embed?src=c_jovg5osnfku7kigbo7joh1reug%40group.calendar.google.com&ctz=Europe%2FLondon&mode=AGENDA
+[6]: https://chromiumdev.slack.com/
