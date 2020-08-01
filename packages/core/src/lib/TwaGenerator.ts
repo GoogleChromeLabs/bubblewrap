@@ -20,7 +20,8 @@ import * as Jimp from 'jimp';
 import fetch from 'node-fetch';
 import {template} from 'lodash';
 import {promisify} from 'util';
-import {TwaManifest, ShortcutInfo} from './TwaManifest';
+import {TwaManifest} from './TwaManifest';
+import {ShortcutInfo} from './ShortcutInfo';
 import Log from './Log';
 
 const COPY_FILE_LIST = [
@@ -187,7 +188,7 @@ export class TwaGenerator {
 
   private async saveIcon(data: Buffer, size: number, fileName: string): Promise<void> {
     const image = await Jimp.read(data);
-    await image.resize(size, size);
+    image.resize(size, size);
     await image.writeAsync(fileName);
   }
 
