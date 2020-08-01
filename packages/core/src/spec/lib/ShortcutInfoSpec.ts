@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google Inc. All Rights Reserved.
+ * Copyright 2020 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ describe('ShortcutInfo', () => {
   });
 
   describe('#constructor', () => {
-    it('Builds a TwaManifest correctly', () => {
+    it('Builds a ShortcutInfo correctly', () => {
       const shortcutInfo = new ShortcutInfo('name', 'shortName', '/', 'icon.png');
       expect(shortcutInfo.name).toEqual('name');
       expect(shortcutInfo.shortName).toEqual('shortName');

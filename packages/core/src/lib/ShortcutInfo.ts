@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google Inc. All Rights Reserved.
+ * Copyright 2020 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import {findSuitableIcon} from './util';
 import {WebManifestShortcutJson} from './types/WebManifest';
 
 // As described on https://developer.chrome.com/apps/manifest/name#short_name
-export const SHORT_NAME_MAX_SIZE = 12;
+const SHORT_NAME_MAX_SIZE = 12;
 
 // The minimum size needed for the shortcut icon
 const MIN_SHORTCUT_ICON_SIZE = 96;

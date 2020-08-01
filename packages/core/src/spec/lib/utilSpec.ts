@@ -23,6 +23,10 @@ describe('util', () => {
       expect(result).toBeNull();
     });
 
+    it('returns null for an undefined icon list', () => {
+      expect(util.findSuitableIcon(undefined, 'any')).toBeNull();
+    });
+
     it('Ignores SVG Icons by mime-type', () => {
       const result = util.findSuitableIcon(
           [{

@@ -22,10 +22,13 @@ import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
 import Color = require('color');
 import Log from './Log';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
-import {ShortcutInfo, SHORT_NAME_MAX_SIZE} from './ShortcutInfo';
+import {ShortcutInfo} from './ShortcutInfo';
 
 // The minimum size needed for the app icon.
 const MIN_ICON_SIZE = 512;
+
+// As described on https://developer.chrome.com/apps/manifest/name#short_name
+const SHORT_NAME_MAX_SIZE = 12;
 
 // The minimum size needed for the notification icon
 const MIN_NOTIFICATION_ICON_SIZE = 48;
@@ -196,14 +199,10 @@ export class TwaManifest {
    * @returns {TwaManifest}
    */
   static fromWebManifestJson(webManifestUrl: URL, webManifest: WebManifestJson): TwaManifest {
-    const icon: WebManifestIcon | null = webManifest.icons ?
-      findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE) : null;
-
-    const maskableIcon: WebManifestIcon | null = webManifest.icons ?
-      findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE) : null;
-
-    const monochromeIcon: WebManifestIcon | null = webManifest.icons ?
-      findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE) : null;
+    const icon = findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE);
+    const maskableIcon = findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE);
+    const monochromeIcon =
+      findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE);
 
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
 
