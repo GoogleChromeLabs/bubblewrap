@@ -33,9 +33,11 @@ const COPY_FILE_LIST = [
   'gradle/wrapper/gradle-wrapper.jar',
   'gradle/wrapper/gradle-wrapper.properties',
   'app/src/main/res/values/styles.xml',
+  'app/src/main/res/values/colors.xml',
   'app/src/main/res/xml/filepaths.xml',
   'app/src/main/res/xml/shortcuts.xml',
   'app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml',
+  'app/src/main/res/drawable-anydpi/shortcut_legacy_background.xml',
 ];
 
 const TEMPLATE_FILE_LIST = [
@@ -69,14 +71,6 @@ const ADAPTIVE_IMAGES: IconDefinition[] = [
   {dest: 'app/src/main/res/mipmap-xxxhdpi/ic_maskable.png', size: 328},
 ];
 
-const SHORTCUT_IMAGES: IconDefinition[] = [
-  {dest: 'app/src/main/res/drawable-mdpi/', size: 48},
-  {dest: 'app/src/main/res/drawable-hdpi/', size: 72},
-  {dest: 'app/src/main/res/drawable-xhdpi/', size: 96},
-  {dest: 'app/src/main/res/drawable-xxhdpi/', size: 144},
-  {dest: 'app/src/main/res/drawable-xxxhdpi/', size: 192},
-];
-
 const NOTIFICATION_IMAGES: IconDefinition[] = [
   {dest: 'app/src/main/res/drawable-mdpi/ic_notification_icon.png', size: 24},
   {dest: 'app/src/main/res/drawable-hdpi/ic_notification_icon.png', size: 36},
@@ -87,6 +81,32 @@ const NOTIFICATION_IMAGES: IconDefinition[] = [
 
 const WEB_MANIFEST_LOCATION = '/app/src/main/res/raw/';
 const WEB_MANIFEST_FILE_NAME = 'web_app_manifest.json';
+
+function shortcutMaskableTemplateFileMap(assetName: string): Record<string, string> {
+  return {
+    'app/src/main/res/drawable-anydpi-v26/shortcut_maskable.xml':
+      `app/src/main/res/drawable-anydpi-v26/${assetName}.xml`,
+  };
+}
+
+function shortcutMonochromeTemplateFileMap(assetName: string): Record<string, string> {
+  return {
+    'app/src/main/res/drawable-anydpi/shortcut_monochrome.xml':
+      `app/src/main/res/drawable-anydpi/${assetName}.xml`,
+    'app/src/main/res/drawable-anydpi-v26/shortcut_monochrome.xml':
+      `app/src/main/res/drawable-anydpi-v26/${assetName}.xml`,
+  };
+}
+
+function shortcutImages(assetName: string): IconDefinition[] {
+  return [
+    {dest: `app/src/main/res/drawable-mdpi/${assetName}.png`, size: 48},
+    {dest: `app/src/main/res/drawable-hdpi/${assetName}.png`, size: 72},
+    {dest: `app/src/main/res/drawable-xhdpi/${assetName}.png`, size: 96},
+    {dest: `app/src/main/res/drawable-xxhdpi/${assetName}.png`, size: 144},
+    {dest: `app/src/main/res/drawable-xxxhdpi/${assetName}.png`, size: 192},
+  ];
+}
 
 // fs.promises is marked as experimental. This should be replaced when stable.
 const fsMkDir = promisify(fs.mkdir);
@@ -170,19 +190,30 @@ export class TwaGenerator {
   }
 
   private async applyTemplate(
-      sourceDir: string, targetDir: string, filename: string, args: object): Promise<void> {
-    const sourceFile = path.join(sourceDir, filename);
-    const destFile = path.join(targetDir, filename);
+      sourceFile: string, destFile: string, args: object): Promise<void> {
     await fsMkDir(path.dirname(destFile), {recursive: true});
     const templateFile = await fsReadFile(sourceFile, 'utf-8');
     const output = template(templateFile)(args);
     await fsWriteFile(destFile, output);
   }
 
-  private applyTemplates(
-      sourceDir: string, targetDir: string, fileList: string[], args: object): Promise<void[]> {
-    return Promise.all(fileList.map((file) => {
-      this.applyTemplate(sourceDir, targetDir, file, args);
+  private async applyTemplateList(
+      sourceDir: string, targetDir: string,
+      fileList: string[], args: object): Promise<void> {
+    await Promise.all(fileList.map((filename) => {
+      const sourceFile = path.join(sourceDir, filename);
+      const destFile = path.join(targetDir, filename);
+      this.applyTemplate(sourceFile, destFile, args);
+    }));
+  }
+
+  private async applyTemplateMap(
+      sourceDir: string, targetDir: string,
+      fileMap: Record<string, string>, args: object): Promise<void> {
+    await Promise.all(Object.keys(fileMap).map((filename) => {
+      const sourceFile = path.join(sourceDir, filename);
+      const destFile = path.join(targetDir, fileMap[filename]);
+      this.applyTemplate(sourceFile, destFile, args);
     }));
   }
 
@@ -200,9 +231,9 @@ export class TwaGenerator {
   }
 
   private async generateIcons(
-      iconUrl: string, targetDir: string, iconList: IconDefinition[]): Promise<void[]> {
+      iconUrl: string, targetDir: string, iconList: IconDefinition[]): Promise<void> {
     const icon = await this.fetchIcon(iconUrl);
-    return Promise.all(iconList.map((iconDef) => {
+    await Promise.all(iconList.map((iconDef) => {
       return this.generateIcon(icon, targetDir, iconDef);
     }));
   }
@@ -226,10 +257,25 @@ export class TwaGenerator {
     await fs.promises.writeFile(webManifestFileName, JSON.stringify(webManifestJson));
   }
 
+  private async monochromeFilter(icon: Icon, twaManifest: TwaManifest): Promise<Icon> {
+    const image = await Jimp.read(icon.data);
+    image.color([
+      // Set all pixels to black/0
+      {apply: 'red', params: [-255]},
+      {apply: 'green', params: [-255]},
+      {apply: 'blue', params: [-255]},
+      // Add to channels using theme color
+      {apply: 'red', params: [twaManifest.themeColor.red()]},
+      {apply: 'green', params: [twaManifest.themeColor.green()]},
+      {apply: 'blue', params: [twaManifest.themeColor.blue()]},
+    ]);
+    return {url: icon.url, data: await image.getBufferAsync('image/png')};
+  }
+
   /**
    * Fetches an Icon.
    *
-   * @param {Object} iconUrl the URL to fetch the icon from.
+   * @param {string} iconUrl the URL to fetch the icon from.
    * @returns an Object containing the original URL and the icon image data.
    */
   private async fetchIcon(iconUrl: string): Promise<Icon> {
@@ -286,7 +332,7 @@ export class TwaGenerator {
     progress.update();
 
     // Generate templated files
-    await this.applyTemplates(
+    await this.applyTemplateList(
         templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, twaManifest);
     progress.update();
 
@@ -296,10 +342,38 @@ export class TwaGenerator {
     }
     progress.update();
 
-    await Promise.all(twaManifest.shortcuts.map((shortcut: ShortcutInfo, i: number) => {
-      const imageDirs = SHORTCUT_IMAGES.map(
-          (imageDir) => ({...imageDir, dest: `${imageDir.dest}shortcut_${i}.png`}));
-      return this.generateIcons(shortcut.chosenIconUrl, targetDirectory, imageDirs);
+    await Promise.all(twaManifest.shortcuts.map(async (shortcut: ShortcutInfo, i: number) => {
+      const assetName = shortcut.assetName(i);
+      const monochromeAssetName = `${assetName}_monochrome`;
+      const maskableAssetName = `${assetName}_maskable`;
+      const templateArgs = {assetName, monochromeAssetName, maskableAssetName};
+
+      if (shortcut.chosenMonochromeIconUrl) {
+        await this.applyTemplateMap(
+            templateDirectory, targetDirectory,
+            shortcutMonochromeTemplateFileMap(assetName), templateArgs);
+
+        const monochromeImages = shortcutImages(monochromeAssetName);
+
+        const baseMonochromeIcon = await this.fetchIcon(shortcut.chosenMonochromeIconUrl);
+        const monochromeIcon = await this.monochromeFilter(baseMonochromeIcon, twaManifest);
+
+        return await Promise.all(monochromeImages.map((iconDef) => {
+          return this.generateIcon(monochromeIcon, targetDirectory, iconDef);
+        }));
+      }
+
+      if (shortcut.chosenMaskableIconUrl) {
+        await this.applyTemplateMap(
+            templateDirectory, targetDirectory,
+            shortcutMaskableTemplateFileMap(assetName), templateArgs);
+
+        const maskableImages = shortcutImages(maskableAssetName);
+        await this.generateIcons(shortcut.chosenMaskableIconUrl, targetDirectory, maskableImages);
+      }
+
+      const images = shortcutImages(assetName);
+      return this.generateIcons(shortcut.chosenIconUrl!, targetDirectory, images);
     }));
     progress.update();
 

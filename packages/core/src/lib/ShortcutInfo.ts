@@ -17,7 +17,7 @@
 'use strict';
 
 import {findSuitableIcon} from './util';
-import {WebManifestShortcutJson} from './types/WebManifest';
+import {WebManifestShortcutJson, WebManifestIcon} from './types/WebManifest';
 
 // As described on https://developer.chrome.com/apps/manifest/name#short_name
 const SHORT_NAME_MAX_SIZE = 12;
@@ -33,15 +33,22 @@ export class ShortcutInfo {
    * @param {string} name
    * @param {string} shortName
    * @param {string} url target Url for when the shortcut is clicked
-   * @param {string} chosenIconUrl Url for the icon
+   * @param {string} chosenIconUrl Url for the icon with an "any" purpose
+   * @param {string} chosenMaskableIconUrl Url for the icon with a maskable purpose
+   * @param {string} chosenMonochromeIconUrl Url for the icon with a monochrome purpose
    */
   constructor(readonly name: string, readonly shortName: string, readonly url: string,
-        readonly chosenIconUrl: string) {
+    readonly chosenIconUrl?: string, readonly chosenMaskableIconUrl?: string,
+    readonly chosenMonochromeIconUrl?: string) {
   }
 
   toString(index: number): string {
     return `[name:'${this.name}', short_name:'${this.shortName}', ` +
-      `url:'${this.url}', icon:'shortcut_${index}']`;
+      `url:'${this.url}', icon:'${this.assetName(index)}']`;
+  }
+
+  assetName(index: number): string {
+    return `shortcut_${index}`;
   }
 
   /**
@@ -60,14 +67,25 @@ export class ShortcutInfo {
     }
 
     const suitableIcon = findSuitableIcon(shortcut.icons, 'any', MIN_SHORTCUT_ICON_SIZE);
-    if (!suitableIcon) {
+    const suitableMaskableIcon =
+      findSuitableIcon(shortcut.icons, 'maskable', MIN_SHORTCUT_ICON_SIZE);
+    const suitableMonochromeIcon =
+      findSuitableIcon(shortcut.icons, 'monochrome', MIN_SHORTCUT_ICON_SIZE);
+
+    if (!suitableIcon && !suitableMonochromeIcon) {
+      // maskable icons also need an equivalent any icon for lower API versions.
+      // any and monochrome icons work on all API versions.
       throw new Error('not finding a suitable icon');
+    }
+
+    function resolveIconUrl(icon: WebManifestIcon | null): string | undefined {
+      return icon ? new URL(icon.src, webManifestUrl).toString() : undefined;
     }
 
     const shortName = shortcut.short_name || shortcut.name!.substring(0, SHORT_NAME_MAX_SIZE);
     const url = new URL(shortcut.url, webManifestUrl).toString();
-    const iconUrl = new URL(suitableIcon.src, webManifestUrl).toString();
-    const shortcutInfo = new ShortcutInfo(name!, shortName!, url, iconUrl);
+    const shortcutInfo = new ShortcutInfo(name!, shortName!, url, resolveIconUrl(suitableIcon),
+        resolveIconUrl(suitableMaskableIcon), resolveIconUrl(suitableMonochromeIcon));
 
     return shortcutInfo;
   }
