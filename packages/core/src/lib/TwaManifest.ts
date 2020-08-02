@@ -22,15 +22,13 @@ import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
 import Color = require('color');
 import Log from './Log';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
+import {ShortcutInfo} from './ShortcutInfo';
 
 // The minimum size needed for the app icon.
 const MIN_ICON_SIZE = 512;
 
 // As described on https://developer.chrome.com/apps/manifest/name#short_name
 const SHORT_NAME_MAX_SIZE = 12;
-
-// The minimum size needed for the shortcut icon
-const MIN_SHORTCUT_ICON_SIZE = 96;
 
 // The minimum size needed for the notification icon
 const MIN_NOTIFICATION_ICON_SIZE = 48;
@@ -59,21 +57,6 @@ const DEFAULT_ENABLE_NOTIFICATIONS = false;
 const DEFAULT_GENERATOR_APP_NAME = 'unknown';
 
 export type FallbackType = 'customtabs' | 'webview';
-
-/**
- * A wrapper around the WebManifest's ShortcutInfo.
- */
-export class ShortcutInfo {
-  /**
-   * @param {string} name
-   * @param {string} shortName
-   * @param {string} url target Url for when the shortcut is clicked
-   * @param {string} chosenIconUrl Url for the icon
-   */
-  constructor(readonly name: string, readonly shortName: string, readonly url: string,
-        readonly chosenIconUrl: string) {
-  }
-}
 
 /**
  * A Manifest used to generate the TWA Project
@@ -204,10 +187,7 @@ export class TwaManifest {
   }
 
   generateShortcuts(): string {
-    return '[' + this.shortcuts.map((s: ShortcutInfo, i: number) =>
-      `[name:'${s.name}', short_name:'${s.shortName}', url:'${s.url}', icon:'shortcut_${i}']`)
-        .join(',') +
-      ']';
+    return '[' + this.shortcuts.map((shortcut, i) => shortcut.toString(i)).join(',') + ']';
   }
 
   /**
@@ -219,14 +199,10 @@ export class TwaManifest {
    * @returns {TwaManifest}
    */
   static fromWebManifestJson(webManifestUrl: URL, webManifest: WebManifestJson): TwaManifest {
-    const icon: WebManifestIcon | null = webManifest.icons ?
-      findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE) : null;
-
-    const maskableIcon: WebManifestIcon | null = webManifest.icons ?
-      findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE) : null;
-
-    const monochromeIcon: WebManifestIcon | null = webManifest.icons ?
-      findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE) : null;
+    const icon = findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE);
+    const maskableIcon = findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE);
+    const monochromeIcon =
+      findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE);
 
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
 
@@ -234,25 +210,14 @@ export class TwaManifest {
 
     for (let i = 0; i < (webManifest.shortcuts || []).length; i++) {
       const s = webManifest.shortcuts![i];
-
-      if (!s.icons || !s.url || (!s.name && !s.short_name)) {
-        TwaManifest.log.warn(`Skipping shortcut[${i}] for missing metadata.`);
-        continue;
+      try {
+        const shortcutInfo = ShortcutInfo.fromShortcutJson(webManifestUrl, s);
+        if (shortcutInfo != null) {
+          shortcuts.push(shortcutInfo);
+        }
+      } catch (err) {
+        TwaManifest.log.warn(`Skipping shortcut[${i}] for ${err.message}.`);
       }
-
-      const suitableIcon = findSuitableIcon(s.icons, 'any', MIN_SHORTCUT_ICON_SIZE);
-      if (!suitableIcon) {
-        TwaManifest.log.warn(`Skipping shortcut[${i}] for not finding a suitable icon.`);
-        continue;
-      }
-
-      const name = s.name || s.short_name;
-      const shortName = s.short_name || s.name!.substring(0, SHORT_NAME_MAX_SIZE);
-      const url = new URL(s.url, webManifestUrl).toString();
-      const iconUrl = new URL(suitableIcon.src, webManifestUrl).toString();
-      const shortcutInfo = new ShortcutInfo(name!, shortName!, url, iconUrl);
-
-      shortcuts.push(shortcutInfo);
 
       if (shortcuts.length === 4) {
         break;
