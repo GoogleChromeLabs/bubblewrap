@@ -51,7 +51,7 @@ describe('GradleWrapper', () => {
     });
   });
 
-  describe('#assembleRelease', async () => {
+  describe('#assembleRelease', () => {
     it('Calls "gradle assembleRelease --stacktrace"', async () => {
       spyOn(util, 'executeFile').and.stub();
       await gradleWrapper.assembleRelease();

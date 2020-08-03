@@ -101,7 +101,7 @@ describe('KeyTool', () => {
     });
   });
 
-  describe('#list', async () => {
+  describe('#list', () => {
     const keyOptions = {
       path: '/',
       alias: 'keyalias',
@@ -141,4 +141,3 @@ describe('KeyTool', () => {
     });
   });
 });
-
