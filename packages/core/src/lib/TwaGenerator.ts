@@ -16,13 +16,13 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
-import * as Jimp from 'jimp';
 import fetch from 'node-fetch';
 import {template} from 'lodash';
 import {promisify} from 'util';
 import {TwaManifest} from './TwaManifest';
 import {ShortcutInfo} from './ShortcutInfo';
 import Log from './Log';
+import {ImageHelper, IconDefinition} from './ImageHelper';
 
 const COPY_FILE_LIST = [
   'settings.gradle',
@@ -114,16 +114,6 @@ const fsCopyFile = promisify(fs.copyFile);
 const fsWriteFile = promisify(fs.writeFile);
 const fsReadFile = promisify(fs.readFile);
 
-interface IconDefinition {
-  dest: string;
-  size: number;
-}
-
-interface Icon {
-  url: string;
-  data: Buffer;
-}
-
 export type twaGeneratorProgress = (progress: number, total: number) => void;
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noOpProgress: twaGeneratorProgress = () => {};
@@ -166,11 +156,9 @@ class Progress {
  * Generates TWA Projects from a TWA Manifest
  */
 export class TwaGenerator {
-  private log: Log;
+  private imageHelper = new ImageHelper();
 
-  constructor(log = new Log('twa-generator')) {
-    this.log = log;
-  }
+  constructor(private log = new Log('twa-generator')) {}
 
   // Ensures targetDir exists and copies a file from sourceDir to target dir.
   private async copyStaticFile(
@@ -217,24 +205,11 @@ export class TwaGenerator {
     }));
   }
 
-  private async saveIcon(data: Buffer, size: number, fileName: string): Promise<void> {
-    const image = await Jimp.read(data);
-    image.resize(size, size);
-    await image.writeAsync(fileName);
-  }
-
-  private async generateIcon(
-      iconData: Icon, targetDir: string, iconDef: IconDefinition): Promise<void> {
-    const destFile = path.join(targetDir, iconDef.dest);
-    await fsMkDir(path.dirname(destFile), {recursive: true});
-    return await this.saveIcon(iconData.data, iconDef.size, destFile);
-  }
-
   private async generateIcons(
       iconUrl: string, targetDir: string, iconList: IconDefinition[]): Promise<void> {
-    const icon = await this.fetchIcon(iconUrl);
+    const icon = await this.imageHelper.fetchIcon(iconUrl);
     await Promise.all(iconList.map((iconDef) => {
-      return this.generateIcon(icon, targetDir, iconDef);
+      return this.imageHelper.generateIcon(icon, targetDir, iconDef);
     }));
   }
 
@@ -257,49 +232,55 @@ export class TwaGenerator {
     await fs.promises.writeFile(webManifestFileName, JSON.stringify(webManifestJson));
   }
 
-  private async monochromeFilter(icon: Icon, twaManifest: TwaManifest): Promise<Icon> {
-    const image = await Jimp.read(icon.data);
-    image.color([
-      // Set all pixels to black/0
-      {apply: 'red', params: [-255]},
-      {apply: 'green', params: [-255]},
-      {apply: 'blue', params: [-255]},
-      // Add to channels using theme color
-      {apply: 'red', params: [twaManifest.themeColor.red()]},
-      {apply: 'green', params: [twaManifest.themeColor.green()]},
-      {apply: 'blue', params: [twaManifest.themeColor.blue()]},
-    ]);
-    return {url: icon.url, data: await image.getBufferAsync('image/png')};
-  }
-
   /**
-   * Fetches an Icon.
+   * Generates shortcut data for a new TWA Project.
    *
-   * @param {string} iconUrl the URL to fetch the icon from.
-   * @returns an Object containing the original URL and the icon image data.
+   * @param {String} targetDirectory the directory where the project will be created
+   * @param {String} templateDirectory the directory where templates are located.
+   * @param {Object} twaManifest configurations values for the project.
    */
-  private async fetchIcon(iconUrl: string): Promise<Icon> {
-    const response = await fetch(iconUrl);
-    if (response.status !== 200) {
-      throw new Error(
-          `Failed to download icon ${iconUrl}. Responded with status ${response.status}`);
-    }
+  private async generateShortcuts(
+      targetDirectory: string, templateDirectory: string, twaManifest: TwaManifest): Promise<void> {
+    await Promise.all(twaManifest.shortcuts.map(async (shortcut: ShortcutInfo, i: number) => {
+      const assetName = shortcut.assetName(i);
+      const monochromeAssetName = `${assetName}_monochrome`;
+      const maskableAssetName = `${assetName}_maskable`;
+      const templateArgs = {assetName, monochromeAssetName, maskableAssetName};
 
-    const contentType = response.headers.get('content-type');
-    if (!contentType?.startsWith('image/')) {
-      throw new Error(`Received icon "${iconUrl}" with invalid Content-Type.` +
-          ` Responded with Content-Type "${contentType}"`);
-    }
+      if (shortcut.chosenMonochromeIconUrl) {
+        await this.applyTemplateMap(
+            templateDirectory, targetDirectory,
+            shortcutMonochromeTemplateFileMap(assetName), templateArgs);
 
-    if (contentType.startsWith('image/svg')) {
-      throw new Error('Sorry, SVGs aren\'t supported yet.');
-    }
+        const monochromeImages = shortcutImages(monochromeAssetName);
 
-    const body = await response.buffer();
-    return {
-      url: iconUrl,
-      data: body,
-    };
+        const baseMonochromeIcon =
+          await this.imageHelper.fetchIcon(shortcut.chosenMonochromeIconUrl);
+        const monochromeIcon =
+          await this.imageHelper.monochromeFilter(baseMonochromeIcon, twaManifest.themeColor);
+
+        return await Promise.all(monochromeImages.map((iconDef) => {
+          return this.imageHelper.generateIcon(monochromeIcon, targetDirectory, iconDef);
+        }));
+      }
+
+      if (!shortcut.chosenIconUrl) {
+        throw new Error(
+            `ShortcutInfo ${shortcut.name} is missing chosenIconUrl and chosenMonochromeIconUrl`);
+      }
+
+      if (shortcut.chosenMaskableIconUrl) {
+        await this.applyTemplateMap(
+            templateDirectory, targetDirectory,
+            shortcutMaskableTemplateFileMap(assetName), templateArgs);
+
+        const maskableImages = shortcutImages(maskableAssetName);
+        await this.generateIcons(shortcut.chosenMaskableIconUrl, targetDirectory, maskableImages);
+      }
+
+      const images = shortcutImages(assetName);
+      return this.generateIcons(shortcut.chosenIconUrl, targetDirectory, images);
+    }));
   }
 
   /**
@@ -342,44 +323,7 @@ export class TwaGenerator {
     }
     progress.update();
 
-    await Promise.all(twaManifest.shortcuts.map(async (shortcut: ShortcutInfo, i: number) => {
-      const assetName = shortcut.assetName(i);
-      const monochromeAssetName = `${assetName}_monochrome`;
-      const maskableAssetName = `${assetName}_maskable`;
-      const templateArgs = {assetName, monochromeAssetName, maskableAssetName};
-
-      if (shortcut.chosenMonochromeIconUrl) {
-        await this.applyTemplateMap(
-            templateDirectory, targetDirectory,
-            shortcutMonochromeTemplateFileMap(assetName), templateArgs);
-
-        const monochromeImages = shortcutImages(monochromeAssetName);
-
-        const baseMonochromeIcon = await this.fetchIcon(shortcut.chosenMonochromeIconUrl);
-        const monochromeIcon = await this.monochromeFilter(baseMonochromeIcon, twaManifest);
-
-        return await Promise.all(monochromeImages.map((iconDef) => {
-          return this.generateIcon(monochromeIcon, targetDirectory, iconDef);
-        }));
-      }
-
-      if (!shortcut.chosenIconUrl) {
-        throw new Error(
-            `ShortcutInfo ${shortcut.name} is missing chosenIconUrl and chosenMonochromeIconUrl`);
-      }
-
-      if (shortcut.chosenMaskableIconUrl) {
-        await this.applyTemplateMap(
-            templateDirectory, targetDirectory,
-            shortcutMaskableTemplateFileMap(assetName), templateArgs);
-
-        const maskableImages = shortcutImages(maskableAssetName);
-        await this.generateIcons(shortcut.chosenMaskableIconUrl, targetDirectory, maskableImages);
-      }
-
-      const images = shortcutImages(assetName);
-      return this.generateIcons(shortcut.chosenIconUrl, targetDirectory, images);
-    }));
+    await this.generateShortcuts(targetDirectory, templateDirectory, twaManifest);
     progress.update();
 
     // Generate adaptive images
