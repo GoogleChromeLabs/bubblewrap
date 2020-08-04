@@ -119,7 +119,7 @@ export type twaGeneratorProgress = (progress: number, total: number) => void;
 const noOpProgress: twaGeneratorProgress = () => {};
 
 /**
- * An utilty class to help ensure progress tracking is consistent.
+ * An utility class to help ensure progress tracking is consistent.
  */
 class Progress {
   private current = 0;

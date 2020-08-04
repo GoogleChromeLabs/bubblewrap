@@ -41,6 +41,13 @@ export class ImageHelper {
     await image.writeAsync(fileName);
   }
 
+  /**
+   * Generate a file for the given icon inside targetDir.
+   *
+   * @param {Object} icon Object containing the original URL and the icon image data.
+   * @param {string} targetDir Path to the directory the image will be saved in.
+   * @param {Object} iconDef Icon definitions specifying the size the icon should be exported as.
+   */
   async generateIcon(
       icon: Icon, targetDir: string, iconDef: IconDefinition): Promise<void> {
     const destFile = path.join(targetDir, iconDef.dest);
@@ -51,7 +58,7 @@ export class ImageHelper {
   /**
    * Set the color of a monochrome icon to be the theme color.
    *
-   * @param {string} iconData Data for the given icon.
+   * @param {Object} icon Original monochrome icon to use.
    * @param {Color} themeColor Color to use for the icon.
    * @returns New image data.
    */
