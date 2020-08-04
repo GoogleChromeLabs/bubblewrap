@@ -56,6 +56,21 @@ describe('ShortcutInfo', () => {
           .toThrowError('not finding a suitable icon');
     });
 
+    it('Throws if there is no any or monochrome icon', () => {
+      const shortcut = {
+        'name': 'invalid',
+        'url': '/invalid',
+        'icons': [{
+          'src': '/shortcut_icon.png',
+          'sizes': '96x96',
+          'purpose': 'maskable',
+        }],
+      };
+      const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
+      expect(() => ShortcutInfo.fromShortcutJson(manifestUrl, shortcut))
+          .toThrowError('not finding a suitable icon');
+    });
+
     it('Throws if icons is missing', () => {
       const shortcut = {
         'name': 'invalid',
@@ -82,7 +97,7 @@ describe('ShortcutInfo', () => {
 
     it('Throws if chosenMonochromeIconUrl is undefined', () => {
       expect(() =>
-        new ShortcutInfo('name', 'shortName', '/', undefined, 'maskable.png', undefined)
+        new ShortcutInfo('name', 'shortName', '/', undefined, 'maskable.png', undefined),
       ).toThrow();
     });
   });
