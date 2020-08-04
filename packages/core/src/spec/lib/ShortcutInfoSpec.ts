@@ -75,5 +75,15 @@ describe('ShortcutInfo', () => {
       expect(shortcutInfo.url).toEqual('/');
       expect(shortcutInfo.chosenIconUrl).toEqual('icon.png');
     });
+
+    it('Throws if chosenIconUrl is undefined', () => {
+      expect(() => new ShortcutInfo('name', 'shortName', '/')).toThrow();
+    });
+
+    it('Throws if chosenMonochromeIconUrl is undefined', () => {
+      expect(() =>
+        new ShortcutInfo('name', 'shortName', '/', undefined, 'maskable.png', undefined)
+      ).toThrow();
+    });
   });
 });

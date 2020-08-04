@@ -363,6 +363,11 @@ export class TwaGenerator {
         }));
       }
 
+      if (!shortcut.chosenIconUrl) {
+        throw new Error(
+            `ShortcutInfo ${shortcut.name} is missing chosenIconUrl and chosenMonochromeIconUrl`);
+      }
+
       if (shortcut.chosenMaskableIconUrl) {
         await this.applyTemplateMap(
             templateDirectory, targetDirectory,
@@ -373,7 +378,7 @@ export class TwaGenerator {
       }
 
       const images = shortcutImages(assetName);
-      return this.generateIcons(shortcut.chosenIconUrl!, targetDirectory, images);
+      return this.generateIcons(shortcut.chosenIconUrl, targetDirectory, images);
     }));
     progress.update();
 

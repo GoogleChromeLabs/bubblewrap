@@ -40,6 +40,10 @@ export class ShortcutInfo {
   constructor(readonly name: string, readonly shortName: string, readonly url: string,
     readonly chosenIconUrl?: string, readonly chosenMaskableIconUrl?: string,
     readonly chosenMonochromeIconUrl?: string) {
+    if (!chosenIconUrl && !chosenMonochromeIconUrl) {
+      throw new Error(
+          `ShortcutInfo ${name} must have either chosenIconUrl or chosenMonochromeIconUrl`);
+    }
   }
 
   toString(index: number): string {
