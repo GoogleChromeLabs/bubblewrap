@@ -21,8 +21,7 @@ import {promisify} from 'util';
 import {exec, execFile, spawn} from 'child_process';
 import {x as extractTar} from 'tar';
 import {WebManifestIcon} from './types/WebManifest';
-import Log from './Log';
-import {consoleLog} from './consoleLog';
+import {Log} from './Log';
 import {lookup} from 'mime-types';
 
 const execPromise = promisify(exec);

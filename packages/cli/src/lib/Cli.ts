@@ -25,6 +25,8 @@ import {loadOrCreateConfig} from './config';
 import {major} from 'semver';
 import {version} from './cmds/version';
 import {BUBBLEWRAP_LOGO} from './constants';
+import {doctor} from './cmds/doctor';
+import {updateConfig} from './cmds/updateConfig';
 
 export class Cli {
   async run(args: string[]): Promise<boolean> {
@@ -57,6 +59,10 @@ export class Cli {
     switch (command) {
       case 'help':
         return await help(parsedArgs);
+      case 'doctor':
+        return await doctor();
+      case 'help':
+        return await updateConfig(parsedArgs);
       case 'init':
         return await init(parsedArgs, config);
       case 'update':

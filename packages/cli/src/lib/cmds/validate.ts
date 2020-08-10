@@ -15,12 +15,11 @@
  */
 
 import {PwaValidator} from '@bubblewrap/validator';
-import { Log } from '@bubblewrap/core';
-import { consoleLog } from '@bubblewrap/core/dist/lib/consoleLog';
+import {ConsoleLog} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
 import {printValidationResult} from '../pwaValidationHelper';
 
-const log = new consoleLog('validate');
+const log = new ConsoleLog('validate');
 
 /**
  * Runs the PwaValidator to check a given URL agains the Quality criteria. More information on the

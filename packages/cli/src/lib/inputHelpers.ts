@@ -30,7 +30,7 @@ import {lookup} from 'mime-types';
  * @returns {Result<Color, Error>} a results that resolves to a {@link Color} on success or
  * {@link Error} on failure.
  */
-export function validateColor(color: string): Result<Color, Error> {
+export async function validateColor(color: string): Promise<Result<Color, Error>> {
   try {
     return Result.ok(new Color(color));
   } catch (_) {
@@ -67,7 +67,7 @@ export function validateUrl(url: string): Result<URL, Error> {
  * @returns {Result<URL, Error>} a results that resolves to a {@link URL} on success or
  * {@link Error} on failure.
  */
-export function validateImageUrl(url: string): Result<URL, Error> {
+export async function validateImageUrl(url: string): Promise<Result<URL, Error>> {
   const mimeType = lookup(url);
 
   // Don't validate mime-type if we are unable to find what it is.
@@ -95,7 +95,7 @@ export function validateImageUrl(url: string): Result<URL, Error> {
  * @returns {Result<URL, Error>} a results that resolves to a {@link URL} on success or
  * {@link Error} on failure.
  */
-export function validateOptionalImageUrl(input: string): Result<URL | null, Error> {
+export async function validateOptionalImageUrl(input: string): Promise<Result<URL | null, Error>> {
   const url = input.trim();
   if (url.length === 0) {
     return Result.ok(null);
@@ -130,7 +130,7 @@ export function validateOptionalUrl(input: string): Result<URL | null, Error> {
  */
 export function createValidateString(
     minLength?: number, maxLength?: number): ValidateFunction<string> {
-  return (input: string): Result<string, Error> => {
+  return async (input: string): Promise<Result<string, Error>> => {
     input = input.trim();
     if (minLength && input.length < minLength) {
       return Result.error(new Error(messages.errorMinLength(minLength, input.length)));
@@ -152,7 +152,7 @@ export function createValidateString(
  * @returns {Result<string, Error>} a results that resolves to a {@link string} on success or
  * {@link Error} on failure.
  */
-export function validateHost(input: string): Result<string, Error> {
+export async function validateHost(input: string): Promise<Result<string, Error>> {
   let host = input.trim();
   if (host.length <= 0) {
     return Result.error(new Error(messages.errorMinLength(1, input.length)));
@@ -198,7 +198,7 @@ export function validateHost(input: string): Result<string, Error> {
  * @returns {Result<DisplayMode, Error>} a result that resolves to a {@link DisplayMode} on
  * success or {@link Error} on failure.
  */
-export function validateDisplayMode(input: string): Result<DisplayMode, Error> {
+export async function validateDisplayMode(input: string): Promise<Result<DisplayMode, Error>> {
   const displayMode = asDisplayMode(input);
   if (displayMode === null) {
     return Result.error(new Error(messages.errorInvalidDisplayMode(input)));
@@ -214,7 +214,7 @@ export function validateDisplayMode(input: string): Result<DisplayMode, Error> {
  * @returns {Result<string, Error>} a result that resolves to a {@link string} on
  * success or {@link Error} on failure.
  */
-export function validatePackageId(input: string): Result<string, Error> {
+export async function validatePackageId(input: string): Promise<Result<string, Error>> {
   const result = util.validatePackageId(input);
 
   if (result !== null) {

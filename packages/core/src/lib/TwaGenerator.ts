@@ -21,8 +21,7 @@ import fetch from 'node-fetch';
 import {template} from 'lodash';
 import {promisify} from 'util';
 import {TwaManifest, ShortcutInfo} from './TwaManifest';
-import Log from './Log';
-import {consoleLog} from './consoleLog';
+import {ConsoleLog} from './Log';
 
 const COPY_FILE_LIST = [
   'settings.gradle',
@@ -146,9 +145,9 @@ class Progress {
  * Generates TWA Projects from a TWA Manifest
  */
 export class TwaGenerator {
-  private log: consoleLog;
+  private log: ConsoleLog;
 
-  constructor(log = new consoleLog('twa-generator')) {
+  constructor(log = new ConsoleLog('twa-generator')) {
     this.log = log;
   }
 

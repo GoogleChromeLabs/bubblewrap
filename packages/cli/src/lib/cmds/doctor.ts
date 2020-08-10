@@ -14,13 +14,12 @@
  *  limitations under the License.
  */
 
-import { Log } from '@bubblewrap/core';
-import { consoleLog } from '@bubblewrap/core/dist/lib/consoleLog';
+import {ConsoleLog} from '@bubblewrap/core';
 import {join} from 'path';
 import {existsSync, promises as fsPromises} from 'fs';
 import {loadOrCreateConfig} from '../config';
 
-async function jdkDoctor(log: consoleLog): Promise<boolean> {
+async function jdkDoctor(log: ConsoleLog): Promise<boolean> {
   const config = loadOrCreateConfig();
   const jdkPath = (await config).jdkPath;
   // Checks if the given path is a real path.
@@ -45,7 +44,7 @@ async function jdkDoctor(log: consoleLog): Promise<boolean> {
   return true;
 }
 
-async function androidSdkDoctor(log: consoleLog): Promise<boolean> {
+async function androidSdkDoctor(log: ConsoleLog): Promise<boolean> {
   const config = loadOrCreateConfig();
   const androidSdkPath = (await config).androidSdkPath;
   // Checks if the given path is a real path.
@@ -64,7 +63,7 @@ async function androidSdkDoctor(log: consoleLog): Promise<boolean> {
   return true;
 }
 
-export async function doctor(log = new consoleLog('doctor')): Promise<boolean> {
+export async function doctor(log = new ConsoleLog('doctor')): Promise<boolean> {
   const jdkResult = jdkDoctor(log);
   const androidSdkResult = androidSdkDoctor(log);
   return jdkResult && androidSdkResult;

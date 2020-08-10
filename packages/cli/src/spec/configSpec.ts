@@ -20,7 +20,7 @@ import {existsSync} from 'fs';
 import {promises as fsPromises} from 'fs';
 import {loadOrCreateConfig} from '../lib/config';
 import * as mock from 'mock-fs';
-import * as inquirer from 'inquirer';
+import {MockPrompt} from './mock/MockPrompt';
 
 const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap');
 const DEFAULT_CONFIG_NAME = 'config.json';
@@ -28,15 +28,6 @@ const DEFAULT_CONFIG_FILE_PATH = join(DEFAULT_CONFIG_FOLDER, DEFAULT_CONFIG_NAME
 const LEGACY_CONFIG_FOLDER = join(homedir(), '.llama-pack');
 const LEGACY_CONFIG_NAME = 'llama-pack-config.json';
 const LEGACY_CONFIG_FILE_PATH = join(LEGACY_CONFIG_FOLDER, LEGACY_CONFIG_NAME);
-
-beforeAll(() => {
-  const fakeResult = Promise.resolve({
-    jdkPath: '/path/to/jdk',
-    androidSdkPath: '/path/to/android-sdk',
-  }) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  spyOn(inquirer, 'prompt').and.returnValue(fakeResult);
-});
-
 
 describe('config', () => {
   describe('#loadOrCreateConfig', () => {
@@ -46,7 +37,8 @@ describe('config', () => {
         [LEGACY_CONFIG_FOLDER]: {
           'llama-pack-config.json': '{}',
         }});
-      await loadOrCreateConfig();
+      const prompt = new MockPrompt();
+      await loadOrCreateConfig(prompt);
       // Checks if the file name was changed.
       expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
       expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeFalse();
@@ -63,7 +55,8 @@ describe('config', () => {
               'llama-pack-config.json': '{}',
               'another file.exe': '{}',
             }});
-          await loadOrCreateConfig();
+          const prompt = new MockPrompt();
+          await loadOrCreateConfig(prompt);
           // Checks if the file name was changed.
           expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
           expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeFalse();
@@ -77,7 +70,8 @@ describe('config', () => {
       mock({
         [homedir()]: {},
       });
-      await loadOrCreateConfig();
+      const prompt = new MockPrompt();
+      await loadOrCreateConfig(prompt);
       // Checks if the file name was created.
       expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
       mock.restore();
@@ -93,7 +87,8 @@ describe('config', () => {
             [DEFAULT_CONFIG_FOLDER]: {
               'config.json': '{"content":"some new content"}',
             }});
-          await loadOrCreateConfig();
+          const prompt = new MockPrompt();
+          await loadOrCreateConfig(prompt);
           // Checks if both of the files exists.
           expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
           expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeTrue();

@@ -14,29 +14,29 @@
  *  limitations under the License.
  */
 
-import { Log } from "..";
+import {Log} from '..';
 
 /**
  * An utility class to print nice Log messages.
  */
-export class MockLog implements Log{
+export class MockLog implements Log {
     /**
      * Creates a new Log instance
-     * @param tag the tag used when logging. Printed at the beggining of a log message. 
+     * @param tag the tag used when logging. Printed at the beggining of a log message.
      * @param verbose if the Log is verbose. Debug messages are only printed on verbose logs.
      */
     public verbose: boolean;
     private tag: string;
-    private receivedData:Array<string>;
+    private receivedData: Array<string>;
 
-    constructor(tag: string = '', verbose: boolean = false) {
-        this.tag = tag;
-        this.verbose = verbose;
-        this.receivedData = [];
+    constructor(tag = '', verbose = false) {
+      this.tag = tag;
+      this.verbose = verbose;
+      this.receivedData = [];
     }
 
-    getReceivedData(): Array<string>{
-        return this.receivedData
+    getReceivedData(): Array<string> {
+      return this.receivedData;
     }
 
     /**
@@ -44,43 +44,42 @@ export class MockLog implements Log{
      * @param message the message the be printed.
      * @param args extra arguments for the console.
      */
-    debug(message: string, ...args: string[]): void {
-        this.receivedData.push(message);        
+    debug(message: string): void {
+      this.receivedData.push(message);
     }
-  
+
     /**
      * Prints an info message to the Log. message is ignored if the Log is not set to verbose.
      * @param message the message the be printed.
      * @param args extra arguments for the console.
      */
-    info(message: string, ...args: string[]): void {
-        this.receivedData.push(message);
+    info(message: string): void {
+      this.receivedData.push(message);
     }
-  
+
     /**
      * Prints an warning message to the Log. message is ignored if the Log is not set to verbose.
      * @param message the message the be printed.
      * @param args extra arguments for the console.
      */
-    warn(message: string, ...args: string[]): void{
-        this.receivedData.push(message);
+    warn(message: string): void {
+      this.receivedData.push(message);
     }
-  
+
     /**
      * Prints an error message to the Log. message is ignored if the Log is not set to verbose.
      * @param message the message the be printed.
      * @param args extra arguments for the console.
      */
-    error(message: string, ...args: string[]): void{
-        this.receivedData.push(message);
+    error(message: string): void {
+      this.receivedData.push(message);
     }
-  
+
     /**
      * Creates a new Log using the same output and verbositity of the current Log.
      * @param newTag the tag the be used on the new Log instance.
      */
-    newLog(newTag: string): Log{
-        return new MockLog();
+    newLog(): Log {
+      return new MockLog();
     }
-  }
-  
+}

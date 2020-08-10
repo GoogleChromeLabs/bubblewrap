@@ -19,8 +19,7 @@ import * as path from 'path';
 import util = require('../util');
 import {Config} from '../Config';
 import {JdkHelper} from '../jdk/JdkHelper';
-import Log from '../../lib/Log';
-import {consoleLog} from '../../lib/consoleLog';
+import {ConsoleLog} from '../Log';
 
 const BUILD_TOOLS_VERSION = '29.0.2';
 
@@ -41,7 +40,7 @@ export class AndroidSdkTools {
    * @param {jdkHelper} jdkHelper the JDK information to be used by the Android SDK
    */
   constructor(process: NodeJS.Process, config: Config, jdkHelper: JdkHelper,
-       readonly log = new consoleLog('AndroidSdkTools')) {
+       readonly log = new ConsoleLog('AndroidSdkTools')) {
     if (!fs.existsSync(config.androidSdkPath)) {
       throw new Error(`androidSdkPath does not exist: ${config.androidSdkPath}`);
     }

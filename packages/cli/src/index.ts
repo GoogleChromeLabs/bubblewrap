@@ -15,11 +15,11 @@
  */
 
 import {Cli} from './lib/Cli';
-import {Log, consoleLog} from '@bubblewrap/core';
+import {ConsoleLog} from '@bubblewrap/core';
 
 module.exports = async (): Promise<void> => {
   const cli = new Cli();
-  const log = new consoleLog('cli');
+  const log = new ConsoleLog('cli');
   const args = process.argv.slice(2);
 
   let success;
