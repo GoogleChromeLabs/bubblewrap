@@ -128,6 +128,10 @@ Options:
 
 Builds the project into a final APK that can be uploaded to the Play Store.
 
+The command will ask the user for they key store passwords. Alternatively, users can set the
+passwords as enviromental variables, which allows running `build` as part of a continuous integration.
+Set `BUBBLEWRAP_KEYSTORE_PASSWORD` for the key store password and `BUBBLEWRAP_KEY_PASSWORD` as the key password.
+
 Usage:
 
 ```
@@ -135,7 +139,8 @@ bubblewrap build [--skipPwaValidation]
 ```
 
 Options: 
-  - `--skipPwaValidation`: skips validating the wrapped PWA against the Quality Criteria. 
+  - `--skipPwaValidation`: skips validating the wrapped PWA against the Quality Criteria.
+  - `--generateAppBundle`: outputs an Android App Bundle additionally to the APK.
 
 
 ## `update`
@@ -172,6 +177,10 @@ Usage:
 ```
 bubblewrap install [--apkFile="/path-to-apk/apkfile.apk"]
 ```
+
+Options:
+  - `--apkFile`: path to the APK file to be isntalled. Defaults to `./app-release-signed.apk`.
+  - `--verbose`: prints the adb command being executed.
 
 ## `help`
 
