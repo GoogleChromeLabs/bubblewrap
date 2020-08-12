@@ -47,7 +47,7 @@
             android:name="twa_generator"
             android:value="@string/generatorApp" />
 
-        <activity android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
+        <activity android:name="LauncherActivity"
             android:label="@string/launcherName">
             <meta-data android:name="android.support.customtabs.trusted.DEFAULT_URL"
                 android:value="@string/launchUrl" />

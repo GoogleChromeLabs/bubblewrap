@@ -45,6 +45,12 @@ const TEMPLATE_FILE_LIST = [
   'app/src/main/AndroidManifest.xml',
 ];
 
+const JAVA_DIR = 'app/src/main/java/';
+
+const JAVA_FILE_LIST = [
+  'LauncherActivity.java',
+];
+
 const DELETE_FILE_LIST = [
   'app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml',
 ];
@@ -195,6 +201,25 @@ export class TwaGenerator {
     }));
   }
 
+  private async applyJavaTemplate(
+      sourceDir: string, targetDir: string, packageName: string, filename: string, args: object):
+      Promise<void> {
+    const sourceFile = path.join(sourceDir, JAVA_DIR, filename);
+    const destFile = path.join(targetDir, JAVA_DIR, packageName.split('.').join('/'), filename);
+    await fsMkDir(path.dirname(destFile), {recursive: true});
+    const templateFile = await fsReadFile(sourceFile, 'utf-8');
+    const output = template(templateFile)(args);
+    await fsWriteFile(destFile, output);
+  }
+
+  private applyJavaTemplates(
+      sourceDir: string, targetDir: string, packageName: string, fileList: string[], args: object):
+      Promise<void[]> {
+    return Promise.all(fileList.map((file) => {
+      this.applyJavaTemplate(sourceDir, targetDir, packageName, file, args);
+    }));
+  }
+
   private async applyTemplateMap(
       sourceDir: string, targetDir: string,
       fileMap: Record<string, string>, args: object): Promise<void> {
@@ -291,7 +316,7 @@ export class TwaGenerator {
    */
   async createTwaProject(targetDirectory: string, twaManifest: TwaManifest,
       reportProgress: twaGeneratorProgress = noOpProgress): Promise<void> {
-    const progress = new Progress(8, reportProgress);
+    const progress = new Progress(9, reportProgress);
     const error = twaManifest.validate();
     if (error !== null) {
       throw new Error(`Invalid TWA Manifest: ${error}`);
@@ -315,6 +340,12 @@ export class TwaGenerator {
     // Generate templated files
     await this.applyTemplateList(
         templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, twaManifest);
+    progress.update();
+
+    // Generate java files
+    await this.applyJavaTemplates(
+        templateDirectory, targetDirectory, twaManifest.packageId, JAVA_FILE_LIST,
+        twaManifest);
     progress.update();
 
     // Generate images
