@@ -179,7 +179,7 @@ bubblewrap install [--apkFile="/path-to-apk/apkfile.apk"]
 ```
 
 Options:
-  - `--apkFile`: path to the APK file to be isntalled. Defaults to `./app-release-signed.apk`.
+  - `--apkFile`: path to the APK file to be installed. Defaults to `./app-release-signed.apk`.
   - `--verbose`: prints the adb command being executed.
 
 ## `help`
