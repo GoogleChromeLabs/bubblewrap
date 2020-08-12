@@ -15,6 +15,7 @@
  */
 
 export type Plugin = {
+  name: string;
   build?: {
     repositories?: string[];
     dependencies?: string[];

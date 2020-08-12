@@ -17,6 +17,7 @@
 import {Plugin} from './Plugin';
 
 export const appsFlyerPlugin: Plugin = {
+  name: 'appsFlyer',
   build: {
     repositories: ['mavenCentral()'],
     dependencies: ['com.appsflyer:af-android-sdk:5.4.0'],

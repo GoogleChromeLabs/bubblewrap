@@ -105,7 +105,7 @@ export class TwaManifest {
   generatorApp: string;
   webManifestUrl?: URL;
   fallbackType: FallbackType;
-  appsFlyer: boolean;
+  plugins: string[];
 
   private static log: Log = new Log('twa-manifest');
 
@@ -133,7 +133,7 @@ export class TwaManifest {
     this.generatorApp = data.generatorApp || DEFAULT_GENERATOR_APP_NAME;
     this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
     this.fallbackType = data.fallbackType || 'customtabs';
-    this.appsFlyer = data.appsFlyer || false;
+    this.plugins = data.plugins || [];
   }
 
   /**
@@ -307,6 +307,7 @@ export interface TwaManifestJson {
   webManifestUrl?: string;
   fallbackType?: FallbackType;
   appsFlyer?: boolean;
+  plugins?: string[];
 }
 
 export interface SigningKeyInfo {

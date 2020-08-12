@@ -18,6 +18,8 @@ import {Plugin} from './Plugin';
 import {appsFlyerPlugin} from './AppsFlyerPlugin';
 import {TwaManifest} from '../TwaManifest';
 
+const allPlugins = [appsFlyerPlugin];
+
 export class PluginManager {
   build = {
     repositories: new Set<string>(),
@@ -29,8 +31,10 @@ export class PluginManager {
   };
 
   constructor(twaManifest: TwaManifest) {
-    if (twaManifest.appsFlyer) {
-      this.addPlugin(appsFlyerPlugin);
+    for (const plugin of allPlugins) {
+      if (twaManifest.plugins.indexOf(plugin.name) >= 0) {
+        this.addPlugin(plugin);
+      }
     }
   }
 
