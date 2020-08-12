@@ -24,7 +24,6 @@ import {ShortcutInfo} from './ShortcutInfo';
 import Log from './Log';
 import {ImageHelper, IconDefinition} from './ImageHelper';
 import {PluginManager} from './plugins/PluginManager';
-import {appsFlyerPlugin} from './plugins/AppsFlyerPlugin';
 
 const COPY_FILE_LIST = [
   'settings.gradle',
@@ -318,11 +317,7 @@ export class TwaGenerator {
    */
   async createTwaProject(targetDirectory: string, twaManifest: TwaManifest,
       reportProgress: twaGeneratorProgress = noOpProgress): Promise<void> {
-    const plugins = new PluginManager();
-    if (twaManifest.appsFlyer) {
-      plugins.addPlugin(appsFlyerPlugin);
-    }
-
+    const plugins = new PluginManager(twaManifest);
     const progress = new Progress(9, reportProgress);
     const error = twaManifest.validate();
     if (error !== null) {

@@ -15,6 +15,8 @@
  */
 
 import {Plugin} from './Plugin';
+import {appsFlyerPlugin} from './AppsFlyerPlugin';
+import {TwaManifest} from '../TwaManifest';
 
 export class PluginManager {
   build = {
@@ -25,6 +27,12 @@ export class PluginManager {
     imports: new Set<string>(),
     launchUrl: new Array<string>(),
   };
+
+  constructor(twaManifest: TwaManifest) {
+    if (twaManifest.appsFlyer) {
+      this.addPlugin(appsFlyerPlugin);
+    }
+  }
 
   addPlugin(plugin: Plugin): void {
     if (plugin.build?.repositories) {
