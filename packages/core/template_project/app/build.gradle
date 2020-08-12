@@ -164,16 +164,16 @@ task generateShorcutsFile {
 
 preBuild.dependsOn(generateShorcutsFile)
 
-<% if (appsFlyer === true) { %>
-    repositories { 
-        mavenCentral()
-    }
-<% } %>
+repositories {
+    <% for(const rep of pluginManager.build.repositories) { %>
+        <%= rep %>
+    <% } %>
+}
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:1.3.2'
-    <% if (appsFlyer === true) { %>
-        implementation 'com.appsflyer:af-android-sdk:5.4.0'
+    <% for(const dep of pluginManager.build.dependencies) { %>
+        implementation '<%= dep %>'
     <% } %>
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:1.3.2'
 }

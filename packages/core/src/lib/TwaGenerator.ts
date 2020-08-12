@@ -23,6 +23,8 @@ import {TwaManifest} from './TwaManifest';
 import {ShortcutInfo} from './ShortcutInfo';
 import Log from './Log';
 import {ImageHelper, IconDefinition} from './ImageHelper';
+import {PluginManager} from './plugins/PluginManager';
+import {appsFlyerPlugin} from './plugins/AppsFlyerPlugin';
 
 const COPY_FILE_LIST = [
   'settings.gradle',
@@ -316,6 +318,11 @@ export class TwaGenerator {
    */
   async createTwaProject(targetDirectory: string, twaManifest: TwaManifest,
       reportProgress: twaGeneratorProgress = noOpProgress): Promise<void> {
+    const plugins = new PluginManager();
+    if (twaManifest.appsFlyer) {
+      plugins.addPlugin(appsFlyerPlugin);
+    }
+
     const progress = new Progress(9, reportProgress);
     const error = twaManifest.validate();
     if (error !== null) {
@@ -337,15 +344,22 @@ export class TwaGenerator {
     await fs.promises.chmod(path.join(targetDirectory, 'gradlew'), '755');
     progress.update();
 
+    // Those are the arguments passed when applying templates. Functions are not automatically
+    // copied from objects, so we explicitly copy generateShortcuts.
+    const args = {
+      ...twaManifest,
+      ...{pluginManager: plugins},
+      generateShortcuts: twaManifest.generateShortcuts,
+    };
+
     // Generate templated files
     await this.applyTemplateList(
-        templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, twaManifest);
+        templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, args);
     progress.update();
 
     // Generate java files
     await this.applyJavaTemplates(
-        templateDirectory, targetDirectory, twaManifest.packageId, JAVA_FILE_LIST,
-        twaManifest);
+        templateDirectory, targetDirectory, twaManifest.packageId, JAVA_FILE_LIST, args);
     progress.update();
 
     // Generate images

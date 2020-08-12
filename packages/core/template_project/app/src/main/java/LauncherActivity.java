@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google Inc.
+ * Copyright 2020 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ package <%= packageId %>;
 
 import android.net.Uri;
 
-<% if (appsFlyer === true) { %>
-import com.appsflyer.AppsFlyerLib;
+<% for(const imp of pluginManager.launcherActivity.imports) { %>
+    import <%= imp %>;
 <% } %>
 
 public class LauncherActivity
@@ -29,12 +29,8 @@ public class LauncherActivity
         // Get the original launch Url.
         Uri uri = super.getLaunchingUrl();
 
-        <% if (appsFlyer === true) { %>
-          String appsFlyerId = AppsFlyerLib.getInstance().getAppsFlyerUID(this);
-          uri = uri
-                .buildUpon()
-                .appendQueryParameter("appsflyer_id", appsFlyerId)
-                .build();          
+        <% for(const code of pluginManager.launcherActivity.launchUrl) { %>
+            <%= code %>
         <% } %>
 
         return uri;
