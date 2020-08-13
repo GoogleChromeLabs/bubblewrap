@@ -135,7 +135,7 @@ export class TwaManifest {
     this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
     this.fallbackType = data.fallbackType || 'customtabs';
     this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ?
-    data.enableSiteSettingsShortcut : true;
+      data.enableSiteSettingsShortcut : true;
   }
 
   /**
