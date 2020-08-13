@@ -75,6 +75,7 @@ type Features = {
  * navigationColor: '<%= themeColor %>', // The color used for the navigation bar.
  * backgroundColor: '<%= backgroundColor %>', // The color used for the splash screen background.
  * enableNotifications: false, // Set to true to enable notification delegation.
+ * enableSiteSettingsShortcut: true, // Set to false to disable the shortcut into site settings.
  * // Add shortcuts for your app here. Every shortcut must include the following fields:
  * // - name: String that will show up in the shortcut.
  * // - short_name: Shorter string used if |name| is too long.
@@ -111,6 +112,7 @@ export class TwaManifest {
   webManifestUrl?: URL;
   fallbackType: FallbackType;
   features: Features;
+  enableSiteSettingsShortcut: boolean;
 
   private static log: Log = new Log('twa-manifest');
 
@@ -139,6 +141,8 @@ export class TwaManifest {
     this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
     this.fallbackType = data.fallbackType || 'customtabs';
     this.features = data.features || {};
+    this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ?
+      data.enableSiteSettingsShortcut : true;
   }
 
   /**
@@ -314,6 +318,7 @@ export interface TwaManifestJson {
   features?: {
     appsFlyer?: AppsFlyerConfig;
   };
+  enableSiteSettingsShortcut?: boolean;
 }
 
 export interface SigningKeyInfo {

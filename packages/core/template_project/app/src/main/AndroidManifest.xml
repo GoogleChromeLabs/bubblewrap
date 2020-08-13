@@ -31,6 +31,9 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/appName"
+        <% if (enableSiteSettingsShortcut) { %>
+        android:manageSpaceActivity="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity"
+        <% } %>
         android:supportsRtl="true"
         android:theme="@style/Theme.LauncherActivity">
 
@@ -48,7 +51,19 @@
             android:name="twa_generator"
             android:value="@string/generatorApp" />
 
+<<<<<<< HEAD
         <activity android:name="LauncherActivity"
+=======
+        <% if (enableSiteSettingsShortcut) { %>
+            <activity android:name="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity">
+            <meta-data
+                android:name="android.support.customtabs.trusted.MANAGE_SPACE_URL"
+                android:value="@string/launchUrl" />
+            </activity>
+        <% } %>
+        
+        <activity android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
+>>>>>>> master
             android:label="@string/launcherName">
             <meta-data android:name="android.support.customtabs.trusted.DEFAULT_URL"
                 android:value="@string/launchUrl" />
