@@ -44,6 +44,7 @@ async function updateJdkPath(path: string, log: Log): Promise<boolean> {
   const config = await loadOrCreateConfig();
   const androidSdkPath = (await config).androidSdkPath;
   const newConfig = new Config(path, androidSdkPath);
+  // Deletes the old config file.
   fsPromises.unlink(CONFIG_FILE_PATH);
   newConfig.saveConfig(CONFIG_FILE_PATH);
   return true;
@@ -52,9 +53,11 @@ async function updateJdkPath(path: string, log: Log): Promise<boolean> {
 async function invoke(args: ParsedArgs, log: Log): Promise<boolean> {
   if (args.jdkPath) {
     await updateJdkPath(args.JdkPath, log);
-  } else if (args.androidSdkPath) {
+  }
+  if (args.androidSdkPath) {
     await updateAndroidSdkPath(args.androidSdkPath, log);
-  } else {
+  }
+  if (!args.jdkPath && !args.androidSdkPath) {
     log.error('usage: bubblewrap updateConfig --jdkPath(or --androidSdkPath)' +
       '\npath/to/location');
     return false;

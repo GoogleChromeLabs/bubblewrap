@@ -30,7 +30,7 @@ const HELP_MESSAGES = new Map<string, string>(
         'validate ............ validates if an URL matches the PWA Quality Criteria for Trusted' +
             ' Web Activity',
         'install ............. installs the output application to a connected device',
-        'doctor .../.......... checks that the jdk and the androidSdk are in place and at the' +
+        'doctor ............. checks that the jdk and the androidSdk are in place and at the' +
           ' correct version',
         'updateConfig ........ sets the paths of the jdk or the androidSdk to the given paths',
       ].join('\n')],
@@ -54,6 +54,7 @@ const HELP_MESSAGES = new Map<string, string>(
         '',
         'Options:',
         '--skipPwaValidation ....... skips validating the wrapped PWA against the Quality Criteria',
+        '--generateAppBundle ....... outputs an Android App Bundle additionally to the APK',
       ].join('\n')],
       ['update', [
         'Usage:',

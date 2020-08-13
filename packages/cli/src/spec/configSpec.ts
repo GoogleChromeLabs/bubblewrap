@@ -43,6 +43,7 @@ describe('config', () => {
       await loadOrCreateConfig(prompt, log);
       // Checks if the file name was changed.
       expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
+      expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeFalse();
       expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeFalse();
       // Checks that the old folder was deleted.
       expect(existsSync(LEGACY_CONFIG_FOLDER)).toBeFalse();

@@ -58,8 +58,8 @@ async function androidSdkDoctor(log: Log): Promise<boolean> {
 }
 
 export async function doctor(log: Log = new ConsoleLog('doctor')): Promise<boolean> {
-  const jdkResult = jdkDoctor(log);
-  const androidSdkResult = androidSdkDoctor(log);
+  const jdkResult = await jdkDoctor(log);
+  const androidSdkResult = await androidSdkDoctor(log);
   if (jdkResult && androidSdkResult) {
     log.info('Your jdkpath and androidSdkPath are valid.');
   }

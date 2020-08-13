@@ -17,40 +17,52 @@
 import {Prompt} from '../../lib/Prompt';
 
 /**
- * A an interface that promps for different types of user input.
+ * A class which usef for testing and which mocks user's input.
  */
-
 export class MockPrompt implements Prompt {
-  async printMessage(message: string): Promise<void> {
-    console.log(message);
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  async printMessage(): Promise<void> {
   }
 
+  /**
+   * Sets the output to be the given message.
+   * @param message the message to be returned.
+   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async promptInput<T>(message: string): Promise<any> {
     const result = Promise.resolve({
-      name: 'question',
       result: message,
     });
     return (await result).result;
   }
 
+  /**
+   * Sets the output to be the given message.
+   * @param message the message to be returned.
+   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async promptChoice<T>(message: string): Promise<any> {
     const result = Promise.resolve({
-      name: 'question',
       result: message,
     });
     return (await result).result;
   }
 
+  /**
+   * Sets the output to be the given message.
+   * @param defaultValue the value to be returned
+   */
   async promptConfirm(message: string, defaultValue: boolean): Promise<boolean> {
     return defaultValue;
   }
 
+  /**
+   * Sets the output to be the givven message.
+   * @param message the message to be returned.
+   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async promptPassword(message: string): Promise<any> {
     const result = Promise.resolve({
-      name: 'question',
       result: message,
     });
     return (await result).result;

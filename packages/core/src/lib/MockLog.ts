@@ -17,11 +17,11 @@
 import {Log} from '..';
 
 /**
- * An utility class to print nice Log messages.
+ * An utility class for testing used for get the logging messages without printing to the user.
  */
 export class MockLog implements Log {
     /**
-     * Creates a new Log instance
+     * Creates a new MockLog instance
      * @param tag the tag used when logging. Printed at the beggining of a log message.
      * @param verbose if the Log is verbose. Debug messages are only printed on verbose logs.
      */
@@ -40,44 +40,39 @@ export class MockLog implements Log {
     }
 
     /**
-     * Prints a debug message to the Log. message is ignored if the Log is not set to verbose.
-     * @param message the message the be printed.
-     * @param args extra arguments for the console.
+     * saves the debug message to the Logger.
+     * @param message the message the be saved.
      */
     debug(message: string): void {
       this.receivedData.push(message);
     }
 
     /**
-     * Prints an info message to the Log. message is ignored if the Log is not set to verbose.
-     * @param message the message the be printed.
-     * @param args extra arguments for the console.
+     * saves the debug message to the Logger.
+     * @param message the message the be saved.
      */
     info(message: string): void {
       this.receivedData.push(message);
     }
 
     /**
-     * Prints an warning message to the Log. message is ignored if the Log is not set to verbose.
-     * @param message the message the be printed.
-     * @param args extra arguments for the console.
+     * saves the debug message to the Logger.
+     * @param message the message the be saved.
      */
     warn(message: string): void {
       this.receivedData.push(message);
     }
 
     /**
-     * Prints an error message to the Log. message is ignored if the Log is not set to verbose.
-     * @param message the message the be printed.
-     * @param args extra arguments for the console.
+     * saves the debug message to the Logger.
+     * @param message the message the be saved.
      */
     error(message: string): void {
       this.receivedData.push(message);
     }
 
     /**
-     * Creates a new Log using the same output and verbositity of the current Log.
-     * @param newTag the tag the be used on the new Log instance.
+     * Creates a new MockLog.
      */
     newLog(): Log {
       return new MockLog();
