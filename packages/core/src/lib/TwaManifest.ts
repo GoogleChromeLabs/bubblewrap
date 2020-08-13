@@ -134,7 +134,8 @@ export class TwaManifest {
     this.generatorApp = data.generatorApp || DEFAULT_GENERATOR_APP_NAME;
     this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
     this.fallbackType = data.fallbackType || 'customtabs';
-    this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ? data.enableSiteSettingsShortcut : true;
+    this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ?
+    data.enableSiteSettingsShortcut : true;
   }
 
   /**
