@@ -70,6 +70,7 @@ export type FallbackType = 'customtabs' | 'webview';
  * navigationColor: '<%= themeColor %>', // The color used for the navigation bar.
  * backgroundColor: '<%= backgroundColor %>', // The color used for the splash screen background.
  * enableNotifications: false, // Set to true to enable notification delegation.
+ * enableSiteSettingsShortcut: false, // Set to true to enable a dynamic shortcut into site settings.
  * // Add shortcuts for your app here. Every shortcut must include the following fields:
  * // - name: String that will show up in the shortcut.
  * // - short_name: Shorter string used if |name| is too long.
@@ -105,6 +106,7 @@ export class TwaManifest {
   generatorApp: string;
   webManifestUrl?: URL;
   fallbackType: FallbackType;
+  enableSiteSettingsShortcut: boolean;
 
   private static log: Log = new Log('twa-manifest');
 
@@ -132,6 +134,7 @@ export class TwaManifest {
     this.generatorApp = data.generatorApp || DEFAULT_GENERATOR_APP_NAME;
     this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
     this.fallbackType = data.fallbackType || 'customtabs';
+    this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ? data.enableSiteSettingsShortcut : true;
   }
 
   /**
@@ -304,6 +307,7 @@ export interface TwaManifestJson {
   generatorApp?: string;
   webManifestUrl?: string;
   fallbackType?: FallbackType;
+  enableSiteSettingsShortcut?: boolean;
 }
 
 export interface SigningKeyInfo {

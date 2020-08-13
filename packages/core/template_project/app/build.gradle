@@ -39,7 +39,8 @@ def twaManifest = [
     generatorApp: '<%= generatorApp %>', // Application that generated the Android Project
     // The fallback strategy for when Trusted Web Activity is not avilable. Possible values are
     // 'customtabs' and 'webview'.
-    fallbackType: '<%= fallbackType %>'
+    fallbackType: '<%= fallbackType %>',
+    enableSiteSettingsShortcut: '<%= enableSiteSettingsShortcut %>',
 ]
 
 android {
@@ -115,6 +116,8 @@ android {
         resValue "string", "generatorApp", twaManifest.generatorApp
 
         resValue "string", "fallbackType", twaManifest.fallbackType
+
+        resValue "bool", "enableSiteSettingsShortcut", twaManifest.enableSiteSettingsShortcut
     }
     buildTypes {
         release {
