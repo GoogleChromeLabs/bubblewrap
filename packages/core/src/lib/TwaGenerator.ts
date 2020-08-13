@@ -23,7 +23,7 @@ import {TwaManifest} from './TwaManifest';
 import {ShortcutInfo} from './ShortcutInfo';
 import Log from './Log';
 import {ImageHelper, IconDefinition} from './ImageHelper';
-import {PluginManager} from './plugins/PluginManager';
+import {FeatureManager} from './plugins/FeatureManager';
 
 const COPY_FILE_LIST = [
   'settings.gradle',
@@ -50,6 +50,7 @@ const JAVA_DIR = 'app/src/main/java/';
 
 const JAVA_FILE_LIST = [
   'LauncherActivity.java',
+  'Application.java',
 ];
 
 const DELETE_FILE_LIST = [
@@ -317,7 +318,7 @@ export class TwaGenerator {
    */
   async createTwaProject(targetDirectory: string, twaManifest: TwaManifest,
       reportProgress: twaGeneratorProgress = noOpProgress): Promise<void> {
-    const plugins = new PluginManager(twaManifest);
+    const plugins = new FeatureManager(twaManifest);
     const progress = new Progress(9, reportProgress);
     const error = twaManifest.validate();
     if (error !== null) {

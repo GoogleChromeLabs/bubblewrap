@@ -23,6 +23,7 @@ import Color = require('color');
 import Log from './Log';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 import {ShortcutInfo} from './ShortcutInfo';
+import {AppsFlyerConfig} from './plugins/AppsFlyerFeature';
 
 // The minimum size needed for the app icon.
 const MIN_ICON_SIZE = 512;
@@ -57,6 +58,10 @@ const DEFAULT_ENABLE_NOTIFICATIONS = false;
 const DEFAULT_GENERATOR_APP_NAME = 'unknown';
 
 export type FallbackType = 'customtabs' | 'webview';
+
+type Features = {
+  appsFlyer?: AppsFlyerConfig;
+}
 
 /**
  * A Manifest used to generate the TWA Project
@@ -105,7 +110,7 @@ export class TwaManifest {
   generatorApp: string;
   webManifestUrl?: URL;
   fallbackType: FallbackType;
-  plugins: string[];
+  features: Features;
 
   private static log: Log = new Log('twa-manifest');
 
@@ -133,7 +138,7 @@ export class TwaManifest {
     this.generatorApp = data.generatorApp || DEFAULT_GENERATOR_APP_NAME;
     this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
     this.fallbackType = data.fallbackType || 'customtabs';
-    this.plugins = data.plugins || [];
+    this.features = data.features || {};
   }
 
   /**
@@ -306,8 +311,9 @@ export interface TwaManifestJson {
   generatorApp?: string;
   webManifestUrl?: string;
   fallbackType?: FallbackType;
-  appsFlyer?: boolean;
-  plugins?: string[];
+  features?: {
+    appsFlyer?: AppsFlyerConfig;
+  };
 }
 
 export interface SigningKeyInfo {

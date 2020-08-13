@@ -14,21 +14,23 @@
  *  limitations under the License.
  */
 
-import {Plugin} from './Plugin';
-
-export const appsFlyerPlugin: Plugin = {
-  name: 'appsFlyer',
+export interface Feature {
+  name: string;
   build: {
-    repositories: ['mavenCentral()'],
-    dependencies: ['com.appsflyer:af-android-sdk:5.4.0'],
-  },
+    repositories: string[];
+    dependencies: string[];
+  };
+  androidManifest: {
+    permissions: string[];
+    components: string[];
+  };
+  application: {
+    imports: string[];
+    variables: string[];
+    onCreate?: string;
+  };
   launcherActivity: {
-    imports: ['com.appsflyer.AppsFlyerLib'],
-    launchUrl: `
-    String appsFlyerId = AppsFlyerLib.getInstance().getAppsFlyerUID(this);
-    uri = uri
-          .buildUpon()
-          .appendQueryParameter("appsflyer_id", appsFlyerId)
-          .build();`,
-  },
-};
+    imports: string[];
+    launchUrl?: string;
+  };
+}
