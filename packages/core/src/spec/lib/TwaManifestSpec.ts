@@ -204,6 +204,7 @@ describe('TwaManifest', () => {
         webManifestUrl: 'https://pwa-directory.com/manifest.json',
         generatorApp: 'test',
         fallbackType: 'webview',
+        enableSiteSettingsShortcut: false,
       } as TwaManifestJson;
       const twaManifest = new TwaManifest(twaManifestJson);
       expect(twaManifest.packageId).toEqual(twaManifestJson.packageId);
@@ -227,6 +228,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.webManifestUrl).toEqual(new URL(twaManifestJson.webManifestUrl!));
       expect(twaManifest.generatorApp).toEqual(twaManifestJson.generatorApp!);
       expect(twaManifest.fallbackType).toBe('webview');
+      expect(twaManifest.enableSiteSettingsShortcut).toEqual(false);
     });
 
     it('Sets correct default values for optional fields', () => {
@@ -255,6 +257,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.webManifestUrl).toBeUndefined();
       expect(twaManifest.fallbackType).toBe('customtabs');
       expect(twaManifest.display).toBe('standalone');
+      expect(twaManifest.enableSiteSettingsShortcut).toEqual(true);
     });
   });
 
