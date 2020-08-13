@@ -70,7 +70,7 @@ export type FallbackType = 'customtabs' | 'webview';
  * navigationColor: '<%= themeColor %>', // The color used for the navigation bar.
  * backgroundColor: '<%= backgroundColor %>', // The color used for the splash screen background.
  * enableNotifications: false, // Set to true to enable notification delegation.
- * enableSiteSettingsShortcut: false, // Set to true to enable a dynamic shortcut into site settings.
+ * enableSiteSettingsShortcut: true, // Set to false to disable the shortcut into site settings.
  * // Add shortcuts for your app here. Every shortcut must include the following fields:
  * // - name: String that will show up in the shortcut.
  * // - short_name: Shorter string used if |name| is too long.
