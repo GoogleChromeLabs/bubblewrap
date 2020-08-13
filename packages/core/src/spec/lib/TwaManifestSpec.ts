@@ -251,7 +251,7 @@ describe('TwaManifest', () => {
         splashScreenFadeOutDuration: 300,
         enableNotifications: true,
         shortcuts: [{name: 'name', url: '/', chosenIconUrl: 'icon.png'}],
-        generatorApp: 'test'
+        generatorApp: 'test',
       } as TwaManifestJson;
       const twaManifest = new TwaManifest(twaManifestJson);
       expect(twaManifest.webManifestUrl).toBeUndefined();

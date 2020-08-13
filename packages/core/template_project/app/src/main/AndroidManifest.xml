@@ -50,7 +50,6 @@
             android:name="twa_generator"
             android:value="@string/generatorApp" />
 
-
         <% if (enableSiteSettingsShortcut) { %>
             <activity android:name="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity">
             <meta-data
@@ -59,7 +58,6 @@
             </activity>
         <% } %>
         
-
         <activity android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
             android:label="@string/launcherName">
             <meta-data android:name="android.support.customtabs.trusted.DEFAULT_URL"
