@@ -31,7 +31,7 @@ const HELP_MESSAGES = new Map<string, string>(
             ' Web Activity',
         'install ............. installs the output application to a connected device',
         'doctor .../.......... checks that the jdk and the androidSdk are in place and at the' +
-          ' right version',
+          ' correct version',
         'updateConfig ........ sets the paths of the jdk or the androidSdk to the given paths',
       ].join('\n')],
       ['init', [
@@ -96,7 +96,9 @@ const HELP_MESSAGES = new Map<string, string>(
         'Usage:',
         '',
         '',
-        'bubblewrap updateConfig --<jdk or androidSdk> new/path/to/folder',
+        // eslint-disable-next-line no-implicit-coercion
+        '[--jdk <path-to-jdk>] [--androidSdk <path-to-android-sdk>]', +
+        '(You can insert one or both of them)',
         '',
         '',
         'Options: ',

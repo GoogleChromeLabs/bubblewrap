@@ -21,6 +21,7 @@ import {promises as fsPromises} from 'fs';
 import {loadOrCreateConfig} from '../lib/config';
 import * as mock from 'mock-fs';
 import {MockPrompt} from './mock/MockPrompt';
+import {MockLog} from '../../../core/src/lib/MockLog';
 
 const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap');
 const DEFAULT_CONFIG_NAME = 'config.json';
@@ -38,7 +39,8 @@ describe('config', () => {
           'llama-pack-config.json': '{}',
         }});
       const prompt = new MockPrompt();
-      await loadOrCreateConfig(prompt);
+      const log = new MockLog();
+      await loadOrCreateConfig(prompt, log);
       // Checks if the file name was changed.
       expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
       expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeFalse();
@@ -56,7 +58,8 @@ describe('config', () => {
               'another file.exe': '{}',
             }});
           const prompt = new MockPrompt();
-          await loadOrCreateConfig(prompt);
+          const log = new MockLog();
+          await loadOrCreateConfig(prompt, log);
           // Checks if the file name was changed.
           expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
           expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeFalse();
@@ -71,7 +74,8 @@ describe('config', () => {
         [homedir()]: {},
       });
       const prompt = new MockPrompt();
-      await loadOrCreateConfig(prompt);
+      const log = new MockLog();
+      await loadOrCreateConfig(prompt, log);
       // Checks if the file name was created.
       expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
       mock.restore();
@@ -88,7 +92,8 @@ describe('config', () => {
               'config.json': '{"content":"some new content"}',
             }});
           const prompt = new MockPrompt();
-          await loadOrCreateConfig(prompt);
+          const log = new MockLog();
+          await loadOrCreateConfig(prompt, log);
           // Checks if both of the files exists.
           expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
           expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeTrue();

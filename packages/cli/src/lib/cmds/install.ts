@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import {AndroidSdkTools, Config, JdkHelper, ConsoleLog} from '@bubblewrap/core';
+import {AndroidSdkTools, Config, JdkHelper, ConsoleLog, Log} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
 
 const APK_FILE_PARAM = '--apkFile';
@@ -23,7 +23,7 @@ const DEFAULT_APK_FILE = './app-release-signed.apk';
 const PARAMETERS_TO_IGNORE = ['--verbose', '-r'];
 
 export async function install(
-    args: ParsedArgs, config: Config, log = new ConsoleLog('install')): Promise<boolean> {
+    args: ParsedArgs, config: Config, log: Log = new ConsoleLog('install')): Promise<boolean> {
   const jdkHelper = new JdkHelper(process, config);
   const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper, log);
   const apkFile = args.apkFile || DEFAULT_APK_FILE;

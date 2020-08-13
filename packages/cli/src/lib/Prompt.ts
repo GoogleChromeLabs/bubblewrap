@@ -95,8 +95,8 @@ export interface Prompt {
 // validate: (Function) Receive the user input and answers hash. Should return true if the
 //           value is valid, and an error message (String) otherwise. If false is returned,
 //           a default error message is provided.
-export async function buildInquirerValidate<T>(validateFunction: ValidateFunction<T>):
-  Promise<(input: string) => Promise<boolean | string>> {
+export function buildInquirerValidate<T>(validateFunction: ValidateFunction<T>):
+  (input: string) => Promise<boolean | string> {
   return async (input: string): Promise<boolean | string> => {
     const result = await validateFunction(input);
     if (result.isOk()) {
@@ -119,7 +119,7 @@ export class InquirerPrompt implements Prompt {
       defaultValue: string | null,
       validateFunction: ValidateFunction<T>,
   ): Promise<T> {
-    const validate = await buildInquirerValidate(validateFunction);
+    const validate = buildInquirerValidate(validateFunction);
     const result = await inquirer.prompt({
       name: 'question',
       type: 'input',

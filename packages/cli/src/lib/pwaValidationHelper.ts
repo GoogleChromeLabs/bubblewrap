@@ -1,6 +1,6 @@
 import {PwaValidationResult, ScoreResult} from '@bubblewrap/validator';
 import {red, green, bold, underline, yellow} from 'colors';
-import {ConsoleLog} from '@bubblewrap/core';
+import {Log} from '@bubblewrap/core';
 
 function getColor(score: ScoreResult): string {
   switch (score.status) {
@@ -11,7 +11,7 @@ function getColor(score: ScoreResult): string {
   }
 }
 
-export function printValidationResult(validationResult: PwaValidationResult, log: ConsoleLog):
+export function printValidationResult(validationResult: PwaValidationResult, log: Log):
  void {
   log.info('');
   log.info('Check the full PageSpeed Insights report at:');

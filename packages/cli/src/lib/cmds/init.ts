@@ -36,10 +36,10 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
   prompt.printMessage(messages.messageWebAppDetailsDesc);
 
   twaManifest.host = await prompt.promptInput(
-      messages.promptHostMessage, twaManifest.host, await validateHost);
+      messages.promptHostMessage, twaManifest.host, validateHost);
 
   twaManifest.startUrl = await prompt.promptInput(
-      messages.promptStartUrl, twaManifest.startUrl, await createValidateString(1));
+      messages.promptStartUrl, twaManifest.startUrl, createValidateString(1));
 
   // Step 2/5 Collect information on the Android App.
   prompt.printMessage(messages.messageAndroidAppDetails);
@@ -153,17 +153,17 @@ async function createSigningKey(
   }
 
   const fullName =
-      await prompt.promptInput(messages.promptKeyFullName, null, await createValidateString(1));
+      await prompt.promptInput(messages.promptKeyFullName, null, createValidateString(1));
   const organizationalUnit = await prompt.promptInput(
-      messages.promptKeyOrganizationalUnit, null, await createValidateString(1));
+      messages.promptKeyOrganizationalUnit, null, createValidateString(1));
   const organization =
-      await prompt.promptInput(messages.promptKeyOrganization, null, await createValidateString(1));
+      await prompt.promptInput(messages.promptKeyOrganization, null, createValidateString(1));
   const country =
-      await prompt.promptInput(messages.promptKeyCountry, null, await createValidateString(2, 2));
+      await prompt.promptInput(messages.promptKeyCountry, null, createValidateString(2, 2));
   const keystorePassword =
-      await prompt.promptPassword(messages.promptKeystorePassword, await createValidateString(6));
+      await prompt.promptPassword(messages.promptKeystorePassword, createValidateString(6));
   const keyPassword =
-      await prompt.promptPassword(messages.promptKeyPassword, await createValidateString(6));
+      await prompt.promptPassword(messages.promptKeyPassword, createValidateString(6));
 
   await keytool.createSigningKey({
     fullName: fullName,

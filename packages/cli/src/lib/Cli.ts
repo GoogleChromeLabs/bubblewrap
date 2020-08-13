@@ -61,7 +61,7 @@ export class Cli {
         return await help(parsedArgs);
       case 'doctor':
         return await doctor();
-      case 'help':
+      case 'updateConfig':
         return await updateConfig(parsedArgs);
       case 'init':
         return await init(parsedArgs, config);

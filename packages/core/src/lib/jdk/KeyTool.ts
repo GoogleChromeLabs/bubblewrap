@@ -44,7 +44,7 @@ export class KeyTool {
   private jdkHelper: JdkHelper;
   private log: Log;
 
-  constructor(jdkHelper: JdkHelper, log = new ConsoleLog('keytool')) {
+  constructor(jdkHelper: JdkHelper, log: Log = new ConsoleLog('keytool')) {
     this.jdkHelper = jdkHelper;
     this.log = log;
   }

@@ -63,21 +63,18 @@ describe('inputHelpers', () => {
 
   describe('#validatePackageId', () => {
     it('returns Ok for valid package ids', async () => {
-      expect((await
-      inputHelpers.validatePackageId('com.pwa_directory.appspot.com')).isOk()).toBeTrue();
-      expect((await
-      inputHelpers.validatePackageId('com.pwa1directory.appspot.com')).isOk()).toBeTrue();
+      expect((await inputHelpers.validatePackageId('com.pwa_directory.appspot.com'))
+          .isOk()).toBeTrue();
+      expect((await inputHelpers.validatePackageId('com.pwa1directory.appspot.com'))
+          .isOk()).toBeTrue();
     });
 
     it('returns Error for invalid package ids', async () => {
-      expect((await
-      inputHelpers.validatePackageId('com.pwa@directory.appspot.com')).isError()).toBeTrue();
-      expect((await
-      inputHelpers.validatePackageId('com..example')).isError()).toBeTrue();
-      expect((await
-      inputHelpers.validatePackageId('')).isError()).toBeTrue();
-      expect((await
-      inputHelpers.validatePackageId('com.1char.twa')).isError()).toBeTrue();
+      expect((await inputHelpers.validatePackageId('com.pwa@directory.appspot.com'))
+          .isError()).toBeTrue();
+      expect((await inputHelpers.validatePackageId('com..example')).isError()).toBeTrue();
+      expect((await inputHelpers.validatePackageId('')).isError()).toBeTrue();
+      expect((await inputHelpers.validatePackageId('com.1char.twa')).isError()).toBeTrue();
     });
   });
 
@@ -120,8 +117,10 @@ describe('inputHelpers', () => {
 
   describe('#validateImageUrl', () => {
     it('returns Ok for valid urls', async () => {
-      expect((await inputHelpers.validateImageUrl('https://www.example.com/test.png')).isOk()).toBeTrue();
-      expect((await inputHelpers.validateImageUrl('http://example.com/sub/test.jpg')).isOk()).toBeTrue();
+      expect((await inputHelpers.validateImageUrl('https://www.example.com/test.png'))
+          .isOk()).toBeTrue();
+      expect((await inputHelpers.validateImageUrl('http://example.com/sub/test.jpg'))
+          .isOk()).toBeTrue();
     });
 
     it('returns Error for invalid urls', async () => {
@@ -130,20 +129,22 @@ describe('inputHelpers', () => {
     });
 
     it('returns Error for non-image mime-types', async () => {
-      expect((await
-      inputHelpers.validateImageUrl('https://www.example.com/html.svg')).isError()).toBeTrue();
+      expect((await inputHelpers.validateImageUrl('https://www.example.com/html.svg'))
+          .isError()).toBeTrue();
     });
 
     it('returns Error for SVG images', async () => {
-      expect((await
-      inputHelpers.validateImageUrl('https://www.example.com/test.svg')).isError()).toBeTrue();
+      expect((await inputHelpers.validateImageUrl('https://www.example.com/test.svg'))
+          .isError()).toBeTrue();
     });
   });
 
   describe('#validateOptionalImageUrl', () => {
     it('returns Ok for valid urls', async () => {
-      expect((await inputHelpers.validateImageUrl('https://www.example.com/test.png')).isOk()).toBeTrue();
-      expect((await inputHelpers.validateImageUrl('http://example.com/sub/test.jpg')).isOk()).toBeTrue();
+      expect((await inputHelpers.validateImageUrl('https://www.example.com/test.png'))
+          .isOk()).toBeTrue();
+      expect((await inputHelpers.validateImageUrl('http://example.com/sub/test.jpg'))
+          .isOk()).toBeTrue();
       expect((await inputHelpers.validateOptionalUrl('')).isOk()).toBeTrue();
       expect((await inputHelpers.validateOptionalUrl('')).unwrap()).toBeNull();
     });
@@ -153,19 +154,20 @@ describe('inputHelpers', () => {
     });
 
     it('returns Error for non-image mime-types', async () => {
-      expect((await
-      inputHelpers.validateImageUrl('https://www.example.com/html.svg')).isError()).toBeTrue();
+      expect((await inputHelpers.validateImageUrl('https://www.example.com/html.svg'))
+          .isError()).toBeTrue();
     });
 
     it('returns Error for SVG images', async () => {
-      expect((await
-      inputHelpers.validateImageUrl('https://www.example.com/test.svg')).isError()).toBeTrue();
+      expect((await inputHelpers.validateImageUrl('https://www.example.com/test.svg'))
+          .isError()).toBeTrue();
     });
   });
 
   describe('#validateOptionalUrl', () => {
     it('returns Ok for valid urls', async () => {
-      expect((await inputHelpers.validateOptionalUrl('https://www.example.com')).isOk()).toBeTrue();
+      expect((await inputHelpers.validateOptionalUrl('https://www.example.com'))
+          .isOk()).toBeTrue();
       expect((await inputHelpers.validateOptionalUrl('http://example.com')).isOk()).toBeTrue();
       expect((await inputHelpers.validateOptionalUrl('')).isOk()).toBeTrue();
       expect((await inputHelpers.validateOptionalUrl('')).unwrap()).toBeNull();
