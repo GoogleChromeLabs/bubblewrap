@@ -168,14 +168,14 @@ task generateShorcutsFile {
 preBuild.dependsOn(generateShorcutsFile)
 
 repositories {
-    <% for(const rep of pluginManager.build.repositories) { %>
+    <% for(const rep of buildGradle.repositories) { %>
         <%= rep %>
     <% } %>
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    <% for(const dep of pluginManager.build.dependencies) { %>
+    <% for(const dep of buildGradle.dependencies) { %>
         implementation '<%= dep %>'
     <% } %>
     implementation 'com.google.androidbrowserhelper:androidbrowserhelper:1.4.0'    

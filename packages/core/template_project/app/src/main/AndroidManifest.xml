@@ -22,7 +22,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="<%= packageId %>">
 
-    <% for(const permission of pluginManager.androidManifest.permissions) { %>
+    <% for(const permission of androidManifest.permissions) { %>
         <uses-permission android:name="<%= permission %>"/>
     <% } %>
 
@@ -51,9 +51,6 @@
             android:name="twa_generator"
             android:value="@string/generatorApp" />
 
-<<<<<<< HEAD
-        <activity android:name="LauncherActivity"
-=======
         <% if (enableSiteSettingsShortcut) { %>
             <activity android:name="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity">
             <meta-data
@@ -62,8 +59,7 @@
             </activity>
         <% } %>
         
-        <activity android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
->>>>>>> master
+        <activity android:name="LauncherActivity"
             android:label="@string/launcherName">
             <meta-data android:name="android.support.customtabs.trusted.DEFAULT_URL"
                 android:value="@string/launchUrl" />
@@ -144,7 +140,7 @@
             </intent-filter>
         </service>
 
-        <% for(const component of pluginManager.androidManifest.components) { %>
+        <% for(const component of androidManifest.components) { %>
             <%= component %>
         <% } %>
     </application>

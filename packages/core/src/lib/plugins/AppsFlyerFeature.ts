@@ -22,7 +22,7 @@ export type AppsFlyerConfig = {
 
 export class AppsFlyerFeature implements Feature {
   name = 'appsFlyer';
-  build = {
+  buildGradle = {
     repositories: ['mavenCentral()'],
     dependencies: ['com.appsflyer:af-android-sdk:5.4.0'],
   };
@@ -44,7 +44,7 @@ export class AppsFlyerFeature implements Feature {
       </receiver>`,
     ],
   };
-  application = {
+  applicationClass = {
     imports: [
       'java.util.Map',
       'com.appsflyer.AppsFlyerLib',
@@ -83,7 +83,7 @@ export class AppsFlyerFeature implements Feature {
   };
 
   constructor(config: AppsFlyerConfig) {
-    this.application.variables.push(
+    this.applicationClass.variables.push(
         `private static final String AF_DEV_KEY = "${config.appsFlyerId}";`);
   }
 }

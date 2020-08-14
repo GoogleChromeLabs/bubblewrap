@@ -15,20 +15,20 @@
  */
 package <%= packageId %>;
 
-<% for(const imp of pluginManager.applicationClass.imports) { %>
+<% for(const imp of applicationClass.imports) { %>
   import <%= imp %>;
 <% } %>
 
 public class Application extends android.app.Application {
 
-  <% for(const variable of pluginManager.applicationClass.variables) { %>
+  <% for(const variable of applicationClass.variables) { %>
     <%= variable %>
   <% } %>
 
   @Override
   public void onCreate() {
       super.onCreate();
-      <% for(const code of pluginManager.applicationClass.onCreate) { %>
+      <% for(const code of applicationClass.onCreate) { %>
         <%= code %>
       <% } %>
   }

@@ -16,7 +16,7 @@
 
 export interface Feature {
   name: string;
-  build: {
+  buildGradle: {
     repositories: string[];
     dependencies: string[];
   };
@@ -24,7 +24,7 @@ export interface Feature {
     permissions: string[];
     components: string[];
   };
-  application: {
+  applicationClass: {
     imports: string[];
     variables: string[];
     onCreate?: string;

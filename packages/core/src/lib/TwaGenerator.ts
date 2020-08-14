@@ -318,7 +318,7 @@ export class TwaGenerator {
    */
   async createTwaProject(targetDirectory: string, twaManifest: TwaManifest,
       reportProgress: twaGeneratorProgress = noOpProgress): Promise<void> {
-    const plugins = new FeatureManager(twaManifest);
+    const features = new FeatureManager(twaManifest);
     const progress = new Progress(9, reportProgress);
     const error = twaManifest.validate();
     if (error !== null) {
@@ -344,7 +344,7 @@ export class TwaGenerator {
     // copied from objects, so we explicitly copy generateShortcuts.
     const args = {
       ...twaManifest,
-      ...{pluginManager: plugins},
+      ...features,
       generateShortcuts: twaManifest.generateShortcuts,
     };
 

@@ -17,7 +17,7 @@ package <%= packageId %>;
 
 import android.net.Uri;
 
-<% for(const imp of pluginManager.launcherActivity.imports) { %>
+<% for(const imp of launcherActivity.imports) { %>
     import <%= imp %>;
 <% } %>
 
@@ -29,7 +29,7 @@ public class LauncherActivity
         // Get the original launch Url.
         Uri uri = super.getLaunchingUrl();
 
-        <% for(const code of pluginManager.launcherActivity.launchUrl) { %>
+        <% for(const code of launcherActivity.launchUrl) { %>
             <%= code %>
         <% } %>
 

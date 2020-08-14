@@ -19,7 +19,7 @@ import {AppsFlyerFeature} from './AppsFlyerFeature';
 import {TwaManifest} from '../TwaManifest';
 
 export class FeatureManager {
-  build = {
+  buildGradle = {
     repositories: new Set<string>(),
     dependencies: new Set<string>(),
   };
@@ -50,25 +50,25 @@ export class FeatureManager {
 
   addFeature(feature: Feature): void {
     // Adds properties to build
-    feature.build.repositories.forEach((repo) => {
-      this.build.repositories.add(repo);
+    feature.buildGradle.repositories.forEach((repo) => {
+      this.buildGradle.repositories.add(repo);
     });
 
-    feature.build.dependencies.forEach((dep) => {
-      this.build.dependencies.add(dep);
+    feature.buildGradle.dependencies.forEach((dep) => {
+      this.buildGradle.dependencies.add(dep);
     });
 
     // Adds properties to application
-    feature.application.imports.forEach((imp) => {
+    feature.applicationClass.imports.forEach((imp) => {
       this.applicationClass.imports.add(imp);
     });
 
-    feature.application.variables.forEach((imp) => {
+    feature.applicationClass.variables.forEach((imp) => {
       this.applicationClass.variables.push(imp);
     });
 
-    if (feature.application.onCreate) {
-      this.applicationClass.onCreate.push(feature.application.onCreate);
+    if (feature.applicationClass.onCreate) {
+      this.applicationClass.onCreate.push(feature.applicationClass.onCreate);
     }
 
     // Adds properties to AndroidManifest.xml
