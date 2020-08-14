@@ -23,7 +23,7 @@ import Color = require('color');
 import Log from './Log';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 import {ShortcutInfo} from './ShortcutInfo';
-import {AppsFlyerConfig} from './plugins/AppsFlyerFeature';
+import {AppsFlyerConfig} from './features/AppsFlyerFeature';
 
 // The minimum size needed for the app icon.
 const MIN_ICON_SIZE = 512;

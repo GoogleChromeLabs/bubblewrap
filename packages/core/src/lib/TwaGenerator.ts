@@ -23,7 +23,7 @@ import {TwaManifest} from './TwaManifest';
 import {ShortcutInfo} from './ShortcutInfo';
 import Log from './Log';
 import {ImageHelper, IconDefinition} from './ImageHelper';
-import {FeatureManager} from './plugins/FeatureManager';
+import {FeatureManager} from './features/FeatureManager';
 
 const COPY_FILE_LIST = [
   'settings.gradle',
