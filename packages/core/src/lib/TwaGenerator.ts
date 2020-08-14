@@ -32,7 +32,6 @@ const COPY_FILE_LIST = [
   'gradlew.bat',
   'gradle/wrapper/gradle-wrapper.jar',
   'gradle/wrapper/gradle-wrapper.properties',
-  'app/src/main/res/values/styles.xml',
   'app/src/main/res/values/colors.xml',
   'app/src/main/res/xml/filepaths.xml',
   'app/src/main/res/xml/shortcuts.xml',
