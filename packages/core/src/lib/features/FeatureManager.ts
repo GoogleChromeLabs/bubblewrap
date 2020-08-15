@@ -18,6 +18,10 @@ import {Feature} from './Feature';
 import {AppsFlyerFeature} from './AppsFlyerFeature';
 import {TwaManifest} from '../TwaManifest';
 
+/**
+ * Analyzes a TwaManifest to collect enable features and aggregates all customizations that will
+ * be applied when generating the Android project.
+ */
 export class FeatureManager {
   buildGradle = {
     repositories: new Set<string>(),
@@ -37,6 +41,9 @@ export class FeatureManager {
     launchUrl: new Array<string>(),
   };
 
+  /**
+   * Builds a new intance from a TwaManifest.
+   */
   constructor(twaManifest: TwaManifest) {
     if (twaManifest.features.appsFlyer !== undefined) {
       this.addFeature(new AppsFlyerFeature(twaManifest.features.appsFlyer));
@@ -48,7 +55,7 @@ export class FeatureManager {
     }
   }
 
-  addFeature(feature: Feature): void {
+  private addFeature(feature: Feature): void {
     // Adds properties to build
     feature.buildGradle.repositories.forEach((repo) => {
       this.buildGradle.repositories.add(repo);
