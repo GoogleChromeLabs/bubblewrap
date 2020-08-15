@@ -18,9 +18,9 @@ import {FeatureManager} from '../../../lib/features/FeatureManager';
 import {AppsFlyerConfig, AppsFlyerFeature} from '../../../lib/features/AppsFlyerFeature';
 import {TwaManifest} from '../../../lib/TwaManifest';
 
-describe("FeatureManager", () => {
-  describe("#constructor", () => {
-    it ('Creates from empty features', () => {
+describe('FeatureManager', () => {
+  describe('#constructor', () => {
+    it('Creates from empty features', () => {
       const manifest = {
         features: {},
         fallbackType: 'customtabs',
@@ -37,7 +37,7 @@ describe("FeatureManager", () => {
       expect(features.launcherActivity.launchUrl.length).toBe(0);
     });
 
-    it ('Adds INTERNET permission when WebView fallback is enabled', () => {
+    it('Adds INTERNET permission when WebView fallback is enabled', () => {
       const manifest = {
         features: {},
         fallbackType: 'webview',
@@ -46,7 +46,7 @@ describe("FeatureManager", () => {
       expect(features.androidManifest.permissions).toContain('android.permission.INTERNET');
     });
 
-    it ('Enables the AppsFlyer plugin', () => {
+    it('Enables the AppsFlyer plugin', () => {
       const appsFlyerConfig = {
         appsFlyerId: '12345',
       } as AppsFlyerConfig;
@@ -60,7 +60,7 @@ describe("FeatureManager", () => {
 
       const appsFlyerFeature = new AppsFlyerFeature(appsFlyerConfig);
       const features = new FeatureManager(manifest);
-      
+
       appsFlyerFeature.androidManifest.components.forEach((component) => {
         expect(features.androidManifest.components).toContain(component);
       });
@@ -89,7 +89,7 @@ describe("FeatureManager", () => {
       });
 
       appsFlyerFeature.launcherActivity.imports.forEach((imp) => {
-        expect(features.launcherActivity.imports).toContain(imp);        
+        expect(features.launcherActivity.imports).toContain(imp);
       });
 
       expect(features.launcherActivity.launchUrl)

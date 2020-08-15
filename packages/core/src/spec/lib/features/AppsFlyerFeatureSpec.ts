@@ -21,7 +21,7 @@ describe('AppsFlyerFeature', () => {
     // variables is the only field dynamically generated.
     it('Generates correct variables for application', () => {
       const config = {
-          appsFlyerId: '12345',
+        appsFlyerId: '12345',
       } as AppsFlyerConfig;
       const appsFlyerFeature = new AppsFlyerFeature(config);
       expect(appsFlyerFeature.applicationClass.variables.length).toBe(1);
