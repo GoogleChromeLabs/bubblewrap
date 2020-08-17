@@ -15,12 +15,7 @@
  */
 
 import {AndroidSdkTools, Config, DigitalAssetLinks, GradleWrapper, JdkHelper, KeyTool, Log,
-<<<<<<< HEAD
-  TwaManifest, JarSigner, SigningKeyInfo, Result} from '@bubblewrap/core';
-=======
-  ConsoleLog, TwaManifest} from '@bubblewrap/core';
-import * as inquirer from 'inquirer';
->>>>>>> master
+  ConsoleLog, TwaManifest, JarSigner, SigningKeyInfo, Result} from '@bubblewrap/core';
 import * as path from 'path';
 import * as fs from 'fs';
 import {enUS as messages} from '../strings';
@@ -43,7 +38,7 @@ class Build {
   private jarSigner: JarSigner;
 
   constructor(private config: Config, private args: ParsedArgs,
-      private log = new Log('build'), private prompt: Prompt = new InquirerPrompt()) {
+      private log: Log = new ConsoleLog('build'), private prompt: Prompt = new InquirerPrompt()) {
     this.jdkHelper = new JdkHelper(process, this.config);
     this.androidSdkTools = new AndroidSdkTools(process, this.config, this.jdkHelper, this.log);
     this.keyTool = new KeyTool(this.jdkHelper, this.log);
@@ -119,18 +114,10 @@ class Build {
 
       await fs.promises.writeFile(digitalAssetLinksFile, digitalAssetLinks);
 
-<<<<<<< HEAD
       this.prompt.printMessage(messages.messageDigitalAssetLinksSuccess(digitalAssetLinksFile));
     } catch (e) {
       this.prompt.printMessage(messages.errorAssetLinksGeneration);
     }
-=======
-export async function build(
-    config: Config, args: ParsedArgs, log: Log = new ConsoleLog('build')): Promise<boolean> {
-  let pwaValidationPromise;
-  if (!args.skipPwaValidation) {
-    pwaValidationPromise = startValidation();
->>>>>>> master
   }
 
   async buildApk(signingKey: SigningKeyInfo, passwords: SigningKeyPasswords): Promise<void> {
@@ -204,7 +191,7 @@ export async function build(
 }
 
 export async function build(config: Config, args: ParsedArgs,
-    log = new Log('build'), prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
+    log: Log = new ConsoleLog('build'), prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
   const build = new Build(config, args, log, prompt);
   return build.build();
 }

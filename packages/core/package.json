@@ -33,7 +33,6 @@
     "@types/extract-zip": "^1.6.2",
     "@types/inquirer": "^6.5.0",
     "@types/lodash.template": "^4.5.0",
-    "@types/mime-types": "^2.1.0",
     "@types/node": "^12.12.50",
     "@types/node-fetch": "^2.5.7",
     "@types/tar": "^4.0.3",
@@ -47,5 +46,8 @@
     "node-fetch": "^2.6.0",
     "tar": "^6.0.2",
     "valid-url": "^1.0.9"
+  },
+  "devDependencies": {
+    "@types/mime-types": "^2.1.0"
   }
 }

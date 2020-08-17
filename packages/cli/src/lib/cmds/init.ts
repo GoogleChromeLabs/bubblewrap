@@ -15,7 +15,6 @@
  */
 
 import * as fs from 'fs';
-<<<<<<< HEAD
 import {Config, DisplayModes, JdkHelper, KeyTool, TwaGenerator, TwaManifest}
   from '@bubblewrap/core';
 import {validateHost, validateColor, createValidateString, validateDisplayMode, validatePackageId,
@@ -25,17 +24,6 @@ import {APP_NAME} from '../constants';
 import {Prompt, InquirerPrompt} from '../Prompt';
 import {enUS as messages} from '../strings';
 import {generateTwaProject} from './shared';
-=======
-import Color = require('color');
-import * as inquirer from 'inquirer';
-import {Config, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest,
-  ConsoleLog, util} from '@bubblewrap/core';
-import {validateColor, validateKeyPassword, validateUrl, notEmpty} from '../inputHelpers';
-import {ParsedArgs} from 'minimist';
-import {APP_NAME} from '../constants';
-
-const log: Log = new ConsoleLog('init');
->>>>>>> master
 
 export interface InitArgs {
   manifest: string;
