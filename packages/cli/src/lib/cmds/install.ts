@@ -28,7 +28,7 @@ export async function install(
   const androidSdkTools = new AndroidSdkTools(process, config, jdkHelper, log);
   const apkFile = args.apkFile || DEFAULT_APK_FILE;
   if (args.verbose) {
-    log.verbose = true;
+    log.setVerbose(true);
   }
 
   // parameter 0 would be the path to 'node', followed by `bubblewrap.js` at 1, then `install` at

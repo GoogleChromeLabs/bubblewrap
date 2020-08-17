@@ -19,7 +19,7 @@ import {Log, ConsoleLog} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
 import {printValidationResult} from '../pwaValidationHelper';
 
-const log: Log = new ConsoleLog('validate');
+const log = new ConsoleLog('validate');
 
 /**
  * Runs the PwaValidator to check a given URL agains the Quality criteria. More information on the
