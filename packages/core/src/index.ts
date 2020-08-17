@@ -17,7 +17,7 @@
 import {AndroidSdkTools} from './lib/androidSdk/AndroidSdkTools';
 import {Config} from './lib/Config';
 import {GradleWrapper} from './lib/GradleWrapper';
-import Log from './lib/Log';
+import {Log, ConsoleLog} from './lib/Log';
 import {JdkHelper} from './lib/jdk/JdkHelper';
 import {KeyTool} from './lib/jdk/KeyTool';
 import {TwaManifest} from './lib/TwaManifest';
@@ -32,6 +32,7 @@ export {AndroidSdkTools,
   JdkHelper,
   KeyTool,
   Log,
+  ConsoleLog,
   TwaGenerator,
   TwaManifest,
   util,

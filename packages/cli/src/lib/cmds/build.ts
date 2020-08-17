@@ -15,7 +15,7 @@
  */
 
 import {AndroidSdkTools, Config, DigitalAssetLinks, GradleWrapper, JdkHelper, KeyTool, Log,
-  TwaManifest} from '@bubblewrap/core';
+  ConsoleLog, TwaManifest} from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -110,7 +110,7 @@ async function generateAssetLinks(keyTool: KeyTool, twaManifest: TwaManifest,
 }
 
 export async function build(
-    config: Config, args: ParsedArgs, log = new Log('build')): Promise<boolean> {
+    config: Config, args: ParsedArgs, log: Log = new ConsoleLog('build')): Promise<boolean> {
   let pwaValidationPromise;
   if (!args.skipPwaValidation) {
     pwaValidationPromise = startValidation();

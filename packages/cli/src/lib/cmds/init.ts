@@ -17,12 +17,13 @@
 import * as fs from 'fs';
 import Color = require('color');
 import * as inquirer from 'inquirer';
-import {Config, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest, util} from '@bubblewrap/core';
+import {Config, JdkHelper, KeyTool, Log, TwaGenerator, TwaManifest,
+  ConsoleLog, util} from '@bubblewrap/core';
 import {validateColor, validateKeyPassword, validateUrl, notEmpty} from '../inputHelpers';
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
 
-const log = new Log('init');
+const log: Log = new ConsoleLog('init');
 
 export interface InitArgs {
   manifest: string;

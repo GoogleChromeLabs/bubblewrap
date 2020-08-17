@@ -21,7 +21,7 @@ import fetch from 'node-fetch';
 import {template} from 'lodash';
 import {promisify} from 'util';
 import {TwaManifest, ShortcutInfo} from './TwaManifest';
-import Log from './Log';
+import {Log, ConsoleLog} from './Log';
 
 const COPY_FILE_LIST = [
   'settings.gradle',
@@ -101,7 +101,7 @@ interface Icon {
 export class TwaGenerator {
   private log: Log;
 
-  constructor(log = new Log('twa-generator')) {
+  constructor(log: Log = new ConsoleLog('twa-generator')) {
     this.log = log;
   }
 
