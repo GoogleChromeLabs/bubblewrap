@@ -15,7 +15,12 @@
  */
 
 import {AndroidSdkTools, Config, DigitalAssetLinks, GradleWrapper, JdkHelper, KeyTool, Log,
+<<<<<<< HEAD
   TwaManifest, JarSigner, SigningKeyInfo, Result} from '@bubblewrap/core';
+=======
+  ConsoleLog, TwaManifest} from '@bubblewrap/core';
+import * as inquirer from 'inquirer';
+>>>>>>> master
 import * as path from 'path';
 import * as fs from 'fs';
 import {enUS as messages} from '../strings';
@@ -114,10 +119,18 @@ class Build {
 
       await fs.promises.writeFile(digitalAssetLinksFile, digitalAssetLinks);
 
+<<<<<<< HEAD
       this.prompt.printMessage(messages.messageDigitalAssetLinksSuccess(digitalAssetLinksFile));
     } catch (e) {
       this.prompt.printMessage(messages.errorAssetLinksGeneration);
     }
+=======
+export async function build(
+    config: Config, args: ParsedArgs, log: Log = new ConsoleLog('build')): Promise<boolean> {
+  let pwaValidationPromise;
+  if (!args.skipPwaValidation) {
+    pwaValidationPromise = startValidation();
+>>>>>>> master
   }
 
   async buildApk(signingKey: SigningKeyInfo, passwords: SigningKeyPasswords): Promise<void> {

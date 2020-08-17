@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google Inc. All Rights Reserved.
+ * Copyright 2020 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,9 +15,44 @@
  */
 
 /**
+ * An interface for loggers.
+ */
+export interface Log {
+
+  verbose: boolean;
+
+  /**
+   * Prints a debug message to the Log. message is ignored if the Log is not set to verbose.
+   * @param message the message the be printed.
+   * @param args extra arguments for the console.
+   */
+  debug(message: string, ...args: string[]): void;
+
+  /**
+   * Prints an info message to the Log. message is ignored if the Log is not set to verbose.
+   * @param message the message the be printed.
+   * @param args extra arguments for the console.
+   */
+  info(message: string, ...args: string[]): void;
+
+  /**
+   * Prints an warning message to the Log. message is ignored if the Log is not set to verbose.
+   * @param message the message the be printed.
+   * @param args extra arguments for the console.
+   */
+  warn(message: string, ...args: string[]): void;
+  /**
+   * Prints an error message to the Log. message is ignored if the Log is not set to verbose.
+   * @param message the message the be printed.
+   * @param args extra arguments for the console.
+   */
+  error(message: string, ...args: string[]): void;
+};
+
+/**
  * An utility class to print nice Log messages.
  */
-export default class Log {
+export class ConsoleLog implements Log {
   private tag: string;
   private prefix: string;
   private output: Console;
@@ -85,11 +120,11 @@ export default class Log {
    * Creates a new Log using the same output and verbositity of the current Log.
    * @param newTag the tag the be used on the new Log instance.
    */
-  newLog(newTag: string): Log {
+  newLog(newTag: string): ConsoleLog {
     if (this.tag) {
       newTag = this.tag + ' ' + newTag;
     }
-    return new Log(newTag, this.verbose, this.output);
+    return new ConsoleLog(newTag, this.verbose, this.output);
   }
 
   private log(fn: Function, message: string, ...args: string[]): void {

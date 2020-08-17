@@ -15,16 +15,26 @@
  */
 
 import * as path from 'path';
+<<<<<<< HEAD
 import {Prompt, InquirerPrompt} from '../Prompt';
 import {TwaGenerator, TwaManifest} from '@bubblewrap/core';
+=======
+import {Log, ConsoleLog, TwaGenerator, TwaManifest} from '@bubblewrap/core';
+>>>>>>> master
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
 import {createValidateString} from '../inputHelpers';
 import {enUS as messages} from '../strings';
 import {generateTwaProject} from './shared';
 
+<<<<<<< HEAD
 async function updateVersions(
     twaManifest: TwaManifest, appVersionNameArg: string, prompt: Prompt): Promise<{
+=======
+const log: Log = new ConsoleLog('update');
+
+async function updateVersions(twaManifest: TwaManifest, appVersionNameArg: string): Promise<{
+>>>>>>> master
       appVersionName: string;
       appVersionCode: number;
     }> {

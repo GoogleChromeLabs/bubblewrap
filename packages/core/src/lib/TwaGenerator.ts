@@ -21,7 +21,7 @@ import {template} from 'lodash';
 import {promisify} from 'util';
 import {TwaManifest} from './TwaManifest';
 import {ShortcutInfo} from './ShortcutInfo';
-import Log from './Log';
+import {Log, ConsoleLog} from './Log';
 import {ImageHelper, IconDefinition} from './ImageHelper';
 
 const COPY_FILE_LIST = [
@@ -158,7 +158,7 @@ class Progress {
 export class TwaGenerator {
   private imageHelper = new ImageHelper();
 
-  constructor(private log = new Log('twa-generator')) {}
+  constructor(private log: Log = new ConsoleLog('twa-generator')) {}
 
   // Ensures targetDir exists and copies a file from sourceDir to target dir.
   private async copyStaticFile(
