@@ -20,6 +20,7 @@ import {existsSync} from 'fs';
 import {promises as fsPromises} from 'fs';
 import {loadOrCreateConfig} from '../lib/config';
 import * as mock from 'mock-fs';
+import {MockLog} from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
 
 const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap');
@@ -37,7 +38,6 @@ beforeAll(() => {
   spyOn(inquirer, 'prompt').and.returnValue(fakeResult);
 });
 
-
 describe('config', () => {
   describe('#loadOrCreateConfig', () => {
     it('checks if the file\'s name was changed in case it has the old name', async () => {
@@ -46,7 +46,8 @@ describe('config', () => {
         [LEGACY_CONFIG_FOLDER]: {
           'llama-pack-config.json': '{}',
         }});
-      await loadOrCreateConfig();
+      const mockLog = new MockLog();
+      await loadOrCreateConfig(mockLog);
       // Checks if the file name was changed.
       expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
       expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeFalse();
@@ -63,7 +64,8 @@ describe('config', () => {
               'llama-pack-config.json': '{}',
               'another file.exe': '{}',
             }});
-          await loadOrCreateConfig();
+          const mockLog = new MockLog();
+          await loadOrCreateConfig(mockLog);
           // Checks if the file name was changed.
           expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
           expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeFalse();
@@ -77,7 +79,8 @@ describe('config', () => {
       mock({
         [homedir()]: {},
       });
-      await loadOrCreateConfig();
+      const mockLog = new MockLog();
+      await loadOrCreateConfig(mockLog);
       // Checks if the file name was created.
       expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
       mock.restore();
@@ -93,7 +96,8 @@ describe('config', () => {
             [DEFAULT_CONFIG_FOLDER]: {
               'config.json': '{"content":"some new content"}',
             }});
-          await loadOrCreateConfig();
+          const mockLog = new MockLog();
+          await loadOrCreateConfig(mockLog);
           // Checks if both of the files exists.
           expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
           expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeTrue();
