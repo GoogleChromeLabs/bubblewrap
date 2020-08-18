@@ -46,8 +46,8 @@ describe('config', () => {
         [LEGACY_CONFIG_FOLDER]: {
           'llama-pack-config.json': '{}',
         }});
-      const log = new MockLog();
-      await loadOrCreateConfig(log);
+      const mockLog = new MockLog();
+      await loadOrCreateConfig(mockLog);
       // Checks if the file name was changed.
       expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
       expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeFalse();
@@ -64,8 +64,8 @@ describe('config', () => {
               'llama-pack-config.json': '{}',
               'another file.exe': '{}',
             }});
-          const log = new MockLog();
-          await loadOrCreateConfig(log);
+          const mockLog = new MockLog();
+          await loadOrCreateConfig(mockLog);
           // Checks if the file name was changed.
           expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
           expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeFalse();
@@ -79,8 +79,8 @@ describe('config', () => {
       mock({
         [homedir()]: {},
       });
-      const log = new MockLog();
-      await loadOrCreateConfig(log);
+      const mockLog = new MockLog();
+      await loadOrCreateConfig(mockLog);
       // Checks if the file name was created.
       expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
       mock.restore();
@@ -96,8 +96,8 @@ describe('config', () => {
             [DEFAULT_CONFIG_FOLDER]: {
               'config.json': '{"content":"some new content"}',
             }});
-          const log = new MockLog();
-          await loadOrCreateConfig(log);
+          const mockLog = new MockLog();
+          await loadOrCreateConfig(mockLog);
           // Checks if both of the files exists.
           expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
           expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeTrue();
