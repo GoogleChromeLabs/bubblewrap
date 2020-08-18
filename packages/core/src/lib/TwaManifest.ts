@@ -48,6 +48,7 @@ const DEFAULT_APP_NAME = 'My TWA';
 const DEFAULT_DISPLAY_MODE = 'standalone';
 const DEFAULT_THEME_COLOR = '#FFFFFF';
 const DEFAULT_NAVIGATION_COLOR = '#000000';
+const DEFAULT_NAVIGATION_DIVIDER_COLOR = '#00000000';
 const DEFAULT_BACKGROUND_COLOR = '#FFFFFF';
 const DEFAULT_APP_VERSION_CODE = 1;
 const DEFAULT_APP_VERSION_NAME = DEFAULT_APP_VERSION_CODE.toString();
@@ -68,6 +69,11 @@ export type FallbackType = 'customtabs' | 'webview';
  * display: '<%= display %>', // The display mode for the TWA.
  * themeColor: '<%= themeColor %>', // The color used for the status bar.
  * navigationColor: '<%= themeColor %>', // The color used for the navigation bar.
+ * navigationColorDark: '<%= navigationColorDark %>', // The color used for the dark navbar.
+ * navigationDividerColor: '<%= navigationDividerColor %>', // The color used for the
+ * navbar divider.
+ * navigationDividerColorDark: '<%= navigationDividerColorDark %>', // The color used for the dark 
+ * navbar divider.
  * backgroundColor: '<%= backgroundColor %>', // The color used for the splash screen background.
  * enableNotifications: false, // Set to true to enable notification delegation.
  * enableSiteSettingsShortcut: true, // Set to false to disable the shortcut into site settings.
@@ -92,6 +98,9 @@ export class TwaManifest {
   display: DisplayMode;
   themeColor: Color;
   navigationColor: Color;
+  navigationColorDark: Color;
+  navigationDividerColor: Color;
+  navigationDividerColorDark: Color;
   backgroundColor: Color;
   enableNotifications: boolean;
   startUrl: string;
@@ -120,6 +129,12 @@ export class TwaManifest {
     this.display = asDisplayMode(data.display!) || DEFAULT_DISPLAY_MODE;
     this.themeColor = new Color(data.themeColor);
     this.navigationColor = new Color(data.navigationColor);
+    this.navigationColorDark = data.navigationColorDark == undefined ?
+      new Color(DEFAULT_NAVIGATION_COLOR) : new Color(data.navigationColorDark);
+    this.navigationDividerColor = data.navigationDividerColor == undefined ?
+      new Color(DEFAULT_NAVIGATION_DIVIDER_COLOR) : new Color(data.navigationDividerColor);
+    this.navigationDividerColorDark = data.navigationDividerColorDark == undefined ?
+    new Color(DEFAULT_NAVIGATION_COLOR) : new Color(data.navigationDividerColorDark);
     this.backgroundColor = new Color(data.backgroundColor);
     this.enableNotifications = data.enableNotifications;
     this.startUrl = data.startUrl;
@@ -148,6 +163,9 @@ export class TwaManifest {
     const json: TwaManifestJson = Object.assign({}, this, {
       themeColor: this.themeColor.hex(),
       navigationColor: this.navigationColor.hex(),
+      navigationColorDark: this.navigationColorDark.hex(),
+      navigationDividerColor: this.navigationDividerColor.hex(),
+      navigationDividerColorDark: this.navigationDividerColorDark.hex(),
       backgroundColor: this.backgroundColor.hex(),
       appVersion: this.appVersionName,
       webManifestUrl: this.webManifestUrl ? this.webManifestUrl.toString() : undefined,
@@ -241,6 +259,9 @@ export class TwaManifest {
       display: asDisplayMode(webManifest['display']!) || DEFAULT_DISPLAY_MODE,
       themeColor: webManifest['theme_color'] || DEFAULT_THEME_COLOR,
       navigationColor: DEFAULT_NAVIGATION_COLOR,
+      navigationColorDark: DEFAULT_NAVIGATION_COLOR,
+      navigationDividerColor: DEFAULT_NAVIGATION_DIVIDER_COLOR,
+      navigationDividerColorDark: DEFAULT_NAVIGATION_DIVIDER_COLOR,
       backgroundColor: webManifest['background_color'] || DEFAULT_BACKGROUND_COLOR,
       startUrl: fullStartUrl.pathname + fullStartUrl.search,
       iconUrl: resolveIconUrl(icon),
@@ -294,6 +315,9 @@ export interface TwaManifestJson {
   display?: string; // Older Manifests may not have this field.
   themeColor: string;
   navigationColor: string;
+  navigationColorDark?: string;
+  navigationDividerColor?: string;
+  navigationDividerColorDark?: string;
   backgroundColor: string;
   enableNotifications: boolean;
   startUrl: string;
