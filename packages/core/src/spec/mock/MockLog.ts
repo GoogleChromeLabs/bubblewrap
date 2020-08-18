@@ -65,8 +65,8 @@ export class MockLog implements Log {
       this.receivedData.push(message);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     setVerbose(): void {
+      // Not implemented for testing.
     }
 
     /**

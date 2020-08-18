@@ -18,6 +18,7 @@ import {AndroidSdkTools} from './lib/androidSdk/AndroidSdkTools';
 import {Config} from './lib/Config';
 import {GradleWrapper} from './lib/GradleWrapper';
 import {Log, ConsoleLog} from './lib/Log';
+import {MockLog} from './spec/mock/MockLog';
 import {JarSigner} from './lib/jdk/JarSigner';
 import {JdkHelper} from './lib/jdk/JdkHelper';
 import {KeyTool} from './lib/jdk/KeyTool';
@@ -37,6 +38,7 @@ export {AndroidSdkTools,
   KeyTool,
   Log,
   ConsoleLog,
+  MockLog,
   TwaGenerator,
   TwaManifest,
   DisplayMode,
