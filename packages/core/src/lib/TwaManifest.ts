@@ -72,7 +72,7 @@ export type FallbackType = 'customtabs' | 'webview';
  * navigationColorDark: '<%= navigationColorDark %>', // The color used for the dark navbar.
  * navigationDividerColor: '<%= navigationDividerColor %>', // The color used for the
  * navbar divider.
- * navigationDividerColorDark: '<%= navigationDividerColorDark %>', // The color used for the dark 
+ * navigationDividerColorDark: '<%= navigationDividerColorDark %>', // The color used for the dark
  * navbar divider.
  * backgroundColor: '<%= backgroundColor %>', // The color used for the splash screen background.
  * enableNotifications: false, // Set to true to enable notification delegation.

@@ -273,7 +273,6 @@ describe('TwaManifest', () => {
       expect(twaManifest.navigationColor).toEqual(new Color('#000000'));
       expect(twaManifest.navigationDividerColor).toEqual(new Color('#00000000'));
       expect(twaManifest.navigationDividerColorDark).toEqual(new Color('#000000'));
-
     });
   });
 
