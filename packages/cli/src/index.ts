@@ -15,7 +15,7 @@
  */
 
 import {Cli} from './lib/Cli';
-import {Log, ConsoleLog} from '@bubblewrap/core';
+import {ConsoleLog} from '@bubblewrap/core';
 
 module.exports = async (): Promise<void> => {
   const cli = new Cli();
