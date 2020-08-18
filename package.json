@@ -7,7 +7,8 @@
     "build": "lerna run build",
     "lint": "lerna run lint",
     "test": "lerna run test",
-    "clean": "lerna clean -y",
+    "clean-modules": "lerna clean -y",
+    "clean": "lerna run clean",
     "postinstall": "lerna bootstrap && lerna link"
   },
   "keywords": [
@@ -28,6 +29,7 @@
     "@types/mock-fs": "^4.10.0",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
+    "del-cli": "^3.0.1",
     "eslint": "^6.6.0",
     "eslint-config-google": "^0.14.0",
     "jasmine": "^3.5.0",
