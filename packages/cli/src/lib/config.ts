@@ -17,7 +17,7 @@
 
 import {join} from 'path';
 import {homedir} from 'os';
-import {Config, Log} from '@bubblewrap/core';
+import {Config, Log, ConsoleLog} from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
 import {existsSync} from 'fs';
 import {promises as fsPromises} from 'fs';
@@ -44,7 +44,7 @@ async function createConfig(): Promise<Config> {
   return new Config(result.jdkPath, result.androidSdkPath);
 }
 
-async function renameConfigIfNeeded(log = new Log('config')): Promise<void> {
+async function renameConfigIfNeeded(log: Log): Promise<void> {
   if (existsSync(DEFAULT_CONFIG_FILE_PATH)) return;
   // No new named config file found.
   if (!existsSync(LEGACY_CONFIG_FILE_PATH)) return;
@@ -64,9 +64,9 @@ async function renameConfigIfNeeded(log = new Log('config')): Promise<void> {
   }
 }
 
-
-export async function loadOrCreateConfig(path = DEFAULT_CONFIG_FILE_PATH): Promise<Config> {
-  await renameConfigIfNeeded();
+export async function loadOrCreateConfig(log: Log = new ConsoleLog('config'),
+    path = DEFAULT_CONFIG_FILE_PATH): Promise<Config> {
+  await renameConfigIfNeeded(log);
   const existingConfig = await Config.loadConfig(path);
   if (existingConfig) return existingConfig;
 

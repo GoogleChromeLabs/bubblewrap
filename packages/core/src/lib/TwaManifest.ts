@@ -20,7 +20,7 @@ import * as fs from 'fs';
 import fetch from 'node-fetch';
 import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
 import Color = require('color');
-import Log from './Log';
+import {ConsoleLog} from './Log';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 import {ShortcutInfo} from './ShortcutInfo';
 import {AppsFlyerConfig} from './features/AppsFlyerFeature';
@@ -114,7 +114,7 @@ export class TwaManifest {
   features: Features;
   enableSiteSettingsShortcut: boolean;
 
-  private static log: Log = new Log('twa-manifest');
+  private static log = new ConsoleLog('twa-manifest');
 
   constructor(data: TwaManifestJson) {
     this.packageId = data.packageId;

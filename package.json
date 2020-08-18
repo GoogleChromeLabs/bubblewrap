@@ -25,6 +25,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/jasmine": "^3.5.11",
+    "@types/mock-fs": "^4.10.0",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "eslint": "^6.6.0",
@@ -32,12 +33,10 @@
     "jasmine": "^3.5.0",
     "lerna": "^3.22.1",
     "lerna-changelog": "^1.0.1",
+    "mock-fs": "^4.12.0",
     "npm": "^6.14.5",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
   },
-  "dependencies": {
-    "@bubblewrap/core": "^1.4.0",
-    "mock-fs": "^4.12.0"
-  }
+  "dependencies": {}
 }
