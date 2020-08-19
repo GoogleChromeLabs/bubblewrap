@@ -74,6 +74,11 @@ type Messages = {
   promptKeyPassword: string;
   promptNewAppVersionName: string;
   warnPwaFailedQuality: string;
+  jdkPathIsNotValid: string;
+  jdkPathIsNotCorrect: string;
+  jdkIsNotsupported: string;
+  androidSdkPathIsNotValid: string;
+  androidSdkPathIsNotCorrect: string;
 }
 
 export const enUS: Messages = {
@@ -245,4 +250,17 @@ the PWA:
   promptKeyPassword: 'Password for the Key:',
   promptNewAppVersionName: 'versionName for the new App version:',
   warnPwaFailedQuality: red('PWA Quality Criteria check failed.'),
+  jdkPathIsNotValid: 'The jdkPath doesn\'t exist, please run the following command to update it:' +
+  '\nbubblewrap updateConfig --jdkPath <path-to-jdk>. Then run bubblewrap doctor again.',
+  jdkPathIsNotCorrect: 'The jdkPath isn\'t correct, please run the following command to update ' +
+  'it:\nbubblewrap updateConfig --jdkPath path/here, such that the folder "here" contains' +
+  ' the file "release". Then run bubblewrap doctor again.',
+  jdkIsNotsupported: 'Unsupported jdk version. Please download "OpenJDK 8(LTS)" at the link ' +
+  'below:\nhttps://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=hotspot.',
+  androidSdkPathIsNotValid: 'The androidSdkPath doesn\'t exist, please run the following ' +
+  'command to update it:\nbubblewrap updateConfig --androidSdkPath <path-to-sdk>. '+
+  'Then run bubblewrap doctor again.',
+  androidSdkPathIsNotCorrect: 'The androidSdkPath isn\'t correct, please run the following ' +
+  'command to update it:\nbubblewrap updateConfig --androidSdkPath <path-to-sdk>, such that the' +
+  ' folder of the path contains the folder "build-tools". Then run bubblewrap doctor again.',
 };
