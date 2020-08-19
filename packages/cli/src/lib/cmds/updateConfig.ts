@@ -16,22 +16,19 @@
 
 import {Config, Log, ConsoleLog} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
-import {join} from 'path';
-import {homedir} from 'os';
 import {existsSync} from 'fs';
 import {loadOrCreateConfig} from '../config';
-
-const CONFIG_FILE_PATH = join(homedir(), '.bubblewrap-config/bubblewrap-config.json');
+import {DEFAULT_CONFIG_FILE_PATH} from '../config';
 
 async function updateAndroidSdkPath(path: string, log: Log): Promise<boolean> {
   if (!existsSync(path)) {
     log.error('Please enter a valid path.');
     return false;
   }
-  const config = loadOrCreateConfig();
-  const jdkPath = (await config).jdkPath;
+  const config = await loadOrCreateConfig();
+  const jdkPath = config.jdkPath;
   const newConfig = new Config(jdkPath, path);
-  newConfig.saveConfig(CONFIG_FILE_PATH);
+  newConfig.saveConfig(DEFAULT_CONFIG_FILE_PATH);
   return true;
 }
 
@@ -41,13 +38,14 @@ async function updateJdkPath(path: string, log: Log): Promise<boolean> {
     return false;
   }
   const config = await loadOrCreateConfig();
-  const androidSdkPath = (await config).androidSdkPath;
+  const androidSdkPath = config.androidSdkPath;
   const newConfig = new Config(path, androidSdkPath);
-  newConfig.saveConfig(CONFIG_FILE_PATH);
+  newConfig.saveConfig(DEFAULT_CONFIG_FILE_PATH);
   return true;
 }
 
-async function invoke(args: ParsedArgs, log: Log): Promise<boolean> {
+export async function updateConfig(args: ParsedArgs, log: Log = new ConsoleLog('updateConfig')):
+        Promise<boolean> {
   if (args.jdkPath) {
     await updateJdkPath(args.JdkPath, log);
   }
@@ -60,9 +58,4 @@ async function invoke(args: ParsedArgs, log: Log): Promise<boolean> {
     return false;
   }
   return true;
-}
-
-export async function updateConfig(args: ParsedArgs, log: Log = new ConsoleLog('updateConfig')):
-        Promise<boolean> {
-  return await invoke(args, log);
 }
