@@ -16,7 +16,7 @@
 
 import {Log, ConsoleLog} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
-import {enUS as messages} from '../strings'
+import {enUS as messages} from '../strings';
 
 const HELP_MESSAGES = new Map<string, string>(
     [

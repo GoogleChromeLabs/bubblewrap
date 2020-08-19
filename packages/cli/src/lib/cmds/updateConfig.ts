@@ -19,7 +19,7 @@ import {ParsedArgs} from 'minimist';
 import {existsSync} from 'fs';
 import {loadOrCreateConfig} from '../config';
 import {DEFAULT_CONFIG_FILE_PATH} from '../config';
-import {enUS as messages} from '../strings'
+import {enUS as messages} from '../strings';
 
 async function updateAndroidSdkPath(path: string, log: Log): Promise<boolean> {
   if (!existsSync(path)) {
