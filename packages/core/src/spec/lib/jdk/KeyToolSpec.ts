@@ -66,8 +66,7 @@ describe('KeyTool', () => {
     } as CreateKeyOptions;
 
     it('Executes the correct command to create a key', async () => {
-      const mockLog = new MockLog();
-      const keyTool = new KeyTool(jdkHelper, mockLog);
+      const keyTool = new KeyTool(jdkHelper, new MockLog());
       spyOn(fs, 'existsSync').and.returnValue(false);
       spyOn(util, 'execute').and.stub();
       await keyTool.createSigningKey(keyOptions);
@@ -86,8 +85,7 @@ describe('KeyTool', () => {
     });
 
     it('Skips creation when a key already exists', async () => {
-      const mockLog = new MockLog();
-      const keyTool = new KeyTool(jdkHelper, mockLog);
+      const keyTool = new KeyTool(jdkHelper, new MockLog());
       spyOn(fs, 'existsSync').and.returnValue(true);
       spyOn(util, 'execute').and.stub();
       await keyTool.createSigningKey(keyOptions);
@@ -95,8 +93,7 @@ describe('KeyTool', () => {
     });
 
     it('Deletes and writes a new key when overwrite = true', async () => {
-      const mockLog = new MockLog();
-      const keyTool = new KeyTool(jdkHelper, mockLog);
+      const keyTool = new KeyTool(jdkHelper, new MockLog());
       spyOn(fs, 'existsSync').and.returnValue(true);
       spyOn(fs.promises, 'unlink').and.resolveTo();
       spyOn(util, 'execute').and.stub();
@@ -115,7 +112,7 @@ describe('KeyTool', () => {
     } as KeyOptions;
 
     it('Executes the correct command to list keys', async () => {
-      const keyTool = new KeyTool(jdkHelper);
+      const keyTool = new KeyTool(jdkHelper, new MockLog());
       spyOn(fs, 'existsSync').and.returnValue(true);
       spyOn(util, 'execute').and.resolveTo({stdout: '', stderr: ''});
       await keyTool.list(keyOptions);
@@ -131,8 +128,7 @@ describe('KeyTool', () => {
     });
 
     it('Throws error if keyOptions.path doesn\'t exist', async () => {
-      const mockLog = new MockLog();
-      const keyTool = new KeyTool(jdkHelper, mockLog);
+      const keyTool = new KeyTool(jdkHelper, new MockLog());
       spyOn(fs, 'existsSync').and.returnValue(false);
       expectAsync(keyTool.list(keyOptions)).toBeRejectedWithError();
     });
