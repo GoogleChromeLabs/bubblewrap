@@ -19,6 +19,8 @@ import {Config} from '../../../lib/Config';
 import util = require('../../../lib/util');
 import {JdkHelper} from '../../../lib/jdk/JdkHelper';
 import * as fs from 'fs';
+import {MockLog} from '../../..';
+import mock = require('mock-fs');
 
 const SHA1 = '38:03:D6:95:91:7C:9C:EE:4A:A0:58:43:A7:43:A5:D2:76:52:EF:9B';
 const SHA256 = 'F5:08:9F:8A:D4:C8:4A:15:6D:0A:B1:3F:61:96:BE:C7:87:8C:DE:05:59:92:B2:A3:2D:05:' +
@@ -64,7 +66,8 @@ describe('KeyTool', () => {
     } as CreateKeyOptions;
 
     it('Executes the correct command to create a key', async () => {
-      const keyTool = new KeyTool(jdkHelper);
+      const mockLog = new MockLog();
+      const keyTool = new KeyTool(jdkHelper, mockLog);
       spyOn(fs, 'existsSync').and.returnValue(false);
       spyOn(util, 'execute').and.stub();
       await keyTool.createSigningKey(keyOptions);
@@ -83,7 +86,8 @@ describe('KeyTool', () => {
     });
 
     it('Skips creation when a key already exists', async () => {
-      const keyTool = new KeyTool(jdkHelper);
+      const mockLog = new MockLog();
+      const keyTool = new KeyTool(jdkHelper, mockLog);
       spyOn(fs, 'existsSync').and.returnValue(true);
       spyOn(util, 'execute').and.stub();
       await keyTool.createSigningKey(keyOptions);
@@ -91,7 +95,8 @@ describe('KeyTool', () => {
     });
 
     it('Deletes and writes a new key when overwrite = true', async () => {
-      const keyTool = new KeyTool(jdkHelper);
+      const mockLog = new MockLog();
+      const keyTool = new KeyTool(jdkHelper, mockLog);
       spyOn(fs, 'existsSync').and.returnValue(true);
       spyOn(fs.promises, 'unlink').and.resolveTo();
       spyOn(util, 'execute').and.stub();
@@ -126,7 +131,8 @@ describe('KeyTool', () => {
     });
 
     it('Throws error if keyOptions.path doesn\'t exist', async () => {
-      const keyTool = new KeyTool(jdkHelper);
+      const mockLog = new MockLog();
+      const keyTool = new KeyTool(jdkHelper, mockLog);
       spyOn(fs, 'existsSync').and.returnValue(false);
       expectAsync(keyTool.list(keyOptions)).toBeRejectedWithError();
     });
