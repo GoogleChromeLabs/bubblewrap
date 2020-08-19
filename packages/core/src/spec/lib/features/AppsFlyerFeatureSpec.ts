@@ -24,9 +24,8 @@ describe('AppsFlyerFeature', () => {
         appsFlyerId: '12345',
       } as AppsFlyerConfig;
       const appsFlyerFeature = new AppsFlyerFeature(config);
-      expect(appsFlyerFeature.applicationClass.variables.length).toBe(1);
-      expect(appsFlyerFeature.applicationClass.variables[0])
-          .toBe('private static final String AF_DEV_KEY = "12345";');
+      expect(appsFlyerFeature.applicationClass.variables)
+          .toEqual(['private static final String AF_DEV_KEY = "12345";']);
     });
   });
 });

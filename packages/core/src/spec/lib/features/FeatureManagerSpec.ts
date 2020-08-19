@@ -25,16 +25,17 @@ describe('FeatureManager', () => {
         features: {},
         fallbackType: 'customtabs',
       } as TwaManifest;
+      const emptySet = new Set();
       const features = new FeatureManager(manifest);
-      expect(features.androidManifest.components.length).toBe(0);
-      expect(features.androidManifest.permissions.size).toBe(0);
-      expect(features.applicationClass.imports.size).toBe(0);
-      expect(features.applicationClass.onCreate.length).toBe(0);
-      expect(features.applicationClass.variables.length).toBe(0);
-      expect(features.buildGradle.dependencies.size).toBe(0);
-      expect(features.buildGradle.repositories.size).toBe(0);
-      expect(features.launcherActivity.imports.size).toBe(0);
-      expect(features.launcherActivity.launchUrl.length).toBe(0);
+      expect(features.androidManifest.components).toEqual([]);
+      expect(features.androidManifest.permissions).toEqual(emptySet);
+      expect(features.applicationClass.imports).toEqual(emptySet);
+      expect(features.applicationClass.onCreate).toEqual([]);
+      expect(features.applicationClass.variables).toEqual([]);
+      expect(features.buildGradle.dependencies).toEqual(emptySet);
+      expect(features.buildGradle.repositories).toEqual(emptySet);
+      expect(features.launcherActivity.imports).toEqual(emptySet);
+      expect(features.launcherActivity.launchUrl).toEqual([]);
     });
 
     it('Adds INTERNET permission when WebView fallback is enabled', () => {
