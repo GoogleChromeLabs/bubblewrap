@@ -23,6 +23,7 @@ import {TwaManifest} from './TwaManifest';
 import {ShortcutInfo} from './ShortcutInfo';
 import {Log, ConsoleLog} from './Log';
 import {ImageHelper, IconDefinition} from './ImageHelper';
+import {FeatureManager} from './features/FeatureManager';
 
 const COPY_FILE_LIST = [
   'settings.gradle',
@@ -43,6 +44,13 @@ const COPY_FILE_LIST = [
 const TEMPLATE_FILE_LIST = [
   'app/build.gradle',
   'app/src/main/AndroidManifest.xml',
+];
+
+const JAVA_DIR = 'app/src/main/java/';
+
+const JAVA_FILE_LIST = [
+  'LauncherActivity.java',
+  'Application.java',
 ];
 
 const DELETE_FILE_LIST = [
@@ -195,6 +203,25 @@ export class TwaGenerator {
     }));
   }
 
+  private async applyJavaTemplate(
+      sourceDir: string, targetDir: string, packageName: string, filename: string, args: object):
+      Promise<void> {
+    const sourceFile = path.join(sourceDir, JAVA_DIR, filename);
+    const destFile = path.join(targetDir, JAVA_DIR, packageName.split('.').join('/'), filename);
+    await fsMkDir(path.dirname(destFile), {recursive: true});
+    const templateFile = await fsReadFile(sourceFile, 'utf-8');
+    const output = template(templateFile)(args);
+    await fsWriteFile(destFile, output);
+  }
+
+  private applyJavaTemplates(
+      sourceDir: string, targetDir: string, packageName: string, fileList: string[], args: object):
+      Promise<void[]> {
+    return Promise.all(fileList.map((file) => {
+      this.applyJavaTemplate(sourceDir, targetDir, packageName, file, args);
+    }));
+  }
+
   private async applyTemplateMap(
       sourceDir: string, targetDir: string,
       fileMap: Record<string, string>, args: object): Promise<void> {
@@ -291,7 +318,8 @@ export class TwaGenerator {
    */
   async createTwaProject(targetDirectory: string, twaManifest: TwaManifest,
       reportProgress: twaGeneratorProgress = noOpProgress): Promise<void> {
-    const progress = new Progress(8, reportProgress);
+    const features = new FeatureManager(twaManifest);
+    const progress = new Progress(9, reportProgress);
     const error = twaManifest.validate();
     if (error !== null) {
       throw new Error(`Invalid TWA Manifest: ${error}`);
@@ -312,9 +340,22 @@ export class TwaGenerator {
     await fs.promises.chmod(path.join(targetDirectory, 'gradlew'), '755');
     progress.update();
 
+    // Those are the arguments passed when applying templates. Functions are not automatically
+    // copied from objects, so we explicitly copy generateShortcuts.
+    const args = {
+      ...twaManifest,
+      ...features,
+      generateShortcuts: twaManifest.generateShortcuts,
+    };
+
     // Generate templated files
     await this.applyTemplateList(
-        templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, twaManifest);
+        templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, args);
+    progress.update();
+
+    // Generate java files
+    await this.applyJavaTemplates(
+        templateDirectory, targetDirectory, twaManifest.packageId, JAVA_FILE_LIST, args);
     progress.update();
 
     // Generate images

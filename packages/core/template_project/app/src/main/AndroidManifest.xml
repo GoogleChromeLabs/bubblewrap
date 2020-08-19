@@ -22,11 +22,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="<%= packageId %>">
 
-    <% if (fallbackType === 'webview') { %>
-        <uses-permission android:name="android.permission.INTERNET"/>
-    <% }%>
+    <% for(const permission of androidManifest.permissions) { %>
+        <uses-permission android:name="<%= permission %>"/>
+    <% } %>
 
     <application
+        android:name="Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/appName"
@@ -58,7 +59,7 @@
             </activity>
         <% } %>
         
-        <activity android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
+        <activity android:name="LauncherActivity"
             android:label="@string/launcherName">
             <meta-data android:name="android.support.customtabs.trusted.DEFAULT_URL"
                 android:value="@string/launchUrl" />
@@ -137,7 +138,10 @@
                 <action android:name="android.support.customtabs.trusted.TRUSTED_WEB_ACTIVITY_SERVICE"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-         </service>
+        </service>
 
+        <% for(const component of androidManifest.components) { %>
+            <%= component %>
+        <% } %>
     </application>
 </manifest>
