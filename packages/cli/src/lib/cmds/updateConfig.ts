@@ -19,6 +19,7 @@ import {ParsedArgs} from 'minimist';
 import {existsSync} from 'fs';
 import {loadOrCreateConfig} from '../config';
 import {DEFAULT_CONFIG_FILE_PATH} from '../config';
+import {enUS as messages} from '../strings'
 
 async function updateAndroidSdkPath(path: string, log: Log): Promise<boolean> {
   if (!existsSync(path)) {
@@ -53,8 +54,7 @@ export async function updateConfig(args: ParsedArgs, log: Log = new ConsoleLog('
     await updateAndroidSdkPath(args.androidSdkPath, log);
   }
   if (!args.jdkPath && !args.androidSdkPath) {
-    log.error('usage: bubblewrap updateConfig [--androidSdk <path-to-jdk>]' +
-        '[--androidSdk <path-to-android-sdk>]\nYou can insert one or both of them.');
+    log.error(messages.updateConfigUsage);
     return false;
   }
   return true;

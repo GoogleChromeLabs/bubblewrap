@@ -16,8 +16,9 @@
 
 import {Log, ConsoleLog} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
+import {enUS as messages} from '../strings'
 
-const HELP_MESSAGES = new Map<string, string>(
+export const HELP_MESSAGES = new Map<string, string>(
     [
       ['main', [
         'bubblewrap [command] <options>',
@@ -86,11 +87,7 @@ const HELP_MESSAGES = new Map<string, string>(
         '--verbose ................. prints the adb command being executed',
       ].join('\n')],
       ['updateConfig', [
-        'Usage:',
-        '',
-        '',
-        '[--jdk <path-to-jdk>] [--androidSdk <path-to-android-sdk>]',
-        '(You can insert one or both of them)',
+        messages.updateConfigUsage,
         '',
         '',
         'Options: ',
