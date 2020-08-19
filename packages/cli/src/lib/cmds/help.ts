@@ -30,6 +30,7 @@ const HELP_MESSAGES = new Map<string, string>(
         'validate ............ validates if an URL matches the PWA Quality Criteria for Trusted' +
             ' Web Activity',
         'install ............. installs the output application to a connected device',
+        'updateConfig ........ sets the paths of the jdk or the androidSdk to the given paths',
       ].join('\n')],
       ['init', [
         'Usage:',
@@ -83,6 +84,18 @@ const HELP_MESSAGES = new Map<string, string>(
         '--apkFile ................. path to the APK file to be installed. Defaults to ' +
             '"./app-release-signed.apk"',
         '--verbose ................. prints the adb command being executed',
+      ].join('\n')],
+      ['updateConfig', [
+        'Usage:',
+        '',
+        '',
+        '[--jdk <path-to-jdk>] [--androidSdk <path-to-android-sdk>]',
+        '(You can insert one or both of them)',
+        '',
+        '',
+        'Options: ',
+        '--jdk ................. sets the jdk\'s path to the path given',
+        '--androidSdk .......... sets the androidSdk\'s path to the path given',
       ].join('\n')],
     ],
 );
