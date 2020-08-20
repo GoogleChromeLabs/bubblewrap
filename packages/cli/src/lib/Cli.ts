@@ -26,6 +26,7 @@ import {major} from 'semver';
 import {version} from './cmds/version';
 import {BUBBLEWRAP_LOGO} from './constants';
 import {updateConfig} from './cmds/updateConfig';
+import {doctor} from './cmds/doctor';
 
 export class Cli {
   async run(args: string[]): Promise<boolean> {
@@ -73,6 +74,8 @@ export class Cli {
         return await install(parsedArgs, config);
       case 'updateConfig':
         return await updateConfig(parsedArgs);
+      case 'doctor':
+        return await doctor();
       default:
         throw new Error(
             `"${command}" is not a valid command! Use 'bubblewrap help' for a list of commands`);
