@@ -129,12 +129,11 @@ export class TwaManifest {
     this.display = asDisplayMode(data.display!) || DEFAULT_DISPLAY_MODE;
     this.themeColor = new Color(data.themeColor);
     this.navigationColor = new Color(data.navigationColor);
-    this.navigationColorDark = new Color(data.navigationColorDark == undefined ?
-      DEFAULT_NAVIGATION_COLOR : data.navigationColorDark);
-    this.navigationDividerColor = new Color(data.navigationDividerColor == undefined ?
-      DEFAULT_NAVIGATION_DIVIDER_COLOR : data.navigationDividerColor);
-    this.navigationDividerColorDark = new Color(data.navigationDividerColorDark == undefined ?
-      DEFAULT_NAVIGATION_COLOR : data.navigationDividerColorDark);
+    this.navigationColorDark = new Color(data.navigationColorDark ?? DEFAULT_NAVIGATION_COLOR);
+    this.navigationDividerColor = new Color(data.navigationDividerColor ??
+      DEFAULT_NAVIGATION_DIVIDER_COLOR);
+    this.navigationDividerColorDark = new Color(data.navigationDividerColorDark ??
+      DEFAULT_NAVIGATION_COLOR);
     this.backgroundColor = new Color(data.backgroundColor);
     this.enableNotifications = data.enableNotifications;
     this.startUrl = data.startUrl;
