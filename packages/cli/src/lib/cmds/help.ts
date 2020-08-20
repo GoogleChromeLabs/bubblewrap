@@ -16,6 +16,7 @@
 
 import {Log, ConsoleLog} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
+import {enUS as messages} from '../strings';
 
 const HELP_MESSAGES = new Map<string, string>(
     [
@@ -30,6 +31,7 @@ const HELP_MESSAGES = new Map<string, string>(
         'validate ............ validates if an URL matches the PWA Quality Criteria for Trusted' +
             ' Web Activity',
         'install ............. installs the output application to a connected device',
+        'updateConfig ........ sets the paths of the jdk or the androidSdk to the given paths',
       ].join('\n')],
       ['init', [
         'Usage:',
@@ -83,6 +85,14 @@ const HELP_MESSAGES = new Map<string, string>(
         '--apkFile ................. path to the APK file to be installed. Defaults to ' +
             '"./app-release-signed.apk"',
         '--verbose ................. prints the adb command being executed',
+      ].join('\n')],
+      ['updateConfig', [
+        messages.updateConfigUsage,
+        '',
+        '',
+        'Options: ',
+        '--jdk ................. sets the jdk\'s path to the path given',
+        '--androidSdk .......... sets the androidSdk\'s path to the path given',
       ].join('\n')],
     ],
 );

@@ -24,7 +24,7 @@ import {promises as fsPromises} from 'fs';
 
 const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap');
 const DEFAULT_CONFIG_NAME = 'config.json';
-const DEFAULT_CONFIG_FILE_PATH = join(DEFAULT_CONFIG_FOLDER, DEFAULT_CONFIG_NAME);
+export const DEFAULT_CONFIG_FILE_PATH = join(DEFAULT_CONFIG_FOLDER, DEFAULT_CONFIG_NAME);
 const LEGACY_CONFIG_FOLDER = join(homedir(), '.llama-pack');
 const LEGACY_CONFIG_NAME = 'llama-pack-config.json';
 const LEGACY_CONFIG_FILE_PATH = join(LEGACY_CONFIG_FOLDER, LEGACY_CONFIG_NAME);
