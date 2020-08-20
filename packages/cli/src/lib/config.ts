@@ -19,8 +19,7 @@ import {join} from 'path';
 import {homedir} from 'os';
 import {Config, Log, ConsoleLog} from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
-import {existsSync} from 'fs';
-import {promises as fsPromises} from 'fs';
+import {existsSync, promises as fsPromises} from 'fs';
 
 const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap');
 const DEFAULT_CONFIG_NAME = 'config.json';
@@ -71,6 +70,6 @@ export async function loadOrCreateConfig(log: Log = new ConsoleLog('config'),
   if (existingConfig) return existingConfig;
 
   const config = await createConfig();
-  await config.saveConfig(path);
+  await config.saveConfig(DEFAULT_CONFIG_FILE_PATH);
   return config;
 }

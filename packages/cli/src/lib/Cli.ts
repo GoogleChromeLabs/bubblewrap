@@ -57,6 +57,10 @@ export class Cli {
     }
 
     switch (command) {
+      case 'updateConfig':
+        return await updateConfig(parsedArgs);
+      case 'doctor':
+        return await doctor();
       case 'help':
         return await help(parsedArgs);
       case 'init':
