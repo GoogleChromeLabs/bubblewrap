@@ -4,6 +4,7 @@
   "description": "Core Library to generate, build and sign TWA projects",
   "scripts": {
     "build": "tsc",
+    "clean": "del dist",
     "lint": "eslint \"src/**/*.{js,ts}\"",
     "test": "tsc && jasmine --config=jasmine.json"
   },
@@ -32,7 +33,6 @@
     "@types/color": "^3.0.0",
     "@types/extract-zip": "^1.6.2",
     "@types/inquirer": "^6.5.0",
-    "@types/jasmine": "^3.5.11",
     "@types/lodash.template": "^4.5.0",
     "@types/mime-types": "^2.1.0",
     "@types/node": "^12.12.50",

@@ -74,6 +74,7 @@ type Messages = {
   promptKeyPassword: string;
   promptNewAppVersionName: string;
   warnPwaFailedQuality: string;
+  updateConfigUsage: string;
 }
 
 export const enUS: Messages = {
@@ -245,4 +246,6 @@ the PWA:
   promptKeyPassword: 'Password for the Key:',
   promptNewAppVersionName: 'versionName for the new App version:',
   warnPwaFailedQuality: red('PWA Quality Criteria check failed.'),
+  updateConfigUsage: 'Usage\n\n:[--jdk <path-to-jdk>] [--androidSdk <path-to-android-sdk>]' +
+      '(You can insert one or both of them)',
 };

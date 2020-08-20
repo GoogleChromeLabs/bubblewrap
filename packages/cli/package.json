@@ -7,11 +7,14 @@
   },
   "scripts": {
     "build": "tsc",
+    "clean": "del dist",
     "lint": "eslint \"src/**/*.{js,ts}\"",
     "test": "tsc && jasmine --config=jasmine.json"
   },
   "files": [
-    "dist",
+    "dist/lib",
+    "dist/index.d.ts",
+    "dist/index.js",
     "bin",
     "package.json"
   ],
@@ -22,10 +25,6 @@
   },
   "author": "",
   "license": "Apache-2.0",
-  "devDependencies": {
-    "@types/jasmine": "^3.5.11",
-    "@types/mock-fs": "^4.10.0"
-  },
   "dependencies": {
     "@bubblewrap/core": "^1.5.0",
     "@bubblewrap/validator": "^1.4.1",

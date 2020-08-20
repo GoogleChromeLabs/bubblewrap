@@ -20,9 +20,10 @@ import * as fs from 'fs';
 import fetch from 'node-fetch';
 import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
 import Color = require('color');
-import Log from './Log';
+import {ConsoleLog} from './Log';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 import {ShortcutInfo} from './ShortcutInfo';
+import {AppsFlyerConfig} from './features/AppsFlyerFeature';
 
 // The minimum size needed for the app icon.
 const MIN_ICON_SIZE = 512;
@@ -58,6 +59,10 @@ const DEFAULT_ENABLE_NOTIFICATIONS = false;
 const DEFAULT_GENERATOR_APP_NAME = 'unknown';
 
 export type FallbackType = 'customtabs' | 'webview';
+
+type Features = {
+  appsFlyer?: AppsFlyerConfig;
+}
 
 /**
  * A Manifest used to generate the TWA Project
@@ -115,9 +120,10 @@ export class TwaManifest {
   generatorApp: string;
   webManifestUrl?: URL;
   fallbackType: FallbackType;
+  features: Features;
   enableSiteSettingsShortcut: boolean;
 
-  private static log: Log = new Log('twa-manifest');
+  private static log = new ConsoleLog('twa-manifest');
 
   constructor(data: TwaManifestJson) {
     this.packageId = data.packageId;
@@ -148,6 +154,7 @@ export class TwaManifest {
     this.generatorApp = data.generatorApp || DEFAULT_GENERATOR_APP_NAME;
     this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
     this.fallbackType = data.fallbackType || 'customtabs';
+    this.features = data.features || {};
     this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ?
       data.enableSiteSettingsShortcut : true;
   }
@@ -331,6 +338,9 @@ export interface TwaManifestJson {
   generatorApp?: string;
   webManifestUrl?: string;
   fallbackType?: FallbackType;
+  features?: {
+    appsFlyer?: AppsFlyerConfig;
+  };
   enableSiteSettingsShortcut?: boolean;
 }
 
