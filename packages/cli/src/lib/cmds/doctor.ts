@@ -23,17 +23,14 @@ import {enUS as messages} from '../strings';
 async function jdkDoctor(log: Log): Promise<boolean> {
   const config = await loadOrCreateConfig();
   const jdkPath = config.jdkPath;
-  if (!existsSync(jdkPath)) { // Checks if the given path is a real path.
-    log.error(messages.jdkPathIsNotValid);
-    return false;
-  }
   const file = await fsPromises.readFile(join(jdkPath, 'release'), 'utf-8');
-  if (!file) {
+  // Checks if the path given is valid.
+  if (!file || !existsSync(jdkPath)) {
     log.error(messages.jdkPathIsNotCorrect);
     return false;
   };
   if (file.indexOf('JAVA_VERSION="1.8') < 0) { // Checks if the jdk's version is 8 as needed.
-    log.error(messages.jdkIsNotsupported);
+    log.error(messages.jdkIsNotSupported);
     return false;
   }
   return true;
@@ -42,11 +39,8 @@ async function jdkDoctor(log: Log): Promise<boolean> {
 async function androidSdkDoctor(log: Log): Promise<boolean> {
   const config = await loadOrCreateConfig();
   const androidSdkPath = config.androidSdkPath;
-  if (!existsSync(androidSdkPath)) { // Checks if the given path is a real path.
-    log.error(messages.androidSdkPathIsNotValid);
-    return false;
-  }
-  if (!existsSync(join(androidSdkPath, 'build-tools'))) { // Checks if the path given is indeed.
+  // Checks if the path given is valid.
+  if (!existsSync(join(androidSdkPath, 'build-tools')) || !existsSync(androidSdkPath)) {
     log.error(messages.androidSdkPathIsNotCorrect);
     return false;
   };
