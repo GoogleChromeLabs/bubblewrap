@@ -36,6 +36,7 @@ async function jdkDoctor(log: Log): Promise<boolean> {
     }
   } catch {
     log.error(messages.jdkPathIsNotCorrect);
+    return false;
   }
   return true;
 }
