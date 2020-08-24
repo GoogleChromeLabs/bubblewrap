@@ -33,8 +33,8 @@ async function jdkDoctor(config: Config, log: Log): Promise<boolean> {
       log.error(messages.jdkIsNotSupported);
       return false;
     }
-  } catch {
-    log.error(messages.jdkPathIsNotCorrect);
+  } catch (e) {
+    log.error(messages.jdkPathIsNotCorrect + '\n' + e.message);
     return false;
   }
   return true;
