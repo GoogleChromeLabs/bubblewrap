@@ -23,15 +23,19 @@ import {enUS as messages} from '../strings';
 async function jdkDoctor(log: Log): Promise<boolean> {
   const config = await loadOrCreateConfig();
   const jdkPath = config.jdkPath;
-  const file = await fsPromises.readFile(join(jdkPath, 'release'), 'utf-8');
   // Checks if the path given is valid.
-  if (!file || !existsSync(jdkPath)) {
+  if (!existsSync(jdkPath)) {
     log.error(messages.jdkPathIsNotCorrect);
     return false;
   };
-  if (file.indexOf('JAVA_VERSION="1.8') < 0) { // Checks if the jdk's version is 8 as needed.
-    log.error(messages.jdkIsNotSupported);
-    return false;
+  try {
+    const file = await fsPromises.readFile(join(jdkPath, 'release'), 'utf-8');
+    if (file.indexOf('JAVA_VERSION="1.8') < 0) { // Checks if the jdk's version is 8 as needed.np
+      log.error(messages.jdkIsNotSupported);
+      return false;
+    }
+  } catch {
+    log.error(messages.jdkPathIsNotCorrect);
   }
   return true;
 }
@@ -51,7 +55,7 @@ export async function doctor(log: Log = new ConsoleLog('doctor')): Promise<boole
   const jdkResult = await jdkDoctor(log);
   const androidSdkResult = await androidSdkDoctor(log);
   if (jdkResult && androidSdkResult) {
-    log.info('Your jdkpath and androidSdkPath are valid.');
+    log.info(messages.bothPathsAreValid);
   }
   return jdkResult && androidSdkResult;
 }

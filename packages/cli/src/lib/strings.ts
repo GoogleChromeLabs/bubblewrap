@@ -78,6 +78,7 @@ type Messages = {
   jdkPathIsNotCorrect: string;
   jdkIsNotSupported: string;
   androidSdkPathIsNotCorrect: string;
+  bothPathsAreValid: string;
 }
 
 export const enUS: Messages = {
@@ -259,4 +260,5 @@ the PWA:
   androidSdkPathIsNotCorrect: 'The androidSdkPath isn\'t correct, please run the following ' +
       'command to update it:\nbubblewrap updateConfig --androidSdkPath <path-to-sdk>, such that ' +
       'the folder of the path contains the folder "build-tools". Then run bubblewrap doctor again.',
+  bothPathsAreValid: 'Your jdkpath and androidSdkPath are valid.',
 };
