@@ -253,7 +253,7 @@ the PWA:
   updateConfigUsage: 'Usage\n\n:[--jdk <path-to-jdk>] [--androidSdk <path-to-android-sdk>]' +
       '(You can insert one or both of them)',
   jdkPathIsNotCorrect: 'The jdkPath isn\'t correct, please run the following command to update ' +
-      'it:\nbubblewrap updateConfig --jdkPath path/here, such that the folder "here" contains' +
+      'it:\nbubblewrap updateConfig --jdkPath <path-to-jdk>, such that the folder "here" contains' +
       ' the file "release". Then run bubblewrap doctor again.',
   jdkIsNotSupported: 'Unsupported jdk version. Please download "OpenJDK 8(LTS)" at the link ' +
       'below:\nhttps://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=hotspot.',

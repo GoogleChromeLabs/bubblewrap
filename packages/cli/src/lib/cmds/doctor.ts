@@ -14,14 +14,13 @@
  *  limitations under the License.
  */
 
-import {ConsoleLog, Log} from '@bubblewrap/core';
+import {ConsoleLog, Log, Config} from '@bubblewrap/core';
 import {join} from 'path';
 import {existsSync, promises as fsPromises} from 'fs';
 import {loadOrCreateConfig} from '../config';
 import {enUS as messages} from '../strings';
 
-async function jdkDoctor(log: Log): Promise<boolean> {
-  const config = await loadOrCreateConfig();
+async function jdkDoctor(config: Config, log: Log): Promise<boolean> {
   const jdkPath = config.jdkPath;
   // Checks if the path given is valid.
   if (!existsSync(jdkPath)) {
@@ -30,7 +29,7 @@ async function jdkDoctor(log: Log): Promise<boolean> {
   };
   try {
     const file = await fsPromises.readFile(join(jdkPath, 'release'), 'utf-8');
-    if (file.indexOf('JAVA_VERSION="1.8') < 0) { // Checks if the jdk's version is 8 as needed.np
+    if (file.indexOf('JAVA_VERSION="1.8') < 0) { // Checks if the jdk's version is 8 as needed
       log.error(messages.jdkIsNotSupported);
       return false;
     }
@@ -41,8 +40,7 @@ async function jdkDoctor(log: Log): Promise<boolean> {
   return true;
 }
 
-async function androidSdkDoctor(log: Log): Promise<boolean> {
-  const config = await loadOrCreateConfig();
+async function androidSdkDoctor(config: Config, log: Log): Promise<boolean> {
   const androidSdkPath = config.androidSdkPath;
   // Checks if the path given is valid.
   if (!existsSync(join(androidSdkPath, 'build-tools')) || !existsSync(androidSdkPath)) {
@@ -53,8 +51,9 @@ async function androidSdkDoctor(log: Log): Promise<boolean> {
 }
 
 export async function doctor(log: Log = new ConsoleLog('doctor')): Promise<boolean> {
-  const jdkResult = await jdkDoctor(log);
-  const androidSdkResult = await androidSdkDoctor(log);
+  const config = await loadOrCreateConfig();
+  const jdkResult = await jdkDoctor(config, log);
+  const androidSdkResult = await androidSdkDoctor(config, log);
   if (jdkResult && androidSdkResult) {
     log.info(messages.bothPathsAreValid);
   }
