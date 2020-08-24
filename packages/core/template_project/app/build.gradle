@@ -196,5 +196,5 @@ dependencies {
     <% for(const dep of buildGradle.dependencies) { %>
         implementation '<%= dep %>'
     <% } %>
-    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:1.4.0'    
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.0.0'    
 }
