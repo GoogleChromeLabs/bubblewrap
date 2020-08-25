@@ -19,9 +19,10 @@ import {join} from 'path';
 import {existsSync, promises as fsPromises} from 'fs';
 import {loadOrCreateConfig} from '../config';
 import {enUS as messages} from '../strings';
+import {getJavaHome} from '../../../../core/src/lib/jdk/JdkHelper';
 
 async function jdkDoctor(config: Config, log: Log): Promise<boolean> {
-  const jdkPath = config.jdkPath;
+  const jdkPath = getJavaHome(config, process);
   // Checks if the path given is valid.
   if (!existsSync(jdkPath)) {
     log.error(messages.jdkPathIsNotCorrect);
@@ -43,7 +44,7 @@ async function jdkDoctor(config: Config, log: Log): Promise<boolean> {
 async function androidSdkDoctor(config: Config, log: Log): Promise<boolean> {
   const androidSdkPath = config.androidSdkPath;
   // Checks if the path given is valid.
-  if (!existsSync(join(androidSdkPath, 'build-tools')) || !existsSync(androidSdkPath)) {
+  if (!existsSync(join(androidSdkPath, 'tools')) || !existsSync(androidSdkPath)) {
     log.error(messages.androidSdkPathIsNotCorrect);
     return false;
   };

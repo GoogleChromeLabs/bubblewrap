@@ -21,6 +21,21 @@ import * as path from 'path';
 import {executeFile} from '../util';
 
 /**
+ * Returns the Home folder of the jdk.
+ * @param {Config} config The bubblewrap general configuration
+ * @param {NodeJS.Process} process Information from the OS process
+ */
+export function getJavaHome(config: Config, process: NodeJS.Process): string {
+  const joinPath = (process.platform === 'win32') ? path.win32.join : path.posix.join;
+  if (process.platform === 'darwin') {
+    return joinPath(config.jdkPath, '/Contents/Home/');
+  } else if (process.platform === 'linux' || process.platform === 'win32') {
+    return joinPath(config.jdkPath, '/');
+  }
+  throw new Error(`Unsupported Platform: ${process.platform}`);
+}
+
+/**
  * Helps getting information relevant to the JDK installed, including
  * the approprite environment needed to run Java commands on the JDK
  */
@@ -65,12 +80,7 @@ export class JdkHelper {
    * @returns {string} the value for the JAVA_HOME
    */
   getJavaHome(): string {
-    if (this.process.platform === 'darwin') {
-      return this.joinPath(this.config.jdkPath, '/Contents/Home/');
-    } else if (this.process.platform === 'linux' || this.process.platform === 'win32') {
-      return this.joinPath(this.config.jdkPath, '/');
-    }
-    throw new Error(`Unsupported Platform: ${this.process.platform}`);
+    return getJavaHome(this.config, this.process);
   }
 
   /**
