@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import {AndroidSdkTools} from './lib/androidSdk/AndroidSdkTools';
+import {AndroidSdkTools, newAndroidSdkTools} from './lib/androidSdk/AndroidSdkTools';
 import {Config} from './lib/Config';
 import {GradleWrapper} from './lib/GradleWrapper';
 import {Log, ConsoleLog} from './lib/Log';
@@ -30,6 +30,7 @@ import * as util from './lib/util';
 import {Result} from './lib/Result';
 
 export {AndroidSdkTools,
+  newAndroidSdkTools,
   Config,
   DigitalAssetLinks,
   GradleWrapper,
