@@ -25,7 +25,7 @@ const PARAMETERS_TO_IGNORE = ['--verbose', '-r'];
 export async function install(
     args: ParsedArgs, config: Config, log: Log = new ConsoleLog('install')): Promise<boolean> {
   const jdkHelper = new JdkHelper(process, config);
-  const androidSdkTools = await AndroidSdkTools.newAndroidSdkTools(process, config, jdkHelper, log);
+  const androidSdkTools = await AndroidSdkTools.create(process, config, jdkHelper, log);
   const apkFile = args.apkFile || DEFAULT_APK_FILE;
   if (args.verbose) {
     log.setVerbose(true);

@@ -16,7 +16,7 @@
 
 import {Config} from '../../../lib/Config';
 import {JdkHelper} from '../../../lib/jdk/JdkHelper';
-import {AndroidSdkTools, newAndroidSdkTools} from '../../../lib/androidSdk/AndroidSdkTools';
+import {AndroidSdkTools} from '../../../lib/androidSdk/AndroidSdkTools';
 import util = require('../../../lib/util');
 import * as fs from 'fs';
 import {MockLog} from '../../mock/MockLog';
@@ -78,7 +78,8 @@ describe('AndroidSdkTools', () => {
       const process = buildMockProcess('linux');
       const jdkHelper = new JdkHelper(process, config);
       const mockLog = new MockLog();
-      expectAsync(newAndroidSdkTools(process, config, jdkHelper, mockLog)).toBeRejectedWithError();
+      expectAsync(AndroidSdkTools.create(process, config, jdkHelper, mockLog))
+          .toBeRejectedWithError();
     });
   });
 
@@ -96,7 +97,8 @@ describe('AndroidSdkTools', () => {
         const process = buildMockProcess(test.platform);
         const jdkHelper = new JdkHelper(process, config);
         const mockLog = new MockLog();
-        const androidSdkTools = await newAndroidSdkTools(process, config, jdkHelper, mockLog);
+        const androidSdkTools = (await AndroidSdkTools.create(process, config,
+            jdkHelper, mockLog));
         const env = androidSdkTools.getEnv();
         expect(env['ANDROID_HOME']).toBe(test.expectedAndroidHome);
       });
@@ -123,7 +125,8 @@ describe('AndroidSdkTools', () => {
         const process = buildMockProcess(test.platform);
         const jdkHelper = new JdkHelper(process, config);
         const mockLog = new MockLog();
-        const androidSdkTools = await newAndroidSdkTools(process, config, jdkHelper, mockLog);
+        const androidSdkTools = (await AndroidSdkTools.create(process, config,
+            jdkHelper, mockLog));
         spyOn(util, 'execInteractive').and.stub();
         await androidSdkTools.installBuildTools();
         expect(util.execInteractive).toHaveBeenCalledWith(
@@ -142,7 +145,8 @@ describe('AndroidSdkTools', () => {
       const process = buildMockProcess(tests[0].platform);
       const jdkHelper = new JdkHelper(process, config);
       const mockLog = new MockLog();
-      const androidSdkTools = await newAndroidSdkTools(process, config, jdkHelper, mockLog);
+      const androidSdkTools = (await AndroidSdkTools.create(process, config,
+          jdkHelper, mockLog));
 
       // Set existsSync to return false so check for sdkmanager fails.
       fsSpy.and.returnValue(false);
@@ -182,7 +186,8 @@ describe('AndroidSdkTools', () => {
         const process = buildMockProcess(test.platform);
         const jdkHelper = new JdkHelper(process, config);
         const mockLog = new MockLog();
-        const androidSdkTools = await newAndroidSdkTools(process, config, jdkHelper, mockLog);
+        const androidSdkTools = (await AndroidSdkTools.create(process, config,
+            jdkHelper, mockLog));
         spyOn(util, 'execute').and.stub();
         await androidSdkTools.install('app-release-signed.apk');
         expect(util.execute).toHaveBeenCalledWith(test.expectedCwd, androidSdkTools.getEnv(),
@@ -198,7 +203,8 @@ describe('AndroidSdkTools', () => {
       const process = buildMockProcess(tests[0].platform);
       const jdkHelper = new JdkHelper(process, config);
       const mockLog = new MockLog();
-      const androidSdkTools = await newAndroidSdkTools(process, config, jdkHelper, mockLog);
+      const androidSdkTools = (await AndroidSdkTools.create(process, config,
+          jdkHelper, mockLog));
       fsSpy.and.returnValue(false);
       expectAsync(androidSdkTools.install('./app-release-signed.apk')).toBeRejectedWithError();
     });
@@ -249,7 +255,8 @@ describe('AndroidSdkTools', () => {
         const process = buildMockProcess(test.platform);
         const jdkHelper = new JdkHelper(process, config);
         const mockLog = new MockLog();
-        const androidSdkTools = await newAndroidSdkTools(process, config, jdkHelper, mockLog);
+        const androidSdkTools = (await AndroidSdkTools.create(process, config,
+            jdkHelper, mockLog));
         spyOn(util, 'executeFile').and.stub();
         await androidSdkTools.apksigner(
             '/path/to/keystore.ks', 'kspass', 'alias', 'keypass', 'unsigned.apk', 'signed.apk');

@@ -20,7 +20,7 @@ import util = require('../util');
 import {Config} from '../Config';
 import {JdkHelper} from '../jdk/JdkHelper';
 import {Log, ConsoleLog} from '../../lib/Log';
-import {Result} from '../..';
+import {Result} from '../../lib/Result';
 
 const BUILD_TOOLS_VERSION = '29.0.2';
 
@@ -33,12 +33,9 @@ export class AndroidSdkTools {
   private jdkHelper: JdkHelper;
   private pathJoin: (...paths: string[]) => string;
 
-  static async newAndroidSdkTools(process: NodeJS.Process, config: Config, jdkHelper: JdkHelper,
+  static async create(process: NodeJS.Process, config: Config, jdkHelper: JdkHelper,
       log: Log = new ConsoleLog('AndroidSdkTools')): Promise<AndroidSdkTools> {
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    if ((await validatePath(config)).isError()) {
-      throw new Error(`androidSdkPath does not exist: ${config.androidSdkPath}`);
-    }
+    (await AndroidSdkTools.validatePath(config.androidSdkPath)).unwrap();
     try {
       return new AndroidSdkTools(process, config, jdkHelper, log);
     } catch (error) {
@@ -210,8 +207,8 @@ export class AndroidSdkTools {
    * Checks if the androidSdkPath in the config file is valid.
    * @param {Config} config the bubblewrap general configuration.
    */
-  static async validatePath(config: Config): Promise<Result<boolean, Error>> {
-    const androidSdkPath = config.androidSdkPath;
+  static async validatePath(sdkPath: string): Promise<Result<boolean, Error>> {
+    const androidSdkPath = sdkPath;
     // Checks if the path given is valid.
     if (!fs.existsSync(path.join(androidSdkPath, 'tools'))|| !fs.existsSync(androidSdkPath)) {
       return Result.error(new Error('androidSdkPathIsNotCorrect'));
@@ -219,5 +216,3 @@ export class AndroidSdkTools {
     return Result.ok(true);
   }
 }
-export const newAndroidSdkTools = AndroidSdkTools.newAndroidSdkTools;
-export const validatePath = AndroidSdkTools.validatePath;

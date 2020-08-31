@@ -38,7 +38,7 @@ describe('GradleWrapper', () => {
     spyOn(fs, 'existsSync').and.returnValue(true);
     const config = new Config('/home/user/jdk8', '/home/user/sdktools');
     const jdkHelper = new JdkHelper(process, config);
-    androidSdkTools = await AndroidSdkTools.newAndroidSdkTools(process, config, jdkHelper);
+    androidSdkTools = await AndroidSdkTools.create(process, config, jdkHelper);
     gradleWrapper = new GradleWrapper(process, androidSdkTools);
   });
 

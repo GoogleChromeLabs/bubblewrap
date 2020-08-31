@@ -189,7 +189,7 @@ export async function build(config: Config, args: ParsedArgs,
     log: Log = new ConsoleLog('build'), prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
   const jdkHelper = new JdkHelper(process, config);
   const androidSdkTools =
-      await AndroidSdkTools.newAndroidSdkTools(process, config, jdkHelper, log);
+      await AndroidSdkTools.create(process, config, jdkHelper, log);
   const keyTool = new KeyTool(jdkHelper, log);
   const gradleWrapper = new GradleWrapper(process, androidSdkTools);
   const jarSigner = new JarSigner(jdkHelper);

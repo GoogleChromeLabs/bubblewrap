@@ -41,7 +41,7 @@ async function jdkDoctor(config: Config, log: Log): Promise<boolean> {
 }
 
 async function androidSdkDoctor(config: Config, log: Log): Promise<boolean> {
-  if ((await AndroidSdkTools.validatePath(config)).isError()) {
+  if ((await AndroidSdkTools.validatePath(config.androidSdkPath)).isError()) {
     log.error(messages.androidSdkPathIsNotCorrect);
     return false;
   };
