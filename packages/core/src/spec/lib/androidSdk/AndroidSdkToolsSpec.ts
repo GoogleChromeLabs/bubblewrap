@@ -124,7 +124,7 @@ describe('AndroidSdkTools', () => {
         const process = buildMockProcess(test.platform);
         const jdkHelper = new JdkHelper(process, config);
         const mockLog = new MockLog();
-        const androidSdkTools = await AndroidSdkTools.create(process, config,jdkHelper, mockLog);
+        const androidSdkTools = await AndroidSdkTools.create(process, config, jdkHelper, mockLog);
         spyOn(util, 'execInteractive').and.stub();
         await androidSdkTools.installBuildTools();
         expect(util.execInteractive).toHaveBeenCalledWith(
