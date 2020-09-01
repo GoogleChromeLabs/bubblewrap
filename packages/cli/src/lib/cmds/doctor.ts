@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import {ConsoleLog, Log, Config} from '@bubblewrap/core';
+import {ConsoleLog, Log, Config, AndroidSdkTools} from '@bubblewrap/core';
 import {join} from 'path';
 import {existsSync, promises as fsPromises} from 'fs';
 import {loadOrCreateConfig} from '../config';
@@ -41,9 +41,7 @@ async function jdkDoctor(config: Config, log: Log): Promise<boolean> {
 }
 
 async function androidSdkDoctor(config: Config, log: Log): Promise<boolean> {
-  const androidSdkPath = config.androidSdkPath;
-  // Checks if the path given is valid.
-  if (!existsSync(join(androidSdkPath, 'build-tools')) || !existsSync(androidSdkPath)) {
+  if ((await AndroidSdkTools.validatePath(config.androidSdkPath)).isError()) {
     log.error(messages.androidSdkPathIsNotCorrect);
     return false;
   };
