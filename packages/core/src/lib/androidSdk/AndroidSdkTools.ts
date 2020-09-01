@@ -35,6 +35,7 @@ export class AndroidSdkTools {
 
   static async create(process: NodeJS.Process, config: Config, jdkHelper: JdkHelper,
       log: Log = new ConsoleLog('AndroidSdkTools')): Promise<AndroidSdkTools> {
+    // unwrap will throw an error in case that the the path is valid and else will do nothing.
     (await AndroidSdkTools.validatePath(config.androidSdkPath)).unwrap();
     try {
       return new AndroidSdkTools(process, config, jdkHelper, log);
