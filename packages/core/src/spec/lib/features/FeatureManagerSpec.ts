@@ -16,6 +16,7 @@
 
 import {FeatureManager} from '../../../lib/features/FeatureManager';
 import {AppsFlyerConfig, AppsFlyerFeature} from '../../../lib/features/AppsFlyerFeature';
+import {LocationDelegationFeature} from '../../../lib/features/LocationDelegationFeature';
 import {TwaManifest} from '../../../lib/TwaManifest';
 
 describe('FeatureManager', () => {
@@ -36,6 +37,7 @@ describe('FeatureManager', () => {
       expect(features.buildGradle.repositories).toEqual(emptySet);
       expect(features.launcherActivity.imports).toEqual(emptySet);
       expect(features.launcherActivity.launchUrl).toEqual([]);
+      expect(features.delegationService.constructor).toEqual([]);
     });
 
     it('Adds INTERNET permission when WebView fallback is enabled', () => {
@@ -95,6 +97,29 @@ describe('FeatureManager', () => {
 
       expect(features.launcherActivity.launchUrl)
           .toContain(appsFlyerFeature.launcherActivity.launchUrl);
+    });
+
+
+    it('Enables the LocationDelegation feature', () => {
+      const manifest = {
+        features: {
+          locationDelegation: true,
+        },
+      } as TwaManifest;
+
+      const locationDelegationFeature = new LocationDelegationFeature();
+      const features = new FeatureManager(manifest);
+
+      locationDelegationFeature.androidManifest.components.forEach((component) => {
+        expect(features.androidManifest.components).toContain(component);
+      });
+
+      locationDelegationFeature.delegationService.imports.forEach((imp) => {
+        expect(features.delegationService.imports).toContain(imp);
+      });
+
+      expect(features.delegationService.constructor)
+          .toContain(locationDelegationFeature.delegationService.constructor);
     });
   });
 });

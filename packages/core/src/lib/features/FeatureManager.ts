@@ -16,6 +16,7 @@
 
 import {Feature} from './Feature';
 import {AppsFlyerFeature} from './AppsFlyerFeature';
+import {LocationDelegationFeature} from './LocationDelegationFeature';
 import {TwaManifest} from '../TwaManifest';
 
 /**
@@ -40,6 +41,10 @@ export class FeatureManager {
     imports: new Set<string>(),
     launchUrl: new Array<string>(),
   };
+  delegationService = {
+    imports: new Set<string>(),
+    constructor: new Array<string>(),
+  };
 
   /**
    * Builds a new intance from a TwaManifest.
@@ -47,6 +52,10 @@ export class FeatureManager {
   constructor(twaManifest: TwaManifest) {
     if (twaManifest.features.appsFlyer !== undefined) {
       this.addFeature(new AppsFlyerFeature(twaManifest.features.appsFlyer));
+    }
+
+    if (twaManifest.features.locationDelegation) {
+      this.addFeature(new LocationDelegationFeature());
     }
 
     // The WebView fallback needs the INTERNET permission.
@@ -66,16 +75,18 @@ export class FeatureManager {
     });
 
     // Adds properties to application
-    feature.applicationClass.imports.forEach((imp) => {
-      this.applicationClass.imports.add(imp);
-    });
+    if (feature.applicationClass !== undefined) {
+      feature.applicationClass.imports.forEach((imp) => {
+        this.applicationClass.imports.add(imp);
+      });
 
-    feature.applicationClass.variables.forEach((imp) => {
-      this.applicationClass.variables.push(imp);
-    });
+      feature.applicationClass.variables.forEach((imp) => {
+        this.applicationClass.variables.push(imp);
+      });
 
-    if (feature.applicationClass.onCreate) {
-      this.applicationClass.onCreate.push(feature.applicationClass.onCreate);
+      if (feature.applicationClass.onCreate) {
+        this.applicationClass.onCreate.push(feature.applicationClass.onCreate);
+      }
     }
 
     // Adds properties to AndroidManifest.xml
@@ -88,12 +99,24 @@ export class FeatureManager {
     });
 
     // Adds properties to launcherActivity
-    feature.launcherActivity.imports.forEach((imp) => {
-      this.launcherActivity.imports.add(imp);
-    });
+    if (feature.launcherActivity !== undefined) {
+      feature.launcherActivity.imports.forEach((imp) => {
+        this.launcherActivity.imports.add(imp);
+      });
 
-    if (feature.launcherActivity?.launchUrl) {
-      this.launcherActivity.launchUrl.push(feature.launcherActivity.launchUrl);
+      if (feature.launcherActivity?.launchUrl) {
+        this.launcherActivity.launchUrl.push(feature.launcherActivity.launchUrl);
+      }
+    }
+
+    // Adds properties to delegationService
+    if (feature.delegationService !== undefined) {
+      feature.delegationService.imports.forEach((imp) => {
+        this.delegationService.imports.add(imp);
+      });
+      if (feature.delegationService?.constructor) {
+        this.delegationService.constructor.push(feature.delegationService.constructor);
+      }
     }
   }
 }

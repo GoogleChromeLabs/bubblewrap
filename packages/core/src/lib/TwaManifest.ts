@@ -63,7 +63,12 @@ export type FallbackType = 'customtabs' | 'webview';
 
 type Features = {
   appsFlyer?: AppsFlyerConfig;
+  locationDelegation: boolean;
 }
+
+const DEFAULT_FEATURES: Features = {
+  locationDelegation: DEFAULT_ENABLE_LOCATIONS,
+};
 
 /**
  * A Manifest used to generate the TWA Project
@@ -109,7 +114,6 @@ export class TwaManifest {
   navigationDividerColorDark: Color;
   backgroundColor: Color;
   enableNotifications: boolean;
-  enableLocation: boolean;
   startUrl: string;
   iconUrl: string | undefined;
   maskableIconUrl: string | undefined;
@@ -144,7 +148,6 @@ export class TwaManifest {
       DEFAULT_NAVIGATION_COLOR);
     this.backgroundColor = new Color(data.backgroundColor);
     this.enableNotifications = data.enableNotifications;
-    this.enableLocation = data.enableLocation;
     this.startUrl = data.startUrl;
     this.iconUrl = data.iconUrl;
     this.maskableIconUrl = data.maskableIconUrl;
@@ -157,7 +160,7 @@ export class TwaManifest {
     this.generatorApp = data.generatorApp || DEFAULT_GENERATOR_APP_NAME;
     this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
     this.fallbackType = data.fallbackType || 'customtabs';
-    this.features = data.features || {};
+    this.features = data.features || DEFAULT_FEATURES;
     this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ?
       data.enableSiteSettingsShortcut : true;
   }
@@ -283,9 +286,9 @@ export class TwaManifest {
       },
       splashScreenFadeOutDuration: DEFAULT_SPLASHSCREEN_FADEOUT_DURATION,
       enableNotifications: DEFAULT_ENABLE_NOTIFICATIONS,
-      enableLocation: DEFAULT_ENABLE_LOCATIONS,
       shortcuts: shortcuts,
       webManifestUrl: webManifestUrl.toString(),
+      features: {locationDelegation: DEFAULT_ENABLE_LOCATIONS},
     });
     return twaManifest;
   }
@@ -330,7 +333,6 @@ export interface TwaManifestJson {
   navigationDividerColorDark?: string;
   backgroundColor: string;
   enableNotifications: boolean;
-  enableLocation: boolean;
   startUrl: string;
   iconUrl?: string;
   maskableIconUrl?: string;
@@ -343,9 +345,7 @@ export interface TwaManifestJson {
   generatorApp?: string;
   webManifestUrl?: string;
   fallbackType?: FallbackType;
-  features?: {
-    appsFlyer?: AppsFlyerConfig;
-  };
+  features?: Features;
   enableSiteSettingsShortcut?: boolean;
 }
 

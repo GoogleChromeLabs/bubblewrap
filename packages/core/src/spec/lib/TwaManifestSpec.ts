@@ -70,7 +70,6 @@ describe('TwaManifest', () => {
       expect(twaManifest.signingKey.alias).toBe('android');
       expect(twaManifest.splashScreenFadeOutDuration).toBe(300);
       expect(twaManifest.enableNotifications).toBeFalse();
-      expect(twaManifest.enableLocation).toBeFalse();
       expect(twaManifest.webManifestUrl).toEqual(manifestUrl);
       expect(twaManifest.shortcuts.length).toBe(1);
       expect(twaManifest.shortcuts[0].name).toBe('shortcut name');
@@ -109,7 +108,6 @@ describe('TwaManifest', () => {
       expect(twaManifest.signingKey.alias).toBe('android');
       expect(twaManifest.splashScreenFadeOutDuration).toBe(300);
       expect(twaManifest.enableNotifications).toBeFalse();
-      expect(twaManifest.enableLocation).toBeFalse();
       expect(twaManifest.webManifestUrl).toEqual(manifestUrl);
       expect(twaManifest.shortcuts).toEqual([]);
       expect(twaManifest.generateShortcuts()).toBe('[]');
@@ -211,7 +209,6 @@ describe('TwaManifest', () => {
         },
         splashScreenFadeOutDuration: 300,
         enableNotifications: true,
-        enableLocation: true,
         shortcuts: [{name: 'name', shortName: 'shortName', url: '/', chosenIconUrl: 'icon.png'}],
         webManifestUrl: 'https://pwa-directory.com/manifest.json',
         generatorApp: 'test',
@@ -239,7 +236,6 @@ describe('TwaManifest', () => {
       expect(twaManifest.splashScreenFadeOutDuration)
           .toEqual(twaManifestJson.splashScreenFadeOutDuration);
       expect(twaManifest.enableNotifications).toEqual(twaManifestJson.enableNotifications);
-      expect(twaManifest.enableLocation).toEqual(twaManifestJson.enableLocation);
       expect(twaManifest.shortcuts).toEqual(twaManifestJson.shortcuts);
       expect(twaManifest.webManifestUrl).toEqual(new URL(twaManifestJson.webManifestUrl!));
       expect(twaManifest.generatorApp).toEqual(twaManifestJson.generatorApp!);
@@ -266,7 +262,6 @@ describe('TwaManifest', () => {
         },
         splashScreenFadeOutDuration: 300,
         enableNotifications: true,
-        enableLocation: true,
         shortcuts: [{name: 'name', url: '/', chosenIconUrl: 'icon.png'}],
         generatorApp: 'test',
       } as TwaManifestJson;
@@ -305,7 +300,6 @@ describe('TwaManifest', () => {
         },
         splashScreenFadeOutDuration: 300,
         enableNotifications: true,
-        enableLocation: true,
         shortcuts: [{name: 'name', url: '/', chosenIconUrl: 'icon.png'}],
       } as TwaManifestJson);
       expect(twaManifest.validate()).toBeNull();

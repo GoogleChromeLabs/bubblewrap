@@ -50,7 +50,7 @@ const JAVA_DIR = 'app/src/main/java/';
 const JAVA_FILE_LIST = [
   'LauncherActivity.java',
   'Application.java',
-  'TwaDelegationService.java',
+  'DelegationService.java',
 ];
 
 const DELETE_FILE_LIST = [
@@ -356,14 +356,6 @@ export class TwaGenerator {
     // Generate java files
     await this.applyJavaTemplates(
         templateDirectory, targetDirectory, twaManifest.packageId, JAVA_FILE_LIST, args);
-    progress.update();
-
-    // Generate java files
-    if (twaManifest.enableLocation) {
-      await this.applyJavaTemplates(
-          templateDirectory, targetDirectory, twaManifest.packageId, JAVA_FILE_LIST,
-          twaManifest);
-    }
     progress.update();
 
     // Generate images

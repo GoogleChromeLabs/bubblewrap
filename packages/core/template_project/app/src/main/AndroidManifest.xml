@@ -136,7 +136,7 @@
         </provider>
 
         <service
-            android:name=".TwaDelegationService"
+            android:name=".DelegationService"
             android:enabled="@bool/enableNotification"
             android:exported="@bool/enableNotification">
 

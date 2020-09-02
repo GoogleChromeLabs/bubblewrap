@@ -31,7 +31,6 @@ def twaManifest = [
     navigationDividerColorDark: '<%= navigationDividerColorDark.hex() %>', // The dark navbar divider color.
     backgroundColor: '<%= backgroundColor.hex() %>', // The color used for the splash screen background.
     enableNotifications: <%= enableNotifications %>, // Set to true to enable notification delegation.
-    enableLocation: <%= enableLocation %>, // Set to true to enable location delegation.
     // Every shortcut must include the following fields:
     // - name: String that will show up in the shortcut.
     // - short_name: Shorter string used if |name| is too long.
@@ -51,7 +50,7 @@ android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "<%= packageId %>"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 29
         versionCode <%= appVersionCode %>
         versionName "<%= appVersionName %>"
@@ -122,10 +121,6 @@ android {
         // TrustedWebActivityService, by changing the android:enabled and android:exported
         // attributes
         resValue "bool", "enableNotification", twaManifest.enableNotifications.toString()
-
-        // The enableLocation resource is used to enable or disable the
-        // PermissionRequestActivity, by changing the android:enabled attributes
-        resValue "bool", "enableLocation", twaManifest.enableLocation.toString()
 
         twaManifest.shortcuts.eachWithIndex { shortcut, index ->
             resValue "string", "shortcut_name_$index", "$shortcut.name"
