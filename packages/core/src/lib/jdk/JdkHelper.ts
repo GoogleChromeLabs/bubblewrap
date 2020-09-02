@@ -16,24 +16,11 @@
 
 'use strict';
 
+import {existsSync, promises as fsPromises} from 'fs';
 import {Config} from '../Config';
 import * as path from 'path';
 import {executeFile} from '../util';
-
-/**
- * Returns the Home folder of the jdk.
- * @param {Config} config The bubblewrap general configuration
- * @param {NodeJS.Process} process Information from the OS process
- */
-export function getJavaHome(config: Config, process: NodeJS.Process): string {
-  const joinPath = (process.platform === 'win32') ? path.win32.join : path.posix.join;
-  if (process.platform === 'darwin') {
-    return joinPath(config.jdkPath, '/Contents/Home/');
-  } else if (process.platform === 'linux' || process.platform === 'win32') {
-    return joinPath(config.jdkPath, '/');
-  }
-  throw new Error(`Unsupported Platform: ${process.platform}`);
-}
+import {Result} from '../Result';
 
 /**
  * Helps getting information relevant to the JDK installed, including
@@ -71,16 +58,48 @@ export class JdkHelper {
    */
   async runJava(args: string[]): Promise<{stdout: string; stderr: string}> {
     const java = this.process.platform === 'win32' ? '/bin/java.exe' : '/bin/java';
-    const runJavaCmd = this.joinPath(this.getJavaHome(), java);
+    const runJavaCmd = this.joinPath(this.getJavaHome(),
+        java);
     return await executeFile(runJavaCmd, args, this.getEnv());
   }
 
   /**
    * Returns information from the JAVA_HOME, based on the config and platform.
-   * @returns {string} the value for the JAVA_HOME
    */
   getJavaHome(): string {
-    return getJavaHome(this.config, this.process);
+    return JdkHelper.getJavaHome(this.config.jdkPath, this.process);
+  }
+
+  /**
+   * Returns information from the JAVA_HOME, based on the config and platform.
+   * @param {Config} config The bubblewrap general configuration
+   * @param {NodeJS.Process} process Information from the OS process
+   */
+  static getJavaHome(jdkPath: string, process: NodeJS.Process): string {
+    const joinPath = (process.platform === 'win32') ? path.win32.join : path.posix.join;
+    if (process.platform === 'darwin') {
+      return joinPath(jdkPath, '/Contents/Home/');
+    } else if (process.platform === 'linux' || process.platform === 'win32') {
+      return joinPath(jdkPath, '/');
+    }
+    throw new Error(`Unsupported Platform: ${process.platform}`);
+  }
+
+  static async validatePath(jdkPath: string, currentProcess: NodeJS.Process = process):
+      Promise<Result<boolean, Error>> {
+    if (!existsSync(jdkPath)) {
+      return Result.error(new Error('jdkPathIsNotCorrect'));
+    };
+    const javaHome = this.getJavaHome(jdkPath, currentProcess);
+    try {
+      const file = await fsPromises.readFile(path.join(javaHome, 'release'), 'utf-8');
+      if (file.indexOf('JAVA_VERSION="1.8') < 0) { // Checks if the jdk's version is 8 as needed
+        return Result.error(new Error('jdkIsNotSupported'));
+      }
+    } catch (e) {
+      return Result.error(new Error(e.message));
+    }
+    return Result.ok(true);
   }
 
   /**

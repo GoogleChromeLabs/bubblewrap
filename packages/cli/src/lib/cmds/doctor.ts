@@ -14,15 +14,14 @@
  *  limitations under the License.
  */
 
-import {ConsoleLog, Log, Config} from '@bubblewrap/core';
+import {ConsoleLog, Log, Config, AndroidSdkTools} from '@bubblewrap/core';
 import {join} from 'path';
 import {existsSync, promises as fsPromises} from 'fs';
 import {loadOrCreateConfig} from '../config';
 import {enUS as messages} from '../strings';
-import {getJavaHome} from '../../../../core/src/lib/jdk/JdkHelper';
 
 async function jdkDoctor(config: Config, log: Log): Promise<boolean> {
-  const jdkPath = getJavaHome(config, process);
+  const jdkPath = config.jdkPath;
   // Checks if the path given is valid.
   if (!existsSync(jdkPath)) {
     log.error(messages.jdkPathIsNotCorrect);
@@ -42,9 +41,7 @@ async function jdkDoctor(config: Config, log: Log): Promise<boolean> {
 }
 
 async function androidSdkDoctor(config: Config, log: Log): Promise<boolean> {
-  const androidSdkPath = config.androidSdkPath;
-  // Checks if the path given is valid.
-  if (!existsSync(join(androidSdkPath, 'tools')) || !existsSync(androidSdkPath)) {
+  if ((await AndroidSdkTools.validatePath(config.androidSdkPath)).isError()) {
     log.error(messages.androidSdkPathIsNotCorrect);
     return false;
   };
