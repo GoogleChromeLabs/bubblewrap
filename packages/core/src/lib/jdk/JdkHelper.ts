@@ -58,7 +58,7 @@ export class JdkHelper {
    */
   async runJava(args: string[]): Promise<{stdout: string; stderr: string}> {
     const java = this.process.platform === 'win32' ? '/bin/java.exe' : '/bin/java';
-    const runJavaCmd = this.joinPath(this.getJavaHome(this.config.jdkPath, this.process),
+    const runJavaCmd = this.joinPath(this.getJavaHome(),
         java);
     return await executeFile(runJavaCmd, args, this.getEnv());
   }
@@ -68,8 +68,8 @@ export class JdkHelper {
    * @param {Config} config The bubblewrap general configuration
    * @param {NodeJS.Process} process Information from the OS process
    */
-  getJavaHome(jdkPath: string, process: NodeJS.Process): string {
-    return JdkHelper.getJavaHome(jdkPath, process);
+  getJavaHome(): string {
+    return JdkHelper.getJavaHome(this.config.jdkPath, this.process);
   }
 
   /**
@@ -109,7 +109,7 @@ export class JdkHelper {
    * @returns {string} the value where the Java executables can be found
    */
   getJavaBin(): string {
-    return this.joinPath(this.getJavaHome(this.config.jdkPath, this.process), 'bin/');
+    return this.joinPath(this.getJavaHome(), 'bin/');
   }
 
   /**
@@ -118,7 +118,7 @@ export class JdkHelper {
    */
   getEnv(): NodeJS.ProcessEnv {
     const env: NodeJS.ProcessEnv = Object.assign({}, this.process.env);
-    env['JAVA_HOME'] = this.getJavaHome(this.config.jdkPath, this.process);
+    env['JAVA_HOME'] = this.getJavaHome();
     // Concatenates the Java binary path to the existing PATH environment variable.
     env[this.pathEnvironmentKey] =
         this.getJavaBin() + this.pathSeparator + env[this.pathEnvironmentKey];
