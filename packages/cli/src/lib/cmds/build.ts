@@ -31,19 +31,14 @@ interface SigningKeyPasswords {
 }
 
 class Build {
-  private jdkHelper: JdkHelper;
-  private androidSdkTools: AndroidSdkTools;
-  private keyTool: KeyTool;
-  private gradleWrapper: GradleWrapper;
-  private jarSigner: JarSigner;
-
-  constructor(private config: Config, private args: ParsedArgs,
-      private log: Log = new ConsoleLog('build'), private prompt: Prompt = new InquirerPrompt()) {
-    this.jdkHelper = new JdkHelper(process, this.config);
-    this.androidSdkTools = new AndroidSdkTools(process, this.config, this.jdkHelper, this.log);
-    this.keyTool = new KeyTool(this.jdkHelper, this.log);
-    this.gradleWrapper = new GradleWrapper(process, this.androidSdkTools);
-    this.jarSigner = new JarSigner(this.jdkHelper);
+  constructor(
+      private args: ParsedArgs,
+      private androidSdkTools: AndroidSdkTools,
+      private keyTool: KeyTool,
+      private gradleWrapper: GradleWrapper,
+      private jarSigner: JarSigner,
+      private log: Log = new ConsoleLog('build'),
+      private prompt: Prompt = new InquirerPrompt()) {
   }
 
   /**
@@ -192,6 +187,20 @@ class Build {
 
 export async function build(config: Config, args: ParsedArgs,
     log: Log = new ConsoleLog('build'), prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
-  const build = new Build(config, args, log, prompt);
+  const jdkHelper = new JdkHelper(process, config);
+  const androidSdkTools =
+      await AndroidSdkTools.create(process, config, jdkHelper, log);
+  const keyTool = new KeyTool(jdkHelper, log);
+  const gradleWrapper = new GradleWrapper(process, androidSdkTools);
+  const jarSigner = new JarSigner(jdkHelper);
+  const build = new Build(
+      args,
+      androidSdkTools,
+      keyTool,
+      gradleWrapper,
+      jarSigner,
+      log,
+      prompt,
+  );
   return build.build();
 }

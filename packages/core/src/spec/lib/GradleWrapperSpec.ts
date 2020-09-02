@@ -34,11 +34,11 @@ describe('GradleWrapper', () => {
     cwd: () => cwd,
   } as unknown as NodeJS.Process;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     spyOn(fs, 'existsSync').and.returnValue(true);
     const config = new Config('/home/user/jdk8', '/home/user/sdktools');
     const jdkHelper = new JdkHelper(process, config);
-    androidSdkTools = new AndroidSdkTools(process, config, jdkHelper);
+    androidSdkTools = await AndroidSdkTools.create(process, config, jdkHelper);
     gradleWrapper = new GradleWrapper(process, androidSdkTools);
   });
 
