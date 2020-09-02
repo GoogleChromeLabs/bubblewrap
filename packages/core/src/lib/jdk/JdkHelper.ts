@@ -58,9 +58,18 @@ export class JdkHelper {
    */
   async runJava(args: string[]): Promise<{stdout: string; stderr: string}> {
     const java = this.process.platform === 'win32' ? '/bin/java.exe' : '/bin/java';
-    const runJavaCmd = this.joinPath(JdkHelper.getJavaHome(this.config.jdkPath, this.process),
+    const runJavaCmd = this.joinPath(this.getJavaHome(this.config.jdkPath, this.process),
         java);
     return await executeFile(runJavaCmd, args, this.getEnv());
+  }
+
+  /**
+   * Returns information from the JAVA_HOME, based on the config and platform.
+   * @param {Config} config The bubblewrap general configuration
+   * @param {NodeJS.Process} process Information from the OS process
+   */
+  getJavaHome(jdkPath: string, process: NodeJS.Process): string {
+    return JdkHelper.getJavaHome(jdkPath, process);
   }
 
   /**
@@ -83,7 +92,7 @@ export class JdkHelper {
     if (!existsSync(jdkPath)) {
       return Result.error(new Error('jdkPathIsNotCorrect'));
     };
-    const javaHome = JdkHelper.getJavaHome(jdkPath, currentProcess);
+    const javaHome = this.getJavaHome(jdkPath, currentProcess);
     try {
       const file = await fsPromises.readFile(path.join(javaHome, 'release'), 'utf-8');
       if (file.indexOf('JAVA_VERSION="1.8') < 0) { // Checks if the jdk's version is 8 as needed
@@ -100,7 +109,7 @@ export class JdkHelper {
    * @returns {string} the value where the Java executables can be found
    */
   getJavaBin(): string {
-    return this.joinPath(JdkHelper.getJavaHome(this.config.jdkPath, this.process), 'bin/');
+    return this.joinPath(this.getJavaHome(this.config.jdkPath, this.process), 'bin/');
   }
 
   /**
@@ -109,7 +118,7 @@ export class JdkHelper {
    */
   getEnv(): NodeJS.ProcessEnv {
     const env: NodeJS.ProcessEnv = Object.assign({}, this.process.env);
-    env['JAVA_HOME'] = JdkHelper.getJavaHome(this.config.jdkPath, this.process);
+    env['JAVA_HOME'] = this.getJavaHome(this.config.jdkPath, this.process);
     // Concatenates the Java binary path to the existing PATH environment variable.
     env[this.pathEnvironmentKey] =
         this.getJavaBin() + this.pathSeparator + env[this.pathEnvironmentKey];
