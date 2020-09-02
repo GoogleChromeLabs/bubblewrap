@@ -15,9 +15,44 @@
  */
 
 /**
+ * An interface for loggers.
+ */
+export interface Log {
+
+  /**
+   * Prints a debug message to the Log. Message is ignored if the Log is not set to verbose.
+   * @param message the message the be printed.
+   * @param args extra arguments for the console.
+   */
+  debug(message: string, ...args: string[]): void;
+
+  /**
+   * Prints an info message to the Log. Message is ignored if the Log is not set to verbose.
+   * @param message The message the be printed.
+   * @param args Extra arguments for the console.
+   */
+  info(message: string, ...args: string[]): void;
+
+  /**
+   * Prints an warning message to the Log. Message is ignored if the Log is not set to verbose.
+   * @param message The message the be printed.
+   * @param args Extra arguments for the console.
+   */
+  warn(message: string, ...args: string[]): void;
+  /**
+   * Prints an error message to the Log. Message is ignored if the Log is not set to verbose.
+   * @param message The message the be printed.
+   * @param args Extra arguments for the console.
+   */
+  error(message: string, ...args: string[]): void;
+
+  setVerbose(verbose: boolean): void;
+};
+
+/**
  * An utility class to print nice Log messages.
  */
-export default class Log {
+export class ConsoleLog implements Log {
   private tag: string;
   private prefix: string;
   private output: Console;
@@ -29,9 +64,9 @@ export default class Log {
 
   /**
    * Creates a new Log instance
-   * @param tag the tag used when logging. Printed at the beggining of a log message.
-   * @param verbose if the Log is verbose. Debug messages are only printed on verbose logs.
-   * @param output where to output the log messages.
+   * @param tag The tag used when logging. Printed at the beggining of a log message.
+   * @param verbose If the Log is verbose. Debug messages are only printed on verbose logs.
+   * @param output Where to output the log messages.
    */
   constructor(tag = '', verbose = false, output = console) {
     this.tag = tag;
@@ -41,9 +76,9 @@ export default class Log {
   }
 
   /**
-   * Prints a debug message to the Log. message is ignored if the Log is not set to verbose.
-   * @param message the message the be printed.
-   * @param args extra arguments for the console.
+   * Prints a debug message to the Log. Message is ignored if the Log is not set to verbose.
+   * @param message The message the be printed.
+   * @param args Extra arguments for the console.
    */
   debug(message: string, ...args: string[]): void {
     if (!this.verbose) {
@@ -53,27 +88,27 @@ export default class Log {
   }
 
   /**
-   * Prints an info message to the Log. message is ignored if the Log is not set to verbose.
-   * @param message the message the be printed.
-   * @param args extra arguments for the console.
+   * Prints an info message to the Log. Message is ignored if the Log is not set to verbose.
+   * @param message The message the be printed.
+   * @param args Extra arguments for the console.
    */
   info(message: string, ...args: string[]): void {
     this.log(this.output.log, message, ...args);
   }
 
   /**
-   * Prints an warning message to the Log. message is ignored if the Log is not set to verbose.
-   * @param message the message the be printed.
-   * @param args extra arguments for the console.
+   * Prints an warning message to the Log. Message is ignored if the Log is not set to verbose.
+   * @param message The message the be printed.
+   * @param args Extra arguments for the console.
    */
   warn(message: string, ...args: string[]): void {
     this.log(this.output.warn, this.yellow('WARNING ' + message), ...args);
   }
 
   /**
-   * Prints an error message to the Log. message is ignored if the Log is not set to verbose.
-   * @param message the message the be printed.
-   * @param args extra arguments for the console.
+   * Prints an error message to the Log. Message is ignored if the Log is not set to verbose.
+   * @param message The message the be printed.
+   * @param args Extra arguments for the console.
    */
   error(message: string, ...args: string[]): void {
     this.output.error('\n');
@@ -82,14 +117,22 @@ export default class Log {
   }
 
   /**
-   * Creates a new Log using the same output and verbositity of the current Log.
-   * @param newTag the tag the be used on the new Log instance.
+   * Sets the verbose.
+   * @param verbose The verbose value to set.
    */
-  newLog(newTag: string): Log {
+  setVerbose(verbose: boolean): void {
+    this.verbose = verbose;
+  }
+
+  /**
+   * Creates a new Log using the same output and verbositity of the current Log.
+   * @param newTag The tag the be used on the new Log instance.
+   */
+  newLog(newTag: string): ConsoleLog {
     if (this.tag) {
       newTag = this.tag + ' ' + newTag;
     }
-    return new Log(newTag, this.verbose, this.output);
+    return new ConsoleLog(newTag, this.verbose, this.output);
   }
 
   private log(fn: Function, message: string, ...args: string[]): void {

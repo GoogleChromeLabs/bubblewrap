@@ -19,7 +19,8 @@ import * as path from 'path';
 import util = require('../util');
 import {Config} from '../Config';
 import {JdkHelper} from '../jdk/JdkHelper';
-import Log from '../../lib/Log';
+import {Log, ConsoleLog} from '../../lib/Log';
+import {Result} from '../../lib/Result';
 
 const BUILD_TOOLS_VERSION = '29.0.2';
 
@@ -32,6 +33,17 @@ export class AndroidSdkTools {
   private jdkHelper: JdkHelper;
   private pathJoin: (...paths: string[]) => string;
 
+  static async create(process: NodeJS.Process, config: Config, jdkHelper: JdkHelper,
+      log: Log = new ConsoleLog('AndroidSdkTools')): Promise<AndroidSdkTools> {
+    // unwrap will throw an error in case that the the path is valid and else will do nothing.
+    (await AndroidSdkTools.validatePath(config.androidSdkPath)).unwrap();
+    try {
+      return new AndroidSdkTools(process, config, jdkHelper, log);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   /**
    * Constructs a new instance of AndroidSdkTools.
    *
@@ -40,10 +52,7 @@ export class AndroidSdkTools {
    * @param {jdkHelper} jdkHelper the JDK information to be used by the Android SDK
    */
   constructor(process: NodeJS.Process, config: Config, jdkHelper: JdkHelper,
-       readonly log = new Log('AndroidSdkTools')) {
-    if (!fs.existsSync(config.androidSdkPath)) {
-      throw new Error(`androidSdkPath does not exist: ${config.androidSdkPath}`);
-    }
+       readonly log: Log = new ConsoleLog('AndroidSdkTools')) {
     this.process = process;
     this.config = config;
     this.jdkHelper = jdkHelper;
@@ -193,5 +202,17 @@ export class AndroidSdkTools {
       apkFilePath,
     ];
     await util.execute(installCmd, env, this.log);
+  }
+
+  /**
+   * Checks if the androidSdkPath in the config file is valid.
+   * @param {Config} config the bubblewrap general configuration.
+   */
+  static async validatePath(sdkPath: string): Promise<Result<boolean, Error>> {
+    // Checks if the path given is valid.
+    if (!fs.existsSync(path.join(sdkPath, 'tools'))|| !fs.existsSync(sdkPath)) {
+      return Result.error(new Error('androidSdkPathIsNotCorrect'));
+    };
+    return Result.ok(true);
   }
 }

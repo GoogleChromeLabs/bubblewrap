@@ -74,6 +74,11 @@ type Messages = {
   promptKeyPassword: string;
   promptNewAppVersionName: string;
   warnPwaFailedQuality: string;
+  updateConfigUsage: string;
+  jdkPathIsNotCorrect: string;
+  jdkIsNotSupported: string;
+  androidSdkPathIsNotCorrect: string;
+  bothPathsAreValid: string;
 }
 
 export const enUS: Messages = {
@@ -245,4 +250,15 @@ the PWA:
   promptKeyPassword: 'Password for the Key:',
   promptNewAppVersionName: 'versionName for the new App version:',
   warnPwaFailedQuality: red('PWA Quality Criteria check failed.'),
+  updateConfigUsage: 'Usage\n\n:[--jdk <path-to-jdk>] [--androidSdk <path-to-android-sdk>]' +
+      '(You can insert one or both of them)',
+  jdkPathIsNotCorrect: 'The jdkPath isn\'t correct, please run the following command to update ' +
+      'it:\nbubblewrap updateConfig --jdkPath <path-to-jdk>, such that the folder "here" contains' +
+      ' the file "release". Then run bubblewrap doctor again.',
+  jdkIsNotSupported: 'Unsupported jdk version. Please download "OpenJDK 8(LTS)" at the link ' +
+      'below:\nhttps://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=hotspot.',
+  androidSdkPathIsNotCorrect: 'The androidSdkPath isn\'t correct, please run the following ' +
+      'command to update it:\nbubblewrap updateConfig --androidSdkPath <path-to-sdk>, such that ' +
+      'the folder of the path contains the folder "build-tools". Then run bubblewrap doctor again.',
+  bothPathsAreValid: 'Your jdkpath and androidSdkPath are valid.',
 };

@@ -25,7 +25,7 @@ import * as inquirer from 'inquirer';
  * @returns {Result<T, Error>} an `Ok` {@link Result} that unwraps `T` if the validation and
  * conversion are successful or an `Error` if it fails.
  */
-export type ValidateFunction<T> = (input: string) => Result<T, Error>;
+export type ValidateFunction<T> = (input: string) => Promise<Result<T, Error>>;
 
 /**
  * A an interface that promps for different types of user input.
@@ -96,9 +96,9 @@ export interface Prompt {
 //           value is valid, and an error message (String) otherwise. If false is returned,
 //           a default error message is provided.
 function buildInquirerValidate<T>(validateFunction: ValidateFunction<T>):
-    (input: string) => boolean | string {
-  return (input: string): boolean | string => {
-    const result = validateFunction(input);
+    (input: string) => Promise<boolean | string> {
+  return async (input: string): Promise<boolean | string> => {
+    const result = await validateFunction(input);
 
     if (result.isOk()) {
       return true;
@@ -130,7 +130,7 @@ export class InquirerPrompt implements Prompt {
       validate: validate,
     });
 
-    return validateFunction(result.question).unwrap();
+    return (await validateFunction(result.question)).unwrap();
   }
 
   async promptChoice<T>(
@@ -148,7 +148,7 @@ export class InquirerPrompt implements Prompt {
       choices: choices,
       validate: validate,
     });
-    return validateFunction(result.question).unwrap();
+    return (await validateFunction(result.question)).unwrap();
   }
 
   async promptConfirm(message: string, defaultValue: boolean): Promise<boolean> {
@@ -171,6 +171,6 @@ export class InquirerPrompt implements Prompt {
       validate: validate,
       mask: '*',
     });
-    return validateFunction(result.question).unwrap();
+    return (await validateFunction(result.question)).unwrap();
   }
 }

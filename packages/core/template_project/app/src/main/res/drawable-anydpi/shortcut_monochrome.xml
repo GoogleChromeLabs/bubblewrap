@@ -1,5 +1,5 @@
 <!--
-    Copyright 2019 Google Inc. All Rights Reserved.
+    Copyright 2020 Google Inc. All Rights Reserved.
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,13 +13,15 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
-    <!-- Theme to create a blank screen while the TWA is opening -->
-    <style name="Theme.LauncherActivity" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowAnimationStyle">@null</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:backgroundDimEnabled">false</item>
-    </style>
-</resources>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/shortcut_legacy_background" />
+    <!--
+        12dp padding on each side of 48dp asset to
+        create a 24dp box for the icon.
+    -->
+    <item android:drawable="@drawable/<%= monochromeAssetName %>"
+        android:top="12dp"
+        android:right="12dp"
+        android:left="12dp"
+        android:bottom="12dp" />
+</layer-list>

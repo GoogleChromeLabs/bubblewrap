@@ -21,7 +21,7 @@ import {promisify} from 'util';
 import {exec, execFile, spawn} from 'child_process';
 import {x as extractTar} from 'tar';
 import {WebManifestIcon} from './types/WebManifest';
-import Log from './Log';
+import {Log} from './Log';
 import {lookup} from 'mime-types';
 
 const execPromise = promisify(exec);
@@ -111,8 +111,8 @@ export function execInteractive(
  * @param {number} minSize The minimum required icon size enforced id provided.
  */
 export function findSuitableIcon(
-    icons: WebManifestIcon[], purpose: string, minSize = 0): WebManifestIcon | null {
-  if (icons.length === 0) {
+    icons: WebManifestIcon[] | undefined, purpose: string, minSize = 0): WebManifestIcon | null {
+  if (icons == undefined || icons.length === 0) {
     return null;
   }
 

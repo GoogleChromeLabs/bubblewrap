@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "target": "es5",
+    "target": "es2018",
     "module": "commonjs",
     "declaration": true,
     "outDir": "dist",
     "strict": true
   },
-  "include": ["src/**/*.ts"],  
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

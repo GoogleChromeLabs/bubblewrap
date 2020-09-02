@@ -4,13 +4,16 @@
   "description": "Validate if an app using Trusted Web Activity fulfills the quality criteria",
   "scripts": {
     "build": "tsc",
+    "clean": "del dist",
     "lint": "eslint \"src/**/*.{js,ts}\"",
     "test": "tsc && jasmine --config=jasmine.json"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist/lib",
+    "dist/index.d.ts",
+    "dist/index.js"
   ],
   "keywords": [],
   "repository": {
@@ -20,7 +23,6 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@types/jasmine": "^3.5.11",
     "@types/node-fetch": "^2.5.7",
     "node-fetch": "^2.6.0"
   }

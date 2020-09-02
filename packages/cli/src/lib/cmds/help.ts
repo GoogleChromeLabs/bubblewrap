@@ -14,8 +14,9 @@
  *  limitations under the License.
  */
 
-import {Log} from '@bubblewrap/core';
+import {Log, ConsoleLog} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
+import {enUS as messages} from '../strings';
 
 const HELP_MESSAGES = new Map<string, string>(
     [
@@ -30,6 +31,9 @@ const HELP_MESSAGES = new Map<string, string>(
         'validate ............ validates if an URL matches the PWA Quality Criteria for Trusted' +
             ' Web Activity',
         'install ............. installs the output application to a connected device',
+        'updateConfig ........ sets the paths of the jdk or the androidSdk to the given paths',
+        'doctor ............. checks that the jdk and the androidSdk are in place and at the' +
+            ' correct version',
       ].join('\n')],
       ['init', [
         'Usage:',
@@ -80,14 +84,28 @@ const HELP_MESSAGES = new Map<string, string>(
         '',
         '',
         'Options: ',
-        '--apkFile ................. path to the APK file to be isntalled. Defaults to ' +
+        '--apkFile ................. path to the APK file to be installed. Defaults to ' +
             '"./app-release-signed.apk"',
         '--verbose ................. prints the adb command being executed',
+      ].join('\n')],
+      ['updateConfig', [
+        messages.updateConfigUsage,
+        '',
+        '',
+        'Options: ',
+        '--jdk ................. sets the jdk\'s path to the path given',
+        '--androidSdk .......... sets the androidSdk\'s path to the path given',
+      ].join('\n')],
+      ['doctor', [
+        'Usage:',
+        '',
+        '',
+        'bubblewrap doctor',
       ].join('\n')],
     ],
 );
 
-export async function help(args: ParsedArgs, log = new Log('help')): Promise<boolean> {
+export async function help(args: ParsedArgs, log: Log = new ConsoleLog('help')): Promise<boolean> {
   // minimist uses an `_` object to store details.
   const command = args._[1];
   const message = HELP_MESSAGES.get(command) || HELP_MESSAGES.get('main');

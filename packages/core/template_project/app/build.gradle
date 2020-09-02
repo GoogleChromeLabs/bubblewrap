@@ -26,6 +26,9 @@ def twaManifest = [
     launcherName: '<%= launcherName %>', // The name shown on the Android Launcher.
     themeColor: '<%= themeColor.hex() %>', // The color used for the status bar.
     navigationColor: '<%= navigationColor.hex() %>', // The color used for the navigation bar.
+    navigationColorDark: '<%= navigationColorDark.hex() %>', // The color used for the dark navbar.
+    navigationDividerColor: '<%= navigationDividerColor.hex() %>', // The navbar divider color.
+    navigationDividerColorDark: '<%= navigationDividerColorDark.hex() %>', // The dark navbar divider color.
     backgroundColor: '<%= backgroundColor.hex() %>', // The color used for the splash screen background.
     enableNotifications: <%= enableNotifications %>, // Set to true to enable notification delegation.
     enableLocation: <%= enableLocation %>, // Set to true to enable location delegation.
@@ -40,7 +43,8 @@ def twaManifest = [
     generatorApp: '<%= generatorApp %>', // Application that generated the Android Project
     // The fallback strategy for when Trusted Web Activity is not avilable. Possible values are
     // 'customtabs' and 'webview'.
-    fallbackType: '<%= fallbackType %>'
+    fallbackType: '<%= fallbackType %>',
+    enableSiteSettingsShortcut: '<%= enableSiteSettingsShortcut %>',
 ]
 
 android {
@@ -87,10 +91,25 @@ android {
         // compile. If not set, the status bar color defaults to #FFFFFF - white.
         resValue "color", "colorPrimary", twaManifest.themeColor
 
-        // This attribute sets the navigation bar color for the TWA. It can be either set here or in
-        // `res/values/colors.xml`. Setting in both places is an error and the app will not
+        // This attribute sets the navigation bar color for the TWA. It can be either set here or
+        // in `res/values/colors.xml`. Setting in both places is an error and the app will not
         // compile. If not set, the navigation bar color defaults to #FFFFFF - white.
         resValue "color", "navigationColor", twaManifest.navigationColor
+
+        // This attribute sets the dark navigation bar color for the TWA. It can be either set here
+        // or in `res/values/colors.xml`. Setting in both places is an error and the app will not
+        // compile. If not set, the navigation bar color defaults to #000000 - black.
+        resValue "color", "navigationColorDark", twaManifest.navigationColorDark
+
+        // This attribute sets the navbar divider color for the TWA. It can be either 
+        // set here or in `res/values/colors.xml`. Setting in both places is an error and the app 
+        // will not compile. If not set, the divider color defaults to #00000000 - transparent.
+        resValue "color", "navigationDividerColor", twaManifest.navigationDividerColor
+
+        // This attribute sets the dark navbar divider color for the TWA. It can be either 
+        // set here or in `res/values/colors.xml`. Setting in both places is an error and the 
+        //app will not compile. If not set, the divider color defaults to #000000 - black.
+        resValue "color", "navigationDividerColorDark", twaManifest.navigationDividerColorDark
 
         // Sets the color for the background used for the splash screen when launching the
         // Trusted Web Activity.
@@ -120,6 +139,8 @@ android {
         resValue "string", "generatorApp", twaManifest.generatorApp
 
         resValue "string", "fallbackType", twaManifest.fallbackType
+
+        resValue "bool", "enableSiteSettingsShortcut", twaManifest.enableSiteSettingsShortcut
     }
     buildTypes {
         release {
@@ -169,10 +190,16 @@ task generateShorcutsFile {
 
 preBuild.dependsOn(generateShorcutsFile)
 
+repositories {
+    <% for(const rep of buildGradle.repositories) { %>
+        <%= rep %>
+    <% } %>
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:1.4.0-alpha01'
-    <% if (enableLocation) { %>
-    implementation 'com.google.androidbrowserhelper:locationdelegation:1.0.0-alpha01'
-    <% }%>
+    <% for(const dep of buildGradle.dependencies) { %>
+        implementation '<%= dep %>'
+    <% } %>
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.0.0'    
 }

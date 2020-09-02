@@ -60,6 +60,9 @@ describe('TwaManifest', () => {
       expect(twaManifest.monochromeIconUrl).toBeUndefined();
       expect(twaManifest.themeColor.hex()).toBe('#00FF00');
       expect(twaManifest.navigationColor.hex()).toBe('#000000');
+      expect(twaManifest.navigationColorDark.hex()).toBe('#000000');
+      expect(twaManifest.navigationDividerColor.hex()).toBe('#000000');
+      expect(twaManifest.navigationDividerColorDark.hex()).toBe('#000000');
       expect(twaManifest.backgroundColor.hex()).toBe('#7CC0FF');
       expect(twaManifest.appVersionName).toBe('1');
       expect(twaManifest.appVersionCode).toBe(1);
@@ -96,6 +99,9 @@ describe('TwaManifest', () => {
       expect(twaManifest.display).toBe('standalone');
       expect(twaManifest.themeColor.hex()).toBe('#FFFFFF');
       expect(twaManifest.navigationColor.hex()).toBe('#000000');
+      expect(twaManifest.navigationColorDark.hex()).toBe('#000000');
+      expect(twaManifest.navigationDividerColor.hex()).toBe('#000000');
+      expect(twaManifest.navigationDividerColorDark.hex()).toBe('#000000');
       expect(twaManifest.backgroundColor.hex()).toBe('#FFFFFF');
       expect(twaManifest.appVersionName).toBe('1');
       expect(twaManifest.appVersionCode).toBe(1);
@@ -193,6 +199,9 @@ describe('TwaManifest', () => {
         display: 'fullscreen',
         themeColor: '#00ff00',
         navigationColor: '#000000',
+        navigationColorDark: '#ffffff',
+        navigationDividerColor: '#ff0000',
+        navigationDividerColorDark: '#dddddd',
         backgroundColor: '#0000ff',
         appVersion: '1.0.0',
         appVersionCode: 10,
@@ -207,6 +216,7 @@ describe('TwaManifest', () => {
         webManifestUrl: 'https://pwa-directory.com/manifest.json',
         generatorApp: 'test',
         fallbackType: 'webview',
+        enableSiteSettingsShortcut: false,
       } as TwaManifestJson;
       const twaManifest = new TwaManifest(twaManifestJson);
       expect(twaManifest.packageId).toEqual(twaManifestJson.packageId);
@@ -218,6 +228,9 @@ describe('TwaManifest', () => {
       expect(twaManifest.display).toEqual('fullscreen');
       expect(twaManifest.themeColor).toEqual(new Color('#00ff00'));
       expect(twaManifest.navigationColor).toEqual(new Color('#000000'));
+      expect(twaManifest.navigationColorDark).toEqual(new Color('#ffffff'));
+      expect(twaManifest.navigationDividerColor).toEqual(new Color('#ff0000'));
+      expect(twaManifest.navigationDividerColorDark).toEqual(new Color('#dddddd'));
       expect(twaManifest.backgroundColor).toEqual(new Color('#0000ff'));
       expect(twaManifest.appVersionName).toEqual(twaManifestJson.appVersion);
       expect(twaManifest.appVersionCode).toEqual(twaManifestJson.appVersionCode!);
@@ -231,6 +244,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.webManifestUrl).toEqual(new URL(twaManifestJson.webManifestUrl!));
       expect(twaManifest.generatorApp).toEqual(twaManifestJson.generatorApp!);
       expect(twaManifest.fallbackType).toBe('webview');
+      expect(twaManifest.enableSiteSettingsShortcut).toEqual(false);
     });
 
     it('Sets correct default values for optional fields', () => {
@@ -260,6 +274,10 @@ describe('TwaManifest', () => {
       expect(twaManifest.webManifestUrl).toBeUndefined();
       expect(twaManifest.fallbackType).toBe('customtabs');
       expect(twaManifest.display).toBe('standalone');
+      expect(twaManifest.enableSiteSettingsShortcut).toEqual(true);
+      expect(twaManifest.navigationColor).toEqual(new Color('#000000'));
+      expect(twaManifest.navigationDividerColor).toEqual(new Color('#00000000'));
+      expect(twaManifest.navigationDividerColorDark).toEqual(new Color('#000000'));
     });
   });
 

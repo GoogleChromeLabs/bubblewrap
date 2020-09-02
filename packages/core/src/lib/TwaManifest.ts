@@ -20,17 +20,16 @@ import * as fs from 'fs';
 import fetch from 'node-fetch';
 import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
 import Color = require('color');
-import Log from './Log';
+import {ConsoleLog} from './Log';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
+import {ShortcutInfo} from './ShortcutInfo';
+import {AppsFlyerConfig} from './features/AppsFlyerFeature';
 
 // The minimum size needed for the app icon.
 const MIN_ICON_SIZE = 512;
 
 // As described on https://developer.chrome.com/apps/manifest/name#short_name
 const SHORT_NAME_MAX_SIZE = 12;
-
-// The minimum size needed for the shortcut icon
-const MIN_SHORTCUT_ICON_SIZE = 96;
 
 // The minimum size needed for the notification icon
 const MIN_NOTIFICATION_ICON_SIZE = 48;
@@ -50,6 +49,7 @@ const DEFAULT_APP_NAME = 'My TWA';
 const DEFAULT_DISPLAY_MODE = 'standalone';
 const DEFAULT_THEME_COLOR = '#FFFFFF';
 const DEFAULT_NAVIGATION_COLOR = '#000000';
+const DEFAULT_NAVIGATION_DIVIDER_COLOR = '#00000000';
 const DEFAULT_BACKGROUND_COLOR = '#FFFFFF';
 const DEFAULT_APP_VERSION_CODE = 1;
 const DEFAULT_APP_VERSION_NAME = DEFAULT_APP_VERSION_CODE.toString();
@@ -61,19 +61,8 @@ const DEFAULT_GENERATOR_APP_NAME = 'unknown';
 
 export type FallbackType = 'customtabs' | 'webview';
 
-/**
- * A wrapper around the WebManifest's ShortcutInfo.
- */
-export class ShortcutInfo {
-  /**
-   * @param {string} name
-   * @param {string} shortName
-   * @param {string} url target Url for when the shortcut is clicked
-   * @param {string} chosenIconUrl Url for the icon
-   */
-  constructor(readonly name: string, readonly shortName: string, readonly url: string,
-        readonly chosenIconUrl: string) {
-  }
+type Features = {
+  appsFlyer?: AppsFlyerConfig;
 }
 
 /**
@@ -86,8 +75,14 @@ export class ShortcutInfo {
  * display: '<%= display %>', // The display mode for the TWA.
  * themeColor: '<%= themeColor %>', // The color used for the status bar.
  * navigationColor: '<%= themeColor %>', // The color used for the navigation bar.
+ * navigationColorDark: '<%= navigationColorDark %>', // The color used for the dark navbar.
+ * navigationDividerColor: '<%= navigationDividerColor %>', // The color used for the
+ * navbar divider.
+ * navigationDividerColorDark: '<%= navigationDividerColorDark %>', // The color used for the dark
+ * navbar divider.
  * backgroundColor: '<%= backgroundColor %>', // The color used for the splash screen background.
  * enableNotifications: false, // Set to true to enable notification delegation.
+ * enableSiteSettingsShortcut: true, // Set to false to disable the shortcut into site settings.
  * // Add shortcuts for your app here. Every shortcut must include the following fields:
  * // - name: String that will show up in the shortcut.
  * // - short_name: Shorter string used if |name| is too long.
@@ -109,6 +104,9 @@ export class TwaManifest {
   display: DisplayMode;
   themeColor: Color;
   navigationColor: Color;
+  navigationColorDark: Color;
+  navigationDividerColor: Color;
+  navigationDividerColorDark: Color;
   backgroundColor: Color;
   enableNotifications: boolean;
   enableLocation: boolean;
@@ -124,8 +122,10 @@ export class TwaManifest {
   generatorApp: string;
   webManifestUrl?: URL;
   fallbackType: FallbackType;
+  features: Features;
+  enableSiteSettingsShortcut: boolean;
 
-  private static log: Log = new Log('twa-manifest');
+  private static log = new ConsoleLog('twa-manifest');
 
   constructor(data: TwaManifestJson) {
     this.packageId = data.packageId;
@@ -137,6 +137,11 @@ export class TwaManifest {
     this.display = asDisplayMode(data.display!) || DEFAULT_DISPLAY_MODE;
     this.themeColor = new Color(data.themeColor);
     this.navigationColor = new Color(data.navigationColor);
+    this.navigationColorDark = new Color(data.navigationColorDark ?? DEFAULT_NAVIGATION_COLOR);
+    this.navigationDividerColor = new Color(data.navigationDividerColor ??
+      DEFAULT_NAVIGATION_DIVIDER_COLOR);
+    this.navigationDividerColorDark = new Color(data.navigationDividerColorDark ??
+      DEFAULT_NAVIGATION_COLOR);
     this.backgroundColor = new Color(data.backgroundColor);
     this.enableNotifications = data.enableNotifications;
     this.enableLocation = data.enableLocation;
@@ -152,6 +157,9 @@ export class TwaManifest {
     this.generatorApp = data.generatorApp || DEFAULT_GENERATOR_APP_NAME;
     this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
     this.fallbackType = data.fallbackType || 'customtabs';
+    this.features = data.features || {};
+    this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ?
+      data.enableSiteSettingsShortcut : true;
   }
 
   /**
@@ -164,6 +172,9 @@ export class TwaManifest {
     const json: TwaManifestJson = Object.assign({}, this, {
       themeColor: this.themeColor.hex(),
       navigationColor: this.navigationColor.hex(),
+      navigationColorDark: this.navigationColorDark.hex(),
+      navigationDividerColor: this.navigationDividerColor.hex(),
+      navigationDividerColorDark: this.navigationDividerColorDark.hex(),
       backgroundColor: this.backgroundColor.hex(),
       appVersion: this.appVersionName,
       webManifestUrl: this.webManifestUrl ? this.webManifestUrl.toString() : undefined,
@@ -207,10 +218,7 @@ export class TwaManifest {
   }
 
   generateShortcuts(): string {
-    return '[' + this.shortcuts.map((s: ShortcutInfo, i: number) =>
-      `[name:'${s.name}', short_name:'${s.shortName}', url:'${s.url}', icon:'shortcut_${i}']`)
-        .join(',') +
-      ']';
+    return '[' + this.shortcuts.map((shortcut, i) => shortcut.toString(i)).join(',') + ']';
   }
 
   /**
@@ -222,14 +230,10 @@ export class TwaManifest {
    * @returns {TwaManifest}
    */
   static fromWebManifestJson(webManifestUrl: URL, webManifest: WebManifestJson): TwaManifest {
-    const icon: WebManifestIcon | null = webManifest.icons ?
-      findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE) : null;
-
-    const maskableIcon: WebManifestIcon | null = webManifest.icons ?
-      findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE) : null;
-
-    const monochromeIcon: WebManifestIcon | null = webManifest.icons ?
-      findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE) : null;
+    const icon = findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE);
+    const maskableIcon = findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE);
+    const monochromeIcon =
+      findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE);
 
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
 
@@ -237,25 +241,14 @@ export class TwaManifest {
 
     for (let i = 0; i < (webManifest.shortcuts || []).length; i++) {
       const s = webManifest.shortcuts![i];
-
-      if (!s.icons || !s.url || (!s.name && !s.short_name)) {
-        TwaManifest.log.warn(`Skipping shortcut[${i}] for missing metadata.`);
-        continue;
+      try {
+        const shortcutInfo = ShortcutInfo.fromShortcutJson(webManifestUrl, s);
+        if (shortcutInfo != null) {
+          shortcuts.push(shortcutInfo);
+        }
+      } catch (err) {
+        TwaManifest.log.warn(`Skipping shortcut[${i}] for ${err.message}.`);
       }
-
-      const suitableIcon = findSuitableIcon(s.icons, 'any', MIN_SHORTCUT_ICON_SIZE);
-      if (!suitableIcon) {
-        TwaManifest.log.warn(`Skipping shortcut[${i}] for not finding a suitable icon.`);
-        continue;
-      }
-
-      const name = s.name || s.short_name;
-      const shortName = s.short_name || s.name!.substring(0, SHORT_NAME_MAX_SIZE);
-      const url = new URL(s.url, webManifestUrl).toString();
-      const iconUrl = new URL(suitableIcon.src, webManifestUrl).toString();
-      const shortcutInfo = new ShortcutInfo(name!, shortName!, url, iconUrl);
-
-      shortcuts.push(shortcutInfo);
 
       if (shortcuts.length === 4) {
         break;
@@ -275,6 +268,9 @@ export class TwaManifest {
       display: asDisplayMode(webManifest['display']!) || DEFAULT_DISPLAY_MODE,
       themeColor: webManifest['theme_color'] || DEFAULT_THEME_COLOR,
       navigationColor: DEFAULT_NAVIGATION_COLOR,
+      navigationColorDark: DEFAULT_NAVIGATION_COLOR,
+      navigationDividerColor: DEFAULT_NAVIGATION_DIVIDER_COLOR,
+      navigationDividerColorDark: DEFAULT_NAVIGATION_DIVIDER_COLOR,
       backgroundColor: webManifest['background_color'] || DEFAULT_BACKGROUND_COLOR,
       startUrl: fullStartUrl.pathname + fullStartUrl.search,
       iconUrl: resolveIconUrl(icon),
@@ -329,6 +325,9 @@ export interface TwaManifestJson {
   display?: string; // Older Manifests may not have this field.
   themeColor: string;
   navigationColor: string;
+  navigationColorDark?: string;
+  navigationDividerColor?: string;
+  navigationDividerColorDark?: string;
   backgroundColor: string;
   enableNotifications: boolean;
   enableLocation: boolean;
@@ -344,6 +343,10 @@ export interface TwaManifestJson {
   generatorApp?: string;
   webManifestUrl?: string;
   fallbackType?: FallbackType;
+  features?: {
+    appsFlyer?: AppsFlyerConfig;
+  };
+  enableSiteSettingsShortcut?: boolean;
 }
 
 export interface SigningKeyInfo {
