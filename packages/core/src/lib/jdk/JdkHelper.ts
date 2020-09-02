@@ -65,8 +65,6 @@ export class JdkHelper {
 
   /**
    * Returns information from the JAVA_HOME, based on the config and platform.
-   * @param {Config} config The bubblewrap general configuration
-   * @param {NodeJS.Process} process Information from the OS process
    */
   getJavaHome(): string {
     return JdkHelper.getJavaHome(this.config.jdkPath, this.process);
