@@ -21,7 +21,7 @@ import {Config} from '../Config';
 import * as path from 'path';
 import {executeFile} from '../util';
 import {Result} from '../Result';
-import {validatePathError, ErrorCode} from '../types/validatePathError';
+import {ValidatePathError} from '../types/ValidatePathError';
 
 /**
  * Helps getting information relevant to the JDK installed, including
@@ -91,20 +91,20 @@ export class JdkHelper {
    * @param {string} jdkPath the path to the jdk.
    */
   static async validatePath(jdkPath: string, currentProcess: NodeJS.Process = process):
-      Promise<Result<string, validatePathError>> {
+      Promise<Result<string, ValidatePathError>> {
     if (!existsSync(jdkPath)) {
-      return Result.error(new validatePathError('The path given isn\'t exist.' ,
+      return Result.error(new ValidatePathError('The path given isn\'t exist.',
           'PathIsNotCorrect'));
     };
     const javaHome = this.getJavaHome(jdkPath, currentProcess);
     try {
       const file = await fsPromises.readFile(path.join(javaHome, 'release'), 'utf-8');
       if (file.indexOf('JAVA_VERSION="1.8') < 0) { // Checks if the jdk's version is 8 as needed
-        return Result.error(new validatePathError('The given jdk isn\'t supported.'
+        return Result.error(new ValidatePathError('The given jdk isn\'t supported.'
             , 'PathIsNotSupported'));
       }
     } catch (e) {
-      return Result.error(new validatePathError('Did not find the release file of the jdk.',
+      return Result.error(new ValidatePathError('Did not find the release file of the jdk.',
           'PathIsNotCorrect'));
     }
     return Result.ok(jdkPath);

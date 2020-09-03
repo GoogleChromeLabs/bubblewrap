@@ -21,7 +21,7 @@ import {Config} from '../Config';
 import {JdkHelper} from '../jdk/JdkHelper';
 import {Log, ConsoleLog} from '../../lib/Log';
 import {Result} from '../../lib/Result';
-import {validatePathError} from '../types/validatePathError';
+import {ValidatePathError} from '../types/ValidatePathError';
 
 const BUILD_TOOLS_VERSION = '29.0.2';
 
@@ -209,11 +209,11 @@ export class AndroidSdkTools {
    * Checks if the given androidSdkPath is valid.
    * @param {string} sdkPath the path to the sdk.
    */
-  static async validatePath(sdkPath: string): Promise<Result<string, validatePathError>> {
+  static async validatePath(sdkPath: string): Promise<Result<string, ValidatePathError>> {
     // Checks if the path given is valid.
     if (!fs.existsSync(path.join(sdkPath, 'tools'))|| !fs.existsSync(sdkPath)) {
-      return Result.error(new validatePathError('The given androidSdk isn\'t correct.'
-            , 'PathIsNotCorrect'));
+      return Result.error(new ValidatePathError('The given androidSdk isn\'t correct.'
+          , 'PathIsNotCorrect'));
     };
     return Result.ok(sdkPath);
   }
