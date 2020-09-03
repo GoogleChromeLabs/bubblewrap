@@ -65,6 +65,7 @@ be changed by editing the configuration file at `${USER_HOME}/.bubblewrap/config
  }
 
 ```
+*(Note : Make sure you don't have `spaces` in the androidSdkPath.)*
 ## Quickstart Guide
 
 ### Installing Bubblewrap
