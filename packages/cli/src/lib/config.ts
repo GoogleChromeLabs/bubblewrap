@@ -17,7 +17,7 @@
 
 import {join} from 'path';
 import {homedir} from 'os';
-import {Config, Log, ConsoleLog} from '@bubblewrap/core';
+import {Config, Log, ConsoleLog, JdkInstaller} from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
 import {existsSync} from 'fs';
 import {promises as fsPromises} from 'fs';
@@ -32,8 +32,14 @@ const LEGACY_CONFIG_FILE_PATH = join(LEGACY_CONFIG_FOLDER, LEGACY_CONFIG_NAME);
 async function createConfig(): Promise<Config> {
   const result = await inquirer.prompt([
     {
+      type: 'confirm',
+      name: 'jdkExists',
+      message: 'Do you have JDK 8 installed?',
+      default: false,
+    },
+    {
       name: 'jdkPath',
-      message: 'Path to the JDK:',
+      message: 'Path to the JDK. If not installed, enter the path you want JDK 8 to be installed at:',
       validate: existsSync,
     }, {
       name: 'androidSdkPath',
@@ -41,7 +47,15 @@ async function createConfig(): Promise<Config> {
       validate: existsSync,
     },
   ]);
-  return new Config(result.jdkPath, result.androidSdkPath);
+
+  let jdkPath = result.jdkPath;
+  if (!result.jdkExists) {
+    console.log('Downloading JDK 8');
+    const jdkInstaller = new JdkInstaller(process);
+    jdkPath = await jdkInstaller.install(result.jdkPath);
+  }
+  
+  return new Config(jdkPath, result.androidSdkPath);
 }
 
 async function renameConfigIfNeeded(log: Log): Promise<void> {
