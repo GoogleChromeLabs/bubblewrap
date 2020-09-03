@@ -102,7 +102,7 @@ The tool will inkove the installation process for the build tools. Make sure to 
 the license agreement before proceeding. This process will install the other required files inside the `directory/decompressed` root directory of the android CLI package.
 
 As a result of the build step, the tool will generate a signed APK (`app-release-signed.apk`)
-that can be uploaded to the Play Store. You will also need to deploy a Digital Asset Links file to
+that can be used for testing the app and a signed AppBundle (`./app-release-bundle.aab`) that can be [uploaded to the Play Store](https://android-developers.googleblog.com/2020/08/recent-android-app-bundle-improvements.html). You will also need to deploy a Digital Asset Links file to
 validate your domain. The
 [TWA Quick Start Guide](https://developers.google.com/web/updates/2019/08/twas-quickstart#creating-your-asset-link-file)
 explains how to extract the information needed to generate it.
@@ -140,7 +140,6 @@ bubblewrap build [--skipPwaValidation]
 
 Options: 
   - `--skipPwaValidation`: skips validating the wrapped PWA against the Quality Criteria.
-  - `--generateAppBundle`: outputs an Android App Bundle additionally to the APK.
 
 
 ## `update`
