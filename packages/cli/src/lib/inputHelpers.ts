@@ -207,6 +207,21 @@ export async function validateDisplayMode(input: string): Promise<Result<Display
 }
 
 /**
+ * A {@link ValidateFunction} that receives a {@link string} as input and resolves to a 
+ * {@link number} when successful.
+ * @param {string} input a string to be converted to a {@link number} integer.
+ * @returns {Result<number, Error>} a result that resolves to a {@link number} integer on
+ * success or {@link Error} on error.
+ */
+export async function validateInteger(input: string): Promise<Result<number, Error>> {
+  const validNumber = Number.parseFloat(input);
+  if(!Number.isInteger(validNumber)) {
+    return Result.error(new Error(messages.errorInvalidInteger(input)));
+  }
+  return Result.ok(validNumber);
+}
+
+/**
  * A {@link ValidateFunction} that receives a {@link string} as input and resolves to a
  * {@link DisplayMode} when successful. Verifies if the input is a valid Android packageId. See
  * {@link util.validatePackageId} for more details on the packageId validation.
