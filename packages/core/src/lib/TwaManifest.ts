@@ -93,6 +93,8 @@ type Features = {
  *  ],
  * // The duration of fade out animation in milliseconds to be played when removing splash screen.
  * splashScreenFadeOutDuration: 300
+ * isChromeOSOnly: false, // Setting to true will enable a feature that prevents non-ChromeOS devices
+ *  from installing the app.
  *
  */
 export class TwaManifest {
@@ -122,6 +124,7 @@ export class TwaManifest {
   fallbackType: FallbackType;
   features: Features;
   enableSiteSettingsShortcut: boolean;
+  isChromeOSOnly: boolean;
 
   private static log = new ConsoleLog('twa-manifest');
 
@@ -157,6 +160,7 @@ export class TwaManifest {
     this.features = data.features || {};
     this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ?
       data.enableSiteSettingsShortcut : true;
+    this.isChromeOSOnly = data.isChromeOSOnly != undefined ? data.isChromeOSOnly : false;
   }
 
   /**
@@ -342,6 +346,7 @@ export interface TwaManifestJson {
     appsFlyer?: AppsFlyerConfig;
   };
   enableSiteSettingsShortcut?: boolean;
+  isChromeOSOnly?: boolean;
 }
 
 export interface SigningKeyInfo {
