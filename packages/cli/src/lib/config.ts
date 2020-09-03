@@ -39,7 +39,7 @@ async function createConfig(): Promise<Config> {
     },
     {
       name: 'jdkPath',
-      message: 'Path to the JDK. If not installed, enter the path you want JDK 8 to be installed at:',
+      message: 'Path to the JDK. If not installed, enter the desired install location:',
       validate: existsSync,
     }, {
       name: 'androidSdkPath',
@@ -54,7 +54,7 @@ async function createConfig(): Promise<Config> {
     const jdkInstaller = new JdkInstaller(process);
     jdkPath = await jdkInstaller.install(result.jdkPath);
   }
-  
+
   return new Config(jdkPath, result.androidSdkPath);
 }
 

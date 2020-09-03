@@ -16,7 +16,7 @@
 
 'use strict';
 
-import * as path from 'path'
+import * as path from 'path';
 import util = require('../util');
 
 const JDK_VERSION = '8u265-b01';
@@ -37,11 +37,12 @@ const JDK_SRC_ZIP = `jdk${JDK_VERSION}.zip`;
 export class JdkInstaller {
   private process: NodeJS.Process;
   private downloadFile: string;
-  private unzipFunction: (srcPath: string, dstPath: string, deleteWhenDone: boolean) => Promise<void>;
+  private unzipFunction: (srcPath: string, dstPath: string, deleteWhenDone: boolean)
+    => Promise<void>;
   private joinPath: (...paths: string[]) => string;
   /**
    * Constructs a new instance of JdkInstaller
-   * 
+   *
    * @param process {NodeJS.Process} process information from the OS process
    */
   constructor(process: NodeJS.Process) {
@@ -64,22 +65,22 @@ export class JdkInstaller {
         break;
       }
       default:
-          this.downloadFile = '';
-          console.log('Platform not found. Cannot download appropriate JDK.')
+        this.downloadFile = '';
+        console.log('Platform not found. Cannot download appropriate JDK.');
     }
   }
 
   /**
    * Downloads the platform-appropriate version of JDK 8, including
    * binary and source code.
-   * 
+   *
    * @param installPath {string} path to install JDK at
    */
   async install(installPath: string): Promise<string> {
     if (this.downloadFile === '') {
-      throw new Error(`Platform not found or unsupported: ${this.process.platform}. Cannot download appropriate JDK.`);
+      throw new Error(`Platform not found or unsupported: ${this.process.platform}.`);
     }
-    let dstPath = path.resolve(installPath);
+    const dstPath = path.resolve(installPath);
     const downloadSrcUrl = DOWNLOAD_JDK_SRC_ROOT + JDK_SRC_ZIP;
     const localSrcZipPath = this.joinPath(dstPath, JDK_SRC_ZIP);
     await util.downloadFile(downloadSrcUrl, localSrcZipPath);
@@ -93,4 +94,3 @@ export class JdkInstaller {
     return this.joinPath(dstPath, JDK_DIR);
   }
 }
- 
