@@ -85,8 +85,12 @@ export class JdkHelper {
     throw new Error(`Unsupported Platform: ${process.platform}`);
   }
 
+  /**
+   * Checks if the given jdkPath is valid.
+   * @param {string} jdkPath the path to the jdk.
+   */
   static async validatePath(jdkPath: string, currentProcess: NodeJS.Process = process):
-      Promise<Result<boolean, Error>> {
+      Promise<Result<string, Error>> {
     if (!existsSync(jdkPath)) {
       return Result.error(new Error('jdkPathIsNotCorrect'));
     };
@@ -99,7 +103,7 @@ export class JdkHelper {
     } catch (e) {
       return Result.error(new Error(e.message));
     }
-    return Result.ok(true);
+    return Result.ok(jdkPath);
   }
 
   /**

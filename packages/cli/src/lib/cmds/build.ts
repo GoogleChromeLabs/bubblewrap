@@ -160,9 +160,7 @@ class Build {
     this.prompt.printMessage(messages.messageBuildingApp);
     await this.buildApk(twaManifest.signingKey, passwords);
 
-    if (this.args.generateAppBundle) {
-      await this.buildAppBundle(twaManifest.signingKey, passwords);
-    }
+    await this.buildAppBundle(twaManifest.signingKey, passwords);
 
     await this.generateAssetLinks(twaManifest, passwords);
 
