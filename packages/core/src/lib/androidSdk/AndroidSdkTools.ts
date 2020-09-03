@@ -208,11 +208,11 @@ export class AndroidSdkTools {
    * Checks if the androidSdkPath in the config file is valid.
    * @param {Config} config the bubblewrap general configuration.
    */
-  static async validatePath(sdkPath: string): Promise<Result<boolean, Error>> {
+  static async validatePath(sdkPath: string): Promise<Result<string, Error>> {
     // Checks if the path given is valid.
     if (!fs.existsSync(path.join(sdkPath, 'tools'))|| !fs.existsSync(sdkPath)) {
       return Result.error(new Error('androidSdkPathIsNotCorrect'));
     };
-    return Result.ok(true);
+    return Result.ok(sdkPath);
   }
 }
