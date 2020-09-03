@@ -1,4 +1,4 @@
-export type ErrorCode = 'PathIsNotCorrect' | 'PathIsNotSupported' | 'CouldNotReadFile';
+export type ErrorCode = 'PathIsNotCorrect' | 'PathIsNotSupported';
 
 /**
  * Extends Error type to have an error code in addition to the Error's message.
