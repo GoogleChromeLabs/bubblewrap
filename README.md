@@ -28,6 +28,10 @@ projects for Android Applications that launch Progressive Web App (PWA) using
 - To get started with building an application using Bubblewrap, check the [Trusted Web Activity
 Quick Start Guide][1] or the [bubblewrap/cli](./packages/cli) documentation.
 
+## Getting started with GUI tools 
+- If you are just getting started with APK generation from PWA, You might want to check [PWABuilder](https://www.pwabuilder.com/).
+This tool is powered by Bubblewrap and uses the same underlying core. 
+
 ## Bubblewrap Components
 
 - **[bubblewrap/core](./packages/core):** a javascript library for generating, building and
