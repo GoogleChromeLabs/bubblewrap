@@ -21,7 +21,7 @@ import {Config} from '../Config';
 import {JdkHelper} from '../jdk/JdkHelper';
 import {Log, ConsoleLog} from '../../lib/Log';
 import {Result} from '../../lib/Result';
-import {ValidatePathError} from '../types/ValidatePathError';
+import {ValidatePathError} from '../errors/ValidatePathError';
 
 const BUILD_TOOLS_VERSION = '29.0.2';
 

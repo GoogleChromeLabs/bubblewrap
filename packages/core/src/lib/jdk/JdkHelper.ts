@@ -21,7 +21,7 @@ import {Config} from '../Config';
 import * as path from 'path';
 import {executeFile} from '../util';
 import {Result} from '../Result';
-import {ValidatePathError} from '../types/ValidatePathError';
+import {ValidatePathError} from '../errors/ValidatePathError';
 
 /**
  * Helps getting information relevant to the JDK installed, including
