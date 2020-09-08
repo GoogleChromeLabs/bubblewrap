@@ -62,6 +62,14 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
       twaManifest.packageId,
       validatePackageId,
   );
+  
+  twaManifest.appVersionCode = await prompt.promptInput(
+      messages.promptVersionCode,
+      twaManifest.appVersionCode.toString(),
+      validateInteger,
+  );
+  twaManifest.appVersionName = twaManifest.appVersionCode.toString();
+
 
   twaManifest.display = await prompt.promptChoice(
       messages.promptDisplayMode,
@@ -75,13 +83,6 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
       twaManifest.themeColor.hex(),
       validateColor,
   );
-
-  twaManifest.appVersionCode = await prompt.promptInput(
-    messages.promptVersionCode,
-    twaManifest.appVersionCode.toString(),
-    validateInteger,
-  );
-  twaManifest.appVersionName = twaManifest.appVersionCode.toString();
 
   // Step 3/5 Launcher Icons and Splash Screen.
   prompt.printMessage(messages.messageLauncherIconAndSplash);
