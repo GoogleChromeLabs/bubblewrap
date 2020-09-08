@@ -254,7 +254,7 @@ the PWA:
   promptKeystorePassword: 'Password for the Key Store:',
   promptKeyPassword: 'Password for the Key:',
   promptNewAppVersionName: 'versionName for the new App version:',
-  promptVersionCode: 'Starting Version code for the new app version',
+  promptVersionCode: 'Starting version code for the new app version:',
   warnPwaFailedQuality: red('PWA Quality Criteria check failed.'),
   updateConfigUsage: 'Usage\n\n:[--jdk <path-to-jdk>] [--androidSdk <path-to-android-sdk>]' +
       '(You can insert one or both of them)',
