@@ -17,6 +17,7 @@
 import {TwaManifest, TwaManifestJson, asDisplayMode} from '../../lib/TwaManifest';
 import {WebManifestJson} from '../../lib/types/WebManifest';
 import Color = require('color');
+import {ShortcutInfo} from '../../lib/ShortcutInfo';
 
 describe('TwaManifest', () => {
   describe('#fromWebManifestJson', () => {
@@ -237,7 +238,8 @@ describe('TwaManifest', () => {
       expect(twaManifest.splashScreenFadeOutDuration)
           .toEqual(twaManifestJson.splashScreenFadeOutDuration);
       expect(twaManifest.enableNotifications).toEqual(twaManifestJson.enableNotifications);
-      expect(twaManifest.shortcuts).toEqual(twaManifestJson.shortcuts);
+      expect(twaManifest.shortcuts)
+          .toEqual([new ShortcutInfo('name', 'shortName', '/', 'icon.png')]);
       expect(twaManifest.webManifestUrl).toEqual(new URL(twaManifestJson.webManifestUrl!));
       expect(twaManifest.generatorApp).toEqual(twaManifestJson.generatorApp!);
       expect(twaManifest.fallbackType).toBe('webview');
