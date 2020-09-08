@@ -21,7 +21,6 @@ import {Prompt, ValidateFunction} from '../../lib/Prompt';
  */
 export class MockPromptForStrings implements Prompt {
   private responses: string[] = [];
-  private lastMessageIndex = -1;
 
   /**
    * Sets the next answer of this class to be the given message.
@@ -29,7 +28,6 @@ export class MockPromptForStrings implements Prompt {
    */
   addMessage(message: string): void {
     this.responses.push(message);
-    this.lastMessageIndex++;
   }
 
   async printMessage(): Promise<void> {
@@ -38,67 +36,72 @@ export class MockPromptForStrings implements Prompt {
 
   /**
    * Sets the output to be the given message.
-   * @param message the message to be returned.
+   * @param message the message to be prompt. Not relevant for tests.
    * @param {string | null} defaultValue a default value or null.
    * @param {ValidateFunction<T>} validateFunction a function to validate the input.
+   * @returns {Promise<T>} a {@link Promise} that resolves to the validated loaded message,
+   * converted to `T` by the `validateFunction`.
    */
-  async promptInput<T>(message: string,
+  async promptInput<T>(_message: string,
       _defaultValue: string | null,
       validateFunction: ValidateFunction<T>): Promise<T> {
-    if (this.lastMessageIndex < 0) {
-      throw new Error('No answer was given. Please use addMessage(NextResponse) before' +
-      ' using this function');
-    }
-    const nextResponse = this.responses[this.lastMessageIndex--];
-    this.responses.pop();
+    const nextResponse = this.getNextMessage();
     return (await validateFunction(nextResponse)).unwrap();
   }
 
-
   /**
    * Sets the output to be the given message.
-   * @param message the message to be returned.
-   * @param {string[]} choices a list of choices. Not important for testing.
+   * @param message the message to be prompt. Not relevant for tests.
+   * @param {string[]} choices a list of choices. Not relevant for testing.
    * @param {string | null} defaultValue a default value or null.
    * @param {ValidateFunction<T>} validateFunction a function to validate the input.
+   * @returns {Promise<T>} a {@link Promise} that resolves to the validated loaded message,
+   * converted to `T` by the `validateFunction`.
    */
-
-  async promptChoice<T>(
-      _message: string,
+  async promptChoice<T>(_message: string,
       _choices: string[],
       _defaultValue: string | null,
       validateFunction: ValidateFunction<T>): Promise<T> {
-    if (this.lastMessageIndex < 0) {
-      throw new Error('No answer was given. Please use addMessage(NextResponse) before' +
-      ' using this function');
-    }
-    const nextResponse = this.responses[this.lastMessageIndex--];
-    this.responses.pop();
+    const nextResponse = this.getNextMessage();
     return (await validateFunction(nextResponse)).unwrap();
   }
 
   /**
    * Sets the output to be the given message.
+   * @param message the message to be prompt. Not relevant for tests.
    * @param defaultValue the value to be returned
+   * @returns {Promise<boolean>} a {@link Promise} that resolves to a {@link boolean} value. The
+   * value will the `true` if the user answers `Yes` and `false` for `No`.
    */
   async promptConfirm(_message: string, defaultValue: boolean): Promise<boolean> {
     return defaultValue;
   }
 
   /**
-   * Sets the output to be the givven message.
-   * @param message the message to be returned.
+   * Sets the output to be the given message.
+   * @param message the message to be prompt. Not relevant for tests.
    * @param {ValidateFunction<T>} validateFunction a function to validate the input.
+   * @returns {Promise<string>} a {@link Promise} that resolves to the user input validated by
+   * `validateFunction`.
    */
-
   async promptPassword(_message: string, validateFunction: ValidateFunction<string>,
   ): Promise<string> {
-    if (this.lastMessageIndex < 0) {
+    const nextResponse = this.getNextMessage();
+    return (await validateFunction(nextResponse)).unwrap();
+  }
+
+  /**
+   * Sets the output to be the given message.
+   * @param {ValidateFunction<T>} validateFunction a function to validate the input.
+   * @returns {string} which is the next message to be prompted`.
+   */
+  private getNextMessage(): string {
+    if (this.responses.length < 0) {
       throw new Error('No answer was given. Please use addMessage(NextResponse) before' +
       ' using this function');
     }
-    const nextResponse = this.responses[this.lastMessageIndex--];
+    const nextResponse = this.responses[this.responses.length];
     this.responses.pop();
-    return (await validateFunction(nextResponse)).unwrap();
+    return nextResponse;
   }
 }
