@@ -153,7 +153,7 @@ export class TwaManifest {
     this.signingKey = data.signingKey;
     this.appVersionName = data.appVersion;
     this.appVersionCode = data.appVersionCode || DEFAULT_APP_VERSION_CODE;
-    this.shortcuts = data.shortcuts.map((si) => {
+    this.shortcuts = (data.shortcuts || []).map((si) => {
       return new ShortcutInfo(si.name, si.shortName, si.url, si.chosenIconUrl,
           si.chosenMaskableIconUrl, si.chosenMonochromeIconUrl);
     });
@@ -341,7 +341,7 @@ export interface TwaManifestJson {
   signingKey: SigningKeyInfo;
   appVersionCode?: number; // Older Manifests may not have this field.
   appVersion: string; // appVersionName - Old Manifests use `appVersion`. Keeping compatibility.
-  shortcuts: ShortcutInfo[];
+  shortcuts?: ShortcutInfo[];
   generatorApp?: string;
   webManifestUrl?: string;
   fallbackType?: FallbackType;
