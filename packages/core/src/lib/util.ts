@@ -17,6 +17,7 @@
 import * as extractZip from 'extract-zip';
 import fetch from 'node-fetch';
 import * as fs from 'fs';
+import {join} from 'path';
 import {promisify} from 'util';
 import {exec, execFile, spawn} from 'child_process';
 import {x as extractTar} from 'tar';
@@ -224,3 +225,23 @@ export function validatePackageId(input: string): string | null{
   }
   return null;
 }
+
+/**
+ * Removes a file or directory. If the path is a directory, recursively deletes files and
+ * directories inside it.
+ */
+export async function rmdirs(path: string): Promise<void> {
+  const stat = await fs.promises.stat(path);
+
+  // This is a regular file. Just delete it.
+  if (stat.isFile()) {
+    await fs.promises.unlink(path);
+    return;
+  }
+
+  // This is a directory. We delete files and sub directories inside it, then delete the
+  // directory itself.
+  const entries = fs.readdirSync(path);
+  await Promise.all(entries.map((entry) => rmdirs(join(path, entry))));
+  await fs.promises.rmdir(path);
+};
