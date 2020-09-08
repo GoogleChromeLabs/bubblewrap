@@ -18,7 +18,7 @@ import {AndroidSdkTools} from './lib/androidSdk/AndroidSdkTools';
 import {Config} from './lib/Config';
 import {GradleWrapper} from './lib/GradleWrapper';
 import {Log, ConsoleLog} from './lib/Log';
-import {MockLog} from './spec/mock/MockLog';
+import {MockLog} from './lib/mock/MockLog';
 import {JarSigner} from './lib/jdk/JarSigner';
 import {JdkHelper} from './lib/jdk/JdkHelper';
 import {KeyTool} from './lib/jdk/KeyTool';
@@ -28,6 +28,7 @@ import {TwaGenerator} from './lib/TwaGenerator';
 import {DigitalAssetLinks} from './lib/DigitalAssetLinks';
 import * as util from './lib/util';
 import {Result} from './lib/Result';
+import {ValidatePathError} from './lib/errors/ValidatePathError';
 
 export {AndroidSdkTools,
   Config,
@@ -47,4 +48,5 @@ export {AndroidSdkTools,
   util,
   Result,
   SigningKeyInfo,
+  ValidatePathError,
 };

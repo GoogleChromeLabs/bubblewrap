@@ -93,6 +93,8 @@ type Features = {
  *  ],
  * // The duration of fade out animation in milliseconds to be played when removing splash screen.
  * splashScreenFadeOutDuration: 300
+ * isChromeOSOnly: false, // Setting to true will enable a feature that prevents non-ChromeOS devices
+ *  from installing the app.
  *
  */
 export class TwaManifest {
@@ -122,6 +124,7 @@ export class TwaManifest {
   fallbackType: FallbackType;
   features: Features;
   enableSiteSettingsShortcut: boolean;
+  isChromeOSOnly: boolean;
 
   private static log = new ConsoleLog('twa-manifest');
 
@@ -150,13 +153,17 @@ export class TwaManifest {
     this.signingKey = data.signingKey;
     this.appVersionName = data.appVersion;
     this.appVersionCode = data.appVersionCode || DEFAULT_APP_VERSION_CODE;
-    this.shortcuts = data.shortcuts;
+    this.shortcuts = (data.shortcuts || []).map((si) => {
+      return new ShortcutInfo(si.name, si.shortName, si.url, si.chosenIconUrl,
+          si.chosenMaskableIconUrl, si.chosenMonochromeIconUrl);
+    });
     this.generatorApp = data.generatorApp || DEFAULT_GENERATOR_APP_NAME;
     this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
     this.fallbackType = data.fallbackType || 'customtabs';
     this.features = data.features || {};
     this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ?
       data.enableSiteSettingsShortcut : true;
+    this.isChromeOSOnly = data.isChromeOSOnly != undefined ? data.isChromeOSOnly : false;
   }
 
   /**
@@ -334,7 +341,7 @@ export interface TwaManifestJson {
   signingKey: SigningKeyInfo;
   appVersionCode?: number; // Older Manifests may not have this field.
   appVersion: string; // appVersionName - Old Manifests use `appVersion`. Keeping compatibility.
-  shortcuts: ShortcutInfo[];
+  shortcuts?: ShortcutInfo[];
   generatorApp?: string;
   webManifestUrl?: string;
   fallbackType?: FallbackType;
@@ -342,6 +349,7 @@ export interface TwaManifestJson {
     appsFlyer?: AppsFlyerConfig;
   };
   enableSiteSettingsShortcut?: boolean;
+  isChromeOSOnly?: boolean;
 }
 
 export interface SigningKeyInfo {

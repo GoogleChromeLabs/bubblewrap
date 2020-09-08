@@ -15,6 +15,8 @@
  */
 
 import * as util from '../../lib/util';
+import * as mockFs from 'mock-fs';
+import {existsSync} from 'fs';
 
 describe('util', () => {
   describe('#findSuitableIcon', () => {
@@ -222,6 +224,37 @@ describe('util', () => {
       expect(util.validatePackageId('1com.char.twa')).not.toBeNull();
       expect(util.validatePackageId('com.char.1twa')).not.toBeNull();
       expect(util.validatePackageId('_com.char.1twa')).not.toBeNull();
+    });
+  });
+
+  describe('rmdirs', () => {
+    it('Deletes a single file', async () => {
+      mockFs({'/app.txt': 'Test Content'});
+      await util.rmdir('/app.txt');
+      expect(existsSync('/app.txt')).toBeFalse();
+      mockFs.restore();
+    });
+
+    it('Deletes a directory', async () => {
+      mockFs({
+        '/test': {
+          'app.txt': 'Test Content',
+          'subdirectory': {
+            'file2.txt': 'Test Content 2',
+          },
+        },
+        '/other-file.txt': 'This should not be deleted',
+      });
+      await util.rmdir('/test');
+      expect(existsSync('/test')).toBeFalse();
+      expect(existsSync('/other-file.txt')).toBeTrue();
+      mockFs.restore();
+    });
+
+    it('Skips empty directory', () => {
+      mockFs({});
+      expectAsync(util.rmdir('/app.txt')).toBeResolved();
+      mockFs.restore();
     });
   });
 });

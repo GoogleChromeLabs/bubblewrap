@@ -15,10 +15,49 @@
  */
 
 import {TwaGenerator} from '../../lib/TwaGenerator';
+import * as mockFs from 'mock-fs';
+import {existsSync} from 'fs';
 
 describe('TwaGenerator', () => {
   it('Builds an instance of TwaGenerator', () => {
     const twaGenerator = new TwaGenerator();
     expect(twaGenerator).not.toBeNull();
+  });
+
+  describe('#removeTwaProject', () => {
+    it('Removes project files', async () => {
+      mockFs({
+        '/root': {
+          'app': {
+            'build.gradle': 'build.gradle content',
+            'src': {
+              'AndroidManifest.xml': 'Android Manifest',
+            },
+          },
+          'gradle': {
+            'gradlew.bat': 'gradlew content',
+          },
+          'settings.gradle': 'settings.gradle',
+          'gradle.properties': 'gradle.properties',
+          'build.gradle': 'build.gradle',
+          'gradlew': 'gradlew',
+          'gradlew.bat': 'gradle.bat',
+          'twa-manifest.json': 'twa-manifest.json',
+          'android.keystore': 'keystore',
+        },
+      });
+
+      const twaGenerator = new TwaGenerator();
+      await twaGenerator.removeTwaProject('/root');
+      expect(existsSync('/root/app')).toBeFalse();
+      expect(existsSync('/root/gradle')).toBeFalse();
+      expect(existsSync('/root/settings.gradle')).toBeFalse();
+      expect(existsSync('/root/build.gradle')).toBeFalse();
+      expect(existsSync('/root/gradlew')).toBeFalse();
+      expect(existsSync('/root/gradlew.bat')).toBeFalse();
+      expect(existsSync('/root/twa-manifest.json')).toBeTrue();
+      expect(existsSync('/root/android.keystore')).toBeTrue();
+      mockFs.restore();
+    });
   });
 });

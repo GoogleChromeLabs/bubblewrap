@@ -86,6 +86,7 @@ export async function update(
   }
 
   const twaGenerator = new TwaGenerator();
+  await twaGenerator.removeTwaProject(targetDirectory);
   await generateTwaProject(prompt, twaGenerator, targetDirectory, twaManifest);
   return true;
 }
