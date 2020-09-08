@@ -17,7 +17,7 @@
 import {Prompt} from '../../lib/Prompt';
 
 /**
- * A class which usef for testing and which mocks user's input.
+ * A class which used for testing and which mocks user's input.
  */
 export class MockPromptForStrings implements Prompt {
   async printMessage(): Promise<void> {
