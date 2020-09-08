@@ -230,7 +230,7 @@ export function validatePackageId(input: string): string | null{
  * Removes a file or directory. If the path is a directory, recursively deletes files and
  * directories inside it.
  */
-export async function rmdirs(path: string): Promise<void> {
+export async function rmdir(path: string): Promise<void> {
   const stat = await fs.promises.stat(path);
 
   // This is a regular file. Just delete it.
@@ -242,6 +242,6 @@ export async function rmdirs(path: string): Promise<void> {
   // This is a directory. We delete files and sub directories inside it, then delete the
   // directory itself.
   const entries = fs.readdirSync(path);
-  await Promise.all(entries.map((entry) => rmdirs(join(path, entry))));
+  await Promise.all(entries.map((entry) => rmdir(join(path, entry))));
   await fs.promises.rmdir(path);
 };

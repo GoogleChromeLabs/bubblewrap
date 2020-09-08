@@ -230,7 +230,7 @@ describe('util', () => {
   describe('rmdirs', () => {
     it('Deletes a single file', async () => {
       mockFs({'/app.txt': 'Test Content'});
-      await util.rmdirs('/app.txt');
+      await util.rmdir('/app.txt');
       expect(existsSync('/app.txt')).toBeFalse();
       mockFs.restore();
     });
@@ -245,7 +245,7 @@ describe('util', () => {
         },
         '/other-file.txt': 'This should not be deleted',
       });
-      await util.rmdirs('/test');
+      await util.rmdir('/test');
       expect(existsSync('/test')).toBeFalse();
       expect(existsSync('/other-file.txt')).toBeTrue();
       mockFs.restore();
@@ -253,7 +253,7 @@ describe('util', () => {
 
     it('Skips empty directory', () => {
       mockFs({});
-      expectAsync(util.rmdirs('/app.txt')).toBeResolved();
+      expectAsync(util.rmdir('/app.txt')).toBeResolved();
       mockFs.restore();
     });
   });
