@@ -62,7 +62,7 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
       twaManifest.packageId,
       validatePackageId,
   );
-  
+
   twaManifest.appVersionCode = await prompt.promptInput(
       messages.promptVersionCode,
       twaManifest.appVersionCode.toString(),
