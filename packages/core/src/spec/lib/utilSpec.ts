@@ -248,6 +248,7 @@ describe('util', () => {
       await util.rmdirs('/test');
       expect(existsSync('/test')).toBeFalse();
       expect(existsSync('/other-file.txt')).toBeTrue();
+      mockFs.restore();
     });
 
     it('Skips empty directory', () => {
