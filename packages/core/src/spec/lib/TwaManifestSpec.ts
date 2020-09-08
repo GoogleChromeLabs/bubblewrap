@@ -17,7 +17,7 @@
 import {TwaManifest, TwaManifestJson, asDisplayMode} from '../../lib/TwaManifest';
 import {WebManifestJson} from '../../lib/types/WebManifest';
 import Color = require('color');
-import { ShortcutInfo } from '../../lib/ShortcutInfo';
+import {ShortcutInfo} from '../../lib/ShortcutInfo';
 
 describe('TwaManifest', () => {
   describe('#fromWebManifestJson', () => {
