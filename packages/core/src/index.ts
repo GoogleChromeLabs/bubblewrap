@@ -28,7 +28,6 @@ import {TwaGenerator} from './lib/TwaGenerator';
 import {DigitalAssetLinks} from './lib/DigitalAssetLinks';
 import * as util from './lib/util';
 import {Result} from './lib/Result';
-import {ValidatePathError} from './lib/errors/ValidatePathError';
 
 export {AndroidSdkTools,
   Config,
@@ -48,5 +47,4 @@ export {AndroidSdkTools,
   util,
   Result,
   SigningKeyInfo,
-  ValidatePathError,
 };
