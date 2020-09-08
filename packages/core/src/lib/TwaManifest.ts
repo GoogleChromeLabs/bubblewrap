@@ -153,7 +153,10 @@ export class TwaManifest {
     this.signingKey = data.signingKey;
     this.appVersionName = data.appVersion;
     this.appVersionCode = data.appVersionCode || DEFAULT_APP_VERSION_CODE;
-    this.shortcuts = data.shortcuts;
+    this.shortcuts = data.shortcuts.map((si) => {
+      return new ShortcutInfo(si.name, si.shortName, si.url, si.chosenIconUrl,
+          si.chosenMaskableIconUrl, si.chosenMonochromeIconUrl);
+    });
     this.generatorApp = data.generatorApp || DEFAULT_GENERATOR_APP_NAME;
     this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
     this.fallbackType = data.fallbackType || 'customtabs';
