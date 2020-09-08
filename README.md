@@ -47,6 +47,10 @@ on the conversation:
  the meeting via [this link][3].
  - Join the conversation on the [#bubblewrap][4] channel on the [chromiumdev slack][6].
  If not already a member, request an invite via [this link][2].
+ 
+## Getting started with GUI tools 
+- If you are just getting started with APK generation from PWA, You might want to check [PWABuilder](https://www.pwabuilder.com/).
+This tool is powered by Bubblewrap and uses the same underlying core. 
 
 ## Contributing
 
