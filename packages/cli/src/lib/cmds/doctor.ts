@@ -21,10 +21,10 @@ import {enUS as messages} from '../strings';
 async function jdkDoctor(config: Config, log: Log): Promise<boolean> {
   const result = await JdkHelper.validatePath(config.jdkPath);
   if (result.isError()) {
-    if (result.unwrapError().message === 'jdkPathIsNotCorrect') {
+    if (result.unwrapError().getErrorCode() === 'PathIsNotCorrect') {
       log.error(messages.jdkPathIsNotCorrect);
       return false;
-    } else if (result.unwrapError().message === 'jdkIsNotSupported') {
+    } else if (result.unwrapError().getErrorCode() === 'PathIsNotSupported') {
       log.error(messages.jdkIsNotSupported);
       return false;
     } else { // Error while reading the file, will print the error message.
