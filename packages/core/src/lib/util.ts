@@ -231,6 +231,9 @@ export function validatePackageId(input: string): string | null{
  * directories inside it.
  */
 export async function rmdir(path: string): Promise<void> {
+  if (!fs.existsSync(path)) {
+    return;
+  }
   const stat = await fs.promises.stat(path);
 
   // This is a regular file. Just delete it.
