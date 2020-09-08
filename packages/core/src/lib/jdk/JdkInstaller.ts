@@ -30,10 +30,9 @@ const JDK_FILE_NAME_LINUX64 = `OpenJDK8U-jdk_x64_linux_hotspot_${JDK_BIN_VERSION
 const JDK_SRC_ZIP = `jdk${JDK_VERSION}.zip`;
 
 /**
- * Install JDK 8 by downloading the binary and source code and 
+ * Install JDK 8 by downloading the binary and source code and
  * decompressing it at path given by user. Source code is required
  * based on discussions with legal team about licensing.
- * 
  */
 export class JdkInstaller {
   private process: NodeJS.Process;
