@@ -30,9 +30,9 @@ const JDK_FILE_NAME_LINUX64 = `OpenJDK8U-jdk_x64_linux_hotspot_${JDK_BIN_VERSION
 const JDK_SRC_ZIP = `jdk${JDK_VERSION}.zip`;
 
 /**
- * Checks whether JDK 8 is installed. If not installed,
- * download the binary and source code and decompress at
- * path given by user.
+ * Install JDK 8 by downloading the binary and source code and
+ * decompressing it at path given by user. Source code is required
+ * based on discussions with legal team about licensing.
  */
 export class JdkInstaller {
   private process: NodeJS.Process;
@@ -40,10 +40,11 @@ export class JdkInstaller {
   private unzipFunction: (srcPath: string, dstPath: string, deleteWhenDone: boolean)
     => Promise<void>;
   private joinPath: (...paths: string[]) => string;
+
   /**
-   * Constructs a new instance of JdkInstaller
+   * Constructs a new instance of JdkInstaller.
    *
-   * @param process {NodeJS.Process} process information from the OS process
+   * @param process {NodeJS.Process} process information from the OS process.
    */
   constructor(process: NodeJS.Process) {
     this.process = process;
@@ -66,7 +67,7 @@ export class JdkInstaller {
       }
       default:
         this.downloadFile = '';
-        console.log('Platform not found. Cannot download appropriate JDK.');
+        throw new Error(`Platform not found or unsupported: ${this.process.platform}.`);
     }
   }
 
@@ -74,12 +75,9 @@ export class JdkInstaller {
    * Downloads the platform-appropriate version of JDK 8, including
    * binary and source code.
    *
-   * @param installPath {string} path to install JDK at
+   * @param installPath {string} path to install JDK at.
    */
   async install(installPath: string): Promise<string> {
-    if (this.downloadFile === '') {
-      throw new Error(`Platform not found or unsupported: ${this.process.platform}.`);
-    }
     const dstPath = path.resolve(installPath);
     const downloadSrcUrl = DOWNLOAD_JDK_SRC_ROOT + JDK_SRC_ZIP;
     const localSrcZipPath = this.joinPath(dstPath, JDK_SRC_ZIP);
