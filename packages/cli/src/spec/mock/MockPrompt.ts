@@ -100,8 +100,7 @@ export class MockPrompt implements Prompt {
       throw new Error('No answer was given. Please use addMessage(nextMessage) before' +
       ' using this function');
     }
-    const nextResponse = this.responses[0];
-    this.responses.shift();
+    const nextResponse = this.responses.shift()!;
     return nextResponse;
   }
 }

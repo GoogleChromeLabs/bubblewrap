@@ -21,7 +21,7 @@ async function validationFunction(message: string): Promise<Result<string, Error
   return Result.ok(message);
 }
 
-describe('MockPromptForStrings', () => {
+describe('MockPrompt', () => {
   describe('#promptInput', () => {
     it('Checks if the correct messages are being prompted using promptInput', async () => {
       const mock = new MockPrompt();
