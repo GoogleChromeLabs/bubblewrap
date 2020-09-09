@@ -19,7 +19,7 @@ import {Prompt, ValidateFunction} from '../../lib/Prompt';
 /**
  * A class which used for testing and which mocks user's input.
  */
-export class MockPromptForStrings implements Prompt {
+export class MockPrompt implements Prompt {
   private responses: string[] = [];
 
   /**
