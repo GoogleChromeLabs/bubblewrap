@@ -27,7 +27,7 @@ export class MockPromptForStrings implements Prompt {
    * @param message the message to be returned in the next prompt message.
    */
   addMessage(message: string): void {
-    this.responses.unshift(message);
+    this.responses.push(message);
   }
 
   async printMessage(): Promise<void> {
@@ -96,11 +96,11 @@ export class MockPromptForStrings implements Prompt {
    * @returns {string} which is the next message to be prompted`.
    */
   private getNextMessage(): string {
-    if (this.responses.length < 0) {
+    if (this.responses.length === 0) {
       throw new Error('No answer was given. Please use addMessage(nextMessage) before' +
       ' using this function');
     }
-    const nextResponse = this.responses[this.responses.length];
+    const nextResponse = this.responses[0];
     this.responses.shift();
     return nextResponse;
   }
