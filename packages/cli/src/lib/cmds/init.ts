@@ -70,7 +70,6 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
   );
   twaManifest.appVersionName = twaManifest.appVersionCode.toString();
 
-
   twaManifest.display = await prompt.promptChoice(
       messages.promptDisplayMode,
       DisplayModes,
