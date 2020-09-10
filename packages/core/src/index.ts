@@ -21,6 +21,7 @@ import {Log, ConsoleLog} from './lib/Log';
 import {MockLog} from './lib/mock/MockLog';
 import {JarSigner} from './lib/jdk/JarSigner';
 import {JdkHelper} from './lib/jdk/JdkHelper';
+import {JdkInstaller} from './lib/jdk/JdkInstaller';
 import {KeyTool} from './lib/jdk/KeyTool';
 import {TwaManifest, DisplayModes, DisplayMode, asDisplayMode, SigningKeyInfo}
   from './lib/TwaManifest';
@@ -28,7 +29,6 @@ import {TwaGenerator} from './lib/TwaGenerator';
 import {DigitalAssetLinks} from './lib/DigitalAssetLinks';
 import * as util from './lib/util';
 import {Result} from './lib/Result';
-import {ValidatePathError} from './lib/errors/ValidatePathError';
 
 export {AndroidSdkTools,
   Config,
@@ -36,6 +36,7 @@ export {AndroidSdkTools,
   GradleWrapper,
   JarSigner,
   JdkHelper,
+  JdkInstaller,
   KeyTool,
   Log,
   ConsoleLog,
@@ -48,5 +49,4 @@ export {AndroidSdkTools,
   util,
   Result,
   SigningKeyInfo,
-  ValidatePathError,
 };

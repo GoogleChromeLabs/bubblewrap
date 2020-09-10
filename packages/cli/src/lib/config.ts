@@ -17,7 +17,7 @@
 
 import {join} from 'path';
 import {homedir} from 'os';
-import {Config, Log, ConsoleLog} from '@bubblewrap/core';
+import {Config, Log, ConsoleLog, JdkInstaller} from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
 import {existsSync} from 'fs';
 import {promises as fsPromises} from 'fs';
@@ -28,20 +28,44 @@ export const DEFAULT_CONFIG_FILE_PATH = join(DEFAULT_CONFIG_FOLDER, DEFAULT_CONF
 const LEGACY_CONFIG_FOLDER = join(homedir(), '.llama-pack');
 const LEGACY_CONFIG_NAME = 'llama-pack-config.json';
 const LEGACY_CONFIG_FILE_PATH = join(LEGACY_CONFIG_FOLDER, LEGACY_CONFIG_NAME);
+const DEFAULT_JDK_FOLDER = join(DEFAULT_CONFIG_FOLDER, 'jdk');
 
 async function createConfig(): Promise<Config> {
-  const result = await inquirer.prompt([
+  const installRequest = await inquirer.prompt([
     {
-      name: 'jdkPath',
-      message: 'Path to the JDK:',
-      validate: existsSync,
-    }, {
-      name: 'androidSdkPath',
+      type: 'confirm',
+      name: 'jdk',
+      message: 'Do you want Bubblewrap to install JDK? (Enter "No" to use your JDK installation)',
+      default: true,
+    },
+  ]);
+
+  let jdkPath;
+  if (!installRequest.jdk) {
+    const jdk = await inquirer.prompt([
+      {
+        name: 'path',
+        message: 'Path to your existing JDK:',
+        validate: existsSync,
+      },
+    ]);
+    jdkPath = jdk.path;
+  } else {
+    await fsPromises.mkdir(DEFAULT_JDK_FOLDER);
+    console.log(`Downloading JDK 8 to ${DEFAULT_JDK_FOLDER}`);
+    const jdkInstaller = new JdkInstaller(process);
+    jdkPath = await jdkInstaller.install(DEFAULT_JDK_FOLDER);
+  }
+
+  const androidSdk = await inquirer.prompt([
+    {
+      name: 'path',
       message: 'Path to the Android SDK:',
       validate: existsSync,
     },
   ]);
-  return new Config(result.jdkPath, result.androidSdkPath);
+
+  return new Config(jdkPath, androidSdk.path);
 }
 
 async function renameConfigIfNeeded(log: Log): Promise<void> {
