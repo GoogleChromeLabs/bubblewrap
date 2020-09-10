@@ -71,8 +71,8 @@ describe('JdkHelper', () => {
         ['jdk']: {
           'release': 'JAVA_VERSION="1.8',
         }});
-        expect((await JdkHelper.validatePath('jdk')).isOk()).toBeTrue()
-        mock.restore();
+      expect((await JdkHelper.validatePath('jdk')).isOk()).toBeTrue();
+      mock.restore();
     });
 
     it('Checks that given an invalid path, validatePath will throw an error', async () => {
@@ -80,9 +80,9 @@ describe('JdkHelper', () => {
         ['jdk']: {
           'release': {},
         }});
-        expect((await JdkHelper.validatePath('jdk')).isError()).toBeTrue()
-        expect((await JdkHelper.validatePath('release')).isError()).toBeTrue()
-        mock.restore();
+      expect((await JdkHelper.validatePath('jdk')).isError()).toBeTrue();
+      expect((await JdkHelper.validatePath('release')).isError()).toBeTrue();
+      mock.restore();
     });
   });
 });
