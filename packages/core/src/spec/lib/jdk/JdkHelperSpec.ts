@@ -18,6 +18,7 @@
 
 import {JdkHelper} from '../../../lib/jdk/JdkHelper';
 import {Config} from '../../../lib/Config';
+import * as mock from 'mock-fs';
 
 describe('JdkHelper', () => {
   describe('getEnv()', () => {
@@ -61,6 +62,27 @@ describe('JdkHelper', () => {
       const env = jdkHelper.getEnv();
       expect(env['Path']).toBe('C:\\Users\\user\\jdk8\\bin\\;');
       expect(env['JAVA_HOME']).toBe('C:\\Users\\user\\jdk8\\');
+    });
+  });
+
+  describe('validatePath', () => {
+    it('Checks that given a valid path, validatePath will pass', async () => {
+      mock({
+        ['jdk']: {
+          'release': 'JAVA_VERSION="1.8',
+        }});
+        expect((await JdkHelper.validatePath('jdk')).isOk()).toBeTrue()
+        mock.restore();
+    });
+
+    it('Checks that given an invalid path, validatePath will throw an error', async () => {
+      mock({
+        ['jdk']: {
+          'release': {},
+        }});
+        expect((await JdkHelper.validatePath('jdk')).isError()).toBeTrue()
+        expect((await JdkHelper.validatePath('release')).isError()).toBeTrue()
+        mock.restore();
     });
   });
 });

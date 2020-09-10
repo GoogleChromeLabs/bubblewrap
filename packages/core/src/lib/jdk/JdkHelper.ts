@@ -96,7 +96,7 @@ export class JdkHelper {
       return Result.error(new ValidatePathError('The path given isn\'t exist.',
           'PathIsNotCorrect'));
     };
-    const javaHome = this.getJavaHome(jdkPath, currentProcess);
+    const javaHome = JdkHelper.getJavaHome(jdkPath, currentProcess);
     try {
       const file = await fsPromises.readFile(path.join(javaHome, 'release'), 'utf-8');
       if (file.indexOf('JAVA_VERSION="1.8') < 0) { // Checks if the jdk's version is 8 as needed

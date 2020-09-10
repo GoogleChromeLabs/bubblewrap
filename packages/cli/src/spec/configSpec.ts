@@ -19,8 +19,8 @@ import {homedir} from 'os';
 import {existsSync} from 'fs';
 import {promises as fsPromises} from 'fs';
 import {loadOrCreateConfig} from '../lib/config';
-import * as mock from 'mock-fs';
 import {MockLog} from '@bubblewrap/core';
+import * as mock from 'mock-fs';
 import * as inquirer from 'inquirer';
 
 const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap');
