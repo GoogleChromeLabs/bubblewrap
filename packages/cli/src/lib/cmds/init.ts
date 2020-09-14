@@ -18,7 +18,7 @@ import * as fs from 'fs';
 import {Config, DisplayModes, JdkHelper, KeyTool, TwaGenerator, TwaManifest}
   from '@bubblewrap/core';
 import {validateHost, validateColor, createValidateString, validateDisplayMode, validatePackageId,
-  validateImageUrl, validateOptionalImageUrl} from '../inputHelpers';
+  validateImageUrl, validateOptionalImageUrl, validateInteger} from '../inputHelpers';
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
 import {Prompt, InquirerPrompt} from '../Prompt';
@@ -62,6 +62,13 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
       twaManifest.packageId,
       validatePackageId,
   );
+
+  twaManifest.appVersionCode = await prompt.promptInput(
+      messages.promptVersionCode,
+      twaManifest.appVersionCode.toString(),
+      validateInteger,
+  );
+  twaManifest.appVersionName = twaManifest.appVersionCode.toString();
 
   twaManifest.display = await prompt.promptChoice(
       messages.promptDisplayMode,

@@ -25,6 +25,7 @@ type Messages = {
   errorInvalidUrl: (url: string) => string;
   errorInvalidColor: (color: string) => string;
   errorInvalidDisplayMode: (displayMode: string) => string;
+  errorInvalidInteger: (integer: string) => string;
   errorUrlMustBeImage: (mimeType: string) => string;
   errorUrlMustNotBeSvg: string;
   messageInitializingWebManifest: (manifestUrl: string) => string;
@@ -73,6 +74,7 @@ type Messages = {
   promptKeystorePassword: string;
   promptKeyPassword: string;
   promptNewAppVersionName: string;
+  promptVersionCode: string;
   warnPwaFailedQuality: string;
   updateConfigUsage: string;
   jdkPathIsNotCorrect: string;
@@ -100,6 +102,9 @@ export const enUS: Messages = {
   },
   errorInvalidDisplayMode: (displayMode: string): string => {
     return `Invalid display mode: ${displayMode}`;
+  },
+  errorInvalidInteger: (integer: string): string => {
+    return `Invalid integer provided: ${integer}`;
   },
   errorUrlMustBeImage: (mimeType: string): string => {
     return `URL must resolve to an image/* mime-type, but resolved to ${mimeType}.`;
@@ -249,6 +254,7 @@ the PWA:
   promptKeystorePassword: 'Password for the Key Store:',
   promptKeyPassword: 'Password for the Key:',
   promptNewAppVersionName: 'versionName for the new App version:',
+  promptVersionCode: 'Starting version code for the new app version:',
   warnPwaFailedQuality: red('PWA Quality Criteria check failed.'),
   updateConfigUsage: 'Usage\n\n:[--jdk <path-to-jdk>] [--androidSdk <path-to-android-sdk>]' +
       '(You can insert one or both of them)',
