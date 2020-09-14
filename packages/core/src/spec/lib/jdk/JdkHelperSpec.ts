@@ -75,7 +75,7 @@ describe('JdkHelper', () => {
       mock.restore();
     });
 
-    it('Creates a Windows environment and checks that a valid path will not pass', async () => {
+    it('Creates a Windows environment and checks that an invalid path will not pass', async () => {
       mock({
         'jdk': {
           'release': {},
