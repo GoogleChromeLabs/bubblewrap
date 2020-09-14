@@ -18,6 +18,7 @@
 
 import {JdkHelper} from '../../../lib/jdk/JdkHelper';
 import {Config} from '../../../lib/Config';
+import * as mock from 'mock-fs';
 
 describe('JdkHelper', () => {
   describe('getEnv()', () => {
@@ -61,6 +62,88 @@ describe('JdkHelper', () => {
       const env = jdkHelper.getEnv();
       expect(env['Path']).toBe('C:\\Users\\user\\jdk8\\bin\\;');
       expect(env['JAVA_HOME']).toBe('C:\\Users\\user\\jdk8\\');
+    });
+  });
+
+  describe('validatePath', () => {
+    it('Creates a Windows environment and checks that a valid path will pass', async () => {
+      mock({
+        'jdk': {
+          'release': 'JAVA_VERSION="1.8',
+        }});
+      expect((await JdkHelper.validatePath('jdk')).isOk()).toBeTrue();
+      mock.restore();
+    });
+
+    it('Creates a Windows environment and checks that an invalid path will not pass', async () => {
+      mock({
+        'jdk': {
+          'release': {},
+        }});
+      expect((await JdkHelper.validatePath('jdk')).isError()).toBeTrue();
+      expect((await JdkHelper.validatePath('release')).isError()).toBeTrue();
+      mock.restore();
+    });
+  });
+
+  describe('getJavaHome', () => {
+    it('Creates a Windows environment and checks that the correct Home is returned', async () => {
+      mock({
+        'jdk8u265-b01': {
+          'bin': {},
+          'include': {},
+          'jre': {},
+          'release': 'JAVA_VERSION="1.8.0_265',
+        }});
+      const process = {
+        platform: 'win32',
+        env: {
+          'Path': '',
+        },
+      } as unknown as NodeJS.Process;
+      expect(JdkHelper.getJavaHome('jdk8u265-b01', process)).toEqual('jdk8u265-b01\\');
+      mock.restore();
+    });
+
+    it('Creates a MacOSX environment and checks that the correct Home is returned', async () => {
+      mock({
+        'jdk8u265-b01': {
+          '_CodeSignature': {},
+          'Home': {
+            'bin': {},
+            'include': {},
+            'jre': {},
+            'release': 'JAVA_VERSION="1.8.0_265',
+          },
+          'MacOS': {},
+          'info.plist': {},
+        }});
+      const process = {
+        platform: 'darwin',
+        env: {
+          'Path': '',
+        },
+      } as unknown as NodeJS.Process;
+      expect(JdkHelper.getJavaHome('jdk8u265-b01', process)).toEqual('jdk8u265-b01/Contents/Home/');
+      mock.restore();
+    });
+
+    it('Creates a Linux environment and checks that the correct Home is returned', async () => {
+      mock({
+        'jdk8u265-b01': {
+          'bin': {},
+          'include': {},
+          'jre': {},
+          'release': 'JAVA_VERSION="1.8.0_265',
+        }});
+      const process = {
+        platform: 'linux',
+        env: {
+          'Path': '',
+        },
+      } as unknown as NodeJS.Process;
+      expect(JdkHelper.getJavaHome('jdk8u265-b01', process)).toEqual('jdk8u265-b01/');
+      mock.restore();
     });
   });
 });
