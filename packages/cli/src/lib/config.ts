@@ -32,7 +32,7 @@ const DEFAULT_JDK_FOLDER = join(DEFAULT_CONFIG_FOLDER, 'jdk');
 
 async function createConfig(prompt: Prompt = new InquirerPrompt()): Promise<Config> {
   const jdkInstallRequest = await prompt.promptConfirm('Do you want Bubblewrap to install JDK? ' +
-    '(Enter "No" to use your JDK installation)', false);
+    '(Enter "No" to use your JDK installation)', true);
 
   let jdkPath;
   if (!jdkInstallRequest) {
