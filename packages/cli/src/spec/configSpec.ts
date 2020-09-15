@@ -80,9 +80,9 @@ describe('config', () => {
       const mockLog = new MockLog();
       const mockPrompt = new MockPrompt();
       // Since 'createConfig' will be called, we push 3 future answers to 'mockPrompt'.
-      mockPrompt.addMessage('false');
-      mockPrompt.addMessage('jdk');
-      mockPrompt.addMessage('sdk');
+      mockPrompt.addMessage('false'); // Should bubblewrap download the JDK?
+      mockPrompt.addMessage('jdk'); // The path of the jdk. (not really used).
+      mockPrompt.addMessage('sdk'); // The path of the androidSdk. (not really used).
       await loadOrCreateConfig(mockLog, mockPrompt);
       // Checks if the file name was created.
       expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
