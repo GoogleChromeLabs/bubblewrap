@@ -25,7 +25,17 @@ const WINDOWS_URL = `commandlinetools-win-${SDK_VERSION}_latest.zip`;
 const MAC_URL = `commandlinetools-mac-${SDK_VERSION}_latest.zip`;
 const LINUX_URL = `commandlinetools-linux-${SDK_VERSION}_latest.zip`;
 
+/**
+ * Install Android Command Line Tools by downloading the zip and
+ * decompressing it.
+ */
 export class AndroidSdkToolsInstaller {
+   /**
+   * Downloads the platform-appropriate version of Android 
+   * Command Line Tools.
+   *
+   * @param installPath {string} path to install SDK at.
+   */
   static async install(installPath: string): Promise<void> {
     let downloadFileName;
     switch (process.platform) {
