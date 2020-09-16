@@ -17,10 +17,15 @@
 
 import {join} from 'path';
 import {homedir} from 'os';
+<<<<<<< HEAD
 import {Config, Log, ConsoleLog, JdkInstaller, AndroidSdkToolsInstaller} from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
+=======
+import {Config, Log, ConsoleLog, JdkInstaller, JdkHelper, AndroidSdkTools} from '@bubblewrap/core';
+>>>>>>> upstream/master
 import {existsSync} from 'fs';
 import {promises as fsPromises} from 'fs';
+import {InquirerPrompt, Prompt} from './Prompt';
 
 const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap');
 const DEFAULT_CONFIG_NAME = 'config.json';
@@ -31,32 +36,22 @@ const LEGACY_CONFIG_FILE_PATH = join(LEGACY_CONFIG_FOLDER, LEGACY_CONFIG_NAME);
 const DEFAULT_JDK_FOLDER = join(DEFAULT_CONFIG_FOLDER, 'jdk');
 const DEFAULT_SDK_FOLDER = join(DEFAULT_CONFIG_FOLDER, 'android_sdk');
 
-async function createConfig(): Promise<Config> {
-  const installJdk = await inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'request',
-      message: 'Do you want Bubblewrap to install JDK? ("No" to use your JDK installation)',
-      default: true,
-    },
-  ]);
+async function createConfig(prompt: Prompt = new InquirerPrompt()): Promise<Config> {
+  const jdkInstallRequest = await prompt.promptConfirm('Do you want Bubblewrap to install JDK? ' +
+    '(Enter "No" to use your JDK installation)', true);
 
   let jdkPath;
-  if (!installJdk.request) {
-    const jdk = await inquirer.prompt([
-      {
-        name: 'path',
-        message: 'Path to your existing JDK:',
-        validate: existsSync,
-      },
-    ]);
-    jdkPath = jdk.path;
+  if (!jdkInstallRequest) {
+    jdkPath = await prompt.promptInput('Path to your existing JDK:', null,
+        JdkHelper.validatePath);
   } else {
     await fsPromises.mkdir(DEFAULT_JDK_FOLDER);
     console.log(`Downloading JDK 8 to ${DEFAULT_JDK_FOLDER}`);
     const jdkInstaller = new JdkInstaller(process);
     jdkPath = await jdkInstaller.install(DEFAULT_JDK_FOLDER);
   }
+  const androidSdkPath = await prompt.promptInput('Path to the Android SDK:', null,
+      AndroidSdkTools.validatePath);
 
   const installSdk = await inquirer.prompt([
     {
@@ -108,12 +103,12 @@ async function renameConfigIfNeeded(log: Log): Promise<void> {
 }
 
 export async function loadOrCreateConfig(log: Log = new ConsoleLog('config'),
-    path = DEFAULT_CONFIG_FILE_PATH): Promise<Config> {
+    prompt: Prompt = new InquirerPrompt(), path = DEFAULT_CONFIG_FILE_PATH): Promise<Config> {
   await renameConfigIfNeeded(log);
   const existingConfig = await Config.loadConfig(path);
   if (existingConfig) return existingConfig;
 
-  const config = await createConfig();
+  const config = await createConfig(prompt);
   await config.saveConfig(path);
   return config;
 }

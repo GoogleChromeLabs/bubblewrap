@@ -74,6 +74,13 @@ export class MockPrompt implements Prompt {
    * value will the `true` if the user answers `Yes` and `false` for `No`.
    */
   async promptConfirm(_message: string, defaultValue: boolean): Promise<boolean> {
+    const nextResponse = this.getNextMessage();
+    if (nextResponse === 'true') {
+      return true;
+    }
+    if (nextResponse === 'false') {
+      return false;
+    }
     return defaultValue;
   }
 
