@@ -30,8 +30,8 @@ const LINUX_URL = `commandlinetools-linux-${SDK_VERSION}_latest.zip`;
  * decompressing it.
  */
 export class AndroidSdkToolsInstaller {
-   /**
-   * Downloads the platform-appropriate version of Android 
+  /**
+   * Downloads the platform-appropriate version of Android
    * Command Line Tools.
    *
    * @param installPath {string} path to install SDK at.

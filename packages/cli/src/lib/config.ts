@@ -17,12 +17,8 @@
 
 import {join} from 'path';
 import {homedir} from 'os';
-<<<<<<< HEAD
-import {Config, Log, ConsoleLog, JdkInstaller, AndroidSdkToolsInstaller} from '@bubblewrap/core';
-import * as inquirer from 'inquirer';
-=======
-import {Config, Log, ConsoleLog, JdkInstaller, JdkHelper, AndroidSdkTools} from '@bubblewrap/core';
->>>>>>> upstream/master
+import {Config, Log, ConsoleLog, JdkInstaller, JdkHelper, AndroidSdkTools,
+  AndroidSdkToolsInstaller} from '@bubblewrap/core';
 import {existsSync} from 'fs';
 import {promises as fsPromises} from 'fs';
 import {InquirerPrompt, Prompt} from './Prompt';
@@ -50,28 +46,14 @@ async function createConfig(prompt: Prompt = new InquirerPrompt()): Promise<Conf
     const jdkInstaller = new JdkInstaller(process);
     jdkPath = await jdkInstaller.install(DEFAULT_JDK_FOLDER);
   }
-  const androidSdkPath = await prompt.promptInput('Path to the Android SDK:', null,
-      AndroidSdkTools.validatePath);
 
-  const installSdk = await inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'request',
-      message: 'Do you want Bubblewrap to install Android SDK? ("No" to use your installation)',
-      default: true,
-    },
-  ]);
+  const sdkInstallRequest = await prompt.promptConfirm('Do you want Bubblewrap to install ' +
+    'Android SDK? (Enter "No" to use your installation)', true);
 
   let sdkPath;
-  if (!installSdk.request) {
-    const androidSdk = await inquirer.prompt([
-      {
-        name: 'path',
-        message: 'Path to your existing Android SDK:',
-        validate: existsSync,
-      },
-    ]);
-    sdkPath = androidSdk.path;
+  if (!sdkInstallRequest) {
+    sdkPath = await prompt.promptInput('Path to your existing Android SDK:', null,
+        AndroidSdkTools.validatePath);
   } else {
     await fsPromises.mkdir(DEFAULT_SDK_FOLDER);
     console.log(`Downloading Android command line tools to ${DEFAULT_SDK_FOLDER}`);
