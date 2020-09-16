@@ -17,7 +17,7 @@
 
 import {join} from 'path';
 import {homedir} from 'os';
-import {Config, Log, ConsoleLog, JdkInstaller} from '@bubblewrap/core';
+import {Config, Log, ConsoleLog, JdkInstaller, AndroidSdkToolsInstaller} from '@bubblewrap/core';
 import * as inquirer from 'inquirer';
 import {existsSync} from 'fs';
 import {promises as fsPromises} from 'fs';
@@ -29,19 +29,20 @@ const LEGACY_CONFIG_FOLDER = join(homedir(), '.llama-pack');
 const LEGACY_CONFIG_NAME = 'llama-pack-config.json';
 const LEGACY_CONFIG_FILE_PATH = join(LEGACY_CONFIG_FOLDER, LEGACY_CONFIG_NAME);
 const DEFAULT_JDK_FOLDER = join(DEFAULT_CONFIG_FOLDER, 'jdk');
+const DEFAULT_SDK_FOLDER = join(DEFAULT_CONFIG_FOLDER, 'android_sdk');
 
 async function createConfig(): Promise<Config> {
-  const installRequest = await inquirer.prompt([
+  const installJdk = await inquirer.prompt([
     {
       type: 'confirm',
-      name: 'jdk',
-      message: 'Do you want Bubblewrap to install JDK? (Enter "No" to use your JDK installation)',
+      name: 'request',
+      message: 'Do you want Bubblewrap to install JDK? ("No" to use your JDK installation)',
       default: true,
     },
   ]);
 
   let jdkPath;
-  if (!installRequest.jdk) {
+  if (!installJdk.request) {
     const jdk = await inquirer.prompt([
       {
         name: 'path',
@@ -57,15 +58,33 @@ async function createConfig(): Promise<Config> {
     jdkPath = await jdkInstaller.install(DEFAULT_JDK_FOLDER);
   }
 
-  const androidSdk = await inquirer.prompt([
+  const installSdk = await inquirer.prompt([
     {
-      name: 'path',
-      message: 'Path to the Android SDK:',
-      validate: existsSync,
+      type: 'confirm',
+      name: 'request',
+      message: 'Do you want Bubblewrap to install Android SDK? ("No" to use your installation)',
+      default: true,
     },
   ]);
 
-  return new Config(jdkPath, androidSdk.path);
+  let sdkPath;
+  if (!installSdk.request) {
+    const androidSdk = await inquirer.prompt([
+      {
+        name: 'path',
+        message: 'Path to your existing Android SDK:',
+        validate: existsSync,
+      },
+    ]);
+    sdkPath = androidSdk.path;
+  } else {
+    await fsPromises.mkdir(DEFAULT_SDK_FOLDER);
+    console.log(`Downloading Android command line tools to ${DEFAULT_SDK_FOLDER}`);
+    await AndroidSdkToolsInstaller.install(DEFAULT_SDK_FOLDER);
+    sdkPath = DEFAULT_SDK_FOLDER;
+  }
+
+  return new Config(jdkPath, sdkPath);
 }
 
 async function renameConfigIfNeeded(log: Log): Promise<void> {
