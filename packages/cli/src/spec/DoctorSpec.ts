@@ -107,7 +107,7 @@ describe('doctor', () => {
       mockPrompt.addMessage('old/path/to/sdk'); // The path of the androidSdk.
       // Create config file.
       await loadOrCreateConfig(mockLog, mockPrompt);
-      // Change the androidSdkPath of the config file to a path which isn't a valid jdkPath.
+      // Change the androidSdkPath of the config file to a path which isn't a valid one.
       const parsedMockArgs = minimist(['--androidSdkPath', 'new/path/to/sdk']);
       await updateConfig(parsedMockArgs, mockLog);
       expect(await doctor(mockLog)).toBeFalse();
