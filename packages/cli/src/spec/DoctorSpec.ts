@@ -25,8 +25,9 @@ import {enUS as messages} from '../lib/strings';
 
 describe('doctor', () => {
   describe('#jdkDoctor', () => {
-    it('checks if a currect error is sent in case that the path given isn\'n valid', async () => {
-      // Creates a mock file systes.
+    it('checks that the expected error message is sent in case that the path given isn\'n' +
+        ' valid', async () => {
+      // Creates a mock file system.
       mock({
         'old/path/to/jdk': {
           'release': 'JAVA_VERSION="1.8.3',
@@ -55,8 +56,9 @@ describe('doctor', () => {
       mock.restore();
     });
 
-    it('checks if a currect error is sent in case that the jdk isn\'t supported', async () => {
-      // Creates a mock file systes.
+    it('checks that the expected error message is sent in case that the jdk isn\'t' +
+        ' supported', async () => {
+      // Creates a mock file system.
       mock({
         'path/to/jdk': {
           'release': 'JAVA_VERSION="1.8',
@@ -88,8 +90,9 @@ describe('doctor', () => {
   });
 
   describe('#androidSdkDoctor', () => {
-    it('checks if a currect error is sent in case that the path given isn\'n valid', async () => {
-      // Creates a mock file systes.
+    it('checks that the expected error message is sent in case that the path given isn\'n' +
+        ' valid', async () => {
+      // Creates a mock file system.
       mock({
         'old/path/to/jdk': {
           'release': 'JAVA_VERSION="1.8.3',
