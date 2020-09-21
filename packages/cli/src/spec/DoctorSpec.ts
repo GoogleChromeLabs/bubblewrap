@@ -25,7 +25,7 @@ import {enUS as messages} from '../lib/strings';
 
 describe('doctor', () => {
   describe('#jdkDoctor', () => {
-    it('checks that the expected error message is sent in case that the path given isn\'n' +
+    it('checks that the expected error message is sent in case that the path given isn\'t' +
         ' valid', async () => {
       // Creates a mock file system.
       mock({
@@ -90,7 +90,7 @@ describe('doctor', () => {
   });
 
   describe('#androidSdkDoctor', () => {
-    it('checks that the expected error message is sent in case that the path given isn\'n' +
+    it('checks that the expected error message is sent in case that the path given isn\'t' +
         ' valid', async () => {
       // Creates a mock file system.
       mock({
