@@ -24,6 +24,24 @@ import {MockPrompt} from './mock/MockPrompt';
 import {enUS as messages} from '../lib/strings';
 
 describe('doctor', () => {
+  let originalProcess: NodeJS.Process;
+
+  beforeEach(() => {
+    // Set process to a linux platform so we can run the test against expected paths on MacOS and
+    // Windows.
+    process = {
+      platform: 'linux',
+      env: {
+        'PATH': '',
+      },
+    } as unknown as NodeJS.Process;
+  });
+
+  afterEach(() => {
+    // Resets to the original process to avoid breaking other tests.
+    process = originalProcess;
+  });
+
   describe('#jdkDoctor', () => {
     it('checks that the expected error message is sent in case that the path given isn\'t' +
         ' valid', async () => {
