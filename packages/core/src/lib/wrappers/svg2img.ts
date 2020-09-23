@@ -1,5 +1,5 @@
 /*
-* Copyright 2019 Google Inc. All Rights Reserved.
+* Copyright 2020 Google Inc. All Rights Reserved.
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -19,9 +19,6 @@
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const _svg2img = require('svg2img');
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Callback = (err: any, buffer: any) => any;
 
 export enum Format {
   jpeg = 'jpeg',
