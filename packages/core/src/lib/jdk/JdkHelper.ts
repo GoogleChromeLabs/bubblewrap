@@ -23,6 +23,8 @@ import {executeFile} from '../util';
 import {Result} from '../Result';
 import {ValidatePathError} from '../errors/ValidatePathError';
 
+type JoinPathFunction = (...paths: string[]) => string;
+
 /**
  * Helps getting information relevant to the JDK installed, including
  * the approprite environment needed to run Java commands on the JDK
@@ -30,7 +32,7 @@ import {ValidatePathError} from '../errors/ValidatePathError';
 export class JdkHelper {
   private process: NodeJS.Process;
   private config: Config;
-  private joinPath: (...paths: string[]) => string;
+  private joinPath: JoinPathFunction;
   private pathSeparator: string;
   private pathEnvironmentKey: string;
 
@@ -86,25 +88,35 @@ export class JdkHelper {
     throw new Error(`Unsupported Platform: ${process.platform}`);
   }
 
+  private static getJoinPath(process: NodeJS.Process): JoinPathFunction {
+    switch (process.platform) {
+      case 'win32': return path.win32.join;
+      default: return path.posix.join;
+    }
+  }
+
   /**
    * Checks if the given jdkPath is valid.
    * @param {string} jdkPath the path to the jdk.
    */
   static async validatePath(jdkPath: string, currentProcess: NodeJS.Process = process):
       Promise<Result<string, ValidatePathError>> {
+    const join = JdkHelper.getJoinPath(currentProcess);
     if (!existsSync(jdkPath)) {
-      return Result.error(new ValidatePathError('The path given isn\'t exist.',
-          'PathIsNotCorrect'));
+      return Result.error(new ValidatePathError(
+          `jdkPath "${jdkPath}" does not exist.`, 'PathIsNotCorrect'));
     };
     const javaHome = JdkHelper.getJavaHome(jdkPath, currentProcess);
     try {
-      const file = await fsPromises.readFile(path.join(javaHome, 'release'), 'utf-8');
+      const releaseFilePath = join(javaHome, 'release');
+      const file = await fsPromises.readFile(releaseFilePath, 'utf-8');
       if (file.indexOf('JAVA_VERSION="1.8') < 0) { // Checks if the jdk's version is 8 as needed
-        return Result.error(new ValidatePathError('The given jdk isn\'t supported.'
-            , 'PathIsNotSupported'));
+        return Result.error(new ValidatePathError(
+            'JDK version not supported. JDK version 1.8 is required.', 'PathIsNotSupported'));
       }
     } catch (e) {
-      return Result.error(new ValidatePathError('Did not find the release file of the jdk.',
+      return Result.error(new ValidatePathError(
+          `Error reading the "release" file for the JDK at "${jdkPath}", with error: ${e} `,
           'PathIsNotCorrect'));
     }
     return Result.ok(jdkPath);
