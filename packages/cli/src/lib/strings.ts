@@ -256,15 +256,15 @@ the PWA:
   promptNewAppVersionName: 'versionName for the new App version:',
   promptVersionCode: 'Starting version code for the new app version:',
   warnPwaFailedQuality: red('PWA Quality Criteria check failed.'),
-  updateConfigUsage: 'Usage\n\n:[--jdk <path-to-jdk>] [--androidSdk <path-to-android-sdk>]' +
+  updateConfigUsage: 'Usage: [--jdk <path-to-jdk>] [--androidSdk <path-to-android-sdk>]' +
       '(You can insert one or both of them)',
   jdkPathIsNotCorrect: 'The jdkPath isn\'t correct, please run the following command to update ' +
-      'it:\nbubblewrap updateConfig --jdkPath <path-to-jdk>, such that the folder "here" contains' +
-      ' the file "release". Then run bubblewrap doctor again.',
+      'it:\nbubblewrap updateConfig --jdkPath <path-to-jdk>, such that the folder of the path' +
+      'contains the file "release". Then run bubblewrap doctor again.',
   jdkIsNotSupported: 'Unsupported jdk version. Please download "OpenJDK 8(LTS)" at the link ' +
       'below:\nhttps://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=hotspot.',
   androidSdkPathIsNotCorrect: 'The androidSdkPath isn\'t correct, please run the following ' +
       'command to update it:\nbubblewrap updateConfig --androidSdkPath <path-to-sdk>, such that ' +
-      'the folder of the path contains the folder "build-tools". Then run bubblewrap doctor again.',
+      'the folder of the path contains the folder "build". Then run bubblewrap doctor again.',
   bothPathsAreValid: 'Your jdkpath and androidSdkPath are valid.',
 };
