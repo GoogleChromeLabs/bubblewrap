@@ -315,6 +315,147 @@ export class TwaManifest {
     const json = JSON.parse((await fs.promises.readFile(fileName)).toString());
     return new TwaManifest(json);
   }
+
+  /**
+   * Merges the Twa Manifest with the web manifest. Ignores the specified fields.
+   *
+   * @param {string[]} fieldsToIgnore the fields which needs to be ignored.
+   * @param {URL} webManifestUrl the URL where the webmanifest is available.
+   * @param {WebManifest} webManifest the Web Manifest, used as a base for the update of 
+   *    the TWA Manifest.
+   * @param {TwaManifest} oldTwaManifest current Twa Manifest. 
+   */
+  static merge(fieldsToIgnore: string[], webManifestUrl: URL
+      , webManifest: WebManifestJson, oldTwaManifest: TwaManifest): void {
+    let shortcuts: ShortcutInfo[] = [];
+    let name;
+    let launcherName;
+    let display;
+    let themeColor;
+    let backgroundColor;
+    let fullStartUrl: URL;
+    let startUrl;
+    let iconUrl;
+    let maskableIconUrl;
+    let monochromeIconUrl;
+    let icon: WebManifestIcon | null = null;
+    let maskableIcon: WebManifestIcon | null = null;
+    let monochromeIcon: WebManifestIcon | null = null;
+    const packageId = oldTwaManifest.packageId;
+    const host = oldTwaManifest.host;
+    const navigationColor = oldTwaManifest.navigationColor.hex();
+    const navigationColorDark = oldTwaManifest.navigationColorDark.hex();
+    const navigationDividerColor = oldTwaManifest.navigationDividerColor.hex();
+    const navigationDividerColorDark = oldTwaManifest.navigationDividerColorDark.hex();
+    const appVersionName = oldTwaManifest.appVersionName;
+    const signingKey = oldTwaManifest.signingKey;
+    const splashScreenFadeOutDuration = oldTwaManifest.splashScreenFadeOutDuration;
+    const enableNotifications = oldTwaManifest.enableNotifications;
+    const twaManifestShortcuts = shortcuts;
+    const twaManifestWebManifestUrl = oldTwaManifest.webManifestUrl!.toString();
+
+    function resolveIconUrl(icon: WebManifestIcon | null): string | undefined {
+      return icon ? new URL(icon.src, webManifestUrl).toString() : undefined;
+    }
+
+    if(!('shortcuts' in fieldsToIgnore)) {
+      for (let i = 0; i < (webManifest.shortcuts || []).length; i++) {
+        const s = webManifest.shortcuts![i];
+        try {
+          const shortcutInfo = ShortcutInfo.fromShortcutJson(webManifestUrl, s);
+          if (shortcutInfo != null) {
+            shortcuts.push(shortcutInfo);
+          }
+        } catch (err) {
+          TwaManifest.log.warn(`Skipping shortcut[${i}] for ${err.message}.`);
+        }
+        if (shortcuts.length === 4) {
+          break;
+        }
+      }
+    }
+    else {
+      shortcuts = oldTwaManifest.shortcuts;
+    }
+
+    if(!('name' in fieldsToIgnore)) {
+      name = webManifest['name'] || webManifest['short_name'] || DEFAULT_APP_NAME;
+    }
+    else {
+      name = oldTwaManifest.name;
+    }
+
+    if(!('launcherName' in fieldsToIgnore)) {
+      launcherName = webManifest['short_name'] ||
+        webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE) || DEFAULT_APP_NAME;
+    }
+    else {
+      launcherName = oldTwaManifest.launcherName;
+    }
+  
+    if(!('display' in fieldsToIgnore)) {
+      display = asDisplayMode(webManifest['display']!) || DEFAULT_DISPLAY_MODE;
+    }
+    else {
+      display = oldTwaManifest.display;
+    }
+    
+    if(!('themeColor' in fieldsToIgnore)) {
+      themeColor = webManifest['theme_color'] || DEFAULT_THEME_COLOR;
+    }
+    else {
+      themeColor = oldTwaManifest.themeColor.hex();
+    }
+
+    if(!('backgroundColor' in fieldsToIgnore)) {
+      backgroundColor = webManifest['background_color'] || DEFAULT_BACKGROUND_COLOR;
+    }
+    else {
+      backgroundColor = oldTwaManifest.backgroundColor.hex();
+    }
+
+    if(!('startUrl' in fieldsToIgnore)) {
+      fullStartUrl = new URL(webManifest['start_url'] || '/', webManifestUrl);
+      startUrl = fullStartUrl.pathname + fullStartUrl.search;
+    }
+    else {
+      startUrl = oldTwaManifest.startUrl;
+    }
+    if (!('icons' in fieldsToIgnore)) {
+      icon = findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE);
+      maskableIcon = findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE);
+      monochromeIcon =
+        findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE);
+    }
+    iconUrl = resolveIconUrl(icon) || oldTwaManifest.iconUrl;
+    maskableIconUrl = resolveIconUrl(maskableIcon) || oldTwaManifest.maskableIconUrl;
+    monochromeIconUrl = resolveIconUrl(monochromeIcon) || oldTwaManifest.monochromeIconUrl;
+  
+    const twaManifest = new TwaManifest({
+      packageId: packageId,
+      host: host,
+      name: name,
+      launcherName: launcherName,
+      display: display,
+      themeColor: themeColor,
+      navigationColor: navigationColor,
+      navigationColorDark: navigationColorDark,
+      navigationDividerColor: navigationDividerColor,
+      navigationDividerColorDark: navigationDividerColorDark,
+      backgroundColor: backgroundColor,
+      startUrl: startUrl,
+      iconUrl: iconUrl,
+      maskableIconUrl: maskableIconUrl,
+      monochromeIconUrl: monochromeIconUrl,
+      appVersion: appVersionName,
+      signingKey: signingKey,
+      splashScreenFadeOutDuration: splashScreenFadeOutDuration,
+      enableNotifications: enableNotifications,
+      shortcuts: twaManifestShortcuts,
+      webManifestUrl: twaManifestWebManifestUrl,
+    });
+    twaManifest.saveToFile('./twa-manifest.json');
+  }
 }
 
 /**
