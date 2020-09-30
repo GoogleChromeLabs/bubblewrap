@@ -321,9 +321,9 @@ export class TwaManifest {
    *
    * @param {string[]} fieldsToIgnore the fields which needs to be ignored.
    * @param {URL} webManifestUrl the URL where the webmanifest is available.
-   * @param {WebManifest} webManifest the Web Manifest, used as a base for the update of 
+   * @param {WebManifest} webManifest the Web Manifest, used as a base for the update of
    *    the TWA Manifest.
-   * @param {TwaManifest} oldTwaManifest current Twa Manifest. 
+   * @param {TwaManifest} oldTwaManifest current Twa Manifest.
    */
   static merge(fieldsToIgnore: string[], webManifestUrl: URL
       , webManifest: WebManifestJson, oldTwaManifest: TwaManifest): void {
@@ -335,12 +335,10 @@ export class TwaManifest {
     let backgroundColor;
     let fullStartUrl: URL;
     let startUrl;
-    let iconUrl;
-    let maskableIconUrl;
-    let monochromeIconUrl;
     let icon: WebManifestIcon | null = null;
     let maskableIcon: WebManifestIcon | null = null;
     let monochromeIcon: WebManifestIcon | null = null;
+
     const packageId = oldTwaManifest.packageId;
     const host = oldTwaManifest.host;
     const navigationColor = oldTwaManifest.navigationColor.hex();
@@ -358,7 +356,7 @@ export class TwaManifest {
       return icon ? new URL(icon.src, webManifestUrl).toString() : undefined;
     }
 
-    if(!('shortcuts' in fieldsToIgnore)) {
+    if (!('shortcuts' in fieldsToIgnore)) {
       for (let i = 0; i < (webManifest.shortcuts || []).length; i++) {
         const s = webManifest.shortcuts![i];
         try {
@@ -373,52 +371,45 @@ export class TwaManifest {
           break;
         }
       }
-    }
-    else {
+    } else {
       shortcuts = oldTwaManifest.shortcuts;
     }
 
-    if(!('name' in fieldsToIgnore)) {
+    if (!('name' in fieldsToIgnore)) {
       name = webManifest['name'] || webManifest['short_name'] || DEFAULT_APP_NAME;
-    }
-    else {
+    } else {
       name = oldTwaManifest.name;
     }
 
-    if(!('launcherName' in fieldsToIgnore)) {
+    if (!('launcherName' in fieldsToIgnore)) {
       launcherName = webManifest['short_name'] ||
         webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE) || DEFAULT_APP_NAME;
-    }
-    else {
+    } else {
       launcherName = oldTwaManifest.launcherName;
     }
-  
-    if(!('display' in fieldsToIgnore)) {
+
+    if (!('display' in fieldsToIgnore)) {
       display = asDisplayMode(webManifest['display']!) || DEFAULT_DISPLAY_MODE;
-    }
-    else {
+    } else {
       display = oldTwaManifest.display;
     }
-    
-    if(!('themeColor' in fieldsToIgnore)) {
+
+    if (!('themeColor' in fieldsToIgnore)) {
       themeColor = webManifest['theme_color'] || DEFAULT_THEME_COLOR;
-    }
-    else {
+    } else {
       themeColor = oldTwaManifest.themeColor.hex();
     }
 
-    if(!('backgroundColor' in fieldsToIgnore)) {
+    if (!('backgroundColor' in fieldsToIgnore)) {
       backgroundColor = webManifest['background_color'] || DEFAULT_BACKGROUND_COLOR;
-    }
-    else {
+    } else {
       backgroundColor = oldTwaManifest.backgroundColor.hex();
     }
 
-    if(!('startUrl' in fieldsToIgnore)) {
+    if (!('startUrl' in fieldsToIgnore)) {
       fullStartUrl = new URL(webManifest['start_url'] || '/', webManifestUrl);
       startUrl = fullStartUrl.pathname + fullStartUrl.search;
-    }
-    else {
+    } else {
       startUrl = oldTwaManifest.startUrl;
     }
     if (!('icons' in fieldsToIgnore)) {
@@ -427,10 +418,11 @@ export class TwaManifest {
       monochromeIcon =
         findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE);
     }
-    iconUrl = resolveIconUrl(icon) || oldTwaManifest.iconUrl;
-    maskableIconUrl = resolveIconUrl(maskableIcon) || oldTwaManifest.maskableIconUrl;
-    monochromeIconUrl = resolveIconUrl(monochromeIcon) || oldTwaManifest.monochromeIconUrl;
-  
+
+    const iconUrl = resolveIconUrl(icon) || oldTwaManifest.iconUrl;
+    const maskableIconUrl = resolveIconUrl(maskableIcon) || oldTwaManifest.maskableIconUrl;
+    const monochromeIconUrl = resolveIconUrl(monochromeIcon) || oldTwaManifest.monochromeIconUrl;
+
     const twaManifest = new TwaManifest({
       packageId: packageId,
       host: host,
