@@ -119,11 +119,12 @@ parse the Web manifest and generate default valuers for the Android project, whe
 will prompt the user to confirm or input values where one could not be generated.
 
 ```
-bubblewrap init --manifest="<web-manifest-url>" [--directory="<path-to-output-location>"]
+bubblewrap init --manifest="<web-manifest-url>" [--directory="<path-to-output-location>"] [--chromeosonly]
 ```
 
 Options:
   - `--directory`: path where to generate the project. Defaults to the current directory.
+  - `--chromeosonly`: this flag specifies that the build will be used for Chrome OS only and prevents non-Chrome OS devices from installing the app.
 
 ## `build`
 
