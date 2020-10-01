@@ -16,7 +16,7 @@
 
 'use strict';
 
-import {join} from 'path'; 
+import {join} from 'path';
 import * as fs from 'fs';
 import fetch from 'node-fetch';
 import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
