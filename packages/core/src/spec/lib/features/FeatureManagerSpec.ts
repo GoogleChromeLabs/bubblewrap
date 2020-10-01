@@ -103,7 +103,7 @@ describe('FeatureManager', () => {
     it('Enables the LocationDelegation feature', () => {
       const manifest = {
         features: {
-          locationDelegation: true,
+          locationDelegation: {},
         },
       } as TwaManifest;
 

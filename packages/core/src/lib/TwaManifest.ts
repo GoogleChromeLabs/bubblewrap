@@ -24,6 +24,7 @@ import {ConsoleLog} from './Log';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 import {ShortcutInfo} from './ShortcutInfo';
 import {AppsFlyerConfig} from './features/AppsFlyerFeature';
+import {LocationDelegationConfig} from './features/LocationDelegationFeature';
 
 // The minimum size needed for the app icon.
 const MIN_ICON_SIZE = 512;
@@ -63,12 +64,8 @@ export type FallbackType = 'customtabs' | 'webview';
 
 type Features = {
   appsFlyer?: AppsFlyerConfig;
-  locationDelegation: boolean;
+  locationDelegation?: LocationDelegationConfig;
 }
-
-const DEFAULT_FEATURES: Features = {
-  locationDelegation: DEFAULT_ENABLE_LOCATIONS,
-};
 
 /**
  * A Manifest used to generate the TWA Project
@@ -160,7 +157,7 @@ export class TwaManifest {
     this.generatorApp = data.generatorApp || DEFAULT_GENERATOR_APP_NAME;
     this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
     this.fallbackType = data.fallbackType || 'customtabs';
-    this.features = data.features || DEFAULT_FEATURES;
+    this.features = data.features || {};
     this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ?
       data.enableSiteSettingsShortcut : true;
   }
@@ -288,7 +285,7 @@ export class TwaManifest {
       enableNotifications: DEFAULT_ENABLE_NOTIFICATIONS,
       shortcuts: shortcuts,
       webManifestUrl: webManifestUrl.toString(),
-      features: {locationDelegation: DEFAULT_ENABLE_LOCATIONS},
+      features: {locationDelegation: DEFAULT_ENABLE_LOCATIONS ? {} : undefined},
     });
     return twaManifest;
   }
@@ -345,7 +342,10 @@ export interface TwaManifestJson {
   generatorApp?: string;
   webManifestUrl?: string;
   fallbackType?: FallbackType;
-  features?: Features;
+  features?: {
+    appsFlyer?: AppsFlyerConfig;
+    locationDelegation?: LocationDelegationConfig;
+  };
   enableSiteSettingsShortcut?: boolean;
 }
 

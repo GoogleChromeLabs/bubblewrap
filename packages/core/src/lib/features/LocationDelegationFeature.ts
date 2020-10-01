@@ -16,6 +16,9 @@
 
 import {Feature} from './Feature';
 
+export type LocationDelegationConfig = {
+}
+
 export class LocationDelegationFeature implements Feature {
   name = 'locationDelegation';
   buildGradle = {
