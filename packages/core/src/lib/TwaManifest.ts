@@ -168,13 +168,12 @@ export class TwaManifest {
   }
 
   /**
-   * Saves the TWA Manifest to the file-system.
+   * Turns an TwaManifest into a TwaManifestJson.
    *
-   * @param {String} filename the location where the TWA Manifest will be saved.
+   * @returns {TwaManifestJson}
    */
-  async saveToFile(filename: string): Promise<void> {
-    console.log('Saving Config to: ' + filename);
-    const json: TwaManifestJson = Object.assign({}, this, {
+  toJson(): TwaManifestJson {
+    return Object.assign({}, this, {
       themeColor: this.themeColor.hex(),
       navigationColor: this.navigationColor.hex(),
       navigationColorDark: this.navigationColorDark.hex(),
@@ -184,6 +183,16 @@ export class TwaManifest {
       appVersion: this.appVersionName,
       webManifestUrl: this.webManifestUrl ? this.webManifestUrl.toString() : undefined,
     });
+  }
+
+  /**
+   * Saves the TWA Manifest to the file-system.
+   *
+   * @param {String} filename the location where the TWA Manifest will be saved.
+   */
+  async saveToFile(filename: string): Promise<void> {
+    console.log('Saving Config to: ' + filename);
+    const json: TwaManifestJson = this.toJson();
     await fs.promises.writeFile(filename, JSON.stringify(json, null, 2));
   }
 
@@ -362,18 +371,18 @@ export class TwaManifest {
     if (!('shortcuts' in fieldsToIgnore)) {
       shortcuts = this.getShortcuts(webManifestUrl, webManifest);
     }
-    const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
-    let icon: WebManifestIcon | null = null;
-    let maskableIcon: WebManifestIcon | null = null;
-    let monochromeIcon: WebManifestIcon | null = null;
-    if (!('icons' in fieldsToIgnore)) {
-      icon = findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE);
-      maskableIcon = findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE);
-      monochromeIcon =
+    const icon = ('icons' in fieldsToIgnore)? null :
+        findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE);
+    const maskableIcon = ('maskableIcons' in fieldsToIgnore)? null :
+        findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE);
+    const monochromeIcon = ('monochromeIcons' in fieldsToIgnore)? null :
         findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE);
-    }
+
+    const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
+    const oldTwaManifestJson = oldTwaManifest.toJson();
 
     const twaManifest = new TwaManifest({
+      ...oldTwaManifestJson,
       name: this.getNewFieldValue('name', fieldsToIgnore, oldTwaManifest.name,
           webManifest['name'] || webManifest['short_name']!),
       launcherName: this.getNewFieldValue('launcherName', fieldsToIgnore,
@@ -391,17 +400,6 @@ export class TwaManifest {
       maskableIconUrl: resolveIconUrl(maskableIcon) || oldTwaManifest.maskableIconUrl,
       monochromeIconUrl: resolveIconUrl(monochromeIcon) || oldTwaManifest.monochromeIconUrl,
       shortcuts: shortcuts,
-      splashScreenFadeOutDuration: oldTwaManifest.splashScreenFadeOutDuration,
-      navigationColor: oldTwaManifest.navigationColor.hex(),
-      navigationColorDark: oldTwaManifest.navigationColorDark.hex(),
-      navigationDividerColor: oldTwaManifest.navigationDividerColor.hex(),
-      navigationDividerColorDark: oldTwaManifest.navigationDividerColorDark.hex(),
-      enableNotifications: oldTwaManifest.enableNotifications,
-      webManifestUrl: oldTwaManifest.webManifestUrl!.toString(),
-      packageId: oldTwaManifest.packageId,
-      host: oldTwaManifest.host,
-      appVersion: oldTwaManifest.appVersionName,
-      signingKey: oldTwaManifest.signingKey,
     });
     twaManifest.saveToFile(join(process.cwd(), 'twa-manifest.json'));
     return true;
