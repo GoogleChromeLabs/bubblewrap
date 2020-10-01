@@ -16,6 +16,7 @@
 
 'use strict';
 
+import {join} from 'path'; 
 import * as fs from 'fs';
 import fetch from 'node-fetch';
 import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
@@ -240,24 +241,7 @@ export class TwaManifest {
       findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE);
 
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
-
-    const shortcuts: ShortcutInfo[] = [];
-
-    for (let i = 0; i < (webManifest.shortcuts || []).length; i++) {
-      const s = webManifest.shortcuts![i];
-      try {
-        const shortcutInfo = ShortcutInfo.fromShortcutJson(webManifestUrl, s);
-        if (shortcutInfo != null) {
-          shortcuts.push(shortcutInfo);
-        }
-      } catch (err) {
-        TwaManifest.log.warn(`Skipping shortcut[${i}] for ${err.message}.`);
-      }
-
-      if (shortcuts.length === 4) {
-        break;
-      }
-    }
+    const shortcuts: ShortcutInfo[] = this.getShortcuts(webManifestUrl, webManifest);
 
     function resolveIconUrl(icon: WebManifestIcon | null): string | undefined {
       return icon ? new URL(icon.src, webManifestUrl).toString() : undefined;
@@ -317,7 +301,7 @@ export class TwaManifest {
   }
 
   /**
-   * Given a field name, returns the new value of the field
+   * Given a field name, returns the new value of the field.
    *
    * @param {string} fieldName the name of the given field.
    * @param {string[]} fieldsToIgnore the fields which needs to be ignored.
@@ -334,38 +318,49 @@ export class TwaManifest {
   }
 
   /**
+   * Gets the shortcuts from the web manifest.
+   *
+   * @param {URL} webManifestUrl the URL where the webManifest is available.
+   * @param {WebManifest} webManifest the Web Manifest.
+   * @returns {ShortcutInfo[]}
+   */
+  static getShortcuts(webManifestUrl: URL, webManifest: WebManifestJson): ShortcutInfo[] {
+    const shortcuts: ShortcutInfo[] = [];
+    for (let i = 0; i < (webManifest.shortcuts || []).length; i++) {
+      const s = webManifest.shortcuts![i];
+      try {
+        const shortcutInfo = ShortcutInfo.fromShortcutJson(webManifestUrl, s);
+        if (shortcutInfo != null) {
+          shortcuts.push(shortcutInfo);
+        }
+      } catch (err) {
+        TwaManifest.log.warn(`Skipping shortcut[${i}] for ${err.message}.`);
+      }
+      if (shortcuts.length === 4) {
+        break;
+      }
+    }
+    return shortcuts;
+  }
+
+  /**
    * Merges the Twa Manifest with the web manifest. Ignores the specified fields.
    *
    * @param {string[]} fieldsToIgnore the fields which needs to be ignored.
-   * @param {URL} webManifestUrl the URL where the webmanifest is available.
+   * @param {URL} webManifestUrl the URL where the webManifest is available.
    * @param {WebManifest} webManifest the Web Manifest, used as a base for the update of
    *    the TWA Manifest.
    * @param {TwaManifest} oldTwaManifest current Twa Manifest.
    */
   static merge(fieldsToIgnore: string[], webManifestUrl: URL,
-      webManifest: WebManifestJson, oldTwaManifest: TwaManifest): void {
+      webManifest: WebManifestJson, oldTwaManifest: TwaManifest): boolean {
     function resolveIconUrl(icon: WebManifestIcon | null): string | undefined {
       return icon ? new URL(icon.src, webManifestUrl).toString() : undefined;
     }
 
-    let shortcuts: ShortcutInfo[] = [];
+    let shortcuts: ShortcutInfo[] = oldTwaManifest.shortcuts;
     if (!('shortcuts' in fieldsToIgnore)) {
-      for (let i = 0; i < (webManifest.shortcuts || []).length; i++) {
-        const s = webManifest.shortcuts![i];
-        try {
-          const shortcutInfo = ShortcutInfo.fromShortcutJson(webManifestUrl, s);
-          if (shortcutInfo != null) {
-            shortcuts.push(shortcutInfo);
-          }
-        } catch (err) {
-          TwaManifest.log.warn(`Skipping shortcut[${i}] for ${err.message}.`);
-        }
-        if (shortcuts.length === 4) {
-          break;
-        }
-      }
-    } else {
-      shortcuts = oldTwaManifest.shortcuts;
+      shortcuts = this.getShortcuts(webManifestUrl, webManifest);
     }
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
     let icon: WebManifestIcon | null = null;
@@ -379,8 +374,6 @@ export class TwaManifest {
     }
 
     const twaManifest = new TwaManifest({
-      packageId: oldTwaManifest.packageId,
-      host: oldTwaManifest.host,
       name: this.getNewFieldValue('name', fieldsToIgnore, oldTwaManifest.name,
           webManifest['name'] || webManifest['short_name']!),
       launcherName: this.getNewFieldValue('launcherName', fieldsToIgnore,
@@ -390,10 +383,6 @@ export class TwaManifest {
           asDisplayMode(webManifest['display']!)!),
       themeColor: this.getNewFieldValue('themeColor', fieldsToIgnore,
           oldTwaManifest.themeColor.hex(), webManifest['theme_color']!),
-      navigationColor: oldTwaManifest.navigationColor.hex(),
-      navigationColorDark: oldTwaManifest.navigationColorDark.hex(),
-      navigationDividerColor: oldTwaManifest.navigationDividerColor.hex(),
-      navigationDividerColorDark: oldTwaManifest.navigationDividerColorDark.hex(),
       backgroundColor: this.getNewFieldValue('backgroundColor', fieldsToIgnore,
           oldTwaManifest.backgroundColor.hex(), webManifest['background_color']!),
       startUrl: this.getNewFieldValue('startUrl', fieldsToIgnore, oldTwaManifest.startUrl,
@@ -401,14 +390,21 @@ export class TwaManifest {
       iconUrl: resolveIconUrl(icon) || oldTwaManifest.iconUrl,
       maskableIconUrl: resolveIconUrl(maskableIcon) || oldTwaManifest.maskableIconUrl,
       monochromeIconUrl: resolveIconUrl(monochromeIcon) || oldTwaManifest.monochromeIconUrl,
+      shortcuts: shortcuts,
+      splashScreenFadeOutDuration: oldTwaManifest.splashScreenFadeOutDuration,
+      navigationColor: oldTwaManifest.navigationColor.hex(),
+      navigationColorDark: oldTwaManifest.navigationColorDark.hex(),
+      navigationDividerColor: oldTwaManifest.navigationDividerColor.hex(),
+      navigationDividerColorDark: oldTwaManifest.navigationDividerColorDark.hex(),
+      enableNotifications: oldTwaManifest.enableNotifications,
+      webManifestUrl: oldTwaManifest.webManifestUrl!.toString(),
+      packageId: oldTwaManifest.packageId,
+      host: oldTwaManifest.host,
       appVersion: oldTwaManifest.appVersionName,
       signingKey: oldTwaManifest.signingKey,
-      splashScreenFadeOutDuration: oldTwaManifest.splashScreenFadeOutDuration,
-      enableNotifications: oldTwaManifest.enableNotifications,
-      shortcuts: shortcuts,
-      webManifestUrl: oldTwaManifest.webManifestUrl!.toString(),
     });
-    twaManifest.saveToFile('./twa-manifest.json');
+    twaManifest.saveToFile(join(process.cwd(), 'twa-manifest.json'));
+    return true;
   }
 }
 
