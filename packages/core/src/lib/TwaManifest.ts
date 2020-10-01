@@ -317,6 +317,23 @@ export class TwaManifest {
   }
 
   /**
+   * Given a field name, returns the new value of the field
+   *
+   * @param {string} fieldName the name of the given field.
+   * @param {string[]} fieldsToIgnore the fields which needs to be ignored.
+   * @param {T} oldValue the old value of the field.
+   * @param {T} newValue the new value of the field.
+   * @returns {T}
+   */
+  static getNewFieldValue<T>(fieldName: string, fieldsToIgnore: string[],
+      oldValue: T, newValue: T): T {
+    if (fieldName in fieldsToIgnore) {
+      return oldValue;
+    }
+    return newValue || oldValue;
+  }
+
+  /**
    * Merges the Twa Manifest with the web manifest. Ignores the specified fields.
    *
    * @param {string[]} fieldsToIgnore the fields which needs to be ignored.
@@ -325,37 +342,13 @@ export class TwaManifest {
    *    the TWA Manifest.
    * @param {TwaManifest} oldTwaManifest current Twa Manifest.
    */
-  static merge(fieldsToIgnore: string[], webManifestUrl: URL
-      , webManifest: WebManifestJson, oldTwaManifest: TwaManifest): void {
-    let shortcuts: ShortcutInfo[] = [];
-    let name;
-    let launcherName;
-    let display;
-    let themeColor;
-    let backgroundColor;
-    let fullStartUrl: URL;
-    let startUrl;
-    let icon: WebManifestIcon | null = null;
-    let maskableIcon: WebManifestIcon | null = null;
-    let monochromeIcon: WebManifestIcon | null = null;
-
-    const packageId = oldTwaManifest.packageId;
-    const host = oldTwaManifest.host;
-    const navigationColor = oldTwaManifest.navigationColor.hex();
-    const navigationColorDark = oldTwaManifest.navigationColorDark.hex();
-    const navigationDividerColor = oldTwaManifest.navigationDividerColor.hex();
-    const navigationDividerColorDark = oldTwaManifest.navigationDividerColorDark.hex();
-    const appVersionName = oldTwaManifest.appVersionName;
-    const signingKey = oldTwaManifest.signingKey;
-    const splashScreenFadeOutDuration = oldTwaManifest.splashScreenFadeOutDuration;
-    const enableNotifications = oldTwaManifest.enableNotifications;
-    const twaManifestShortcuts = shortcuts;
-    const twaManifestWebManifestUrl = oldTwaManifest.webManifestUrl!.toString();
-
+  static merge(fieldsToIgnore: string[], webManifestUrl: URL,
+      webManifest: WebManifestJson, oldTwaManifest: TwaManifest): void {
     function resolveIconUrl(icon: WebManifestIcon | null): string | undefined {
       return icon ? new URL(icon.src, webManifestUrl).toString() : undefined;
     }
 
+    let shortcuts: ShortcutInfo[] = [];
     if (!('shortcuts' in fieldsToIgnore)) {
       for (let i = 0; i < (webManifest.shortcuts || []).length; i++) {
         const s = webManifest.shortcuts![i];
@@ -374,44 +367,10 @@ export class TwaManifest {
     } else {
       shortcuts = oldTwaManifest.shortcuts;
     }
-
-    if (!('name' in fieldsToIgnore)) {
-      name = webManifest['name'] || webManifest['short_name'] || DEFAULT_APP_NAME;
-    } else {
-      name = oldTwaManifest.name;
-    }
-
-    if (!('launcherName' in fieldsToIgnore)) {
-      launcherName = webManifest['short_name'] ||
-        webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE) || DEFAULT_APP_NAME;
-    } else {
-      launcherName = oldTwaManifest.launcherName;
-    }
-
-    if (!('display' in fieldsToIgnore)) {
-      display = asDisplayMode(webManifest['display']!) || DEFAULT_DISPLAY_MODE;
-    } else {
-      display = oldTwaManifest.display;
-    }
-
-    if (!('themeColor' in fieldsToIgnore)) {
-      themeColor = webManifest['theme_color'] || DEFAULT_THEME_COLOR;
-    } else {
-      themeColor = oldTwaManifest.themeColor.hex();
-    }
-
-    if (!('backgroundColor' in fieldsToIgnore)) {
-      backgroundColor = webManifest['background_color'] || DEFAULT_BACKGROUND_COLOR;
-    } else {
-      backgroundColor = oldTwaManifest.backgroundColor.hex();
-    }
-
-    if (!('startUrl' in fieldsToIgnore)) {
-      fullStartUrl = new URL(webManifest['start_url'] || '/', webManifestUrl);
-      startUrl = fullStartUrl.pathname + fullStartUrl.search;
-    } else {
-      startUrl = oldTwaManifest.startUrl;
-    }
+    const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
+    let icon: WebManifestIcon | null = null;
+    let maskableIcon: WebManifestIcon | null = null;
+    let monochromeIcon: WebManifestIcon | null = null;
     if (!('icons' in fieldsToIgnore)) {
       icon = findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE);
       maskableIcon = findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE);
@@ -419,32 +378,35 @@ export class TwaManifest {
         findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE);
     }
 
-    const iconUrl = resolveIconUrl(icon) || oldTwaManifest.iconUrl;
-    const maskableIconUrl = resolveIconUrl(maskableIcon) || oldTwaManifest.maskableIconUrl;
-    const monochromeIconUrl = resolveIconUrl(monochromeIcon) || oldTwaManifest.monochromeIconUrl;
-
     const twaManifest = new TwaManifest({
-      packageId: packageId,
-      host: host,
-      name: name,
-      launcherName: launcherName,
-      display: display,
-      themeColor: themeColor,
-      navigationColor: navigationColor,
-      navigationColorDark: navigationColorDark,
-      navigationDividerColor: navigationDividerColor,
-      navigationDividerColorDark: navigationDividerColorDark,
-      backgroundColor: backgroundColor,
-      startUrl: startUrl,
-      iconUrl: iconUrl,
-      maskableIconUrl: maskableIconUrl,
-      monochromeIconUrl: monochromeIconUrl,
-      appVersion: appVersionName,
-      signingKey: signingKey,
-      splashScreenFadeOutDuration: splashScreenFadeOutDuration,
-      enableNotifications: enableNotifications,
-      shortcuts: twaManifestShortcuts,
-      webManifestUrl: twaManifestWebManifestUrl,
+      packageId: oldTwaManifest.packageId,
+      host: oldTwaManifest.host,
+      name: this.getNewFieldValue('name', fieldsToIgnore, oldTwaManifest.name,
+          webManifest['name'] || webManifest['short_name']!),
+      launcherName: this.getNewFieldValue('launcherName', fieldsToIgnore,
+          oldTwaManifest.launcherName, webManifest['short_name'] ||
+          webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE)),
+      display: this.getNewFieldValue('display', fieldsToIgnore, oldTwaManifest.display,
+          asDisplayMode(webManifest['display']!)!),
+      themeColor: this.getNewFieldValue('themeColor', fieldsToIgnore,
+          oldTwaManifest.themeColor.hex(), webManifest['theme_color']!),
+      navigationColor: oldTwaManifest.navigationColor.hex(),
+      navigationColorDark: oldTwaManifest.navigationColorDark.hex(),
+      navigationDividerColor: oldTwaManifest.navigationDividerColor.hex(),
+      navigationDividerColorDark: oldTwaManifest.navigationDividerColorDark.hex(),
+      backgroundColor: this.getNewFieldValue('backgroundColor', fieldsToIgnore,
+          oldTwaManifest.backgroundColor.hex(), webManifest['background_color']!),
+      startUrl: this.getNewFieldValue('startUrl', fieldsToIgnore, oldTwaManifest.startUrl,
+          fullStartUrl.pathname + fullStartUrl.search),
+      iconUrl: resolveIconUrl(icon) || oldTwaManifest.iconUrl,
+      maskableIconUrl: resolveIconUrl(maskableIcon) || oldTwaManifest.maskableIconUrl,
+      monochromeIconUrl: resolveIconUrl(monochromeIcon) || oldTwaManifest.monochromeIconUrl,
+      appVersion: oldTwaManifest.appVersionName,
+      signingKey: oldTwaManifest.signingKey,
+      splashScreenFadeOutDuration: oldTwaManifest.splashScreenFadeOutDuration,
+      enableNotifications: oldTwaManifest.enableNotifications,
+      shortcuts: shortcuts,
+      webManifestUrl: oldTwaManifest.webManifestUrl!.toString(),
     });
     twaManifest.saveToFile('./twa-manifest.json');
   }
