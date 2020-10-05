@@ -320,7 +320,7 @@ export class TwaManifest {
    */
   static getNewFieldValue<T>(fieldName: string, fieldsToIgnore: string[],
       oldValue: T, newValue: T): T {
-    if (fieldName in fieldsToIgnore) {
+    if (fieldsToIgnore.includes(fieldName)) {
       return oldValue;
     }
     return newValue || oldValue;
@@ -360,22 +360,23 @@ export class TwaManifest {
    * @param {WebManifest} webManifest the Web Manifest, used as a base for the update of
    *    the TWA Manifest.
    * @param {TwaManifest} oldTwaManifest current Twa Manifest.
+   * @returns {Promise<TwaManifest>} the new and merged Twa manifest.
    */
-  static merge(fieldsToIgnore: string[], webManifestUrl: URL,
-      webManifest: WebManifestJson, oldTwaManifest: TwaManifest): boolean {
+  static async merge(fieldsToIgnore: string[], webManifestUrl: URL,
+      webManifest: WebManifestJson, oldTwaManifest: TwaManifest): Promise<TwaManifest> {
     function resolveIconUrl(icon: WebManifestIcon | null): string | undefined {
       return icon ? new URL(icon.src, webManifestUrl).toString() : undefined;
     }
 
     let shortcuts: ShortcutInfo[] = oldTwaManifest.shortcuts;
-    if (!('shortcuts' in fieldsToIgnore)) {
+    if (!(fieldsToIgnore.includes('shortcuts'))) {
       shortcuts = this.getShortcuts(webManifestUrl, webManifest);
     }
-    const icon = ('icons' in fieldsToIgnore)? null :
+    const icon = (fieldsToIgnore.includes('icons'))? null :
         findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE);
-    const maskableIcon = ('maskableIcons' in fieldsToIgnore)? null :
+    const maskableIcon = (fieldsToIgnore.includes('maskableIcons'))? null :
         findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE);
-    const monochromeIcon = ('monochromeIcons' in fieldsToIgnore)? null :
+    const monochromeIcon = (fieldsToIgnore.includes('monochromeIcons'))? null :
         findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE);
 
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
@@ -401,8 +402,8 @@ export class TwaManifest {
       monochromeIconUrl: resolveIconUrl(monochromeIcon) || oldTwaManifest.monochromeIconUrl,
       shortcuts: shortcuts,
     });
-    twaManifest.saveToFile(join(process.cwd(), 'twa-manifest.json'));
-    return true;
+    await twaManifest.saveToFile(join(process.cwd(), 'twa-manifest.json'));
+    return twaManifest;
   }
 }
 
