@@ -33,10 +33,9 @@ export async function merge(args: ParsedArgs): Promise<boolean> {
   const twaManifest = await TwaManifest.fromFile(manifestFile);
   const webManifestUrl: URL = twaManifest.webManifestUrl!;
   const webManifest = await util.getWebManifest(webManifestUrl);
-  const newTwaManifest = 
-      await TwaManifest.merge(fieldsToIgnore, webManifestUrl, webManifest, twaManifest);
+  await TwaManifest.merge(fieldsToIgnore, webManifestUrl, webManifest, twaManifest);
   // Update the app (args are not relevant in this case, bucause update's default values
-  // are valid for it. We just send something as an input). 
+  // are valid for it. We just send something as an input).
   await update(args);
   return true;
 }
