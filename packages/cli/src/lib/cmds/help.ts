@@ -34,6 +34,7 @@ const HELP_MESSAGES = new Map<string, string>(
         'updateConfig ........ sets the paths of the jdk or the androidSdk to the given paths',
         'doctor ............. checks that the jdk and the androidSdk are in place and at the' +
             ' correct version',
+        'merge ........ merges your web manifest into twaManifest.json',
       ].join('\n')],
       ['init', [
         'Usage:',
@@ -111,7 +112,8 @@ const HELP_MESSAGES = new Map<string, string>(
         '',
         '',
         'Options: ',
-        '--ignore [fields-list]................. the fields which you would like to keep the same',
+        '--ignore [fields-list]................. the fields which you would like to keep the same.',
+        'You can enter each key from your Web Manifest.',
       ].join('\n')],
     ],
 );

@@ -192,6 +192,46 @@ Usage:
 bubblewrap help
 ```
 
+## `doctor`
+
+Validates that the jdk and the androidSdk are located at the path specified and that
+they are at the correct version.
+
+Usage:
+
+```
+bubblewrap doctor
+```
+
+## `updateConfig`
+
+Sets the paths of the jdk or the androidSdk to the given paths.
+
+Usage:
+
+```
+bubblewrap updateConfig  --jdk="/path-to-jdk" --androidSdk="/path-to-androidSdk"
+```
+
+Options:
+  - `--jdk`: sets the jdk's path to the path given.
+  - `--androidSdk`: sets the androidSdk's path to the path given.
+
+## `merge`
+
+Merges the user's web manifest into their twaManifest.json.
+
+Usage:
+
+```
+bubblewrap merge --ignore [fields-list]
+```
+
+Options:
+  - `--ignore`: Ignores all of the fields on the list. Accepts all of the possible fields
+  in the Web Manifest.
+
+
 ## Contributing
 
 See [CONTRIBUTING](../../CONTRIBUTING.md) for more.
