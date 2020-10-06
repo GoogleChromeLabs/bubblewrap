@@ -188,6 +188,9 @@ export async function init(
     args: ParsedArgs, config: Config, prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
   prompt.printMessage(messages.messageInitializingWebManifest(args.manifest));
   let twaManifest = await TwaManifest.fromWebManifest(args.manifest);
+  if (args.chromeosonly) {
+    twaManifest.isChromeOSOnly = true;
+  }
   twaManifest = await confirmTwaConfig(twaManifest, prompt);
   const twaGenerator = new TwaGenerator();
   const targetDirectory = args.directory || process.cwd();

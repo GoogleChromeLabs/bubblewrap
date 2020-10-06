@@ -23,7 +23,6 @@ import {exec, execFile, spawn} from 'child_process';
 import {x as extractTar} from 'tar';
 import {WebManifestIcon} from './types/WebManifest';
 import {Log} from './Log';
-import {lookup} from 'mime-types';
 
 const execPromise = promisify(exec);
 const execFilePromise = promisify(execFile);
@@ -52,12 +51,34 @@ export async function executeFile(
   return await execFilePromise(cmd, args, {env: env, cwd: cwd});
 }
 
-export async function downloadFile(url: string, path: string): Promise<void> {
+/**
+ * Downloads a file from `url` and saves it to `path`. If a `progressCallback` function is passed, it
+ * will be invoked for every chunk received. If the value of `total` parameter is -1, it means we
+ * were unable to determine to total file size before starting the download.
+ */
+export async function downloadFile(url: string, path: string,
+    progressCallback?: (current: number, total: number) => void): Promise<void> {
   const result = await fetch(url);
+
+  // Try to determine the file size via the `Content-Length` header. This may not be available
+  // for all cases.
+  const contentLength = result.headers.get('content-length');
+  const fileSize = contentLength ? parseInt(contentLength) : -1;
+
   const fileStream = fs.createWriteStream(path);
+  let received = 0;
 
   await new Promise((resolve, reject) => {
     result.body.pipe(fileStream);
+
+    // Even though we're piping the chunks, we intercept them to check for the download progress.
+    if (progressCallback) {
+      result.body.on('data', (chunk) => {
+        received = received + chunk.length;
+        progressCallback(received, fileSize);
+      });
+    }
+
     result.body.on('error', (err) => {
       reject(err);
     });
@@ -120,14 +141,6 @@ export function findSuitableIcon(
   let largestIcon: WebManifestIcon | null = null;
   let largestIconSize = 0;
   for (const icon of icons) {
-    // Use the mime-type from the icon or look up from the URL if one is not provided.
-    const mimeType = icon.mimeType || lookup(icon.src);
-
-    // We don't support SVG images, so skip SVG icons.
-    if (mimeType && mimeType.startsWith('image/svg')) {
-      continue;
-    }
-
     const size = (icon.sizes || '0x0').split(' ')
         .map((size) => Number.parseInt(size, 10))
         .reduce((max, size) => Math.max(max, size), 0);
