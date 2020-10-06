@@ -402,7 +402,6 @@ export class TwaManifest {
       monochromeIconUrl: resolveIconUrl(monochromeIcon) || oldTwaManifest.monochromeIconUrl,
       shortcuts: shortcuts,
     });
-    await twaManifest.saveToFile(join(process.cwd(), 'twa-manifest.json'));
     return twaManifest;
   }
 }
