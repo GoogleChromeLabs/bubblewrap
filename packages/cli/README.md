@@ -194,8 +194,8 @@ bubblewrap help
 
 ## `doctor`
 
-Validates that the jdk and the androidSdk are located at the path specified and that
-they are at the correct version.
+Validates that the jdk and the androidSdk are located at the path specified in your config
+and that they are at the correct version.
 
 Usage:
 
@@ -210,12 +210,12 @@ Sets the paths of the jdk or the androidSdk to the given paths.
 Usage:
 
 ```
-bubblewrap updateConfig  --jdk="/path-to-jdk" --androidSdk="/path-to-androidSdk"
+bubblewrap updateConfig  --jdkPath="/path-to-jdk" --androidSdkPath="/path-to-androidSdk"
 ```
 
 Options:
-  - `--jdk`: sets the jdk's path to the path given.
-  - `--androidSdk`: sets the androidSdk's path to the path given.
+  - `--jdkPath`: sets the jdk's path to the path given.
+  - `--androidSdkPath`: sets the androidSdk's path to the path given.
 
 ## `merge`
 

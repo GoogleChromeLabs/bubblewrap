@@ -258,7 +258,7 @@ export async function rmdir(path: string): Promise<void> {
 export async function getWebManifest(webManifestUrl: URL): Promise<WebManifestJson> {
   const response = await fetch(webManifestUrl);
   if (response.status !== 200) {
-    throw new Error(`Failed to download Web Manifest ${webManifestUrl}.` +
+    throw new Error(`Failed to download Web Manifest ${webManifestUrl}. ` +
         `Responded with status ${response.status}`);
   }
   return await response.json();

@@ -16,7 +16,6 @@
 
 'use strict';
 
-import {join} from 'path';
 import * as fs from 'fs';
 import fetch from 'node-fetch';
 import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
@@ -372,15 +371,18 @@ export class TwaManifest {
     if (!(fieldsToIgnore.includes('shortcuts'))) {
       shortcuts = this.getShortcuts(webManifestUrl, webManifest);
     }
-    const icon = (fieldsToIgnore.includes('icons'))? null :
-        findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE);
-    const maskableIcon = (fieldsToIgnore.includes('maskableIcons'))? null :
-        findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE);
-    const monochromeIcon = (fieldsToIgnore.includes('monochromeIcons'))? null :
-        findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE);
+    const oldTwaManifestJson = oldTwaManifest.toJson();
+    const iconUrl = (fieldsToIgnore.includes('icons'))? oldTwaManifestJson.iconUrl:
+       resolveIconUrl(findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE));
+    const maskableIconUrl = (fieldsToIgnore.includes('maskableIcons'))?
+        oldTwaManifestJson.maskableIconUrl :
+        resolveIconUrl(findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE));
+    const monochromeIconUrl = (fieldsToIgnore.includes('monochromeIcons'))?
+        oldTwaManifestJson.monochromeIconUrl :
+        resolveIconUrl(findSuitableIcon(webManifest.icons, 'monochrome',
+            MIN_NOTIFICATION_ICON_SIZE));
 
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
-    const oldTwaManifestJson = oldTwaManifest.toJson();
 
     const twaManifest = new TwaManifest({
       ...oldTwaManifestJson,
@@ -397,9 +399,9 @@ export class TwaManifest {
           oldTwaManifest.backgroundColor.hex(), webManifest['background_color']!),
       startUrl: this.getNewFieldValue('startUrl', fieldsToIgnore, oldTwaManifest.startUrl,
           fullStartUrl.pathname + fullStartUrl.search),
-      iconUrl: resolveIconUrl(icon) || oldTwaManifest.iconUrl,
-      maskableIconUrl: resolveIconUrl(maskableIcon) || oldTwaManifest.maskableIconUrl,
-      monochromeIconUrl: resolveIconUrl(monochromeIcon) || oldTwaManifest.monochromeIconUrl,
+      iconUrl: iconUrl,
+      maskableIconUrl: maskableIconUrl,
+      monochromeIconUrl: monochromeIconUrl,
       shortcuts: shortcuts,
     });
     return twaManifest;

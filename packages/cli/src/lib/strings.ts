@@ -256,7 +256,7 @@ the PWA:
   promptNewAppVersionName: 'versionName for the new App version:',
   promptVersionCode: 'Starting version code for the new app version:',
   warnPwaFailedQuality: red('PWA Quality Criteria check failed.'),
-  updateConfigUsage: 'Usage: [--jdk <path-to-jdk>] [--androidSdk <path-to-android-sdk>]' +
+  updateConfigUsage: 'Usage: [--jdkPath <path-to-jdk>] [--androidSdkPath <path-to-android-sdk>]' +
       '(You can insert one or both of them)',
   jdkPathIsNotCorrect: 'The jdkPath isn\'t correct, please run the following command to update ' +
       'it:\nbubblewrap updateConfig --jdkPath <path-to-jdk>, such that the folder of the path' +

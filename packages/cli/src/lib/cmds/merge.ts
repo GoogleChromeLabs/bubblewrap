@@ -25,19 +25,16 @@ import {update} from './update';
  */
 export async function merge(args: ParsedArgs): Promise<boolean> {
   // If there is nothing to ignore, continue with an empty list.
-  let fieldsToIgnore = [];
-  if (args.ignore) {
-    fieldsToIgnore = args.ignore;
-  }
-  const manifestFile = path.join(process.cwd(), 'twa-manifest.json');
-  const twaManifest = await TwaManifest.fromFile(manifestFile);
+  const fieldsToIgnore = args.ignore || [];
+  const manifestPath = path.join(process.cwd(), 'twa-manifest.json');
+  const twaManifest = await TwaManifest.fromFile(manifestPath);
   const webManifestUrl: URL = twaManifest.webManifestUrl!;
   const webManifest = await util.getWebManifest(webManifestUrl);
   const newTwaManifest =
       await TwaManifest.merge(fieldsToIgnore, webManifestUrl, webManifest, twaManifest);
   // Update the app (args are not relevant in this case, because update's default values
   // are valid for it. We just send something as an input).
-  await newTwaManifest.saveToFile(path.join(process.cwd(), 'twa-manifest.json'));
+  await newTwaManifest.saveToFile(manifestPath);
   await update(args);
   return true;
 }
