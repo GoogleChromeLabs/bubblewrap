@@ -352,6 +352,26 @@ export class TwaManifest {
   }
 
   /**
+   * @param {string[]} fieldsToIgnore the fields which needs to be ignored.
+   * @param {string} fieldName the name of the given field.
+   * @param {string} oldUrl the url of the old twaManifest.
+   * @param {WebManifestIcon[]} icons the list of icons from the web manifest.
+   * @param {string} iconType the type of the requested icon.
+   * @param {number} iconSize the size of the requested icon.
+   * @param {URL} webManifestUrl the URL where the webManifest is available.
+   * @returns {string | undefined} the new icon url.
+   */
+  static getNewIconUrl(fieldsToIgnore: string[], fieldName: string, oldUrl: string,
+      icons: WebManifestIcon[], iconType: string, iconSize: number, webManifestUrl: URL):
+      string | undefined {
+    function resolveIconUrl(icon: WebManifestIcon | null): string | undefined {
+      return icon ? new URL(icon.src, webManifestUrl).toString() : undefined;
+    }
+    return (fieldsToIgnore.includes(fieldName))? oldUrl:
+        resolveIconUrl(findSuitableIcon(icons, iconType, iconSize));
+  }
+
+  /**
    * Merges the Twa Manifest with the web manifest. Ignores the specified fields.
    *
    * @param {string[]} fieldsToIgnore the fields which needs to be ignored.
@@ -363,24 +383,18 @@ export class TwaManifest {
    */
   static async merge(fieldsToIgnore: string[], webManifestUrl: URL,
       webManifest: WebManifestJson, oldTwaManifest: TwaManifest): Promise<TwaManifest> {
-    function resolveIconUrl(icon: WebManifestIcon | null): string | undefined {
-      return icon ? new URL(icon.src, webManifestUrl).toString() : undefined;
-    }
-
     let shortcuts: ShortcutInfo[] = oldTwaManifest.shortcuts;
     if (!(fieldsToIgnore.includes('shortcuts'))) {
       shortcuts = this.getShortcuts(webManifestUrl, webManifest);
     }
     const oldTwaManifestJson = oldTwaManifest.toJson();
-    const iconUrl = (fieldsToIgnore.includes('icons'))? oldTwaManifestJson.iconUrl:
-       resolveIconUrl(findSuitableIcon(webManifest.icons, 'any', MIN_ICON_SIZE));
-    const maskableIconUrl = (fieldsToIgnore.includes('maskableIcons'))?
-        oldTwaManifestJson.maskableIconUrl :
-        resolveIconUrl(findSuitableIcon(webManifest.icons, 'maskable', MIN_ICON_SIZE));
-    const monochromeIconUrl = (fieldsToIgnore.includes('monochromeIcons'))?
-        oldTwaManifestJson.monochromeIconUrl :
-        resolveIconUrl(findSuitableIcon(webManifest.icons, 'monochrome',
-            MIN_NOTIFICATION_ICON_SIZE));
+    const iconUrl = this.getNewIconUrl(fieldsToIgnore, 'icons', oldTwaManifestJson.iconUrl!,
+        webManifest.icons!, 'any', MIN_ICON_SIZE, webManifestUrl);
+    const maskableIconUrl = this.getNewIconUrl(fieldsToIgnore, 'maskableIcons',
+        oldTwaManifestJson.iconUrl!, webManifest.icons!, 'maskable', MIN_ICON_SIZE, webManifestUrl);
+    const monochromeIconUrl = this.getNewIconUrl(fieldsToIgnore, 'monochromeIcons',
+        oldTwaManifestJson.iconUrl!, webManifest.icons!, 'monochrome', MIN_NOTIFICATION_ICON_SIZE,
+        webManifestUrl);
 
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
 
@@ -388,7 +402,7 @@ export class TwaManifest {
       ...oldTwaManifestJson,
       name: this.getNewFieldValue('name', fieldsToIgnore, oldTwaManifest.name,
           webManifest['name'] || webManifest['short_name']!),
-      launcherName: this.getNewFieldValue('launcherName', fieldsToIgnore,
+      launcherName: this.getNewFieldValue('short_name', fieldsToIgnore,
           oldTwaManifest.launcherName, webManifest['short_name'] ||
           webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE)),
       display: this.getNewFieldValue('display', fieldsToIgnore, oldTwaManifest.display,
