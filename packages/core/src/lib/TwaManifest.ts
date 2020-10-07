@@ -413,9 +413,9 @@ export class TwaManifest {
           oldTwaManifest.backgroundColor.hex(), webManifest['background_color']!),
       startUrl: this.getNewFieldValue('startUrl', fieldsToIgnore, oldTwaManifest.startUrl,
           fullStartUrl.pathname + fullStartUrl.search),
-      iconUrl: iconUrl,
-      maskableIconUrl: maskableIconUrl,
-      monochromeIconUrl: monochromeIconUrl,
+      iconUrl: iconUrl || oldTwaManifestJson.iconUrl,
+      maskableIconUrl: maskableIconUrl || oldTwaManifestJson.maskableIconUrl,
+      monochromeIconUrl: monochromeIconUrl || oldTwaManifestJson.monochromeIconUrl,
       shortcuts: shortcuts,
     });
     return twaManifest;
