@@ -17,6 +17,7 @@
 import {Feature} from './Feature';
 import {AppsFlyerFeature} from './AppsFlyerFeature';
 import {TwaManifest} from '../TwaManifest';
+import {FirstRunFlagFeature} from './FirstRunFlagFeature';
 
 /**
  * Analyzes a TwaManifest to collect enable features and aggregates all customizations that will
@@ -38,6 +39,8 @@ export class FeatureManager {
   };
   launcherActivity = {
     imports: new Set<string>(),
+    methods: new Set<string>(),
+    variables: new Set<string>(),
     launchUrl: new Array<string>(),
   };
 
@@ -47,6 +50,10 @@ export class FeatureManager {
   constructor(twaManifest: TwaManifest) {
     if (twaManifest.features.appsFlyer !== undefined) {
       this.addFeature(new AppsFlyerFeature(twaManifest.features.appsFlyer));
+    }
+
+    if (twaManifest.features.firstRunFlag !== undefined) {
+      this.addFeature(new FirstRunFlagFeature(twaManifest.features.firstRunFlag));
     }
 
     // The WebView fallback needs the INTERNET permission.
@@ -90,6 +97,14 @@ export class FeatureManager {
     // Adds properties to launcherActivity
     feature.launcherActivity.imports.forEach((imp) => {
       this.launcherActivity.imports.add(imp);
+    });
+
+    feature.launcherActivity.variables.forEach((imp) => {
+      this.launcherActivity.variables.add(imp);
+    });
+
+    feature.launcherActivity.methods.forEach((imp) => {
+      this.launcherActivity.methods.add(imp);
     });
 
     if (feature.launcherActivity?.launchUrl) {
