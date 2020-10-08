@@ -17,7 +17,7 @@
 import * as path from 'path';
 import {ParsedArgs} from 'minimist';
 import {util, TwaManifest} from '@bubblewrap/core';
-import {update} from './update';
+import {updateVersions} from './shared';
 
 /**
  * Updates an existing TWA Project using the `twa-manifest.json`.
@@ -34,7 +34,9 @@ export async function merge(args: ParsedArgs): Promise<boolean> {
       await TwaManifest.merge(fieldsToIgnore, webManifestUrl, webManifest, twaManifest);
   // Update the app (args are not relevant in this case, because update's default values
   // are valid for it. We just send something as an input).
+  const newVersionInfo = await updateVersions(newTwaManifest, twaManifest.appVersionName);
+  newTwaManifest.appVersionName = newVersionInfo.appVersionName;
+  newTwaManifest.appVersionCode = newVersionInfo.appVersionCode;
   await newTwaManifest.saveToFile(manifestPath);
-  await update(args);
   return true;
 }
