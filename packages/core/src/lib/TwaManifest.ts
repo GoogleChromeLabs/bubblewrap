@@ -24,6 +24,7 @@ import {ConsoleLog} from './Log';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 import {ShortcutInfo} from './ShortcutInfo';
 import {AppsFlyerConfig} from './features/AppsFlyerFeature';
+import {FirstRunFlagConfig} from './features/FirstRunFlagFeature';
 
 // The minimum size needed for the app icon.
 const MIN_ICON_SIZE = 512;
@@ -62,6 +63,7 @@ export type FallbackType = 'customtabs' | 'webview';
 
 type Features = {
   appsFlyer?: AppsFlyerConfig;
+  firstRunFlag?: FirstRunFlagConfig;
 }
 
 /**
@@ -452,6 +454,7 @@ export interface TwaManifestJson {
   fallbackType?: FallbackType;
   features?: {
     appsFlyer?: AppsFlyerConfig;
+    firstRunFlag?: FirstRunFlagConfig;
   };
   enableSiteSettingsShortcut?: boolean;
   isChromeOSOnly?: boolean;

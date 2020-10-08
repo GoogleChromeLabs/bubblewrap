@@ -74,6 +74,8 @@ export class AppsFlyerFeature implements Feature {
   };
   launcherActivity = {
     imports: ['com.appsflyer.AppsFlyerLib'],
+    variables: [],
+    methods: [],
     launchUrl: `
     String appsFlyerId = AppsFlyerLib.getInstance().getAppsFlyerUID(this);
     uri = uri
