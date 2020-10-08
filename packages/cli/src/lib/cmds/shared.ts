@@ -14,11 +14,12 @@
  *  limitations under the License.
  */
 
-import {Prompt} from '../Prompt';
+import {InquirerPrompt, Prompt} from '../Prompt';
 import {enUS as messages} from '../strings';
 import {Presets, Bar} from 'cli-progress';
 import {TwaGenerator, TwaManifest} from '@bubblewrap/core';
 import {green} from 'colors';
+import {createValidateString} from '../inputHelpers';
 
 /**
  * Wraps generating a project with a progress bar.
@@ -35,4 +36,48 @@ export async function generateTwaProject(prompt: Prompt, twaGenerator: TwaGenera
   };
   await twaGenerator.createTwaProject(targetDirectory, twaManifest, progress);
   progressBar.stop();
+}
+
+/**
+ * Compute the new app version.
+ * @param {TwaManifest} oldTwaManifest current Twa Manifest.
+ * @param {string} currentAppVersionName the current app's version name (optional) .
+ * @param {Prompt} prompt prompt instance to get information from the user if needed.
+ */
+export async function updateVersions(
+    twaManifest: TwaManifest, currentAppVersionName: string,
+    prompt: Prompt = new InquirerPrompt()): Promise<{
+    appVersionName: string;
+    appVersionCode: number;
+  }> {
+  const previousAppVersionCode = twaManifest.appVersionCode;
+  const appVersionCode = twaManifest.appVersionCode + 1;
+
+  // If a version was passed as parameter, use it.
+  if (currentAppVersionName) {
+    return {
+      appVersionCode: appVersionCode,
+      appVersionName: currentAppVersionName,
+    };
+  }
+
+  // Otherwise, try to upgrade automatically with the versionCode.
+  if (twaManifest.appVersionName === previousAppVersionCode.toString()) {
+    return {
+      appVersionCode: appVersionCode,
+      appVersionName: appVersionCode.toString(),
+    };
+  }
+
+  // If not not possible, ask the user to input a new version.
+  const appVersionName = await prompt.promptInput(
+      messages.promptNewAppVersionName,
+      null,
+      createValidateString(1),
+  );
+
+  return {
+    appVersionCode: appVersionCode,
+    appVersionName: appVersionName,
+  };
 }
