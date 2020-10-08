@@ -14,78 +14,70 @@
  *  limitations under the License.
  */
 
-import {Feature} from './Feature';
+import {AbstractFeature} from './AbstractFeature';
 
 export type AppsFlyerConfig = {
   appsFlyerId: string;
 }
 
-export class AppsFlyerFeature implements Feature {
-  name = 'appsFlyer';
-  buildGradle = {
-    repositories: ['mavenCentral()'],
-    dependencies: ['com.appsflyer:af-android-sdk:5.4.0'],
-  };
-  androidManifest = {
-    permissions: [
-      'android.permission.INTERNET',
-      'android.permission.ACCESS_NETWORK_STATE',
-      'android.permission.ACCESS_WIFI_STATE',
-      // TODO(andreban): this may be optional. Check and remove if that's confirmed.
-      'android.permission.READ_PHONE_STATE',
-    ],
-    components: [
-      `<receiver
-         android:name="com.appsflyer.SingleInstallBroadcastReceiver"
-         android:exported="true">
-        <intent-filter>
-            <action android:name="com.android.vending.INSTALL_REFERRER" />
-        </intent-filter>
-      </receiver>`,
-    ],
-  };
-  applicationClass = {
-    imports: [
-      'java.util.Map',
-      'com.appsflyer.AppsFlyerLib',
-      'com.appsflyer.AppsFlyerConversionListener',
-    ],
-    variables: new Array<string>(),
-    onCreate: `
-      AppsFlyerConversionListener conversionListener = new AppsFlyerConversionListener() {
-          @Override
-          public void onConversionDataSuccess(Map<String, Object> conversionData) {
-          }
-
-          @Override
-          public void onConversionDataFail(String errorMessage) {
-          }
-
-          @Override
-          public void onAppOpenAttribution(Map<String, String> attributionData) {
-          }
-
-          @Override
-          public void onAttributionFailure(String errorMessage) {
-          }
-      };
-      AppsFlyerLib.getInstance().init(AF_DEV_KEY, conversionListener, this);
-      AppsFlyerLib.getInstance().startTracking(this);`,
-  };
-  launcherActivity = {
-    imports: ['com.appsflyer.AppsFlyerLib'],
-    variables: [],
-    methods: [],
-    launchUrl: `
-    String appsFlyerId = AppsFlyerLib.getInstance().getAppsFlyerUID(this);
-    uri = uri
-          .buildUpon()
-          .appendQueryParameter("appsflyer_id", appsFlyerId)
-          .build();`,
-  };
-
+export class AppsFlyerFeature extends AbstractFeature {
   constructor(config: AppsFlyerConfig) {
+    super('appsFlyer');
+    // Setup build.gradle.
+    this.buildGradle.repositories.push('mavenCentral()');
+    this.buildGradle.dependencies.push('com.appsflyer:af-android-sdk:5.4.0');
+
+    // Setup the Android Manifest.
+    this.androidManifest.permissions.push(
+        'android.permission.INTERNET',
+        'android.permission.ACCESS_NETWORK_STATE',
+        'android.permission.ACCESS_WIFI_STATE',
+        // TODO(andreban): this may be optional. Check and remove if that's confirmed.
+        'android.permission.READ_PHONE_STATE');
+    this.androidManifest.components.push(
+        `<receiver
+          android:name="com.appsflyer.SingleInstallBroadcastReceiver"
+          android:exported="true">
+          <intent-filter>
+            <action android:name="com.android.vending.INSTALL_REFERRER" />
+          </intent-filter>
+        </receiver>`);
+
+    // Setup the Application class.
+    this.applicationClass.imports.push(
+        'java.util.Map',
+        'com.appsflyer.AppsFlyerLib',
+        'com.appsflyer.AppsFlyerConversionListener');
     this.applicationClass.variables.push(
         `private static final String AF_DEV_KEY = "${config.appsFlyerId}";`);
+    this.applicationClass.onCreate =
+        `AppsFlyerConversionListener conversionListener = new AppsFlyerConversionListener() {
+            @Override
+            public void onConversionDataSuccess(Map<String, Object> conversionData) {
+            }
+
+            @Override
+            public void onConversionDataFail(String errorMessage) {
+            }
+
+            @Override
+            public void onAppOpenAttribution(Map<String, String> attributionData) {
+            }
+
+            @Override
+            public void onAttributionFailure(String errorMessage) {
+            }
+        };
+        AppsFlyerLib.getInstance().init(AF_DEV_KEY, conversionListener, this);
+        AppsFlyerLib.getInstance().startTracking(this);`;
+
+    // Setup the LauncherActivity.
+    this.launcherActivity.imports.push('com.appsflyer.AppsFlyerLib');
+    this.launcherActivity.launchUrl =
+        `String appsFlyerId = AppsFlyerLib.getInstance().getAppsFlyerUID(this);
+         uri = uri
+              .buildUpon()
+              .appendQueryParameter("appsflyer_id", appsFlyerId)
+              .build();`;
   }
 }
