@@ -23,6 +23,13 @@ import android.net.Uri;
 
 public class LauncherActivity
         extends com.google.androidbrowserhelper.trusted.LauncherActivity {
+    <% for(const variable of launcherActivity.variables) { %>
+        <%= variable %>
+    <% } %>
+
+    <% for(const method of launcherActivity.methods) { %>
+        <%= method %>
+    <% } %>
 
     @Override
     protected Uri getLaunchingUrl() {

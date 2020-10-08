@@ -21,7 +21,7 @@ import {join} from 'path';
 import {promisify} from 'util';
 import {exec, execFile, spawn} from 'child_process';
 import {x as extractTar} from 'tar';
-import {WebManifestIcon} from './types/WebManifest';
+import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 import {Log} from './Log';
 
 const execPromise = promisify(exec);
@@ -261,3 +261,18 @@ export async function rmdir(path: string): Promise<void> {
   await Promise.all(entries.map((entry) => rmdir(join(path, entry))));
   await fs.promises.rmdir(path);
 };
+
+/**
+   * Given a web manifest's URL, the function retrns the web manifest.
+   *
+   * @param {URL} webManifestUrl the URL where the webManifest is available.
+   * @returns {Promise<WebManifestJson}
+   */
+export async function getWebManifest(webManifestUrl: URL): Promise<WebManifestJson> {
+  const response = await fetch(webManifestUrl);
+  if (response.status !== 200) {
+    throw new Error(`Failed to download Web Manifest ${webManifestUrl}. ` +
+        `Responded with status ${response.status}`);
+  }
+  return await response.json();
+}
