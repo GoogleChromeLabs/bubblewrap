@@ -17,6 +17,7 @@
 import {EmptyFeature} from './EmptyFeature';
 
 export interface FirstRunFlagConfig {
+  enabled: boolean;
   queryParameterName: string;
 }
 

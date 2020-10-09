@@ -48,11 +48,11 @@ export class FeatureManager {
    * Builds a new intance from a TwaManifest.
    */
   constructor(twaManifest: TwaManifest) {
-    if (twaManifest.features.appsFlyer !== undefined) {
+    if (twaManifest.features.appsFlyer && twaManifest.features.appsFlyer.enabled) {
       this.addFeature(new AppsFlyerFeature(twaManifest.features.appsFlyer));
     }
 
-    if (twaManifest.features.firstRunFlag !== undefined) {
+    if (twaManifest.features.firstRunFlag && twaManifest.features.firstRunFlag.enabled) {
       this.addFeature(new FirstRunFlagFeature(twaManifest.features.firstRunFlag));
     }
 
