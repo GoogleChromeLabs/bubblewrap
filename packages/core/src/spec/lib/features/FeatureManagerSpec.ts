@@ -89,10 +89,12 @@ describe('FeatureManager', () => {
 
     it('Features are applied to FeatureManager', () => {
       const appsFlyerConfig = {
+        enabled: true,
         appsFlyerId: '12345',
       } as AppsFlyerConfig;
 
       const firstRunFlagConfig = {
+        enabled: true,
         queryParameterName: 'query_parameter',
       } as FirstRunFlagConfig;
 
