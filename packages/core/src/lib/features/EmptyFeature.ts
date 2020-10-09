@@ -16,7 +16,7 @@
 
 import {Feature} from './Feature';
 
-export class AbstractFeature implements Feature {
+export class EmptyFeature implements Feature {
   name: string;
   buildGradle: {
     repositories: string[];

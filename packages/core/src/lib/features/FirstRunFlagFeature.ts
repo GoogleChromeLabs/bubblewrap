@@ -14,13 +14,13 @@
  *  limitations under the License.
  */
 
-import {AbstractFeature} from './AbstractFeature';
+import {EmptyFeature} from './EmptyFeature';
 
 export interface FirstRunFlagConfig {
   queryParameterName: string;
 }
 
-export class FirstRunFlagFeature extends AbstractFeature {
+export class FirstRunFlagFeature extends EmptyFeature {
   constructor(config: FirstRunFlagConfig) {
     super('firstRunFlag');
     this.launcherActivity.imports.push(

@@ -14,13 +14,13 @@
  *  limitations under the License.
  */
 
-import {AbstractFeature} from './AbstractFeature';
+import {EmptyFeature} from './EmptyFeature';
 
 export type AppsFlyerConfig = {
   appsFlyerId: string;
 }
 
-export class AppsFlyerFeature extends AbstractFeature {
+export class AppsFlyerFeature extends EmptyFeature {
   constructor(config: AppsFlyerConfig) {
     super('appsFlyer');
     // Setup build.gradle.
