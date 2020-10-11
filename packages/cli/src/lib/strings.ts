@@ -213,7 +213,7 @@ Bubblewrap will prompt for the creation of a new keystore.
 Read more about Android signing keys at:
 \t ${cyan('https://developer.android.com/studio/publish/app-signing')}\n`,
   messageSigningKeyNotFound: (path: string): string => {
-    return `\nAn existing key store could could not be found at "${path}".\n`;
+    return `\nAn existing key store could not be found at "${path}".\n`;
   },
   messageUsingPasswordsFromEnv: 'Using passwords set in the BUBBLEWRAP_KEYSTORE_PASSWORD and ' +
       'BUBBLEWRAP_KEY_PASSWORD environmental variables.',
