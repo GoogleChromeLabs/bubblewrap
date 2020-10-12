@@ -17,6 +17,7 @@
 import {EmptyFeature} from './EmptyFeature';
 
 export type AppsFlyerConfig = {
+  enabled: boolean;
   appsFlyerId: string;
 }
 

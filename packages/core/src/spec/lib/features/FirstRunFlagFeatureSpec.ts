@@ -22,6 +22,7 @@ describe('FirstRunFlagFeature', () => {
       const paramName = 'my_param_name';
       // variables is the only field dynamically generated.
       const config = {
+        enabled: true,
         queryParameterName: paramName,
       } as FirstRunFlagConfig;
       const appsFlyerFeature = new FirstRunFlagFeature(config);
