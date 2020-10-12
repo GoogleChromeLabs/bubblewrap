@@ -325,7 +325,7 @@ describe('TwaManifest', () => {
   });
   describe('#merge', () => {
     it('Validates that the merge is done correctly in case which' +
-        ' there are no files to ignore', async () => {
+        ' there are no fields to ignore', async () => {
       const webManifest: WebManifestJson = {
         'display': 'fullscreen',
         'name': 'name',
@@ -351,6 +351,8 @@ describe('TwaManifest', () => {
         'navigationDividerColorDark': '#000000',
         'backgroundColor': '#FFFFFF',
         'enableNotifications': false,
+        // The start_urls are different, but since they both resolve the same relative
+        // to the host url, nothing changes.
         'startUrl': '/',
         'iconUrl': 'https://image.png/',
         'splashScreenFadeOutDuration': 300,
@@ -380,7 +382,7 @@ describe('TwaManifest', () => {
           .toEqual(expectedTwaManifest);
     });
     it('Validates that the merge is done correctly in case which' +
-      ' there are files to ignore', async () => {
+      ' there are fields to ignore', async () => {
       const webManifest: WebManifestJson = {
         'display': 'fullscreen',
         'name': 'name',
@@ -406,6 +408,8 @@ describe('TwaManifest', () => {
         'navigationDividerColorDark': '#000000',
         'backgroundColor': '#FFFFFF',
         'enableNotifications': false,
+        // The start_urls are different, but since they both resolve the same relative
+        // to the host url, nothing changes.
         'startUrl': '/',
         'iconUrl': 'https://image.png/',
         'splashScreenFadeOutDuration': 300,
