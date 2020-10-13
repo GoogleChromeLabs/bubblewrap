@@ -196,11 +196,9 @@ dependencies {
     <% for(const dep of buildGradle.dependencies) { %>
         implementation '<%= dep %>'
     <% } %>
-     if (twaManifest.alphaFeatures && twaManifest.alphaFeatures.enabled) {
-      this.buildGradle.dependencies.add(
-          'com.google.androidbrowserhelper:androidbrowserhelper:1.4.0-alpha01');
+    if (twaManifest.alphaDependencies && twaManifest.alphaDependencies.enabled) {
+        implementation 'com.google.androidbrowserhelper:androidbrowserhelper:1.4.0-alpha01' 
     } else {
-      this.buildGradle.dependencies.add(
-          'com.google.androidbrowserhelper:androidbrowserhelper:2.0.0');
-    }
+        implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.0.0' 
+    }    
 }
