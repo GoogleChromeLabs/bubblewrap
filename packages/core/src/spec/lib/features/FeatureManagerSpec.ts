@@ -72,7 +72,8 @@ describe('FeatureManager', () => {
       expect(features.applicationClass.imports).toEqual(emptySet);
       expect(features.applicationClass.onCreate).toEqual([]);
       expect(features.applicationClass.variables).toEqual([]);
-      expect(features.buildGradle.dependencies).toEqual(emptySet);
+      expect(features.buildGradle.dependencies).
+          toEqual((new Set().add('com.google.androidbrowserhelper:androidbrowserhelper:2.0.0')));
       expect(features.buildGradle.repositories).toEqual(emptySet);
       expect(features.launcherActivity.imports).toEqual(emptySet);
       expect(features.launcherActivity.launchUrl).toEqual([]);
