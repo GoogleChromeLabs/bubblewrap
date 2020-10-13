@@ -60,6 +60,14 @@ export class FeatureManager {
     if (twaManifest.fallbackType === 'webview') {
       this.androidManifest.permissions.add('android.permission.INTERNET');
     }
+
+    if (twaManifest.alphaDependencies && twaManifest.alphaDependencies.enabled) {
+      this.buildGradle.dependencies.add(
+          'com.google.androidbrowserhelper:androidbrowserhelper:1.4.0-alpha01');
+    } else {
+      this.buildGradle.dependencies.add(
+          'com.google.androidbrowserhelper:androidbrowserhelper:2.0.0');
+    }
   }
 
   private addFeature(feature: Feature): void {
