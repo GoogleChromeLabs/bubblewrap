@@ -72,11 +72,22 @@ describe('FeatureManager', () => {
       expect(features.applicationClass.imports).toEqual(emptySet);
       expect(features.applicationClass.onCreate).toEqual([]);
       expect(features.applicationClass.variables).toEqual([]);
-      expect(features.buildGradle.dependencies).
-          toEqual((new Set().add('com.google.androidbrowserhelper:androidbrowserhelper:2.0.0')));
+      expect(features.buildGradle.dependencies).toEqual((new Set().
+          add('com.google.androidbrowserhelper:androidbrowserhelper:2.0.0')));
       expect(features.buildGradle.repositories).toEqual(emptySet);
       expect(features.launcherActivity.imports).toEqual(emptySet);
       expect(features.launcherActivity.launchUrl).toEqual([]);
+    });
+
+    it('Creates from empty features with alpha features unabled', () => {
+      const manifest = {
+        features: {},
+        fallbackType: 'customtabs',
+        alphaDependencies: {enabled: true},
+      } as TwaManifest;
+      const features = new FeatureManager(manifest);
+      expect(features.buildGradle.dependencies).toEqual((new Set().
+          add('com.google.androidbrowserhelper:androidbrowserhelper:1.4.0-alpha01')));
     });
 
     it('Adds INTERNET permission when WebView fallback is enabled', () => {
