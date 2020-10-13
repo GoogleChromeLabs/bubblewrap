@@ -456,6 +456,9 @@ export interface TwaManifestJson {
     appsFlyer?: AppsFlyerConfig;
     firstRunFlag?: FirstRunFlagConfig;
   };
+  alphaDependencies?: {
+    enabled: boolean;
+  };
   enableSiteSettingsShortcut?: boolean;
   isChromeOSOnly?: boolean;
 }
