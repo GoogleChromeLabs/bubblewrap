@@ -66,6 +66,10 @@ type Features = {
   firstRunFlag?: FirstRunFlagConfig;
 }
 
+type alphaDependencies = {
+  enabled: boolean;
+}
+
 /**
  * A Manifest used to generate the TWA Project
  *
@@ -125,6 +129,7 @@ export class TwaManifest {
   webManifestUrl?: URL;
   fallbackType: FallbackType;
   features: Features;
+  alphaDependencies: alphaDependencies;
   enableSiteSettingsShortcut: boolean;
   isChromeOSOnly: boolean;
 
@@ -163,6 +168,7 @@ export class TwaManifest {
     this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
     this.fallbackType = data.fallbackType || 'customtabs';
     this.features = data.features || {};
+    this.alphaDependencies = data.alphaDependencies || {enabled: false};
     this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ?
       data.enableSiteSettingsShortcut : true;
     this.isChromeOSOnly = data.isChromeOSOnly != undefined ? data.isChromeOSOnly : false;

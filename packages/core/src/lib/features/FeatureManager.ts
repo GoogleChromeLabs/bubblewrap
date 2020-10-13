@@ -61,7 +61,7 @@ export class FeatureManager {
       this.androidManifest.permissions.add('android.permission.INTERNET');
     }
 
-    if (twaManifest.alphaDependencies && twaManifest.alphaDependencies.enabled) {
+    if (twaManifest.alphaDependencies && twaManifest.alphaDependencies.enabled === true) {
       this.buildGradle.dependencies.add(
           'com.google.androidbrowserhelper:androidbrowserhelper:1.4.0-alpha01');
     } else {
