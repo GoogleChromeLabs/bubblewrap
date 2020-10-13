@@ -79,7 +79,7 @@ describe('FeatureManager', () => {
       expect(features.launcherActivity.launchUrl).toEqual([]);
     });
 
-    it('Creates from empty features with alpha features unabled', () => {
+    it('Creates from empty features with alpha features enabled', () => {
       const manifest = {
         features: {},
         fallbackType: 'customtabs',
