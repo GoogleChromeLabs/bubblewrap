@@ -65,6 +65,7 @@ be changed by editing the configuration file at `${USER_HOME}/.bubblewrap/config
  }
 
 ```
+*(Note : Make sure you don't have `spaces` in the androidSdkPath. Check [this link](https://stackoverflow.com/questions/37052934/android-sdk-location-should-not-contain-whitespace-as-this-cause-problems-with) for more details.)*
 ## Quickstart Guide
 
 ### Installing Bubblewrap
@@ -102,7 +103,7 @@ The tool will inkove the installation process for the build tools. Make sure to 
 the license agreement before proceeding. This process will install the other required files inside the `directory/decompressed` root directory of the android CLI package.
 
 As a result of the build step, the tool will generate a signed APK (`app-release-signed.apk`)
-that can be uploaded to the Play Store. You will also need to deploy a Digital Asset Links file to
+that can be used for testing the app and a signed AppBundle (`./app-release-bundle.aab`) that can be [uploaded to the Play Store](https://android-developers.googleblog.com/2020/08/recent-android-app-bundle-improvements.html). You will also need to deploy a Digital Asset Links file to
 validate your domain. The
 [TWA Quick Start Guide](https://developers.google.com/web/updates/2019/08/twas-quickstart#creating-your-asset-link-file)
 explains how to extract the information needed to generate it.
@@ -118,11 +119,12 @@ parse the Web manifest and generate default valuers for the Android project, whe
 will prompt the user to confirm or input values where one could not be generated.
 
 ```
-bubblewrap init --manifest="<web-manifest-url>" [--directory="<path-to-output-location>"]
+bubblewrap init --manifest="<web-manifest-url>" [--directory="<path-to-output-location>"] [--chromeosonly]
 ```
 
 Options:
   - `--directory`: path where to generate the project. Defaults to the current directory.
+  - `--chromeosonly`: this flag specifies that the build will be used for Chrome OS only and prevents non-Chrome OS devices from installing the app.
 
 ## `build`
 
@@ -140,7 +142,6 @@ bubblewrap build [--skipPwaValidation]
 
 Options: 
   - `--skipPwaValidation`: skips validating the wrapped PWA against the Quality Criteria.
-  - `--generateAppBundle`: outputs an Android App Bundle additionally to the APK.
 
 
 ## `update`
@@ -191,6 +192,46 @@ Usage:
 ```
 bubblewrap help
 ```
+
+## `doctor`
+
+Validates that the jdk and the androidSdk are located at the path specified in your config
+and that they are at the correct version.
+
+Usage:
+
+```
+bubblewrap doctor
+```
+
+## `updateConfig`
+
+Sets the paths of the jdk or the androidSdk to the given paths.
+
+Usage:
+
+```
+bubblewrap updateConfig  --jdkPath="/path-to-jdk" --androidSdkPath="/path-to-androidSdk"
+```
+
+Options:
+  - `--jdkPath`: sets the jdk's path to the path given.
+  - `--androidSdkPath`: sets the androidSdk's path to the path given.
+
+## `merge`
+
+Merges the user's web manifest into their twaManifest.json.
+
+Usage:
+
+```
+bubblewrap merge --ignore [fields-list]
+```
+
+Options:
+  - `--ignore`: Ignores all of the fields on the list. Accepts all of the possible fields
+  in the Web Manifest.
+
 
 ## Contributing
 

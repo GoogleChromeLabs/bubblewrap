@@ -25,6 +25,7 @@ import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 import {ShortcutInfo} from './ShortcutInfo';
 import {AppsFlyerConfig} from './features/AppsFlyerFeature';
 import {LocationDelegationConfig} from './features/LocationDelegationFeature';
+import {FirstRunFlagConfig} from './features/FirstRunFlagFeature';
 
 // The minimum size needed for the app icon.
 const MIN_ICON_SIZE = 512;
@@ -65,6 +66,11 @@ export type FallbackType = 'customtabs' | 'webview';
 type Features = {
   appsFlyer?: AppsFlyerConfig;
   locationDelegation?: LocationDelegationConfig;
+  firstRunFlag?: FirstRunFlagConfig;
+}
+
+type alphaDependencies = {
+  enabled: boolean;
 }
 
 /**
@@ -96,6 +102,8 @@ type Features = {
  *  ],
  * // The duration of fade out animation in milliseconds to be played when removing splash screen.
  * splashScreenFadeOutDuration: 300
+ * isChromeOSOnly: false, // Setting to true will enable a feature that prevents non-ChromeOS devices
+ *  from installing the app.
  *
  */
 export class TwaManifest {
@@ -124,7 +132,9 @@ export class TwaManifest {
   webManifestUrl?: URL;
   fallbackType: FallbackType;
   features: Features;
+  alphaDependencies: alphaDependencies;
   enableSiteSettingsShortcut: boolean;
+  isChromeOSOnly: boolean;
 
   private static log = new ConsoleLog('twa-manifest');
 
@@ -153,23 +163,27 @@ export class TwaManifest {
     this.signingKey = data.signingKey;
     this.appVersionName = data.appVersion;
     this.appVersionCode = data.appVersionCode || DEFAULT_APP_VERSION_CODE;
-    this.shortcuts = data.shortcuts;
+    this.shortcuts = (data.shortcuts || []).map((si) => {
+      return new ShortcutInfo(si.name, si.shortName, si.url, si.chosenIconUrl,
+          si.chosenMaskableIconUrl, si.chosenMonochromeIconUrl);
+    });
     this.generatorApp = data.generatorApp || DEFAULT_GENERATOR_APP_NAME;
     this.webManifestUrl = data.webManifestUrl ? new URL(data.webManifestUrl) : undefined;
     this.fallbackType = data.fallbackType || 'customtabs';
     this.features = data.features || {};
+    this.alphaDependencies = data.alphaDependencies || {enabled: false};
     this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ?
       data.enableSiteSettingsShortcut : true;
+    this.isChromeOSOnly = data.isChromeOSOnly != undefined ? data.isChromeOSOnly : false;
   }
 
   /**
-   * Saves the TWA Manifest to the file-system.
+   * Turns an TwaManifest into a TwaManifestJson.
    *
-   * @param {String} filename the location where the TWA Manifest will be saved.
+   * @returns {TwaManifestJson}
    */
-  async saveToFile(filename: string): Promise<void> {
-    console.log('Saving Config to: ' + filename);
-    const json: TwaManifestJson = Object.assign({}, this, {
+  toJson(): TwaManifestJson {
+    return Object.assign({}, this, {
       themeColor: this.themeColor.hex(),
       navigationColor: this.navigationColor.hex(),
       navigationColorDark: this.navigationColorDark.hex(),
@@ -179,6 +193,16 @@ export class TwaManifest {
       appVersion: this.appVersionName,
       webManifestUrl: this.webManifestUrl ? this.webManifestUrl.toString() : undefined,
     });
+  }
+
+  /**
+   * Saves the TWA Manifest to the file-system.
+   *
+   * @param {String} filename the location where the TWA Manifest will be saved.
+   */
+  async saveToFile(filename: string): Promise<void> {
+    console.log('Saving Config to: ' + filename);
+    const json: TwaManifestJson = this.toJson();
     await fs.promises.writeFile(filename, JSON.stringify(json, null, 2));
   }
 
@@ -236,24 +260,7 @@ export class TwaManifest {
       findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE);
 
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
-
-    const shortcuts: ShortcutInfo[] = [];
-
-    for (let i = 0; i < (webManifest.shortcuts || []).length; i++) {
-      const s = webManifest.shortcuts![i];
-      try {
-        const shortcutInfo = ShortcutInfo.fromShortcutJson(webManifestUrl, s);
-        if (shortcutInfo != null) {
-          shortcuts.push(shortcutInfo);
-        }
-      } catch (err) {
-        TwaManifest.log.warn(`Skipping shortcut[${i}] for ${err.message}.`);
-      }
-
-      if (shortcuts.length === 4) {
-        break;
-      }
-    }
+    const shortcuts: ShortcutInfo[] = this.getShortcuts(webManifestUrl, webManifest);
 
     function resolveIconUrl(icon: WebManifestIcon | null): string | undefined {
       return icon ? new URL(icon.src, webManifestUrl).toString() : undefined;
@@ -312,6 +319,119 @@ export class TwaManifest {
     const json = JSON.parse((await fs.promises.readFile(fileName)).toString());
     return new TwaManifest(json);
   }
+
+  /**
+   * Given a field name, returns the new value of the field.
+   *
+   * @param {string} fieldName the name of the given field.
+   * @param {string[]} fieldsToIgnore the fields which needs to be ignored.
+   * @param {T} oldValue the old value of the field.
+   * @param {T} newValue the new value of the field.
+   * @returns {T}
+   */
+  static getNewFieldValue<T>(fieldName: string, fieldsToIgnore: string[],
+      oldValue: T, newValue: T): T {
+    if (fieldsToIgnore.includes(fieldName)) {
+      return oldValue;
+    }
+    return newValue || oldValue;
+  }
+
+  /**
+   * Gets the shortcuts from the web manifest.
+   *
+   * @param {URL} webManifestUrl the URL where the webManifest is available.
+   * @param {WebManifest} webManifest the Web Manifest.
+   * @returns {ShortcutInfo[]}
+   */
+  static getShortcuts(webManifestUrl: URL, webManifest: WebManifestJson): ShortcutInfo[] {
+    const shortcuts: ShortcutInfo[] = [];
+    for (let i = 0; i < (webManifest.shortcuts || []).length; i++) {
+      const s = webManifest.shortcuts![i];
+      try {
+        const shortcutInfo = ShortcutInfo.fromShortcutJson(webManifestUrl, s);
+        if (shortcutInfo != null) {
+          shortcuts.push(shortcutInfo);
+        }
+      } catch (err) {
+        TwaManifest.log.warn(`Skipping shortcut[${i}] for ${err.message}.`);
+      }
+      if (shortcuts.length === 4) {
+        break;
+      }
+    }
+    return shortcuts;
+  }
+
+  /**
+   * @param {string[]} fieldsToIgnore the fields which needs to be ignored.
+   * @param {string} fieldName the name of the given field.
+   * @param {string} oldUrl the url of the old twaManifest.
+   * @param {WebManifestIcon[]} icons the list of icons from the web manifest.
+   * @param {string} iconType the type of the requested icon.
+   * @param {number} iconSize the size of the requested icon.
+   * @param {URL} webManifestUrl the URL where the webManifest is available.
+   * @returns {string | undefined} the new icon url.
+   */
+  static getNewIconUrl(fieldsToIgnore: string[], fieldName: string, oldUrl: string,
+      icons: WebManifestIcon[], iconType: string, iconSize: number, webManifestUrl: URL):
+      string | undefined {
+    function resolveIconUrl(icon: WebManifestIcon | null): string | undefined {
+      return icon ? new URL(icon.src, webManifestUrl).toString() : undefined;
+    }
+    return (fieldsToIgnore.includes(fieldName))? oldUrl:
+        resolveIconUrl(findSuitableIcon(icons, iconType, iconSize));
+  }
+
+  /**
+   * Merges the Twa Manifest with the web manifest. Ignores the specified fields.
+   *
+   * @param {string[]} fieldsToIgnore the fields which needs to be ignored.
+   * @param {URL} webManifestUrl the URL where the webManifest is available.
+   * @param {WebManifest} webManifest the Web Manifest, used as a base for the update of
+   *    the TWA Manifest.
+   * @param {TwaManifest} oldTwaManifest current Twa Manifest.
+   * @returns {Promise<TwaManifest>} the new and merged Twa manifest.
+   */
+  static async merge(fieldsToIgnore: string[], webManifestUrl: URL,
+      webManifest: WebManifestJson, oldTwaManifest: TwaManifest): Promise<TwaManifest> {
+    let shortcuts: ShortcutInfo[] = oldTwaManifest.shortcuts;
+    if (!(fieldsToIgnore.includes('shortcuts'))) {
+      shortcuts = this.getShortcuts(webManifestUrl, webManifest);
+    }
+    const oldTwaManifestJson = oldTwaManifest.toJson();
+    const iconUrl = this.getNewIconUrl(fieldsToIgnore, 'icons', oldTwaManifestJson.iconUrl!,
+        webManifest.icons!, 'any', MIN_ICON_SIZE, webManifestUrl);
+    const maskableIconUrl = this.getNewIconUrl(fieldsToIgnore, 'maskableIcons',
+        oldTwaManifestJson.iconUrl!, webManifest.icons!, 'maskable', MIN_ICON_SIZE, webManifestUrl);
+    const monochromeIconUrl = this.getNewIconUrl(fieldsToIgnore, 'monochromeIcons',
+        oldTwaManifestJson.iconUrl!, webManifest.icons!, 'monochrome', MIN_NOTIFICATION_ICON_SIZE,
+        webManifestUrl);
+
+    const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
+
+    const twaManifest = new TwaManifest({
+      ...oldTwaManifestJson,
+      name: this.getNewFieldValue('name', fieldsToIgnore, oldTwaManifest.name,
+          webManifest['name'] || webManifest['short_name']!),
+      launcherName: this.getNewFieldValue('short_name', fieldsToIgnore,
+          oldTwaManifest.launcherName, webManifest['short_name'] ||
+          webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE)),
+      display: this.getNewFieldValue('display', fieldsToIgnore, oldTwaManifest.display,
+          asDisplayMode(webManifest['display']!)!),
+      themeColor: this.getNewFieldValue('themeColor', fieldsToIgnore,
+          oldTwaManifest.themeColor.hex(), webManifest['theme_color']!),
+      backgroundColor: this.getNewFieldValue('backgroundColor', fieldsToIgnore,
+          oldTwaManifest.backgroundColor.hex(), webManifest['background_color']!),
+      startUrl: this.getNewFieldValue('startUrl', fieldsToIgnore, oldTwaManifest.startUrl,
+          fullStartUrl.pathname + fullStartUrl.search),
+      iconUrl: iconUrl || oldTwaManifestJson.iconUrl,
+      maskableIconUrl: maskableIconUrl || oldTwaManifestJson.maskableIconUrl,
+      monochromeIconUrl: monochromeIconUrl || oldTwaManifestJson.monochromeIconUrl,
+      shortcuts: shortcuts,
+    });
+    return twaManifest;
+  }
 }
 
 /**
@@ -338,15 +458,20 @@ export interface TwaManifestJson {
   signingKey: SigningKeyInfo;
   appVersionCode?: number; // Older Manifests may not have this field.
   appVersion: string; // appVersionName - Old Manifests use `appVersion`. Keeping compatibility.
-  shortcuts: ShortcutInfo[];
+  shortcuts?: ShortcutInfo[];
   generatorApp?: string;
   webManifestUrl?: string;
   fallbackType?: FallbackType;
   features?: {
     appsFlyer?: AppsFlyerConfig;
     locationDelegation?: LocationDelegationConfig;
+    firstRunFlag?: FirstRunFlagConfig;
+  };
+  alphaDependencies?: {
+    enabled: boolean;
   };
   enableSiteSettingsShortcut?: boolean;
+  isChromeOSOnly?: boolean;
 }
 
 export interface SigningKeyInfo {

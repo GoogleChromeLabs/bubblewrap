@@ -32,8 +32,9 @@ const HELP_MESSAGES = new Map<string, string>(
             ' Web Activity',
         'install ............. installs the output application to a connected device',
         'updateConfig ........ sets the paths of the jdk or the androidSdk to the given paths',
-        'doctor ............. checks that the jdk and the androidSdk are in place and at the' +
+        'doctor .............. checks that the jdk and the androidSdk are in place and at the' +
             ' correct version',
+        'merge ............... merges your web manifest into twaManifest.json',
       ].join('\n')],
       ['init', [
         'Usage:',
@@ -55,7 +56,6 @@ const HELP_MESSAGES = new Map<string, string>(
         '',
         'Options:',
         '--skipPwaValidation ....... skips validating the wrapped PWA against the Quality Criteria',
-        '--generateAppBundle ....... outputs an Android App Bundle additionally to the APK',
       ].join('\n')],
       ['update', [
         'Usage:',
@@ -93,14 +93,27 @@ const HELP_MESSAGES = new Map<string, string>(
         '',
         '',
         'Options: ',
-        '--jdk ................. sets the jdk\'s path to the path given',
-        '--androidSdk .......... sets the androidSdk\'s path to the path given',
+        '',
+        '',
+        '--jdkPath ................. sets the jdk\'s path to the path given',
+        '--androidSdkPath .......... sets the androidSdk\'s path to the path given',
       ].join('\n')],
       ['doctor', [
         'Usage:',
         '',
         '',
         'bubblewrap doctor',
+      ].join('\n')],
+      ['merge', [
+        'Usage:',
+        '',
+        '',
+        'bubblewrap merge',
+        '',
+        '',
+        'Options: ',
+        '--ignore [fields-list]................. the fields which you would like to keep the same.',
+        'You can enter each key from your Web Manifest.',
       ].join('\n')],
     ],
 );

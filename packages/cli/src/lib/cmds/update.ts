@@ -19,46 +19,8 @@ import {Prompt, InquirerPrompt} from '../Prompt';
 import {TwaGenerator, TwaManifest} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
-import {createValidateString} from '../inputHelpers';
 import {enUS as messages} from '../strings';
-import {generateTwaProject} from './shared';
-
-async function updateVersions(
-    twaManifest: TwaManifest, appVersionNameArg: string, prompt: Prompt): Promise<{
-      appVersionName: string;
-      appVersionCode: number;
-    }> {
-  const previousAppVersionCode = twaManifest.appVersionCode;
-  const appVersionCode = twaManifest.appVersionCode + 1;
-
-  // If a version was passed as parameter, use it.
-  if (appVersionNameArg) {
-    return {
-      appVersionCode: appVersionCode,
-      appVersionName: appVersionNameArg,
-    };
-  }
-
-  // Otherwise, try to upgrade automatically with the versionCode.
-  if (twaManifest.appVersionName === previousAppVersionCode.toString()) {
-    return {
-      appVersionCode: appVersionCode,
-      appVersionName: appVersionCode.toString(),
-    };
-  }
-
-  // If not not possible, ask the user to input a new version.
-  const appVersionName = await prompt.promptInput(
-      messages.promptNewAppVersionName,
-      null,
-      createValidateString(1),
-  );
-
-  return {
-    appVersionCode: appVersionCode,
-    appVersionName: appVersionName,
-  };
-}
+import {updateVersions, generateTwaProject} from './shared';
 
 /**
  * Updates an existing TWA Project using the `twa-manifest.json`.
@@ -86,6 +48,7 @@ export async function update(
   }
 
   const twaGenerator = new TwaGenerator();
+  await twaGenerator.removeTwaProject(targetDirectory);
   await generateTwaProject(prompt, twaGenerator, targetDirectory, twaManifest);
   return true;
 }

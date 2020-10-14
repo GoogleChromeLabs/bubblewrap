@@ -29,7 +29,7 @@ async function updateAndroidSdkPath(path: string, log: Log): Promise<boolean> {
   const config = await loadOrCreateConfig();
   const jdkPath = config.jdkPath;
   const newConfig = new Config(jdkPath, path);
-  newConfig.saveConfig(DEFAULT_CONFIG_FILE_PATH);
+  await newConfig.saveConfig(DEFAULT_CONFIG_FILE_PATH);
   return true;
 }
 
@@ -41,14 +41,14 @@ async function updateJdkPath(path: string, log: Log): Promise<boolean> {
   const config = await loadOrCreateConfig();
   const androidSdkPath = config.androidSdkPath;
   const newConfig = new Config(path, androidSdkPath);
-  newConfig.saveConfig(DEFAULT_CONFIG_FILE_PATH);
+  await newConfig.saveConfig(DEFAULT_CONFIG_FILE_PATH);
   return true;
 }
 
 export async function updateConfig(args: ParsedArgs, log: Log = new ConsoleLog('updateConfig')):
         Promise<boolean> {
   if (args.jdkPath) {
-    await updateJdkPath(args.JdkPath, log);
+    await updateJdkPath(args.jdkPath, log);
   }
   if (args.androidSdkPath) {
     await updateAndroidSdkPath(args.androidSdkPath, log);

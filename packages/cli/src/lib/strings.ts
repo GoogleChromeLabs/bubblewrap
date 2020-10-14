@@ -25,6 +25,7 @@ type Messages = {
   errorInvalidUrl: (url: string) => string;
   errorInvalidColor: (color: string) => string;
   errorInvalidDisplayMode: (displayMode: string) => string;
+  errorInvalidInteger: (integer: string) => string;
   errorUrlMustBeImage: (mimeType: string) => string;
   errorUrlMustNotBeSvg: string;
   messageInitializingWebManifest: (manifestUrl: string) => string;
@@ -73,6 +74,7 @@ type Messages = {
   promptKeystorePassword: string;
   promptKeyPassword: string;
   promptNewAppVersionName: string;
+  promptVersionCode: string;
   warnPwaFailedQuality: string;
   updateConfigUsage: string;
   jdkPathIsNotCorrect: string;
@@ -100,6 +102,9 @@ export const enUS: Messages = {
   },
   errorInvalidDisplayMode: (displayMode: string): string => {
     return `Invalid display mode: ${displayMode}`;
+  },
+  errorInvalidInteger: (integer: string): string => {
+    return `Invalid integer provided: ${integer}`;
   },
   errorUrlMustBeImage: (mimeType: string): string => {
     return `URL must resolve to an image/* mime-type, but resolved to ${mimeType}.`;
@@ -208,7 +213,7 @@ Bubblewrap will prompt for the creation of a new keystore.
 Read more about Android signing keys at:
 \t ${cyan('https://developer.android.com/studio/publish/app-signing')}\n`,
   messageSigningKeyNotFound: (path: string): string => {
-    return `\nAn existing key store could could not be found at "${path}".\n`;
+    return `\nAn existing key store could not be found at "${path}".\n`;
   },
   messageUsingPasswordsFromEnv: 'Using passwords set in the BUBBLEWRAP_KEYSTORE_PASSWORD and ' +
       'BUBBLEWRAP_KEY_PASSWORD environmental variables.',
@@ -249,16 +254,17 @@ the PWA:
   promptKeystorePassword: 'Password for the Key Store:',
   promptKeyPassword: 'Password for the Key:',
   promptNewAppVersionName: 'versionName for the new App version:',
+  promptVersionCode: 'Starting version code for the new app version:',
   warnPwaFailedQuality: red('PWA Quality Criteria check failed.'),
-  updateConfigUsage: 'Usage\n\n:[--jdk <path-to-jdk>] [--androidSdk <path-to-android-sdk>]' +
+  updateConfigUsage: 'Usage: [--jdkPath <path-to-jdk>] [--androidSdkPath <path-to-android-sdk>]' +
       '(You can insert one or both of them)',
   jdkPathIsNotCorrect: 'The jdkPath isn\'t correct, please run the following command to update ' +
-      'it:\nbubblewrap updateConfig --jdkPath <path-to-jdk>, such that the folder "here" contains' +
-      ' the file "release". Then run bubblewrap doctor again.',
+      'it:\nbubblewrap updateConfig --jdkPath <path-to-jdk>, such that the folder of the path' +
+      'contains the file "release". Then run bubblewrap doctor again.',
   jdkIsNotSupported: 'Unsupported jdk version. Please download "OpenJDK 8(LTS)" at the link ' +
       'below:\nhttps://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=hotspot.',
   androidSdkPathIsNotCorrect: 'The androidSdkPath isn\'t correct, please run the following ' +
       'command to update it:\nbubblewrap updateConfig --androidSdkPath <path-to-sdk>, such that ' +
-      'the folder of the path contains the folder "build-tools". Then run bubblewrap doctor again.',
+      'the folder of the path contains the folder "build". Then run bubblewrap doctor again.',
   bothPathsAreValid: 'Your jdkpath and androidSdkPath are valid.',
 };

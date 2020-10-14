@@ -1,6 +1,6 @@
 {
   "name": "@bubblewrap/core",
-  "version": "1.5.0",
+  "version": "1.7.0",
   "description": "Core Library to generate, build and sign TWA projects",
   "scripts": {
     "build": "tsc",
@@ -46,6 +46,7 @@
     "lodash.template": "^4.5.0",
     "mime-types": "^2.1.27",
     "node-fetch": "^2.6.0",
+    "svg2img": "^0.8.1",
     "tar": "^6.0.2",
     "valid-url": "^1.0.9"
   }

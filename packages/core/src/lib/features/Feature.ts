@@ -92,6 +92,20 @@ export interface Feature {
      */
     imports: string[];
     /**
+     * Variables to be added to the class. The full declaration is required. Example:
+     * `private static final String MY_API_ID = "12345";`
+     */
+    variables: string[];
+    /**
+     * Methods to be added to the class. The full declaration is required. Example:
+     * ```
+     * private void myMethod() {
+     *   ... // Method implementation.
+     * }
+     * ```
+     */
+    methods: string[];
+    /**
      * Code segment to be added to the `getLaunchingUrl()`. The code is added *after* calling
      * `super.getLaunchingUrl();` and can modify the Uri returned by that. The code will be called
      * by each plugin, and the Uri should be extended by calling `Uri.buildUpon`.

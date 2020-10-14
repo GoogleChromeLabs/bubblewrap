@@ -14,28 +14,23 @@
  *  limitations under the License.
  */
 
-import {ConsoleLog, Log, Config, AndroidSdkTools} from '@bubblewrap/core';
-import {join} from 'path';
-import {existsSync, promises as fsPromises} from 'fs';
+import {ConsoleLog, Log, Config, AndroidSdkTools, JdkHelper} from '@bubblewrap/core';
 import {loadOrCreateConfig} from '../config';
 import {enUS as messages} from '../strings';
 
 async function jdkDoctor(config: Config, log: Log): Promise<boolean> {
-  const jdkPath = config.jdkPath;
-  // Checks if the path given is valid.
-  if (!existsSync(jdkPath)) {
-    log.error(messages.jdkPathIsNotCorrect);
-    return false;
-  };
-  try {
-    const file = await fsPromises.readFile(join(jdkPath, 'release'), 'utf-8');
-    if (file.indexOf('JAVA_VERSION="1.8') < 0) { // Checks if the jdk's version is 8 as needed
+  const result = await JdkHelper.validatePath(config.jdkPath);
+  if (result.isError()) {
+    if (result.unwrapError().getErrorCode() === 'PathIsNotCorrect') {
+      log.error(messages.jdkPathIsNotCorrect);
+      return false;
+    } else if (result.unwrapError().getErrorCode() === 'PathIsNotSupported') {
       log.error(messages.jdkIsNotSupported);
       return false;
+    } else { // Error while reading the file, will print the error message.
+      log.error(result.unwrapError().message);
+      return false;
     }
-  } catch (e) {
-    log.error(messages.jdkPathIsNotCorrect + '\n' + e.message);
-    return false;
   }
   return true;
 }
@@ -49,7 +44,7 @@ async function androidSdkDoctor(config: Config, log: Log): Promise<boolean> {
 }
 
 export async function doctor(log: Log = new ConsoleLog('doctor')): Promise<boolean> {
-  const config = await loadOrCreateConfig();
+  const config = await loadOrCreateConfig(log);
   const jdkResult = await jdkDoctor(config, log);
   const androidSdkResult = await androidSdkDoctor(config, log);
   if (jdkResult && androidSdkResult) {

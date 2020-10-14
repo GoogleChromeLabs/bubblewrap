@@ -19,9 +19,9 @@ import {homedir} from 'os';
 import {existsSync} from 'fs';
 import {promises as fsPromises} from 'fs';
 import {loadOrCreateConfig} from '../lib/config';
+import {MockLog, JdkHelper, Result, AndroidSdkTools} from '@bubblewrap/core';
 import * as mock from 'mock-fs';
-import {MockLog} from '@bubblewrap/core';
-import * as inquirer from 'inquirer';
+import {MockPrompt} from './mock/MockPrompt';
 
 const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap');
 const DEFAULT_CONFIG_NAME = 'config.json';
@@ -30,16 +30,14 @@ const LEGACY_CONFIG_FOLDER = join(homedir(), '.llama-pack');
 const LEGACY_CONFIG_NAME = 'llama-pack-config.json';
 const LEGACY_CONFIG_FILE_PATH = join(LEGACY_CONFIG_FOLDER, LEGACY_CONFIG_NAME);
 
-beforeAll(() => {
-  const fakeResult = Promise.resolve({
-    jdkPath: '/path/to/jdk',
-    androidSdkPath: '/path/to/android-sdk',
-  }) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  spyOn(inquirer, 'prompt').and.returnValue(fakeResult);
-});
-
 describe('config', () => {
   describe('#loadOrCreateConfig', () => {
+    beforeAll(() => {
+      spyOn(JdkHelper, 'validatePath').and.returnValue(Promise.resolve(Result.ok('/path/to/jdk')));
+      spyOn(AndroidSdkTools, 'validatePath').and.returnValue(Promise.resolve(Result.ok(
+          '/path/to/android-sdk')));
+    });
+
     it('checks if the file\'s name was changed in case it has the old name', async () => {
       // Creates a mock file system.
       mock({
@@ -80,7 +78,12 @@ describe('config', () => {
         [homedir()]: {},
       });
       const mockLog = new MockLog();
-      await loadOrCreateConfig(mockLog);
+      const mockPrompt = new MockPrompt();
+      // Since 'createConfig' will be called, we push 3 future answers to 'mockPrompt'.
+      mockPrompt.addMessage('false'); // Should bubblewrap download the JDK?
+      mockPrompt.addMessage('jdk'); // The path of the jdk. (not really used).
+      mockPrompt.addMessage('sdk'); // The path of the androidSdk. (not really used).
+      await loadOrCreateConfig(mockLog, mockPrompt);
       // Checks if the file name was created.
       expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
       mock.restore();

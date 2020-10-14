@@ -21,6 +21,7 @@ import {Config} from '../Config';
 import {JdkHelper} from '../jdk/JdkHelper';
 import {Log, ConsoleLog} from '../../lib/Log';
 import {Result} from '../../lib/Result';
+import {ValidatePathError} from '../errors/ValidatePathError';
 
 const BUILD_TOOLS_VERSION = '29.0.2';
 
@@ -205,14 +206,15 @@ export class AndroidSdkTools {
   }
 
   /**
-   * Checks if the androidSdkPath in the config file is valid.
-   * @param {Config} config the bubblewrap general configuration.
+   * Checks if the given androidSdkPath is valid.
+   * @param {string} sdkPath the path to the sdk.
    */
-  static async validatePath(sdkPath: string): Promise<Result<boolean, Error>> {
+  static async validatePath(sdkPath: string): Promise<Result<string, ValidatePathError>> {
     // Checks if the path given is valid.
     if (!fs.existsSync(path.join(sdkPath, 'tools'))|| !fs.existsSync(sdkPath)) {
-      return Result.error(new Error('androidSdkPathIsNotCorrect'));
+      return Result.error(new ValidatePathError('The given androidSdk isn\'t correct.'
+          , 'PathIsNotCorrect'));
     };
-    return Result.ok(true);
+    return Result.ok(sdkPath);
   }
 }

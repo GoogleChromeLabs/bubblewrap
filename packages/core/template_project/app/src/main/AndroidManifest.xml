@@ -26,6 +26,10 @@
         <uses-permission android:name="<%= permission %>"/>
     <% } %>
 
+    <% if (isChromeOSOnly) { %>
+    <uses-feature android:name="org.chromium.arc" android:required="true" />
+    <% } %>
+
     <application
         android:name="Application"
         android:allowBackup="true"

@@ -18,6 +18,7 @@ import {Feature} from './Feature';
 import {AppsFlyerFeature} from './AppsFlyerFeature';
 import {LocationDelegationFeature} from './LocationDelegationFeature';
 import {TwaManifest} from '../TwaManifest';
+import {FirstRunFlagFeature} from './FirstRunFlagFeature';
 
 /**
  * Analyzes a TwaManifest to collect enable features and aggregates all customizations that will
@@ -39,6 +40,8 @@ export class FeatureManager {
   };
   launcherActivity = {
     imports: new Set<string>(),
+    methods: new Set<string>(),
+    variables: new Set<string>(),
     launchUrl: new Array<string>(),
   };
   delegationService = {
@@ -50,17 +53,29 @@ export class FeatureManager {
    * Builds a new intance from a TwaManifest.
    */
   constructor(twaManifest: TwaManifest) {
-    if (twaManifest.features.appsFlyer !== undefined) {
+    if (twaManifest.features.locationDelegation) {
+      this.addFeature(new LocationDelegationFeature());
+    }
+
+    if (twaManifest.features.appsFlyer && twaManifest.features.appsFlyer.enabled) {
       this.addFeature(new AppsFlyerFeature(twaManifest.features.appsFlyer));
     }
 
-    if (twaManifest.features.locationDelegation) {
-      this.addFeature(new LocationDelegationFeature());
+    if (twaManifest.features.firstRunFlag && twaManifest.features.firstRunFlag.enabled) {
+      this.addFeature(new FirstRunFlagFeature(twaManifest.features.firstRunFlag));
     }
 
     // The WebView fallback needs the INTERNET permission.
     if (twaManifest.fallbackType === 'webview') {
       this.androidManifest.permissions.add('android.permission.INTERNET');
+    }
+
+    if (twaManifest.alphaDependencies && twaManifest.alphaDependencies.enabled) {
+      this.buildGradle.dependencies.add(
+          'com.google.androidbrowserhelper:androidbrowserhelper:1.4.0-alpha01');
+    } else {
+      this.buildGradle.dependencies.add(
+          'com.google.androidbrowserhelper:androidbrowserhelper:2.0.0');
     }
   }
 
@@ -102,6 +117,14 @@ export class FeatureManager {
     if (feature.launcherActivity !== undefined) {
       feature.launcherActivity.imports.forEach((imp) => {
         this.launcherActivity.imports.add(imp);
+      });
+
+      feature.launcherActivity.variables.forEach((imp) => {
+        this.launcherActivity.variables.add(imp);
+      });
+
+      feature.launcherActivity.methods.forEach((imp) => {
+        this.launcherActivity.methods.add(imp);
       });
 
       if (feature.launcherActivity?.launchUrl) {

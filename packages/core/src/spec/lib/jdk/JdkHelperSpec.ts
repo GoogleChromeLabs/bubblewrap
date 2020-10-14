@@ -18,18 +18,34 @@
 
 import {JdkHelper} from '../../../lib/jdk/JdkHelper';
 import {Config} from '../../../lib/Config';
+import * as mock from 'mock-fs';
+
+const WIN32_PROCESS = {
+  platform: 'win32',
+  env: {
+    'Path': '',
+  },
+} as unknown as NodeJS.Process;
+
+const LINUX_PROCESS = {
+  platform: 'linux',
+  env: {
+    'PATH': '',
+  },
+} as unknown as NodeJS.Process;
+
+const MACOS_PROCESS = {
+  platform: 'darwin',
+  env: {
+    'PATH': '',
+  },
+} as unknown as NodeJS.Process;
 
 describe('JdkHelper', () => {
   describe('getEnv()', () => {
     it('Creates the correct environment for Linux', () => {
       const config = new Config('/home/user/jdk8', '/home/user/sdktools');
-      const process = {
-        platform: 'linux',
-        env: {
-          'PATH': '',
-        },
-      } as unknown as NodeJS.Process;
-      const jdkHelper = new JdkHelper(process, config);
+      const jdkHelper = new JdkHelper(LINUX_PROCESS, config);
       const env = jdkHelper.getEnv();
       expect(env['PATH']).toBe('/home/user/jdk8/bin/:');
       expect(env['JAVA_HOME']).toBe('/home/user/jdk8/');
@@ -37,13 +53,7 @@ describe('JdkHelper', () => {
 
     it('Creates the correct environment for MacOSX', () => {
       const config = new Config('/home/user/jdk8', '/home/user/sdktools');
-      const process = {
-        platform: 'darwin',
-        env: {
-          'PATH': '',
-        },
-      } as unknown as NodeJS.Process;
-      const jdkHelper = new JdkHelper(process, config);
+      const jdkHelper = new JdkHelper(MACOS_PROCESS, config);
       const env = jdkHelper.getEnv();
       expect(env['JAVA_HOME']).toBe('/home/user/jdk8/Contents/Home/');
       expect(env['PATH']).toBe('/home/user/jdk8/Contents/Home/bin/:');
@@ -51,16 +61,102 @@ describe('JdkHelper', () => {
 
     it('Creates the correct environment for Windows', () => {
       const config = new Config('C:\\Users\\user\\jdk8', 'C:\\Users\\user\\sdktools');
-      const process = {
-        platform: 'win32',
-        env: {
-          'Path': '',
-        },
-      } as unknown as NodeJS.Process;
-      const jdkHelper = new JdkHelper(process, config);
+      const jdkHelper = new JdkHelper(WIN32_PROCESS, config);
       const env = jdkHelper.getEnv();
       expect(env['Path']).toBe('C:\\Users\\user\\jdk8\\bin\\;');
       expect(env['JAVA_HOME']).toBe('C:\\Users\\user\\jdk8\\');
+    });
+  });
+
+  describe('validatePath', () => {
+    it('Creates a Linux environment and checks that a valid path will pass', async () => {
+      mock({
+        'jdk': {
+          'release': 'JAVA_VERSION="1.8',
+        }});
+      expect((await JdkHelper.validatePath('jdk', LINUX_PROCESS)).isOk()).toBeTrue();
+      mock.restore();
+    });
+
+    it('Creates a Linux environment and checks that an invalid path will not pass', async () => {
+      mock({
+        'jdk': {
+          'release': {},
+        }});
+      expect((await JdkHelper.validatePath('jdk', LINUX_PROCESS)).isError()).toBeTrue();
+      expect((await JdkHelper.validatePath('release', LINUX_PROCESS)).isError()).toBeTrue();
+      mock.restore();
+    });
+
+    it('Creates a MacOS environment and checks that a valid path will pass', async () => {
+      mock({
+        'jdk': {
+          'Contents': {
+            'Home': {
+              'release': 'JAVA_VERSION="1.8"',
+            },
+          },
+        }});
+      expect((await JdkHelper.validatePath('jdk', MACOS_PROCESS)).isOk()).toBeTrue();
+      mock.restore();
+    });
+
+    it('Creates a MacOS environment and checks that an invalid path will not pass', async () => {
+      mock({
+        'jdk': {
+          'Contents': {
+            'Home': {
+              'release': 'JAVA_VERSION="1.9"',
+            },
+          },
+        }});
+      expect((await JdkHelper.validatePath('jdk', MACOS_PROCESS)).isError()).toBeTrue();
+      expect((await JdkHelper.validatePath('release', MACOS_PROCESS)).isError()).toBeTrue();
+      mock.restore();
+    });
+  });
+
+  describe('getJavaHome', () => {
+    it('Creates a Windows environment and checks that the correct Home is returned', async () => {
+      mock({
+        'jdk8u265-b01': {
+          'bin': {},
+          'include': {},
+          'jre': {},
+          'release': 'JAVA_VERSION="1.8.0_265',
+        }});
+      expect(JdkHelper.getJavaHome('jdk8u265-b01', WIN32_PROCESS)).toEqual('jdk8u265-b01\\');
+      mock.restore();
+    });
+
+    it('Creates a MacOSX environment and checks that the correct Home is returned', async () => {
+      mock({
+        'jdk8u265-b01': {
+          '_CodeSignature': {},
+          'Home': {
+            'bin': {},
+            'include': {},
+            'jre': {},
+            'release': 'JAVA_VERSION="1.8.0_265',
+          },
+          'MacOS': {},
+          'info.plist': {},
+        }});
+      expect(JdkHelper.getJavaHome('jdk8u265-b01', MACOS_PROCESS))
+          .toEqual('jdk8u265-b01/Contents/Home/');
+      mock.restore();
+    });
+
+    it('Creates a Linux environment and checks that the correct Home is returned', async () => {
+      mock({
+        'jdk8u265-b01': {
+          'bin': {},
+          'include': {},
+          'jre': {},
+          'release': 'JAVA_VERSION="1.8.0_265',
+        }});
+      expect(JdkHelper.getJavaHome('jdk8u265-b01', LINUX_PROCESS)).toEqual('jdk8u265-b01/');
+      mock.restore();
     });
   });
 });

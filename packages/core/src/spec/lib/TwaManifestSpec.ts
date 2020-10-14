@@ -17,6 +17,7 @@
 import {TwaManifest, TwaManifestJson, asDisplayMode} from '../../lib/TwaManifest';
 import {WebManifestJson} from '../../lib/types/WebManifest';
 import Color = require('color');
+import {ShortcutInfo} from '../../lib/ShortcutInfo';
 
 describe('TwaManifest', () => {
   describe('#fromWebManifestJson', () => {
@@ -214,6 +215,7 @@ describe('TwaManifest', () => {
         generatorApp: 'test',
         fallbackType: 'webview',
         enableSiteSettingsShortcut: false,
+        isChromeOSOnly: false,
       } as TwaManifestJson;
       const twaManifest = new TwaManifest(twaManifestJson);
       expect(twaManifest.packageId).toEqual(twaManifestJson.packageId);
@@ -236,11 +238,13 @@ describe('TwaManifest', () => {
       expect(twaManifest.splashScreenFadeOutDuration)
           .toEqual(twaManifestJson.splashScreenFadeOutDuration);
       expect(twaManifest.enableNotifications).toEqual(twaManifestJson.enableNotifications);
-      expect(twaManifest.shortcuts).toEqual(twaManifestJson.shortcuts);
+      expect(twaManifest.shortcuts)
+          .toEqual([new ShortcutInfo('name', 'shortName', '/', 'icon.png')]);
       expect(twaManifest.webManifestUrl).toEqual(new URL(twaManifestJson.webManifestUrl!));
       expect(twaManifest.generatorApp).toEqual(twaManifestJson.generatorApp!);
       expect(twaManifest.fallbackType).toBe('webview');
       expect(twaManifest.enableSiteSettingsShortcut).toEqual(false);
+      expect(twaManifest.isChromeOSOnly).toEqual(false);
     });
 
     it('Sets correct default values for optional fields', () => {
@@ -317,6 +321,121 @@ describe('TwaManifest', () => {
       expect(asDisplayMode('minimal-ui')).toBeNull();
       expect(asDisplayMode('bogus')).toBeNull();
       expect(asDisplayMode('')).toBeNull();
+    });
+  });
+  describe('#merge', () => {
+    it('Validates that the merge is done correctly in case which' +
+        ' there are no fields to ignore', async () => {
+      const webManifest: WebManifestJson = {
+        'display': 'fullscreen',
+        'name': 'name',
+        'short_name': 'different_name',
+        'start_url': 'https://name.github.io/',
+        'icons': [{
+          'src': 'https://image.png',
+          'sizes': '512x512',
+          'purpose': 'any',
+        },
+        ],
+      };
+      const twaManifest = new TwaManifest({
+        'packageId': 'id',
+        'host': 'host',
+        'name': 'name',
+        'launcherName': 'name',
+        'display': 'standalone',
+        'themeColor': '#FFFFFF',
+        'navigationColor': '#000000',
+        'navigationColorDark': '#000000',
+        'navigationDividerColor': '#000000',
+        'navigationDividerColorDark': '#000000',
+        'backgroundColor': '#FFFFFF',
+        'enableNotifications': false,
+        // The start_urls are different, but since they both resolve the same relative
+        // to the host url, nothing changes.
+        'startUrl': '/',
+        'iconUrl': 'https://image.png/',
+        'splashScreenFadeOutDuration': 300,
+        'signingKey': {
+          'alias': 'android',
+          'path': './android.keystore',
+        },
+        'appVersionCode': 1,
+        'shortcuts': [],
+        'generatorApp': 'bubblewrap-cli',
+        'webManifestUrl': 'https://name.github.io/',
+        'fallbackType': 'customtabs',
+        'features': {},
+        'enableSiteSettingsShortcut': true,
+        'isChromeOSOnly': false,
+        'appVersion': '1',
+      });
+      // The versions shouldn't change because the update happens in `cli`.
+      const expectedTwaManifest = new TwaManifest({
+        ...twaManifest.toJson(),
+        'launcherName': 'different_name',
+        'display': 'fullscreen',
+      });
+      // A URL to insert as the webManifestUrl.
+      const url = new URL('https://name.github.io/');
+      expect(await TwaManifest.merge([], url, webManifest, twaManifest))
+          .toEqual(expectedTwaManifest);
+    });
+    it('Validates that the merge is done correctly in case which' +
+      ' there are fields to ignore', async () => {
+      const webManifest: WebManifestJson = {
+        'display': 'fullscreen',
+        'name': 'name',
+        'short_name': 'different_name',
+        'start_url': 'https://other_url.github.io/',
+        'icons': [{
+          'src': 'https://image.png',
+          'sizes': '512x512',
+          'purpose': 'any',
+        },
+        ],
+      };
+      const twaManifest = new TwaManifest({
+        'packageId': 'id',
+        'host': 'host',
+        'name': 'name',
+        'launcherName': 'name',
+        'display': 'standalone',
+        'themeColor': '#FFFFFF',
+        'navigationColor': '#000000',
+        'navigationColorDark': '#000000',
+        'navigationDividerColor': '#000000',
+        'navigationDividerColorDark': '#000000',
+        'backgroundColor': '#FFFFFF',
+        'enableNotifications': false,
+        // The start_urls are different, but since they both resolve the same relative
+        // to the host url, nothing changes.
+        'startUrl': '/',
+        'iconUrl': 'https://image.png/',
+        'splashScreenFadeOutDuration': 300,
+        'signingKey': {
+          'alias': 'android',
+          'path': './android.keystore',
+        },
+        'appVersionCode': 1,
+        'shortcuts': [],
+        'generatorApp': 'bubblewrap-cli',
+        'webManifestUrl': 'https://name.github.io/',
+        'fallbackType': 'customtabs',
+        'features': {},
+        'enableSiteSettingsShortcut': true,
+        'isChromeOSOnly': false,
+        'appVersion': '1',
+      });
+      // The versions shouldn't change because the update happens in `cli`.
+      const expectedTwaManifest = new TwaManifest({
+        ...twaManifest.toJson(),
+        'webManifestUrl': 'https://other_url.github.io/',
+      });
+      // A URL to insert as the webManifestUrl.
+      const url = new URL('https://name.github.io/');
+      expect(await TwaManifest.merge(['short_name', 'display'], url, webManifest, twaManifest))
+          .toEqual(expectedTwaManifest);
     });
   });
 });

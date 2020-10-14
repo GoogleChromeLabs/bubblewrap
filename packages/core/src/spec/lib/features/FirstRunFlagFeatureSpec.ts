@@ -14,19 +14,20 @@
  *  limitations under the License.
  */
 
-import {AppsFlyerFeature, AppsFlyerConfig} from '../../../lib/features/AppsFlyerFeature';
+import {FirstRunFlagConfig, FirstRunFlagFeature} from '../../../lib/features/FirstRunFlagFeature';
 
-describe('AppsFlyerFeature', () => {
+describe('FirstRunFlagFeature', () => {
   describe('#constructor', () => {
-    // variables is the only field dynamically generated.
-    it('Generates correct variables for application', () => {
+    it('Generates the correct variables', () => {
+      const paramName = 'my_param_name';
+      // variables is the only field dynamically generated.
       const config = {
         enabled: true,
-        appsFlyerId: '12345',
-      } as AppsFlyerConfig;
-      const appsFlyerFeature = new AppsFlyerFeature(config);
-      expect(appsFlyerFeature.applicationClass.variables)
-          .toEqual(['private static final String AF_DEV_KEY = "12345";']);
+        queryParameterName: paramName,
+      } as FirstRunFlagConfig;
+      const appsFlyerFeature = new FirstRunFlagFeature(config);
+      expect(appsFlyerFeature.launcherActivity.variables)
+          .toContain(`private static final String PARAM_FIRST_OPEN = "${paramName}";`);
     });
   });
 });

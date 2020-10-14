@@ -20,6 +20,7 @@ import * as Jimp from 'jimp';
 import fetch from 'node-fetch';
 import Color = require('color');
 import {promisify} from 'util';
+import {svg2img} from './wrappers/svg2img';
 
 // fs.promises is marked as experimental. This should be replaced when stable.
 const fsMkDir = promisify(fs.mkdir);
@@ -95,12 +96,11 @@ export class ImageHelper {
       throw new Error(`Received icon "${iconUrl}" with invalid Content-Type.` +
           ` Responded with Content-Type "${contentType}"`);
     }
-
+    let body;
+    body = await response.buffer();
     if (contentType.startsWith('image/svg')) {
-      throw new Error('Sorry, SVGs aren\'t supported yet.');
+      body = await svg2img(iconUrl);
     }
-
-    const body = await response.buffer();
     return {
       url: iconUrl,
       data: await Jimp.read(body),
