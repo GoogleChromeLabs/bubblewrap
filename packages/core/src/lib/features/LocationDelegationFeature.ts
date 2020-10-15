@@ -31,7 +31,7 @@ export class LocationDelegationFeature extends EmptyFeature {
 
   delegationService = {
     imports: [
-    'com.google.androidbrowserhelper.locationdelegation.LocationDelegationExtraCommandHandler',
+      'com.google.androidbrowserhelper.locationdelegation.LocationDelegationExtraCommandHandler',
     ],
     constructor:
     'registerExtraCommandHandler(new LocationDelegationExtraCommandHandler());',

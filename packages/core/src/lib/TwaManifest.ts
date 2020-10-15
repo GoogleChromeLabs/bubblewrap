@@ -294,8 +294,8 @@ export class TwaManifest {
       webManifestUrl: webManifestUrl.toString(),
       features: {locationDelegation: {
         enabled: DEFAULT_ENABLE_LOCATION},
-      }
-      });
+      },
+    });
     return twaManifest;
   }
 
