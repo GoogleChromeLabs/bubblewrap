@@ -65,7 +65,7 @@ export interface Feature {
   /**
    * Customizations to be added to `app/src/main/java/<app-package>/Application.java`.
    */
-  applicationClass?: {
+  applicationClass: {
     /**
      * Imports to be added. Only the class name must be added. Example:
      * `android.net.Uri`
@@ -85,7 +85,7 @@ export interface Feature {
   /**
    * Customizations to be added to `app/src/main/java/<app-package>/LauncherActivity.java`.
    */
-  launcherActivity?: {
+  launcherActivity: {
     /**
      * Imports to be added. Only the class name must be added. Example:
      * `android.net.Uri`

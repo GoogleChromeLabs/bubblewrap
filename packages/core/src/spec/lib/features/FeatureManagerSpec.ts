@@ -29,17 +29,17 @@ function expectFeatureToBeApplied(features: FeatureManager, feature: Feature): v
   feature.androidManifest.permissions.forEach((permission) => {
     expect(features.androidManifest.permissions).toContain(permission);
   });
-  // Make sure that applicationClass is optional member for a reason, if not, remove the '!'.
-  feature.applicationClass!.imports.forEach((imp) => {
+
+  feature.applicationClass.imports.forEach((imp) => {
     expect(features.applicationClass.imports).toContain(imp);
   });
 
-  feature.applicationClass!.variables.forEach((variable) => {
+  feature.applicationClass.variables.forEach((variable) => {
     expect(features.applicationClass.variables).toContain(variable);
   });
 
-  if (feature.applicationClass!.onCreate) {
-    expect(features.applicationClass.onCreate).toContain(feature.applicationClass!.onCreate);
+  if (feature.applicationClass.onCreate) {
+    expect(features.applicationClass.onCreate).toContain(feature.applicationClass.onCreate);
   }
 
   feature.buildGradle.dependencies.forEach((dependency) => {
@@ -49,13 +49,13 @@ function expectFeatureToBeApplied(features: FeatureManager, feature: Feature): v
   feature.buildGradle.repositories.forEach((repository) => {
     expect(features.buildGradle.repositories).toContain(repository);
   });
-  // Make sure that launcherActivity is optional member for a reason, if not, remove the '!'.
-  feature.launcherActivity!.imports.forEach((imp) => {
+
+  feature.launcherActivity.imports.forEach((imp) => {
     expect(features.launcherActivity.imports).toContain(imp);
   });
 
-  if (feature.launcherActivity!.launchUrl) {
-    expect(features.launcherActivity.launchUrl).toContain(feature.launcherActivity!.launchUrl);
+  if (feature.launcherActivity.launchUrl) {
+    expect(features.launcherActivity.launchUrl).toContain(feature.launcherActivity.launchUrl);
   }
 }
 

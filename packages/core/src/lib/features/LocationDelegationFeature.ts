@@ -14,12 +14,32 @@
  *  limitations under the License.
  */
 
-import {Feature} from './Feature';
+import {EmptyFeature} from './EmptyFeature';
 
 export type LocationDelegationConfig = {
 }
 
-export class LocationDelegationFeature implements Feature {
+export class LocationDelegationFeature implements EmptyFeature {
+  applicationClass: {
+    imports: string[];
+    variables: string[];
+    onCreate?: string;
+    } = {
+      imports: new Array<string>(),
+      variables: new Array<string>(),
+    };
+
+  launcherActivity: {
+    imports: string[];
+    variables: string[];
+    methods: string[];
+    launchUrl?: string;
+    } = {
+      imports: new Array<string>(),
+      variables: new Array<string>(),
+      methods: new Array<string>(),
+    };
+
   name = 'locationDelegation';
   buildGradle = {
     repositories: [],
