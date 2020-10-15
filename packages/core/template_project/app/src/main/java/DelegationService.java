@@ -1,7 +1,7 @@
 package <%= packageId %>;
 
 <% for(const imp of delegationService.imports) { %>
-    import <%= imp %>;
+import <%= imp %>;
 <% } %>
 
 public class DelegationService extends

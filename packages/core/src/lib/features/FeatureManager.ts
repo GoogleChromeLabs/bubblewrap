@@ -53,7 +53,8 @@ export class FeatureManager {
    * Builds a new intance from a TwaManifest.
    */
   constructor(twaManifest: TwaManifest) {
-    if (twaManifest.features.locationDelegation) {
+    if (twaManifest.features.locationDelegation &&
+        twaManifest.features.locationDelegation.enabled) {
       this.addFeature(new LocationDelegationFeature());
     }
 
@@ -90,18 +91,14 @@ export class FeatureManager {
     });
 
     // Adds properties to application
-    if (feature.applicationClass !== undefined) {
-      feature.applicationClass.imports.forEach((imp) => {
-        this.applicationClass.imports.add(imp);
-      });
-
-      feature.applicationClass.variables.forEach((imp) => {
-        this.applicationClass.variables.push(imp);
-      });
-
-      if (feature.applicationClass.onCreate) {
-        this.applicationClass.onCreate.push(feature.applicationClass.onCreate);
-      }
+    feature.applicationClass.imports.forEach((imp) => {
+      this.applicationClass.imports.add(imp);
+    });
+    feature.applicationClass.variables.forEach((imp) => {
+      this.applicationClass.variables.push(imp);
+    });
+    if (feature.applicationClass.onCreate) {
+      this.applicationClass.onCreate.push(feature.applicationClass.onCreate);
     }
 
     // Adds properties to AndroidManifest.xml
@@ -114,22 +111,18 @@ export class FeatureManager {
     });
 
     // Adds properties to launcherActivity
-    if (feature.launcherActivity !== undefined) {
-      feature.launcherActivity.imports.forEach((imp) => {
-        this.launcherActivity.imports.add(imp);
-      });
+    feature.launcherActivity.imports.forEach((imp) => {
+      this.launcherActivity.imports.add(imp);
+    });
+    feature.launcherActivity.variables.forEach((imp) => {
+      this.launcherActivity.variables.add(imp);
+    });
+    feature.launcherActivity.methods.forEach((imp) => {
+      this.launcherActivity.methods.add(imp);
+    });
 
-      feature.launcherActivity.variables.forEach((imp) => {
-        this.launcherActivity.variables.add(imp);
-      });
-
-      feature.launcherActivity.methods.forEach((imp) => {
-        this.launcherActivity.methods.add(imp);
-      });
-
-      if (feature.launcherActivity?.launchUrl) {
-        this.launcherActivity.launchUrl.push(feature.launcherActivity.launchUrl);
-      }
+    if (feature.launcherActivity.launchUrl) {
+      this.launcherActivity.launchUrl.push(feature.launcherActivity.launchUrl);
     }
 
     // Adds properties to delegationService
