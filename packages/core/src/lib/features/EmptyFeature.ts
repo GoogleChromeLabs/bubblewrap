@@ -54,6 +54,14 @@ export class EmptyFeature implements Feature {
     methods: new Array<string>(),
   };
 
+  delegationService: {
+    imports: string[];
+    constructor: string;
+  } = {
+    imports: new Array<string>(),
+    constructor: '',
+  };
+
   constructor(name: string) {
     this.name = name;
   }

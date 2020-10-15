@@ -122,7 +122,7 @@ export interface Feature {
   /**
    * Customizations to be added to `app/src/main/java/<app-package>/DelegationService.java`.
    */
-  delegationService?: {
+  delegationService: {
     /**
      * Imports to be added. Only the class name must be added. Example:
      * `android.net.Uri`

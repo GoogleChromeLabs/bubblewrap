@@ -27,13 +27,10 @@ export class LocationDelegationFeature extends EmptyFeature {
 
     this.androidManifest.components.push(`<activity android:name=
         "com.google.androidbrowserhelper.locationdelegation.PermissionRequestActivity"/>`);
-  }
 
-  delegationService = {
-    imports: [
-      'com.google.androidbrowserhelper.locationdelegation.LocationDelegationExtraCommandHandler',
-    ],
-    constructor:
-    'registerExtraCommandHandler(new LocationDelegationExtraCommandHandler());',
-  };
+    this.delegationService.imports.push('com.google.androidbrowserhelper.locationdelegation' +
+        '.LocationDelegationExtraCommandHandler');
+    this.delegationService.constructor =
+        'registerExtraCommandHandler(new LocationDelegationExtraCommandHandler());';
+  }
 }
