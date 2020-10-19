@@ -16,6 +16,7 @@
 
 import {FeatureManager} from '../../../lib/features/FeatureManager';
 import {AppsFlyerConfig, AppsFlyerFeature} from '../../../lib/features/AppsFlyerFeature';
+import {LocationDelegationFeature} from '../../../lib/features/LocationDelegationFeature';
 import {FirstRunFlagConfig, FirstRunFlagFeature} from '../../../lib/features/FirstRunFlagFeature';
 import {TwaManifest} from '../../../lib/TwaManifest';
 import {Feature} from '../../../lib/features/Feature';
@@ -77,6 +78,7 @@ describe('FeatureManager', () => {
       expect(features.buildGradle.repositories).toEqual(emptySet);
       expect(features.launcherActivity.imports).toEqual(emptySet);
       expect(features.launcherActivity.launchUrl).toEqual([]);
+      expect(features.delegationService.classConstructor).toEqual([]);
     });
 
     it('Creates from empty features with alpha features enabled', () => {
@@ -124,6 +126,31 @@ describe('FeatureManager', () => {
 
       expectFeatureToBeApplied(features, appsFlyerFeature);
       expectFeatureToBeApplied(features, firstRunFlagFeature);
+    });
+
+
+    it('Enables the LocationDelegation feature', () => {
+      const manifest = {
+        features: {
+          locationDelegation: {
+            enabled: true,
+          },
+        },
+      } as TwaManifest;
+
+      const locationDelegationFeature = new LocationDelegationFeature();
+      const features = new FeatureManager(manifest);
+
+      locationDelegationFeature.androidManifest.components.forEach((component) => {
+        expect(features.androidManifest.components).toContain(component);
+      });
+
+      locationDelegationFeature.delegationService.imports.forEach((imp) => {
+        expect(features.delegationService.imports).toContain(imp);
+      });
+
+      expect(features.delegationService.classConstructor!)
+          .toContain(locationDelegationFeature.delegationService.classConstructor!);
     });
   });
 });
