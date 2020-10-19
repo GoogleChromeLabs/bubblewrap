@@ -53,16 +53,15 @@ export class FeatureManager {
    * Builds a new intance from a TwaManifest.
    */
   constructor(twaManifest: TwaManifest) {
-    if (twaManifest.features.locationDelegation &&
-        twaManifest.features.locationDelegation.enabled) {
+    if (twaManifest.features.locationDelegation?.enabled) {
       this.addFeature(new LocationDelegationFeature());
     }
 
-    if (twaManifest.features.appsFlyer && twaManifest.features.appsFlyer.enabled) {
+    if (twaManifest.features.appsFlyer?.enabled) {
       this.addFeature(new AppsFlyerFeature(twaManifest.features.appsFlyer));
     }
 
-    if (twaManifest.features.firstRunFlag && twaManifest.features.firstRunFlag.enabled) {
+    if (twaManifest.features.firstRunFlag?.enabled) {
       this.addFeature(new FirstRunFlagFeature(twaManifest.features.firstRunFlag));
     }
 
@@ -71,7 +70,7 @@ export class FeatureManager {
       this.androidManifest.permissions.add('android.permission.INTERNET');
     }
 
-    if (twaManifest.alphaDependencies && twaManifest.alphaDependencies.enabled) {
+    if (twaManifest.alphaDependencies?.enabled) {
       this.buildGradle.dependencies.add(
           'com.google.androidbrowserhelper:androidbrowserhelper:1.4.0-alpha01');
     } else {
@@ -124,15 +123,11 @@ export class FeatureManager {
     if (feature.launcherActivity.launchUrl) {
       this.launcherActivity.launchUrl.push(feature.launcherActivity.launchUrl);
     }
-
-    // Adds properties to delegationService
-    if (feature.delegationService !== undefined) {
-      feature.delegationService.imports.forEach((imp) => {
-        this.delegationService.imports.add(imp);
-      });
-      if (feature.delegationService?.constructor) {
-        this.delegationService.constructor.push(feature.delegationService.constructor);
-      }
+    feature.delegationService.imports.forEach((imp) => {
+      this.delegationService.imports.add(imp);
+    });
+    if (feature.delegationService?.constructor) {
+      this.delegationService.constructor.push(feature.delegationService.constructor);
     }
   }
 }

@@ -292,8 +292,8 @@ export class TwaManifest {
       enableNotifications: DEFAULT_ENABLE_NOTIFICATIONS,
       shortcuts: shortcuts,
       webManifestUrl: webManifestUrl.toString(),
-      features: {locationDelegation: {
-        enabled: DEFAULT_ENABLE_LOCATION},
+      features: {
+        locationDelegation: {enabled: DEFAULT_ENABLE_LOCATION},
       },
     });
     return twaManifest;
