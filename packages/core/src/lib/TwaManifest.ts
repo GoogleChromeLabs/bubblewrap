@@ -24,6 +24,7 @@ import {ConsoleLog} from './Log';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 import {ShortcutInfo} from './ShortcutInfo';
 import {AppsFlyerConfig} from './features/AppsFlyerFeature';
+import {LocationDelegationConfig} from './features/LocationDelegationFeature';
 import {FirstRunFlagConfig} from './features/FirstRunFlagFeature';
 
 // The minimum size needed for the app icon.
@@ -57,12 +58,14 @@ const DEFAULT_APP_VERSION_NAME = DEFAULT_APP_VERSION_CODE.toString();
 const DEFAULT_SIGNING_KEY_PATH = './android.keystore';
 const DEFAULT_SIGNING_KEY_ALIAS = 'android';
 const DEFAULT_ENABLE_NOTIFICATIONS = false;
+const DEFAULT_ENABLE_LOCATION = false;
 const DEFAULT_GENERATOR_APP_NAME = 'unknown';
 
 export type FallbackType = 'customtabs' | 'webview';
 
 type Features = {
   appsFlyer?: AppsFlyerConfig;
+  locationDelegation?: LocationDelegationConfig;
   firstRunFlag?: FirstRunFlagConfig;
 }
 
@@ -289,6 +292,9 @@ export class TwaManifest {
       enableNotifications: DEFAULT_ENABLE_NOTIFICATIONS,
       shortcuts: shortcuts,
       webManifestUrl: webManifestUrl.toString(),
+      features: {
+        locationDelegation: {enabled: DEFAULT_ENABLE_LOCATION},
+      },
     });
     return twaManifest;
   }
@@ -460,6 +466,7 @@ export interface TwaManifestJson {
   fallbackType?: FallbackType;
   features?: {
     appsFlyer?: AppsFlyerConfig;
+    locationDelegation?: LocationDelegationConfig;
     firstRunFlag?: FirstRunFlagConfig;
   };
   alphaDependencies?: {

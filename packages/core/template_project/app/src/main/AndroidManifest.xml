@@ -140,7 +140,7 @@
         </provider>
 
         <service
-            android:name="com.google.androidbrowserhelper.trusted.DelegationService"
+            android:name=".DelegationService"
             android:enabled="@bool/enableNotification"
             android:exported="@bool/enableNotification">
 

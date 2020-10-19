@@ -16,6 +16,7 @@
 
 import {Feature} from './Feature';
 import {AppsFlyerFeature} from './AppsFlyerFeature';
+import {LocationDelegationFeature} from './LocationDelegationFeature';
 import {TwaManifest} from '../TwaManifest';
 import {FirstRunFlagFeature} from './FirstRunFlagFeature';
 
@@ -43,16 +44,24 @@ export class FeatureManager {
     variables: new Set<string>(),
     launchUrl: new Array<string>(),
   };
+  delegationService = {
+    imports: new Set<string>(),
+    classConstructor: new Array<string>(),
+  };
 
   /**
    * Builds a new intance from a TwaManifest.
    */
   constructor(twaManifest: TwaManifest) {
-    if (twaManifest.features.appsFlyer && twaManifest.features.appsFlyer.enabled) {
+    if (twaManifest.features.locationDelegation?.enabled) {
+      this.addFeature(new LocationDelegationFeature());
+    }
+
+    if (twaManifest.features.appsFlyer?.enabled) {
       this.addFeature(new AppsFlyerFeature(twaManifest.features.appsFlyer));
     }
 
-    if (twaManifest.features.firstRunFlag && twaManifest.features.firstRunFlag.enabled) {
+    if (twaManifest.features.firstRunFlag?.enabled) {
       this.addFeature(new FirstRunFlagFeature(twaManifest.features.firstRunFlag));
     }
 
@@ -61,7 +70,7 @@ export class FeatureManager {
       this.androidManifest.permissions.add('android.permission.INTERNET');
     }
 
-    if (twaManifest.alphaDependencies && twaManifest.alphaDependencies.enabled) {
+    if (twaManifest.alphaDependencies?.enabled) {
       this.buildGradle.dependencies.add(
           'com.google.androidbrowserhelper:androidbrowserhelper:1.4.0-alpha01');
     } else {
@@ -84,11 +93,9 @@ export class FeatureManager {
     feature.applicationClass.imports.forEach((imp) => {
       this.applicationClass.imports.add(imp);
     });
-
     feature.applicationClass.variables.forEach((imp) => {
       this.applicationClass.variables.push(imp);
     });
-
     if (feature.applicationClass.onCreate) {
       this.applicationClass.onCreate.push(feature.applicationClass.onCreate);
     }
@@ -106,17 +113,21 @@ export class FeatureManager {
     feature.launcherActivity.imports.forEach((imp) => {
       this.launcherActivity.imports.add(imp);
     });
-
     feature.launcherActivity.variables.forEach((imp) => {
       this.launcherActivity.variables.add(imp);
     });
-
     feature.launcherActivity.methods.forEach((imp) => {
       this.launcherActivity.methods.add(imp);
     });
 
-    if (feature.launcherActivity?.launchUrl) {
+    if (feature.launcherActivity.launchUrl) {
       this.launcherActivity.launchUrl.push(feature.launcherActivity.launchUrl);
+    }
+    feature.delegationService.imports.forEach((imp) => {
+      this.delegationService.imports.add(imp);
+    });
+    if (feature.delegationService?.classConstructor) {
+      this.delegationService.classConstructor.push(feature.delegationService.classConstructor);
     }
   }
 }

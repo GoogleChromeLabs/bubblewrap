@@ -119,4 +119,19 @@ export interface Feature {
      */
     launchUrl?: string;
   };
+  /**
+   * Customizations to be added to `app/src/main/java/<app-package>/DelegationService.java`.
+   */
+  delegationService: {
+    /**
+     * Imports to be added. Only the class name must be added. Example:
+     * `android.net.Uri`
+     */
+    imports: string[];
+    /**
+     * Code segment to be added to the constructor. The code will be called
+     * by each plugin.
+     */
+    classConstructor?: string;
+  };
 }
