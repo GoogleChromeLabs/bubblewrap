@@ -132,6 +132,6 @@ export interface Feature {
      * Code segment to be added to the constructor. The code will be called
      * by each plugin.
      */
-    constructor?: string;
+    classConstructor?: string;
   };
 }

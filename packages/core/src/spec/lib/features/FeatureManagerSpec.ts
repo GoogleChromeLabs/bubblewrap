@@ -78,7 +78,7 @@ describe('FeatureManager', () => {
       expect(features.buildGradle.repositories).toEqual(emptySet);
       expect(features.launcherActivity.imports).toEqual(emptySet);
       expect(features.launcherActivity.launchUrl).toEqual([]);
-      expect(features.delegationService.constructor).toEqual([]);
+      expect(features.delegationService.classConstructor).toEqual([]);
     });
 
     it('Creates from empty features with alpha features enabled', () => {
@@ -149,8 +149,8 @@ describe('FeatureManager', () => {
         expect(features.delegationService.imports).toContain(imp);
       });
 
-      expect(features.delegationService.constructor)
-          .toContain(locationDelegationFeature.delegationService.constructor);
+      expect(features.delegationService.classConstructor!)
+          .toContain(locationDelegationFeature.delegationService.classConstructor!);
     });
   });
 });

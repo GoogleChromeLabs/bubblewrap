@@ -56,10 +56,9 @@ export class EmptyFeature implements Feature {
 
   delegationService: {
     imports: string[];
-    constructor: string;
+    classConstructor?: string;
   } = {
     imports: new Array<string>(),
-    constructor: '',
   };
 
   constructor(name: string) {
