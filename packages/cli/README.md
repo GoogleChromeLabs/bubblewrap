@@ -110,12 +110,16 @@ explains how to extract the information needed to generate it.
 
 ## Commands
 
+![Overview of bubblewrap commands](command_flow.svg)
+
+The above diagram shows a how all of the commands (in the black boxes) and the artifacts (in the while ovals) effect each other.
+
 ## `init`
 
 Usage:
 
 Initializes an Android project for Trusted Web Activity from a Web Manifest. The init script will
-parse the Web manifest and generate default valuers for the Android project, where possible. It
+parse the Web manifest and generate default values for the Android project, where possible. It
 will prompt the user to confirm or input values where one could not be generated.
 
 ```
