@@ -112,7 +112,8 @@ explains how to extract the information needed to generate it.
 
 ![Overview of bubblewrap commands](command_flow.svg)
 
-The above diagram shows a how all of the commands (in the black boxes) and the artifacts (in the while ovals) effect each other.
+The diagram above shows which commands (in the black boxes) take as input or produce as output various files (in white ovals).
+An arrow leading to a file means "creates or modifies" and an arrow leading to a command means "is used as input".
 
 ## `init`
 
