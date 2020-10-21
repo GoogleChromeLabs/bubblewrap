@@ -110,12 +110,17 @@ explains how to extract the information needed to generate it.
 
 ## Commands
 
+![Overview of bubblewrap commands](command_flow.svg)
+
+The diagram above shows which commands (in the black boxes) take as input or produce as output various files (in white ovals).
+An arrow leading to a file means "creates or modifies" and an arrow leading to a command means "is used as input".
+
 ## `init`
 
 Usage:
 
 Initializes an Android project for Trusted Web Activity from a Web Manifest. The init script will
-parse the Web manifest and generate default valuers for the Android project, where possible. It
+parse the Web manifest and generate default values for the Android project, where possible. It
 will prompt the user to confirm or input values where one could not be generated.
 
 ```
