@@ -75,7 +75,7 @@ export class FeatureManager {
           'com.google.androidbrowserhelper:androidbrowserhelper:1.4.0-alpha01');
     } else {
       this.buildGradle.dependencies.add(
-          'com.google.androidbrowserhelper:androidbrowserhelper:2.0.0');
+          'com.google.androidbrowserhelper:androidbrowserhelper:2.0.1');
     }
   }
 
@@ -123,10 +123,13 @@ export class FeatureManager {
     if (feature.launcherActivity.launchUrl) {
       this.launcherActivity.launchUrl.push(feature.launcherActivity.launchUrl);
     }
+
+    // Adds properties to delegationService
     feature.delegationService.imports.forEach((imp) => {
       this.delegationService.imports.add(imp);
     });
-    if (feature.delegationService?.classConstructor) {
+
+    if (feature.delegationService.classConstructor) {
       this.delegationService.classConstructor.push(feature.delegationService.classConstructor);
     }
   }

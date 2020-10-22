@@ -7,7 +7,7 @@ import <%= imp %>;
 public class DelegationService extends
         com.google.androidbrowserhelper.trusted.DelegationService {
     public DelegationService() {
-        <% for(const code of delegationService.constructor) { %>
+        <% for(const code of delegationService.classConstructor) { %>
             <%= code %>
         <% } %>
     }
