@@ -32,6 +32,7 @@ export interface WebManifestShortcutJson {
 
 type WebManifestDisplayMode = 'browser' | 'minimal-ui' | 'standalone' | 'fullscreen';
 
+// These interfaces follows the implementation from: https://w3c.github.io/web-share-target/.
 export interface ShareTargetParams {
   title?: string;
   text?: string;
