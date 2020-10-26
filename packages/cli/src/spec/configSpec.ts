@@ -30,14 +30,14 @@ const LEGACY_CONFIG_FOLDER = join(homedir(), '.llama-pack');
 const LEGACY_CONFIG_NAME = 'llama-pack-config.json';
 const LEGACY_CONFIG_FILE_PATH = join(LEGACY_CONFIG_FOLDER, LEGACY_CONFIG_NAME);
 
-beforeAll(() => {
-  spyOn(JdkHelper, 'validatePath').and.returnValue(Promise.resolve(Result.ok('/path/to/jdk')));
-  spyOn(AndroidSdkTools, 'validatePath').and.returnValue(Promise.resolve(Result.ok(
-      '/path/to/android-sdk')));
-});
-
 describe('config', () => {
   describe('#loadOrCreateConfig', () => {
+    beforeAll(() => {
+      spyOn(JdkHelper, 'validatePath').and.returnValue(Promise.resolve(Result.ok('/path/to/jdk')));
+      spyOn(AndroidSdkTools, 'validatePath').and.returnValue(Promise.resolve(Result.ok(
+          '/path/to/android-sdk')));
+    });
+
     it('checks if the file\'s name was changed in case it has the old name', async () => {
       // Creates a mock file system.
       mock({

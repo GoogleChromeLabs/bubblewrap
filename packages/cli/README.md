@@ -110,20 +110,26 @@ explains how to extract the information needed to generate it.
 
 ## Commands
 
+![Overview of bubblewrap commands](command_flow.svg)
+
+The diagram above shows which commands (in the black boxes) take as input or produce as output various files (in white ovals).
+An arrow leading to a file means "creates or modifies" and an arrow leading to a command means "is used as input".
+
 ## `init`
 
 Usage:
 
 Initializes an Android project for Trusted Web Activity from a Web Manifest. The init script will
-parse the Web manifest and generate default valuers for the Android project, where possible. It
+parse the Web manifest and generate default values for the Android project, where possible. It
 will prompt the user to confirm or input values where one could not be generated.
 
 ```
-bubblewrap init --manifest="<web-manifest-url>" [--directory="<path-to-output-location>"]
+bubblewrap init --manifest="<web-manifest-url>" [--directory="<path-to-output-location>"] [--chromeosonly]
 ```
 
 Options:
   - `--directory`: path where to generate the project. Defaults to the current directory.
+  - `--chromeosonly`: this flag specifies that the build will be used for Chrome OS only and prevents non-Chrome OS devices from installing the app.
 
 ## `build`
 
@@ -191,6 +197,46 @@ Usage:
 ```
 bubblewrap help
 ```
+
+## `doctor`
+
+Validates that the jdk and the androidSdk are located at the path specified in your config
+and that they are at the correct version.
+
+Usage:
+
+```
+bubblewrap doctor
+```
+
+## `updateConfig`
+
+Sets the paths of the jdk or the androidSdk to the given paths.
+
+Usage:
+
+```
+bubblewrap updateConfig  --jdkPath="/path-to-jdk" --androidSdkPath="/path-to-androidSdk"
+```
+
+Options:
+  - `--jdkPath`: sets the jdk's path to the path given.
+  - `--androidSdkPath`: sets the androidSdk's path to the path given.
+
+## `merge`
+
+Merges the user's web manifest into their twaManifest.json.
+
+Usage:
+
+```
+bubblewrap merge --ignore [fields-list]
+```
+
+Options:
+  - `--ignore`: Ignores all of the fields on the list. Accepts all of the possible fields
+  in the Web Manifest.
+
 
 ## Contributing
 

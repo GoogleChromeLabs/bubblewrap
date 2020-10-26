@@ -16,7 +16,48 @@
 
 import {FeatureManager} from '../../../lib/features/FeatureManager';
 import {AppsFlyerConfig, AppsFlyerFeature} from '../../../lib/features/AppsFlyerFeature';
+import {LocationDelegationFeature} from '../../../lib/features/LocationDelegationFeature';
+import {FirstRunFlagConfig, FirstRunFlagFeature} from '../../../lib/features/FirstRunFlagFeature';
 import {TwaManifest} from '../../../lib/TwaManifest';
+import {Feature} from '../../../lib/features/Feature';
+
+function expectFeatureToBeApplied(features: FeatureManager, feature: Feature): void {
+  feature.androidManifest.components.forEach((component) => {
+    expect(features.androidManifest.components).toContain(component);
+  });
+
+  feature.androidManifest.permissions.forEach((permission) => {
+    expect(features.androidManifest.permissions).toContain(permission);
+  });
+
+  feature.applicationClass.imports.forEach((imp) => {
+    expect(features.applicationClass.imports).toContain(imp);
+  });
+
+  feature.applicationClass.variables.forEach((variable) => {
+    expect(features.applicationClass.variables).toContain(variable);
+  });
+
+  if (feature.applicationClass.onCreate) {
+    expect(features.applicationClass.onCreate).toContain(feature.applicationClass.onCreate);
+  }
+
+  feature.buildGradle.dependencies.forEach((dependency) => {
+    expect(features.buildGradle.dependencies).toContain(dependency);
+  });
+
+  feature.buildGradle.repositories.forEach((repository) => {
+    expect(features.buildGradle.repositories).toContain(repository);
+  });
+
+  feature.launcherActivity.imports.forEach((imp) => {
+    expect(features.launcherActivity.imports).toContain(imp);
+  });
+
+  if (feature.launcherActivity.launchUrl) {
+    expect(features.launcherActivity.launchUrl).toContain(feature.launcherActivity.launchUrl);
+  }
+}
 
 describe('FeatureManager', () => {
   describe('#constructor', () => {
@@ -32,10 +73,23 @@ describe('FeatureManager', () => {
       expect(features.applicationClass.imports).toEqual(emptySet);
       expect(features.applicationClass.onCreate).toEqual([]);
       expect(features.applicationClass.variables).toEqual([]);
-      expect(features.buildGradle.dependencies).toEqual(emptySet);
+      expect(features.buildGradle.dependencies).toContain(
+          'com.google.androidbrowserhelper:androidbrowserhelper:2.0.1');
       expect(features.buildGradle.repositories).toEqual(emptySet);
       expect(features.launcherActivity.imports).toEqual(emptySet);
       expect(features.launcherActivity.launchUrl).toEqual([]);
+      expect(features.delegationService.classConstructor).toEqual([]);
+    });
+
+    it('Creates from empty features with alpha features enabled', () => {
+      const manifest = {
+        features: {},
+        fallbackType: 'customtabs',
+        alphaDependencies: {enabled: true},
+      } as TwaManifest;
+      const features = new FeatureManager(manifest);
+      expect(features.buildGradle.dependencies).toContain(
+          'com.google.androidbrowserhelper:androidbrowserhelper:1.4.0-alpha01');
     });
 
     it('Adds INTERNET permission when WebView fallback is enabled', () => {
@@ -47,54 +101,56 @@ describe('FeatureManager', () => {
       expect(features.androidManifest.permissions).toContain('android.permission.INTERNET');
     });
 
-    it('Enables the AppsFlyer plugin', () => {
+    it('Features are applied to FeatureManager', () => {
       const appsFlyerConfig = {
+        enabled: true,
         appsFlyerId: '12345',
       } as AppsFlyerConfig;
+
+      const firstRunFlagConfig = {
+        enabled: true,
+        queryParameterName: 'query_parameter',
+      } as FirstRunFlagConfig;
 
       const manifest = {
         features: {
           appsFlyer: appsFlyerConfig,
+          firstRunFlag: firstRunFlagConfig,
         },
         fallbackType: 'customtabs',
       } as TwaManifest;
 
       const appsFlyerFeature = new AppsFlyerFeature(appsFlyerConfig);
+      const firstRunFlagFeature = new FirstRunFlagFeature(firstRunFlagConfig);
       const features = new FeatureManager(manifest);
 
-      appsFlyerFeature.androidManifest.components.forEach((component) => {
+      expectFeatureToBeApplied(features, appsFlyerFeature);
+      expectFeatureToBeApplied(features, firstRunFlagFeature);
+    });
+
+
+    it('Enables the LocationDelegation feature', () => {
+      const manifest = {
+        features: {
+          locationDelegation: {
+            enabled: true,
+          },
+        },
+      } as TwaManifest;
+
+      const locationDelegationFeature = new LocationDelegationFeature();
+      const features = new FeatureManager(manifest);
+
+      locationDelegationFeature.androidManifest.components.forEach((component) => {
         expect(features.androidManifest.components).toContain(component);
       });
 
-      appsFlyerFeature.androidManifest.permissions.forEach((permission) => {
-        expect(features.androidManifest.permissions).toContain(permission);
+      locationDelegationFeature.delegationService.imports.forEach((imp) => {
+        expect(features.delegationService.imports).toContain(imp);
       });
 
-      appsFlyerFeature.applicationClass.imports.forEach((imp) => {
-        expect(features.applicationClass.imports).toContain(imp);
-      });
-
-      appsFlyerFeature.applicationClass.variables.forEach((variable) => {
-        expect(features.applicationClass.variables).toContain(variable);
-      });
-
-      expect(features.applicationClass.onCreate)
-          .toContain(appsFlyerFeature.applicationClass.onCreate);
-
-      appsFlyerFeature.buildGradle.dependencies.forEach((dependency) => {
-        expect(features.buildGradle.dependencies).toContain(dependency);
-      });
-
-      appsFlyerFeature.buildGradle.repositories.forEach((repository) => {
-        expect(features.buildGradle.repositories).toContain(repository);
-      });
-
-      appsFlyerFeature.launcherActivity.imports.forEach((imp) => {
-        expect(features.launcherActivity.imports).toContain(imp);
-      });
-
-      expect(features.launcherActivity.launchUrl)
-          .toContain(appsFlyerFeature.launcherActivity.launchUrl);
+      expect(features.delegationService.classConstructor!)
+          .toContain(locationDelegationFeature.delegationService.classConstructor!);
     });
   });
 });

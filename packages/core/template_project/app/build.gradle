@@ -174,7 +174,7 @@ task generateShorcutsFile {
                     'intent'(
                             'android:action': 'android.intent.action.MAIN',
                             'android:targetPackage': twaManifest.applicationId,
-                            'android:targetClass': 'com.google.androidbrowserhelper.trusted.LauncherActivity',
+                            'android:targetClass': twaManifest.applicationId + '.LauncherActivity',
                             'android:data': s.url)
                     'categories'('android:name': 'android.intent.category.LAUNCHER')
                 }
@@ -196,5 +196,4 @@ dependencies {
     <% for(const dep of buildGradle.dependencies) { %>
         implementation '<%= dep %>'
     <% } %>
-    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.0.0'    
 }

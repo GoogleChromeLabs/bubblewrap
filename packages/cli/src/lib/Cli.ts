@@ -27,6 +27,7 @@ import {version} from './cmds/version';
 import {BUBBLEWRAP_LOGO} from './constants';
 import {updateConfig} from './cmds/updateConfig';
 import {doctor} from './cmds/doctor';
+import {merge} from './cmds/merge';
 
 export class Cli {
   async run(args: string[]): Promise<boolean> {
@@ -76,6 +77,8 @@ export class Cli {
         return await updateConfig(parsedArgs);
       case 'doctor':
         return await doctor();
+      case 'merge':
+        return await merge(parsedArgs);
       default:
         throw new Error(
             `"${command}" is not a valid command! Use 'bubblewrap help' for a list of commands`);

@@ -51,6 +51,7 @@ const JAVA_DIR = 'app/src/main/java/';
 const JAVA_FILE_LIST = [
   'LauncherActivity.java',
   'Application.java',
+  'DelegationService.java',
 ];
 
 const DELETE_PROJECT_FILE_LIST = [

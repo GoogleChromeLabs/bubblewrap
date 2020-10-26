@@ -1,0 +1,104 @@
+/*
+ * Copyright 2020 Google Inc. All Rights Reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*
+ * If you change this file you'll have to manually update the image, to do so
+ * you must install GraphViz and run the following command:
+ *
+ * dot -Tsvg command_flow.dot -o command_flow.svg
+ */
+digraph bubble {
+  rankdir="LR";
+
+  subgraph processes {
+    node[shape=box, style=filled, fontcolor=white, fillcolor=black];
+
+    init;
+    build;
+    update;
+    merge;
+    validate;
+    install;
+    doctor;
+    updateConfig;
+  }
+
+  subgraph artifacts {
+    web_app_manifest[label="web app manifest"];
+    updated_web_app_manifest[label="updated web app manifest"];
+    twa_manifest[label="twaManifest.json"];
+    config[label="~/bubblewrap/config.json"];
+    project[label="Android project"];
+    apk[label="APK / AAB"];
+    installed[label="Installed APK"];
+    assetlinks[label="assetlinks.json"];
+  }
+
+  // Init takes the web app manifest, generates the config, twa manifest and
+  // Android project.
+  web_app_manifest -> init;
+  init -> config;
+  init -> twa_manifest;
+  init -> project;
+
+  // UpdateConf modifies the conf and doctor checks it.
+  updateConfig -> config;
+  config -> doctor;
+
+  // Update takes the manifest and applies it to the project.
+  twa_manifest -> update;
+  update -> project;
+
+  // Build turns the project into an APK and generates the asset links.
+  project -> build;
+  build -> apk;
+  build -> assetlinks;
+
+  // Install installs the Android project.
+  apk -> install;
+  install -> installed;
+
+  // Merge takes a new web app manifest and applies to the twa manifest.
+  updated_web_app_manifest -> merge;
+  twa_manifest -> merge;
+  merge -> twa_manifest;
+
+  // Validate just looks at the website.
+  web_app_manifest -> validate;
+
+  // Most of the commands depend on the config.
+  subgraph config_deps {
+    edge[style=dotted];
+
+    // config -> build;
+    // config -> install;
+  }
+
+  // Some constraints to lay the graph out nicely.
+  { rank = same; web_app_manifest; validate; }
+  { rank = same; init; merge; updateConfig; }
+  { rank = same; config; doctor; twa_manifest; }
+  { rank = same; update; project; build; }
+  { rank = same; assetlinks; apk; install; installed; }
+
+  // Some invisible edges to lay the graph out nicely.
+  subgraph layout {
+    edge[style=invisible, arrowhead=none];
+
+    project -> assetlinks;
+    assetlinks -> apk;
+  }
+}

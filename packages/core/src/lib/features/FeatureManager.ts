@@ -16,7 +16,9 @@
 
 import {Feature} from './Feature';
 import {AppsFlyerFeature} from './AppsFlyerFeature';
+import {LocationDelegationFeature} from './LocationDelegationFeature';
 import {TwaManifest} from '../TwaManifest';
+import {FirstRunFlagFeature} from './FirstRunFlagFeature';
 
 /**
  * Analyzes a TwaManifest to collect enable features and aggregates all customizations that will
@@ -38,25 +40,47 @@ export class FeatureManager {
   };
   launcherActivity = {
     imports: new Set<string>(),
+    methods: new Set<string>(),
+    variables: new Set<string>(),
     launchUrl: new Array<string>(),
+  };
+  delegationService = {
+    imports: new Set<string>(),
+    classConstructor: new Array<string>(),
   };
 
   /**
    * Builds a new intance from a TwaManifest.
    */
   constructor(twaManifest: TwaManifest) {
-    if (twaManifest.features.appsFlyer !== undefined) {
+    if (twaManifest.features.locationDelegation?.enabled) {
+      this.addFeature(new LocationDelegationFeature());
+    }
+
+    if (twaManifest.features.appsFlyer?.enabled) {
       this.addFeature(new AppsFlyerFeature(twaManifest.features.appsFlyer));
+    }
+
+    if (twaManifest.features.firstRunFlag?.enabled) {
+      this.addFeature(new FirstRunFlagFeature(twaManifest.features.firstRunFlag));
     }
 
     // The WebView fallback needs the INTERNET permission.
     if (twaManifest.fallbackType === 'webview') {
       this.androidManifest.permissions.add('android.permission.INTERNET');
     }
+
+    if (twaManifest.alphaDependencies?.enabled) {
+      this.buildGradle.dependencies.add(
+          'com.google.androidbrowserhelper:androidbrowserhelper:1.4.0-alpha01');
+    } else {
+      this.buildGradle.dependencies.add(
+          'com.google.androidbrowserhelper:androidbrowserhelper:2.0.1');
+    }
   }
 
   private addFeature(feature: Feature): void {
-    // Adds properties to build
+    // Adds properties to build.
     feature.buildGradle.repositories.forEach((repo) => {
       this.buildGradle.repositories.add(repo);
     });
@@ -65,20 +89,18 @@ export class FeatureManager {
       this.buildGradle.dependencies.add(dep);
     });
 
-    // Adds properties to application
+    // Adds properties to application.
     feature.applicationClass.imports.forEach((imp) => {
       this.applicationClass.imports.add(imp);
     });
-
     feature.applicationClass.variables.forEach((imp) => {
       this.applicationClass.variables.push(imp);
     });
-
     if (feature.applicationClass.onCreate) {
       this.applicationClass.onCreate.push(feature.applicationClass.onCreate);
     }
 
-    // Adds properties to AndroidManifest.xml
+    // Adds properties to AndroidManifest.xml.
     feature.androidManifest.permissions.forEach((permission) => {
       this.androidManifest.permissions.add(permission);
     });
@@ -87,13 +109,28 @@ export class FeatureManager {
       this.androidManifest.components.push(component);
     });
 
-    // Adds properties to launcherActivity
+    // Adds properties to launcherActivity.
     feature.launcherActivity.imports.forEach((imp) => {
       this.launcherActivity.imports.add(imp);
     });
+    feature.launcherActivity.variables.forEach((imp) => {
+      this.launcherActivity.variables.add(imp);
+    });
+    feature.launcherActivity.methods.forEach((imp) => {
+      this.launcherActivity.methods.add(imp);
+    });
 
-    if (feature.launcherActivity?.launchUrl) {
+    if (feature.launcherActivity.launchUrl) {
       this.launcherActivity.launchUrl.push(feature.launcherActivity.launchUrl);
+    }
+
+    // Adds properties to delegationService.
+    feature.delegationService.imports.forEach((imp) => {
+      this.delegationService.imports.add(imp);
+    });
+
+    if (feature.delegationService.classConstructor) {
+      this.delegationService.classConstructor.push(feature.delegationService.classConstructor);
     }
   }
 }
