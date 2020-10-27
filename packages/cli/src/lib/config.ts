@@ -39,7 +39,7 @@ async function createConfig(prompt: Prompt = new InquirerPrompt()): Promise<Conf
     jdkPath = await prompt.promptInput('Path to your existing JDK:', null,
         JdkHelper.validatePath);
   } else {
-    await fsPromises.mkdir(DEFAULT_JDK_FOLDER);
+    await fsPromises.mkdir(DEFAULT_JDK_FOLDER, {recursive: true});
     console.log(`Downloading JDK 8 to ${DEFAULT_JDK_FOLDER}`);
     const jdkInstaller = new JdkInstaller(process);
     jdkPath = await jdkInstaller.install(DEFAULT_JDK_FOLDER);
