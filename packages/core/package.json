@@ -46,8 +46,10 @@
     "lodash.template": "^4.5.0",
     "mime-types": "^2.1.27",
     "node-fetch": "^2.6.0",
-    "svg2img": "^0.8.1",
     "tar": "^6.0.2",
     "valid-url": "^1.0.9"
+  },
+  "optionalDependencies": {
+    "svg2img": "^0.8.1"
   }
 }

@@ -23,6 +23,8 @@ import {exec, execFile, spawn} from 'child_process';
 import {x as extractTar} from 'tar';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 import {Log} from './Log';
+import {lookup} from 'mime-types';
+import {isSvgSupported} from './wrappers/svg2img';
 
 const execPromise = promisify(exec);
 const execFilePromise = promisify(execFile);
@@ -140,7 +142,17 @@ export function findSuitableIcon(
 
   let largestIcon: WebManifestIcon | null = null;
   let largestIconSize = 0;
+  
   for (const icon of icons) {
+    // Use the mime-type from the icon or look up from the URL if one is not provided.	
+    const mimeType = icon.mimeType || lookup(icon.src);
+
+    // We don't support SVG images, so skip SVG icons.	
+    if (mimeType && mimeType.startsWith('image/svg') && !isSvgSupported()) {	
+      console.debug(`Skipping SVG: ${icon.src}`);
+      continue;	
+    }
+
     const size = (icon.sizes || '0x0').split(' ')
         .map((size) => Number.parseInt(size, 10))
         .reduce((max, size) => Math.max(max, size), 0);

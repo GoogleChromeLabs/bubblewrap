@@ -17,8 +17,14 @@
 // This class is needed because svg2img's typescript type definitions didn't work.
 // once it will, there is no need for this class.
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const _svg2img = require('svg2img');
+// The svg2img module is marked as optional. So, we try loading it.
+let _svg2img: any = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+   _svg2img = require('svg2img');
+} catch (e) {
+  console.warn('svg2img is not installed. SVGs won\'t be supported');
+}
 
 export enum Format {
   jpeg = 'jpeg',
@@ -34,7 +40,17 @@ export interface Svg2imgOptions {
   quality?: number;
 }
 
+/**
+ * Returns true if the svg2img module is loaded.
+ */
+export function isSvgSupported(): boolean {
+  return _svg2img !== null;
+}
+
 export function svg2img(svg: string, options: Svg2imgOptions = {}): Promise<Buffer> {
+  if (_svg2img === null) {
+    return Promise.reject('svg2img is not installed.');
+  }
   return new Promise((resolve, reject) => {
     _svg2img(svg, options, (error: string, buffer: Buffer | undefined) => {
       if (error) {
