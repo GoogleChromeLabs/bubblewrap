@@ -14,10 +14,8 @@
  *  limitations under the License.
  */
 
-'use strict';
-
 import * as path from 'path';
-import util = require('../util');
+import * as util from '../util';
 
 const SDK_VERSION = '6609375';
 const DOWNLOAD_SDK_ROOT = 'https://dl.google.com/android/repository/';

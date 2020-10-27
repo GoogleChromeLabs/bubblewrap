@@ -14,10 +14,8 @@
  *  limitations under the License.
  */
 
-'use strict';
-
 import * as path from 'path';
-import util = require('../util');
+import * as util from '../util' ;
 
 const JDK_VERSION = '8u265-b01';
 const JDK_DIR = `jdk${JDK_VERSION}`;
