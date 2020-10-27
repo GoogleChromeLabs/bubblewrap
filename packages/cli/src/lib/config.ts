@@ -20,6 +20,7 @@ import {homedir} from 'os';
 import {Config, Log, ConsoleLog, JdkInstaller, JdkHelper, AndroidSdkTools,
   AndroidSdkToolsInstaller} from '@bubblewrap/core';
 import {existsSync} from 'fs';
+import {enUS as messages} from './strings';
 import {promises as fsPromises} from 'fs';
 import {InquirerPrompt, Prompt} from './Prompt';
 
@@ -33,32 +34,35 @@ const DEFAULT_JDK_FOLDER = join(DEFAULT_CONFIG_FOLDER, 'jdk');
 const DEFAULT_SDK_FOLDER = join(DEFAULT_CONFIG_FOLDER, 'android_sdk');
 
 async function createConfig(prompt: Prompt = new InquirerPrompt()): Promise<Config> {
-  const jdkInstallRequest = await prompt.promptConfirm('Do you want Bubblewrap to install JDK? ' +
-    '(Enter "No" to use your JDK installation)', true);
+  const jdkInstallRequest = await prompt.promptConfirm(messages.promptInstallJdk, true);
 
   let jdkPath;
   if (!jdkInstallRequest) {
-    jdkPath = await prompt.promptInput('Path to your existing JDK:', null,
+    jdkPath = await prompt.promptInput(messages.promptJdkPath, null,
         JdkHelper.validatePath);
   } else {
-    await fsPromises.mkdir(DEFAULT_JDK_FOLDER);
-    console.log(`Downloading JDK 8 to ${DEFAULT_JDK_FOLDER}`);
+    await fsPromises.mkdir(DEFAULT_JDK_FOLDER, {recursive: true});
+    prompt.printMessage(messages.messageDownloadJdk + DEFAULT_JDK_FOLDER);
     const jdkInstaller = new JdkInstaller(process);
     jdkPath = await jdkInstaller.install(DEFAULT_JDK_FOLDER);
   }
 
-  const sdkInstallRequest = await prompt.promptConfirm('Do you want Bubblewrap to install ' +
-    'Android SDK? (Enter "No" to use your installation)', true);
+  const sdkInstallRequest = await prompt.promptConfirm(messages.promptInstallSdk, true);
 
   let sdkPath;
   if (!sdkInstallRequest) {
-    sdkPath = await prompt.promptInput('Path to your existing Android SDK:', null,
+    sdkPath = await prompt.promptInput(messages.promptSdkPath, null,
         AndroidSdkTools.validatePath);
   } else {
-    await fsPromises.mkdir(DEFAULT_SDK_FOLDER);
-    console.log(`Downloading Android command line tools to ${DEFAULT_SDK_FOLDER}`);
-    await AndroidSdkToolsInstaller.install(DEFAULT_SDK_FOLDER);
-    sdkPath = DEFAULT_SDK_FOLDER;
+    const sdkTermsAgreement = await prompt.promptConfirm(messages.promptSdkTerms, false);
+    if (sdkTermsAgreement) {
+      await fsPromises.mkdir(DEFAULT_SDK_FOLDER, {recursive: true});
+      prompt.printMessage(messages.messageDownloadSdk + DEFAULT_SDK_FOLDER);
+      await AndroidSdkToolsInstaller.install(DEFAULT_SDK_FOLDER);
+      sdkPath = DEFAULT_SDK_FOLDER;
+    } else {
+      throw new Error(messages.errorSdkTerms);
+    }
   }
 
   return new Config(jdkPath, sdkPath);
