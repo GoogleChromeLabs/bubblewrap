@@ -72,11 +72,6 @@ android {
             resValue "string", "webManifestUrl", '<%= webManifestUrl %>'
         <% } %>
 
-        <% if (twaManifest.webShare) { %>
-            // The data for the app to support web share target.
-            resValue "string", "webShare", twaManifest.webShare
-        <% } %>
-
         // The hostname is used when building the intent-filter, so the TWA is able to
         // handle Intents to open https://svgomg.firebaseapp.com.
         resValue "string", "hostName", twaManifest.hostName
