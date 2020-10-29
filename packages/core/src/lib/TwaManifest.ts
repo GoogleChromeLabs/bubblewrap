@@ -21,7 +21,7 @@ import fetch from 'node-fetch';
 import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
 import Color = require('color');
 import {ConsoleLog} from './Log';
-import {WebManifestIcon, WebManifestJson, ShareTarget} from './types/WebManifest';
+import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 import {ShortcutInfo} from './ShortcutInfo';
 import {AppsFlyerConfig} from './features/AppsFlyerFeature';
 import {LocationDelegationConfig} from './features/LocationDelegationFeature';
@@ -135,7 +135,7 @@ export class TwaManifest {
   alphaDependencies: alphaDependencies;
   enableSiteSettingsShortcut: boolean;
   isChromeOSOnly: boolean;
-  shareTarget?: ShareTarget;
+  shareTargetJson?: string;
 
   private static log = new ConsoleLog('twa-manifest');
 
@@ -176,7 +176,7 @@ export class TwaManifest {
     this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ?
       data.enableSiteSettingsShortcut : true;
     this.isChromeOSOnly = data.isChromeOSOnly != undefined ? data.isChromeOSOnly : false;
-    this.shareTarget = data.shareTarget;
+    this.shareTargetJson = data.shareTargetJson;
   }
 
   /**
@@ -297,7 +297,7 @@ export class TwaManifest {
       features: {
         locationDelegation: {enabled: DEFAULT_ENABLE_LOCATION},
       },
-      shareTarget: webManifest['share_target'],
+      shareTargetJson: JSON.stringify(webManifest['share_target']),
     });
     return twaManifest;
   }
@@ -477,7 +477,7 @@ export interface TwaManifestJson {
   };
   enableSiteSettingsShortcut?: boolean;
   isChromeOSOnly?: boolean;
-  shareTarget?: ShareTarget;
+  shareTargetJson?: string;
 }
 
 export interface SigningKeyInfo {
