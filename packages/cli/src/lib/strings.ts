@@ -28,6 +28,7 @@ type Messages = {
   errorInvalidInteger: (integer: string) => string;
   errorUrlMustBeImage: (mimeType: string) => string;
   errorUrlMustNotBeSvg: string;
+  errorSdkTerms: string;
   messageInitializingWebManifest: (manifestUrl: string) => string;
   messageAndroidAppDetails: string;
   messageAndroidAppDetailsDesc: string;
@@ -52,6 +53,13 @@ type Messages = {
   messageUsingPasswordsFromEnv: string;
   messageWebAppDetails: string;
   messageWebAppDetailsDesc: string;
+  messageDownloadJdk: string;
+  messageDownloadSdk: string;
+  promptInstallJdk: string;
+  promptJdkPath: string;
+  promptInstallSdk: string;
+  promptSdkTerms: string;
+  promptSdkPath: string;
   promptHostMessage: string;
   promptName: string;
   promptLauncherName: string;
@@ -110,6 +118,7 @@ export const enUS: Messages = {
     return `URL must resolve to an image/* mime-type, but resolved to ${mimeType}.`;
   },
   errorUrlMustNotBeSvg: 'SVG images are not supported yet.',
+  errorSdkTerms: 'Downloading Android SDK failed because Terms and Conditions was not signed.',
   messageAndroidAppDetails: underline(`\nAndroid app details ${green('(2/5)')}`),
   messageAndroidAppDetailsDesc: `
 Please, enter details regarding how the Android app will look when installed
@@ -232,6 +241,15 @@ the PWA:
 
 \t\t- To open ${italic('https://example.com/')}: ${cyan('/')}
 \t\t- To open ${italic('https://example.com/path-to-pwa/')}: ${cyan('/path-to-pwa/')}\n`,
+  messageDownloadJdk: 'Downloading JDK 8 to ',
+  messageDownloadSdk: 'Downloading Android SDK to ',
+  promptInstallJdk: `Do you want Bubblewrap to install JDK?
+  (Enter "No" to use your JDK installation)`,
+  promptJdkPath: 'Path to your existing JDK:',
+  promptInstallSdk: `Do you want Bubblewrap to install Android SDK?
+  (Enter "No" to use your installation)`,
+  promptSdkTerms: `Do you agree to the Android SDK terms and conditions at ${underline('https://developer.android.com/studio/terms.html')}?`,
+  promptSdkPath: 'Path to your existing Android SDK:',
   promptHostMessage: 'Domain:',
   promptName: 'Application name:',
   promptLauncherName: 'Short name:',

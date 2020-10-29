@@ -14,10 +14,8 @@
  *  limitations under the License.
  */
 
-'use strict';
-
 import * as path from 'path';
-import util = require('../util');
+import * as util from '../util';
 
 const JDK_VERSION = '8u265-b01';
 const JDK_DIR = `jdk${JDK_VERSION}`;
@@ -31,7 +29,7 @@ const JDK_SRC_ZIP = `jdk${JDK_VERSION}.zip`;
 
 /**
  * Install JDK 8 by downloading the binary and source code and
- * decompressing it at path given by user. Source code is required
+ * decompressing it. Source code is required
  * based on discussions with legal team about licensing.
  */
 export class JdkInstaller {

@@ -15,6 +15,7 @@
  */
 
 import {AndroidSdkTools} from './lib/androidSdk/AndroidSdkTools';
+import {AndroidSdkToolsInstaller} from './lib/androidSdk/AndroidSdkToolsInstaller';
 import {Config} from './lib/Config';
 import {GradleWrapper} from './lib/GradleWrapper';
 import {Log, ConsoleLog} from './lib/Log';
@@ -31,6 +32,7 @@ import * as util from './lib/util';
 import {Result} from './lib/Result';
 
 export {AndroidSdkTools,
+  AndroidSdkToolsInstaller,
   Config,
   DigitalAssetLinks,
   GradleWrapper,
