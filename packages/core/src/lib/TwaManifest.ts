@@ -297,7 +297,7 @@ export class TwaManifest {
       features: {
         locationDelegation: {enabled: DEFAULT_ENABLE_LOCATION},
       },
-      shareTarget: undefined,//webManifest['share_target'],
+      shareTarget: undefined, //webManifest['share_target'],
     });
     return twaManifest;
   }
