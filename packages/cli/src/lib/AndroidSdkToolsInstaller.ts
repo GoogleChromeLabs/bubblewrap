@@ -15,28 +15,36 @@
  */
 
 import * as path from 'path';
-import * as util from '../util';
+import {util} from '@bubblewrap/core';
+import {Prompt} from './Prompt';
+import {Presets, Bar} from 'cli-progress';
+import {green} from 'colors';
+import {enUS as messages} from './strings';
 
 const SDK_VERSION = '6609375';
 const DOWNLOAD_SDK_ROOT = 'https://dl.google.com/android/repository/';
 const WINDOWS_URL = `commandlinetools-win-${SDK_VERSION}_latest.zip`;
 const MAC_URL = `commandlinetools-mac-${SDK_VERSION}_latest.zip`;
 const LINUX_URL = `commandlinetools-linux-${SDK_VERSION}_latest.zip`;
+const ANDROID_SDK_SIZE = 86532338;
 
 /**
  * Install Android Command Line Tools by downloading the zip and
  * decompressing it.
  */
 export class AndroidSdkToolsInstaller {
+  constructor(private process: NodeJS.Process, private prompt: Prompt) {
+  }
+
   /**
    * Downloads the platform-appropriate version of Android
    * Command Line Tools.
    *
    * @param installPath {string} path to install SDK at.
    */
-  static async install(installPath: string): Promise<void> {
+  async install(installPath: string): Promise<void> {
     let downloadFileName;
-    switch (process.platform) {
+    switch (this.process.platform) {
       case 'darwin': {
         downloadFileName = MAC_URL;
         break;
@@ -49,13 +57,25 @@ export class AndroidSdkToolsInstaller {
         downloadFileName = WINDOWS_URL;
         break;
       }
-      default: throw new Error(`Unsupported Platform: ${process.platform}`);
+      default: throw new Error(`Unsupported Platform: ${this.process.platform}`);
     }
 
     const dstPath = path.resolve(installPath);
     const downloadUrl = DOWNLOAD_SDK_ROOT + downloadFileName;
     const localPath = path.join(dstPath, downloadFileName);
-    await util.downloadFile(downloadUrl, localPath);
+    this.prompt.printMessage(messages.messageDownloadAndroidSdk);
+
+    const progressBar = new Bar({
+      format: ` >> [${green('{bar}')}] {percentage}% | {value}k of {total}k`,
+    }, Presets.shades_classic);
+
+    progressBar.start(Math.round(ANDROID_SDK_SIZE / 1024), 0);
+    await util.downloadFile(downloadUrl, localPath, (current) => {
+      progressBar.update(Math.round(current / 1024));
+    });
+    progressBar.stop();
+
+    this.prompt.printMessage(messages.messageDecompressAndroidSdk);
     await util.unzipFile(localPath, dstPath, true);
   }
 }

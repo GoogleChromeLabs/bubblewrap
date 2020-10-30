@@ -15,7 +15,11 @@
  */
 
 import * as path from 'path';
-import * as util from '../util';
+import {util} from '@bubblewrap/core';
+import {Prompt} from './Prompt';
+import {Presets, Bar} from 'cli-progress';
+import {green} from 'colors';
+import {enUS as messages} from './strings';
 
 const JDK_VERSION = '8u265-b01';
 const JDK_DIR = `jdk${JDK_VERSION}`;
@@ -26,6 +30,8 @@ const JDK_FILE_NAME_MAC = `OpenJDK8U-jdk_x64_mac_hotspot_${JDK_BIN_VERSION}.tar.
 const JDK_FILE_NAME_WIN32 = `OpenJDK8U-jdk_x86-32_windows_hotspot_${JDK_BIN_VERSION}.zip`;
 const JDK_FILE_NAME_LINUX64 = `OpenJDK8U-jdk_x64_linux_hotspot_${JDK_BIN_VERSION}.tar.gz`;
 const JDK_SRC_ZIP = `jdk${JDK_VERSION}.zip`;
+const JDK_SOURCE_SIZE = 136130622;
+const JDK_BIN_SIZE = 101998442;
 
 /**
  * Install JDK 8 by downloading the binary and source code and
@@ -44,7 +50,7 @@ export class JdkInstaller {
    *
    * @param process {NodeJS.Process} process information from the OS process.
    */
-  constructor(process: NodeJS.Process) {
+  constructor(process: NodeJS.Process, private prompt: Prompt) {
     this.process = process;
     this.unzipFunction = util.untar;
     this.joinPath = path.posix.join;
@@ -79,12 +85,30 @@ export class JdkInstaller {
     const dstPath = path.resolve(installPath);
     const downloadSrcUrl = DOWNLOAD_JDK_SRC_ROOT + JDK_SRC_ZIP;
     const localSrcZipPath = this.joinPath(dstPath, JDK_SRC_ZIP);
-    await util.downloadFile(downloadSrcUrl, localSrcZipPath);
+
+    const progressBar = new Bar({
+      format: ` >> [${green('{bar}')}] {percentage}% | {value}k of {total}k`,
+    }, Presets.shades_classic);
+
+    this.prompt.printMessage(messages.messageDownloadJdkSrc);
+    progressBar.start(Math.round(JDK_SOURCE_SIZE / 1024), 0);
+    await util.downloadFile(downloadSrcUrl, localSrcZipPath, (current) => {
+      progressBar.update(Math.round(current / 1024));
+    });
+    progressBar.stop();
+
+    this.prompt.printMessage(messages.messageDecompressJdkSrc);
     await util.unzipFile(localSrcZipPath, dstPath, true);
 
     const downloadBinUrl = DOWNLOAD_JDK_BIN_ROOT + this.downloadFile;
     const localBinPath = this.joinPath(dstPath, this.downloadFile);
-    await util.downloadFile(downloadBinUrl, localBinPath);
+    this.prompt.printMessage(messages.messageDownloadJdkBin);
+    progressBar.start(Math.round(JDK_BIN_SIZE / 1024), 0);
+    await util.downloadFile(downloadBinUrl, localBinPath, (current) => {
+      progressBar.update(Math.round(current / 1024));
+    });
+    progressBar.stop();
+    this.prompt.printMessage(messages.messageDecompressJdkBin);
     await this.unzipFunction(localBinPath, dstPath, true);
 
     return this.joinPath(dstPath, JDK_DIR);
