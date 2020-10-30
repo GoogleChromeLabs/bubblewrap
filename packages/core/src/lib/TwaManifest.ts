@@ -297,7 +297,11 @@ export class TwaManifest {
       features: {
         locationDelegation: {enabled: DEFAULT_ENABLE_LOCATION},
       },
-      shareTarget: undefined, // webManifest['share_target'],
+      // We're leaving `shareTarget` as undefined for now, as the shareTarget is not complete
+      // and we want to avoid creating manifests with invalid values for now. The broader Web Share
+      // Target implementation is being tracked at
+      // https://github.com/GoogleChromeLabs/bubblewrap/issues/21.
+      shareTarget: undefined,
     });
     return twaManifest;
   }
