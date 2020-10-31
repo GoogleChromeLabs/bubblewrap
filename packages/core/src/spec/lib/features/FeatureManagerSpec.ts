@@ -89,7 +89,7 @@ describe('FeatureManager', () => {
       } as TwaManifest;
       const features = new FeatureManager(manifest);
       expect(features.buildGradle.dependencies).toContain(
-          'com.google.androidbrowserhelper:androidbrowserhelper:1.4.0-alpha01');
+          'com.google.androidbrowserhelper:androidbrowserhelper:2.1.0-alpha01');
     });
 
     it('Adds INTERNET permission when WebView fallback is enabled', () => {
@@ -136,6 +136,9 @@ describe('FeatureManager', () => {
             enabled: true,
           },
         },
+        alphaDependencies: {
+          enabled: true,
+        },
       } as TwaManifest;
 
       const locationDelegationFeature = new LocationDelegationFeature();
@@ -151,6 +154,30 @@ describe('FeatureManager', () => {
 
       expect(features.delegationService.classConstructor!)
           .toContain(locationDelegationFeature.delegationService.classConstructor!);
+    });
+
+    it('LocationDelegation is not enabled without alphaDependencies', () => {
+      const manifest = {
+        features: {
+          locationDelegation: {
+            enabled: true,
+          },
+        },
+      } as TwaManifest;
+
+      const locationDelegationFeature = new LocationDelegationFeature();
+      const features = new FeatureManager(manifest);
+
+      locationDelegationFeature.androidManifest.components.forEach((component) => {
+        expect(features.androidManifest.components).not.toContain(component);
+      });
+
+      locationDelegationFeature.delegationService.imports.forEach((imp) => {
+        expect(features.delegationService.imports).not.toContain(imp);
+      });
+
+      expect(features.delegationService.classConstructor!)
+          .not.toContain(locationDelegationFeature.delegationService.classConstructor!);
     });
   });
 });

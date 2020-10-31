@@ -19,6 +19,7 @@ import {AppsFlyerFeature} from './AppsFlyerFeature';
 import {LocationDelegationFeature} from './LocationDelegationFeature';
 import {TwaManifest} from '../TwaManifest';
 import {FirstRunFlagFeature} from './FirstRunFlagFeature';
+import {Log, ConsoleLog} from '../Log';
 
 /**
  * Analyzes a TwaManifest to collect enable features and aggregates all customizations that will
@@ -52,9 +53,14 @@ export class FeatureManager {
   /**
    * Builds a new intance from a TwaManifest.
    */
-  constructor(twaManifest: TwaManifest) {
+  constructor(twaManifest: TwaManifest, log: Log = new ConsoleLog('FeatureManager')) {
     if (twaManifest.features.locationDelegation?.enabled) {
-      this.addFeature(new LocationDelegationFeature());
+      if (twaManifest.alphaDependencies?.enabled) {
+        this.addFeature(new LocationDelegationFeature());
+      } else {
+        log.warn('Skipping LocationDelegationFeature. '+
+            'Enable alphaDependencies to add LocationDelegationFeature.');
+      }
     }
 
     if (twaManifest.features.appsFlyer?.enabled) {
@@ -72,7 +78,7 @@ export class FeatureManager {
 
     if (twaManifest.alphaDependencies?.enabled) {
       this.buildGradle.dependencies.add(
-          'com.google.androidbrowserhelper:androidbrowserhelper:1.4.0-alpha01');
+          'com.google.androidbrowserhelper:androidbrowserhelper:2.1.0-alpha01');
     } else {
       this.buildGradle.dependencies.add(
           'com.google.androidbrowserhelper:androidbrowserhelper:2.0.1');
