@@ -195,7 +195,7 @@ export class InquirerPrompt implements Prompt {
     progressBar.start(Math.round(totalSize / KILOBYTE_SIZE), 0);
     await util.downloadFile(url, filename, (current, total) => {
       if (total > 0 && total !== totalSize) {
-        progressBar.setTotal(total / KILOBYTE_SIZE);
+        progressBar.setTotal(Math.round(total / KILOBYTE_SIZE));
         totalSize = total;
       }
       progressBar.update(Math.round(current / KILOBYTE_SIZE));
