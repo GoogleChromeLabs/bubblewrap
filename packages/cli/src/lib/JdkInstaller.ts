@@ -17,8 +17,6 @@
 import * as path from 'path';
 import {util} from '@bubblewrap/core';
 import {Prompt} from './Prompt';
-import {Presets, Bar} from 'cli-progress';
-import {green} from 'colors';
 import {enUS as messages} from './strings';
 
 const JDK_VERSION = '8u265-b01';
@@ -31,7 +29,6 @@ const JDK_FILE_NAME_WIN32 = `OpenJDK8U-jdk_x86-32_windows_hotspot_${JDK_BIN_VERS
 const JDK_FILE_NAME_LINUX64 = `OpenJDK8U-jdk_x64_linux_hotspot_${JDK_BIN_VERSION}.tar.gz`;
 const JDK_SRC_ZIP = `jdk${JDK_VERSION}.zip`;
 const JDK_SOURCE_SIZE = 136130622;
-const JDK_BIN_SIZE = 101998442;
 
 /**
  * Install JDK 8 by downloading the binary and source code and
@@ -86,28 +83,21 @@ export class JdkInstaller {
     const downloadSrcUrl = DOWNLOAD_JDK_SRC_ROOT + JDK_SRC_ZIP;
     const localSrcZipPath = this.joinPath(dstPath, JDK_SRC_ZIP);
 
-    const progressBar = new Bar({
-      format: ` >> [${green('{bar}')}] {percentage}% | {value}k of {total}k`,
-    }, Presets.shades_classic);
-
     this.prompt.printMessage(messages.messageDownloadJdkSrc);
-    progressBar.start(Math.round(JDK_SOURCE_SIZE / 1024), 0);
-    await util.downloadFile(downloadSrcUrl, localSrcZipPath, (current) => {
-      progressBar.update(Math.round(current / 1024));
-    });
-    progressBar.stop();
+
+    // The sources don't return the file size in the headers, so we
+    // set it statically.
+    await this.prompt.downloadFile(downloadSrcUrl, localSrcZipPath, JDK_SOURCE_SIZE);
 
     this.prompt.printMessage(messages.messageDecompressJdkSrc);
     await util.unzipFile(localSrcZipPath, dstPath, true);
 
     const downloadBinUrl = DOWNLOAD_JDK_BIN_ROOT + this.downloadFile;
     const localBinPath = this.joinPath(dstPath, this.downloadFile);
+
     this.prompt.printMessage(messages.messageDownloadJdkBin);
-    progressBar.start(Math.round(JDK_BIN_SIZE / 1024), 0);
-    await util.downloadFile(downloadBinUrl, localBinPath, (current) => {
-      progressBar.update(Math.round(current / 1024));
-    });
-    progressBar.stop();
+    await this.prompt.downloadFile(downloadBinUrl, localBinPath);
+
     this.prompt.printMessage(messages.messageDecompressJdkBin);
     await this.unzipFunction(localBinPath, dstPath, true);
 
