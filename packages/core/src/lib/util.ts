@@ -276,3 +276,16 @@ export async function getWebManifest(webManifestUrl: URL): Promise<WebManifestJs
   }
   return await response.json();
 }
+
+/**
+ * Given a string of a JSON, the function retrns an escaped string representing that string.
+ * eg: Turns every " instance into \\".
+ *
+ * @param {string} stringToReplace the string before the manipulation.
+ * @returns {string} the string after the manipulation.
+ */
+export function escapeJsonString(stringToReplace: string): string {
+  // The 'g' flag is for replacing all of the instances.
+  const regExp = new RegExp('\"', 'g');
+  return stringToReplace.replace(regExp, '\\\\\"');
+}
