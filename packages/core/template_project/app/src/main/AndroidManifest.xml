@@ -105,23 +105,27 @@
             <meta-data android:name="android.support.customtabs.trusted.FALLBACK_STRATEGY"
                 android:value="@string/fallbackType" />
 
-            <meta-data
-            android:name="android.support.customtabs.trusted.METADATA_SHARE_TARGET"
-            android:resource="@string/shareTarget"/>
+            <% if (shareTarget) { %>
+                <meta-data
+                    android:name="android.support.customtabs.trusted.METADATA_SHARE_TARGET"
+                    android:resource="@string/shareTarget"/>
+            <% } %>
 
             <% if (display === 'fullscreen') { %>
             <meta-data android:name="android.support.customtabs.trusted.DISPLAY_MODE"
                 android:value="immersive" />
-            <% }%>
+            <% } %>
 
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <action android:name="android.intent.action.SEND_MULTIPLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="audio/*" />
-                <data android:mimeType="image/*" />
-                <data android:mimeType="video/*" />
-            </intent-filter>
+            <% if (shareTarget) { %>
+                <intent-filter>
+                    <action android:name="android.intent.action.SEND" />
+                    <action android:name="android.intent.action.SEND_MULTIPLE" />
+                    <category android:name="android.intent.category.DEFAULT" />
+                    <data android:mimeType="audio/*" />
+                    <data android:mimeType="image/*" />
+                    <data android:mimeType="video/*" />
+                </intent-filter>
+            <% } %>
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
