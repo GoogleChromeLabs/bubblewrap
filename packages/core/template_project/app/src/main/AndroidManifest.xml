@@ -55,6 +55,10 @@
             android:name="twa_generator"
             android:value="@string/generatorApp" />
 
+        <meta-data
+            android:name="android.support.customtabs.trusted.METADATA_SHARE_TARGET"
+            android:resource="@string/share_target"/>
+
         <% if (enableSiteSettingsShortcut) { %>
             <activity android:name="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity">
             <meta-data
@@ -62,7 +66,16 @@
                 android:value="@string/launchUrl" />
             </activity>
         <% } %>
-        
+
+        <intent-filter>
+            <action android:name="android.intent.action.SEND" />
+            <action android:name="android.intent.action.SEND_MULTIPLE" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <data android:mimeType="audio/*" />
+            <data android:mimeType="image/*" />
+            <data android:mimeType="video/*" />
+        </intent-filter>
+
         <activity android:name="LauncherActivity"
             android:label="@string/launcherName">
             <meta-data android:name="android.support.customtabs.trusted.DEFAULT_URL"
