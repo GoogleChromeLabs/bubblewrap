@@ -55,10 +55,6 @@
             android:name="twa_generator"
             android:value="@string/generatorApp" />
 
-        <meta-data
-            android:name="android.support.customtabs.trusted.METADATA_SHARE_TARGET"
-            android:resource="@string/shareTarget"/>
-
         <% if (enableSiteSettingsShortcut) { %>
             <activity android:name="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity">
             <meta-data
@@ -66,15 +62,6 @@
                 android:value="@string/launchUrl" />
             </activity>
         <% } %>
-
-        <intent-filter>
-            <action android:name="android.intent.action.SEND" />
-            <action android:name="android.intent.action.SEND_MULTIPLE" />
-            <category android:name="android.intent.category.DEFAULT" />
-            <data android:mimeType="audio/*" />
-            <data android:mimeType="image/*" />
-            <data android:mimeType="video/*" />
-        </intent-filter>
 
         <activity android:name="LauncherActivity"
             android:label="@string/launcherName">
@@ -118,11 +105,24 @@
             <meta-data android:name="android.support.customtabs.trusted.FALLBACK_STRATEGY"
                 android:value="@string/fallbackType" />
 
+            <meta-data
+            android:name="android.support.customtabs.trusted.METADATA_SHARE_TARGET"
+            android:resource="@string/shareTarget"/>
+
             <% if (display === 'fullscreen') { %>
             <meta-data android:name="android.support.customtabs.trusted.DISPLAY_MODE"
                 android:value="immersive" />
-
             <% }%>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
