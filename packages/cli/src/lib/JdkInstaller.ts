@@ -15,7 +15,9 @@
  */
 
 import * as path from 'path';
-import * as util from '../util';
+import {util} from '@bubblewrap/core';
+import {Prompt} from './Prompt';
+import {enUS as messages} from './strings';
 
 const JDK_VERSION = '8u265-b01';
 const JDK_DIR = `jdk${JDK_VERSION}`;
@@ -26,6 +28,7 @@ const JDK_FILE_NAME_MAC = `OpenJDK8U-jdk_x64_mac_hotspot_${JDK_BIN_VERSION}.tar.
 const JDK_FILE_NAME_WIN32 = `OpenJDK8U-jdk_x86-32_windows_hotspot_${JDK_BIN_VERSION}.zip`;
 const JDK_FILE_NAME_LINUX64 = `OpenJDK8U-jdk_x64_linux_hotspot_${JDK_BIN_VERSION}.tar.gz`;
 const JDK_SRC_ZIP = `jdk${JDK_VERSION}.zip`;
+const JDK_SOURCE_SIZE = 136130622;
 
 /**
  * Install JDK 8 by downloading the binary and source code and
@@ -44,7 +47,7 @@ export class JdkInstaller {
    *
    * @param process {NodeJS.Process} process information from the OS process.
    */
-  constructor(process: NodeJS.Process) {
+  constructor(process: NodeJS.Process, private prompt: Prompt) {
     this.process = process;
     this.unzipFunction = util.untar;
     this.joinPath = path.posix.join;
@@ -79,12 +82,23 @@ export class JdkInstaller {
     const dstPath = path.resolve(installPath);
     const downloadSrcUrl = DOWNLOAD_JDK_SRC_ROOT + JDK_SRC_ZIP;
     const localSrcZipPath = this.joinPath(dstPath, JDK_SRC_ZIP);
-    await util.downloadFile(downloadSrcUrl, localSrcZipPath);
+
+    this.prompt.printMessage(messages.messageDownloadJdkSrc);
+
+    // The sources don't return the file size in the headers, so we
+    // set it statically.
+    await this.prompt.downloadFile(downloadSrcUrl, localSrcZipPath, JDK_SOURCE_SIZE);
+
+    this.prompt.printMessage(messages.messageDecompressJdkSrc);
     await util.unzipFile(localSrcZipPath, dstPath, true);
 
     const downloadBinUrl = DOWNLOAD_JDK_BIN_ROOT + this.downloadFile;
     const localBinPath = this.joinPath(dstPath, this.downloadFile);
-    await util.downloadFile(downloadBinUrl, localBinPath);
+
+    this.prompt.printMessage(messages.messageDownloadJdkBin);
+    await this.prompt.downloadFile(downloadBinUrl, localBinPath);
+
+    this.prompt.printMessage(messages.messageDecompressJdkBin);
     await this.unzipFunction(localBinPath, dstPath, true);
 
     return this.joinPath(dstPath, JDK_DIR);

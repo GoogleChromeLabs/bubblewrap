@@ -17,8 +17,9 @@
 
 import {join} from 'path';
 import {homedir} from 'os';
-import {Config, Log, ConsoleLog, JdkInstaller, JdkHelper, AndroidSdkTools,
-  AndroidSdkToolsInstaller} from '@bubblewrap/core';
+import {Config, Log, ConsoleLog, JdkHelper, AndroidSdkTools} from '@bubblewrap/core';
+import {JdkInstaller} from './JdkInstaller';
+import {AndroidSdkToolsInstaller} from './AndroidSdkToolsInstaller';
 import {existsSync} from 'fs';
 import {enUS as messages} from './strings';
 import {promises as fsPromises} from 'fs';
@@ -43,7 +44,7 @@ async function createConfig(prompt: Prompt = new InquirerPrompt()): Promise<Conf
   } else {
     await fsPromises.mkdir(DEFAULT_JDK_FOLDER, {recursive: true});
     prompt.printMessage(messages.messageDownloadJdk + DEFAULT_JDK_FOLDER);
-    const jdkInstaller = new JdkInstaller(process);
+    const jdkInstaller = new JdkInstaller(process, prompt);
     jdkPath = await jdkInstaller.install(DEFAULT_JDK_FOLDER);
   }
 
@@ -58,7 +59,8 @@ async function createConfig(prompt: Prompt = new InquirerPrompt()): Promise<Conf
     if (sdkTermsAgreement) {
       await fsPromises.mkdir(DEFAULT_SDK_FOLDER, {recursive: true});
       prompt.printMessage(messages.messageDownloadSdk + DEFAULT_SDK_FOLDER);
-      await AndroidSdkToolsInstaller.install(DEFAULT_SDK_FOLDER);
+      const androidSdkToolsInstaller = new AndroidSdkToolsInstaller(process, prompt);
+      await androidSdkToolsInstaller.install(DEFAULT_SDK_FOLDER);
       sdkPath = DEFAULT_SDK_FOLDER;
     } else {
       throw new Error(messages.errorSdkTerms);

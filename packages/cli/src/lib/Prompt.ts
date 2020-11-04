@@ -14,8 +14,12 @@
  *  limitations under the License.
  */
 
-import {Result} from '@bubblewrap/core';
+import {Result, util} from '@bubblewrap/core';
+import {Presets, Bar} from 'cli-progress';
+import {green} from 'colors';
 import * as inquirer from 'inquirer';
+
+const KILOBYTE_SIZE = 1024;
 
 /**
  * A function that takes a `string`, validates and tries to convert to the type `T`, and returns a
@@ -88,6 +92,15 @@ export interface Prompt {
    * value will the `true` if the user answers `Yes` and `false` for `No`.
    */
   promptConfirm(message: string, defaultValue: boolean): Promise<boolean>;
+
+  /**
+   * Downloads a file from `url` and saves it as `filename` and shows the download progress.
+   * Optionaly, the total file size can be passed as `totalSize`.
+   * @param url the url to download the file from.
+   * @param filename the filename to save the file.
+   * @param totalSize an optional total file size.
+   */
+  downloadFile(url: string, filename: string, totalSize?: number): Promise<void>;
 }
 
 // Builds an Inquirer validate function from a `ValidateFunction<T>`. From the inquirer docs:
@@ -172,5 +185,21 @@ export class InquirerPrompt implements Prompt {
       mask: '*',
     });
     return (await validateFunction(result.question)).unwrap();
+  }
+
+  async downloadFile(url: string, filename: string, totalSize = 0): Promise<void> {
+    const progressBar = new Bar({
+      format: ` >> [${green('{bar}')}] {percentage}% | {value}k of {total}k`,
+    }, Presets.shades_classic);
+
+    progressBar.start(Math.round(totalSize / KILOBYTE_SIZE), 0);
+    await util.downloadFile(url, filename, (current, total) => {
+      if (total > 0 && total !== totalSize) {
+        progressBar.setTotal(Math.round(total / KILOBYTE_SIZE));
+        totalSize = total;
+      }
+      progressBar.update(Math.round(current / KILOBYTE_SIZE));
+    });
+    progressBar.stop();
   }
 }

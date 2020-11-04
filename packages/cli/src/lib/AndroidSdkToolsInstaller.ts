@@ -15,7 +15,9 @@
  */
 
 import * as path from 'path';
-import * as util from '../util';
+import {util} from '@bubblewrap/core';
+import {Prompt} from './Prompt';
+import {enUS as messages} from './strings';
 
 const SDK_VERSION = '6609375';
 const DOWNLOAD_SDK_ROOT = 'https://dl.google.com/android/repository/';
@@ -28,15 +30,18 @@ const LINUX_URL = `commandlinetools-linux-${SDK_VERSION}_latest.zip`;
  * decompressing it.
  */
 export class AndroidSdkToolsInstaller {
+  constructor(private process: NodeJS.Process, private prompt: Prompt) {
+  }
+
   /**
    * Downloads the platform-appropriate version of Android
    * Command Line Tools.
    *
    * @param installPath {string} path to install SDK at.
    */
-  static async install(installPath: string): Promise<void> {
+  async install(installPath: string): Promise<void> {
     let downloadFileName;
-    switch (process.platform) {
+    switch (this.process.platform) {
       case 'darwin': {
         downloadFileName = MAC_URL;
         break;
@@ -49,13 +54,17 @@ export class AndroidSdkToolsInstaller {
         downloadFileName = WINDOWS_URL;
         break;
       }
-      default: throw new Error(`Unsupported Platform: ${process.platform}`);
+      default: throw new Error(`Unsupported Platform: ${this.process.platform}`);
     }
 
     const dstPath = path.resolve(installPath);
     const downloadUrl = DOWNLOAD_SDK_ROOT + downloadFileName;
     const localPath = path.join(dstPath, downloadFileName);
-    await util.downloadFile(downloadUrl, localPath);
+
+    this.prompt.printMessage(messages.messageDownloadAndroidSdk);
+    await this.prompt.downloadFile(downloadUrl, localPath);
+
+    this.prompt.printMessage(messages.messageDecompressAndroidSdk);
     await util.unzipFile(localPath, dstPath, true);
   }
 }

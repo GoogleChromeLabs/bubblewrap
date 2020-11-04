@@ -55,6 +55,12 @@ type Messages = {
   messageWebAppDetailsDesc: string;
   messageDownloadJdk: string;
   messageDownloadSdk: string;
+  messageDownloadJdkSrc: string;
+  messageDecompressJdkSrc: string;
+  messageDownloadJdkBin: string;
+  messageDecompressJdkBin: string;
+  messageDownloadAndroidSdk: string;
+  messageDecompressAndroidSdk: string;
   promptInstallJdk: string;
   promptJdkPath: string;
   promptInstallSdk: string;
@@ -243,6 +249,12 @@ the PWA:
 \t\t- To open ${italic('https://example.com/path-to-pwa/')}: ${cyan('/path-to-pwa/')}\n`,
   messageDownloadJdk: 'Downloading JDK 8 to ',
   messageDownloadSdk: 'Downloading Android SDK to ',
+  messageDownloadJdkSrc: 'Downloading the JDK 8 Sources...',
+  messageDecompressJdkSrc: 'Decompressing the JDK 8 Sources...',
+  messageDownloadJdkBin: 'Downloading the JDK 8 Binaries...',
+  messageDecompressJdkBin: 'Decompressing the JDK 8 Binaries...',
+  messageDownloadAndroidSdk: 'Downloading the Android SDK...',
+  messageDecompressAndroidSdk: 'Decompressing the Android SDK...',
   promptInstallJdk: `Do you want Bubblewrap to install JDK?
   (Enter "No" to use your JDK installation)`,
   promptJdkPath: 'Path to your existing JDK:',

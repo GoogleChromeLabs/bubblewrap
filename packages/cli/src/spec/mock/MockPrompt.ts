@@ -110,4 +110,8 @@ export class MockPrompt implements Prompt {
     const nextResponse = this.responses.shift()!;
     return nextResponse;
   }
+
+  async downloadFile(): Promise<void> {
+    throw new Error('Not Implemented');
+  }
 }
