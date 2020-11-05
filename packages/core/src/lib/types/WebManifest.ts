@@ -40,6 +40,12 @@ export interface ShareTargetParams {
   title?: string;
   text?: string;
   url?: string;
+  files?: FilesParams[];
+}
+
+export interface FilesParams {
+  name: string;
+  accept: string[];
 }
 
 export interface ShareTarget {
