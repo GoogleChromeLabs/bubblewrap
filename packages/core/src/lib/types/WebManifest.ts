@@ -32,6 +32,9 @@ export interface WebManifestShortcutJson {
 
 type WebManifestDisplayMode = 'browser' | 'minimal-ui' | 'standalone' | 'fullscreen';
 
+export type OrientationLock = 'any' | 'natural' | 'landscape'| 'portrait' | 'portrait-primary'|
+    'portrait-secondary' | 'landscape-primary' | 'landscape-secondary';
+
 // These interfaces follows the implementation from: https://w3c.github.io/web-share-target/.
 export interface ShareTargetParams {
   title?: string;
@@ -56,4 +59,5 @@ export interface WebManifestJson {
   icons?: Array<WebManifestIcon>;
   shortcuts?: Array<WebManifestShortcutJson>;
   share_target?: ShareTarget;
+  orientation?: OrientationLock;
 }
