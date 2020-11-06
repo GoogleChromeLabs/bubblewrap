@@ -47,8 +47,8 @@ export function asDisplayMode(input: string): DisplayMode | null {
 
 // Possible values for screen orientation, as defined in `android-browser-helper`:
 // https://github.com/GoogleChrome/android-browser-helper/blob/alpha/androidbrowserhelper/src/main/java/com/google/androidbrowserhelper/trusted/LauncherActivityMetadata.java#L191-L216
-const ORIENTATION_VALUES = ['default', 'any', 'natural', 'landscape', 'portrait', 'portrait-primary',
-  'portrait-secondary', 'landscape-primary', 'landscape-secondary'];
+const ORIENTATION_VALUES = ['default', 'any', 'natural', 'landscape', 'portrait',
+  'portrait-primary', 'portrait-secondary', 'landscape-primary', 'landscape-secondary'];
 export type Orientation = typeof ORIENTATION_VALUES[number];
 export const Orientations: Orientation[] = [...ORIENTATION_VALUES];
 
