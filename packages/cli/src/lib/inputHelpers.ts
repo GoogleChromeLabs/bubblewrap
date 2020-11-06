@@ -17,7 +17,8 @@
 import Color = require('color');
 import {URL} from 'url';
 import {isWebUri} from 'valid-url';
-import {Result, DisplayMode, asDisplayMode, util} from '@bubblewrap/core';
+import {Result, DisplayMode, asDisplayMode, asOrientation, Orientation, util}
+  from '@bubblewrap/core';
 import {ValidateFunction} from './Prompt';
 import {enUS as messages} from './strings';
 import {domainToASCII} from 'url';
@@ -204,6 +205,21 @@ export async function validateDisplayMode(input: string): Promise<Result<Display
     return Result.error(new Error(messages.errorInvalidDisplayMode(input)));
   }
   return Result.ok(displayMode);
+}
+
+/**
+ * A {@link ValidateFunction} that receives a {@link string} as input and resolves to a
+ * {@link Orientation} when successful.
+ * @param {string} input a string to be converted to a {@link Orientation}.
+ * @returns {Result<Orientation, Error>} a result that resolves to a {@link Orientation} on
+ * success or {@link Error} on failure.
+ */
+export async function validateOrientation(input: string): Promise<Result<Orientation, Error>> {
+  const orientation = asOrientation(input);
+  if (orientation === null) {
+    return Result.error(new Error(messages.errorInvalidOrientation(input)));
+  }
+  return Result.ok(orientation);
 }
 
 /**

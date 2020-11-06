@@ -44,6 +44,7 @@ def twaManifest = [
     // 'customtabs' and 'webview'.
     fallbackType: '<%= fallbackType %>',
     enableSiteSettingsShortcut: '<%= enableSiteSettingsShortcut %>',
+    orientation: '<%= orientation %>',
 ]
 
 android {
@@ -141,6 +142,7 @@ android {
         resValue "string", "fallbackType", twaManifest.fallbackType
 
         resValue "bool", "enableSiteSettingsShortcut", twaManifest.enableSiteSettingsShortcut
+        resValue "string", "orientation", twaManifest.orientation
     }
     buildTypes {
         release {

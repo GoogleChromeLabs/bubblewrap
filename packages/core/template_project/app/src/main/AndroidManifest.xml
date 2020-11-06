@@ -116,6 +116,9 @@
                 android:value="immersive" />
             <% } %>
 
+            <meta-data android:name="android.support.customtabs.trusted.SCREEN_ORIENTATION"
+                android:value="@string/orientation"/>
+
             <% if (shareTarget) { %>
                 <intent-filter>
                     <action android:name="android.intent.action.SEND" />

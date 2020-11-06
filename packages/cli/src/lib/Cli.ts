@@ -18,7 +18,7 @@ import * as minimist from 'minimist';
 import {update} from './cmds/update';
 import {help} from './cmds/help';
 import {build} from './cmds/build';
-import {init} from './cmds/init';
+import {init, InitArgs} from './cmds/init';
 import {validate} from './cmds/validate';
 import {install} from './cmds/install';
 import {loadOrCreateConfig} from './config';
@@ -61,7 +61,7 @@ export class Cli {
       case 'help':
         return await help(parsedArgs);
       case 'init':
-        return await init(parsedArgs, config);
+        return await init(parsedArgs as unknown as InitArgs, config);
       case 'update':
         return await update(parsedArgs);
       case 'build':

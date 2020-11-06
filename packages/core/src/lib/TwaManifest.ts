@@ -45,6 +45,20 @@ export function asDisplayMode(input: string): DisplayMode | null {
   return DISPLAY_MODE_VALUES.includes(input) ? input as DisplayMode : null;
 }
 
+// Possible values for screen orientation, as defined in `android-browser-helper`:
+// https://github.com/GoogleChrome/android-browser-helper/blob/alpha/androidbrowserhelper/src/main/java/com/google/androidbrowserhelper/trusted/LauncherActivityMetadata.java#L191-L216
+const ORIENTATION_VALUES = ['default', 'any', 'natural', 'landscape', 'portrait',
+  'portrait-primary', 'portrait-secondary', 'landscape-primary', 'landscape-secondary'];
+export type Orientation = typeof ORIENTATION_VALUES[number];
+export const Orientations: Orientation[] = [...ORIENTATION_VALUES];
+
+export function asOrientation(input?: string): Orientation | null {
+  if (!input) {
+    return null;
+  }
+  return ORIENTATION_VALUES.includes(input) ? input as Orientation : null;
+}
+
 // Default values used on the Twa Manifest
 const DEFAULT_SPLASHSCREEN_FADEOUT_DURATION = 300;
 const DEFAULT_APP_NAME = 'My TWA';
@@ -59,6 +73,7 @@ const DEFAULT_SIGNING_KEY_PATH = './android.keystore';
 const DEFAULT_SIGNING_KEY_ALIAS = 'android';
 const DEFAULT_ENABLE_NOTIFICATIONS = false;
 const DEFAULT_GENERATOR_APP_NAME = 'unknown';
+const DEFAULT_ORIENTATION = 'default';
 
 export type FallbackType = 'customtabs' | 'webview';
 
@@ -135,6 +150,7 @@ export class TwaManifest {
   enableSiteSettingsShortcut: boolean;
   isChromeOSOnly: boolean;
   shareTarget?: ShareTarget;
+  orientation: Orientation;
 
   private static log = new ConsoleLog('twa-manifest');
 
@@ -176,6 +192,7 @@ export class TwaManifest {
       data.enableSiteSettingsShortcut : true;
     this.isChromeOSOnly = data.isChromeOSOnly != undefined ? data.isChromeOSOnly : false;
     this.shareTarget = data.shareTarget;
+    this.orientation = data.orientation || DEFAULT_ORIENTATION;
   }
 
   /**
@@ -295,6 +312,7 @@ export class TwaManifest {
       webManifestUrl: webManifestUrl.toString(),
       features: {},
       shareTarget: TwaManifest.verifyShareTarget(webManifestUrl, webManifest.share_target),
+      orientation: asOrientation(webManifest.orientation) || DEFAULT_ORIENTATION,
     });
     return twaManifest;
   }
@@ -494,6 +512,7 @@ export interface TwaManifestJson {
   enableSiteSettingsShortcut?: boolean;
   isChromeOSOnly?: boolean;
   shareTarget?: ShareTarget;
+  orientation?: Orientation;
 }
 
 export interface SigningKeyInfo {
