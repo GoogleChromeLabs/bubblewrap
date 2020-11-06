@@ -27,6 +27,7 @@ describe('TwaManifest', () => {
         'short_name': 'PwaDirectory',
         'start_url': '/?utm_source=homescreen',
         'display': 'fullscreen',
+        'orientation': 'landscape',
         'icons': [{
           'src': '/favicons/android-chrome-192x192.png',
           'sizes': '192x192',
@@ -54,6 +55,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.name).toBe('PWA Directory');
       expect(twaManifest.launcherName).toBe('PwaDirectory');
       expect(twaManifest.display).toBe('fullscreen');
+      expect(twaManifest.orientation).toBe('landscape');
       expect(twaManifest.startUrl).toBe('/?utm_source=homescreen');
       expect(twaManifest.iconUrl)
           .toBe('https://pwa-directory.com/favicons/android-chrome-512x512.png');
@@ -97,6 +99,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.maskableIconUrl).toBeUndefined();
       expect(twaManifest.monochromeIconUrl).toBeUndefined();
       expect(twaManifest.display).toBe('standalone');
+      expect(twaManifest.orientation).toBe('any');
       expect(twaManifest.themeColor.hex()).toBe('#FFFFFF');
       expect(twaManifest.navigationColor.hex()).toBe('#000000');
       expect(twaManifest.navigationColorDark.hex()).toBe('#000000');
@@ -196,6 +199,7 @@ describe('TwaManifest', () => {
         startUrl: '/',
         iconUrl: 'https://pwa-directory.com/favicons/android-chrome-512x512.png',
         display: 'fullscreen',
+        orientation: 'landscape',
         themeColor: '#00ff00',
         navigationColor: '#000000',
         navigationColorDark: '#ffffff',
@@ -225,6 +229,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.startUrl).toEqual(twaManifest.startUrl);
       expect(twaManifest.iconUrl).toEqual(twaManifest.iconUrl);
       expect(twaManifest.display).toEqual('fullscreen');
+      expect(twaManifest.orientation).toEqual('landscape');
       expect(twaManifest.themeColor).toEqual(new Color('#00ff00'));
       expect(twaManifest.navigationColor).toEqual(new Color('#000000'));
       expect(twaManifest.navigationColorDark).toEqual(new Color('#ffffff'));
