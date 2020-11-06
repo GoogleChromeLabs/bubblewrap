@@ -9,7 +9,9 @@
     "test": "lerna run test",
     "clean-modules": "lerna clean -y",
     "clean": "lerna run clean",
-    "postinstall": "lerna bootstrap && lerna link"
+    "postinstall": "lerna bootstrap && lerna link",
+    "publish": "lerna publish",
+    "publish-canary": "lerna publish --canary"
   },
   "keywords": [
     "twa",
