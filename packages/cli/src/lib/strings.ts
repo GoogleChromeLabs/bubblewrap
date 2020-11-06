@@ -21,10 +21,12 @@ type Messages = {
   errorFailedToRunQualityCriteria: string;
   errorMaxLength: (maxLength: number, actualLength: number) => string;
   errorMinLength: (minLength: number, actualLength: number) => string;
+  errorMissingManifestParameter: string;
   errorRequireHttps: string;
   errorInvalidUrl: (url: string) => string;
   errorInvalidColor: (color: string) => string;
   errorInvalidDisplayMode: (displayMode: string) => string;
+  errorInvalidOrientation: (orientation: string) => string;
   errorInvalidInteger: (integer: string) => string;
   errorUrlMustBeImage: (mimeType: string) => string;
   errorUrlMustNotBeSvg: string;
@@ -70,6 +72,7 @@ type Messages = {
   promptName: string;
   promptLauncherName: string;
   promptDisplayMode: string;
+  promptOrientation: string;
   promptThemeColor: string;
   promptBackgroundColor: string;
   promptStartUrl: string;
@@ -107,6 +110,7 @@ export const enUS: Messages = {
   errorMinLength: (minLength, actualLength): string => {
     return `Minimum length is ${minLength} but input is ${actualLength}.`;
   },
+  errorMissingManifestParameter: `Missing required parameter ${cyan('--manifest')}`,
   errorRequireHttps: 'Url must be https.',
   errorInvalidUrl: (url: string): string => {
     return `Invalid URL: ${url}`;
@@ -116,6 +120,9 @@ export const enUS: Messages = {
   },
   errorInvalidDisplayMode: (displayMode: string): string => {
     return `Invalid display mode: ${displayMode}`;
+  },
+  errorInvalidOrientation: (orientation: string): string => {
+    return `Invalid orientation: ${orientation}`;
   },
   errorInvalidInteger: (integer: string): string => {
     return `Invalid integer provided: ${integer}`;
@@ -266,6 +273,7 @@ the PWA:
   promptName: 'Application name:',
   promptLauncherName: 'Short name:',
   promptDisplayMode: 'Display mode:',
+  promptOrientation: 'Orientation:',
   promptThemeColor: 'Status bar color:',
   promptBackgroundColor: 'Splash screen color:',
   promptStartUrl: 'URL path:',

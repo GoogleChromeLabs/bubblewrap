@@ -15,19 +15,21 @@
  */
 
 import * as fs from 'fs';
-import {Config, DisplayModes, JdkHelper, KeyTool, TwaGenerator, TwaManifest}
+import {Config, DisplayModes, JdkHelper, KeyTool, Orientations, TwaGenerator, TwaManifest}
   from '@bubblewrap/core';
 import {validateHost, validateColor, createValidateString, validateDisplayMode, validatePackageId,
-  validateImageUrl, validateOptionalImageUrl, validateInteger} from '../inputHelpers';
-import {ParsedArgs} from 'minimist';
+  validateImageUrl, validateOptionalImageUrl, validateInteger, validateOrientation}
+  from '../inputHelpers';
 import {APP_NAME} from '../constants';
 import {Prompt, InquirerPrompt} from '../Prompt';
 import {enUS as messages} from '../strings';
 import {generateTwaProject} from './shared';
 
 export interface InitArgs {
-  manifest: string;
+  manifest?: string;
   directory?: string;
+  chromeosonly?: boolean;
+  alphaDependencies?: boolean;
 }
 
 async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promise<TwaManifest> {
@@ -76,6 +78,15 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
       twaManifest.display,
       validateDisplayMode,
   );
+
+  // TODO(andreban): Remove the alpha check when androidx.browser becomes stable.
+  if (twaManifest.alphaDependencies) {
+    twaManifest.orientation = await prompt.promptChoice(
+        messages.promptOrientation,
+        Orientations,
+        twaManifest.orientation,
+        validateOrientation);
+  }
 
   twaManifest.themeColor = await prompt.promptInput(
       messages.promptThemeColor,
@@ -185,12 +196,23 @@ async function createSigningKey(
 }
 
 export async function init(
-    args: ParsedArgs, config: Config, prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
+    args: InitArgs, config: Config, prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
+  if (!args.manifest) {
+    prompt.printMessage(messages.errorMissingManifestParameter);
+    return false;
+  }
   prompt.printMessage(messages.messageInitializingWebManifest(args.manifest));
   let twaManifest = await TwaManifest.fromWebManifest(args.manifest);
   if (args.chromeosonly) {
     twaManifest.isChromeOSOnly = true;
   }
+
+  if (args.alphaDependencies) {
+    twaManifest.alphaDependencies = {
+      enabled: true,
+    };
+  }
+
   twaManifest = await confirmTwaConfig(twaManifest, prompt);
   const twaGenerator = new TwaGenerator();
   const targetDirectory = args.directory || process.cwd();
