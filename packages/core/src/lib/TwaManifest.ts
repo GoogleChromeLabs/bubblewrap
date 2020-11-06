@@ -294,13 +294,28 @@ export class TwaManifest {
       shortcuts: shortcuts,
       webManifestUrl: webManifestUrl.toString(),
       features: {},
-      // We're leaving `shareTarget` as undefined for now, as the shareTarget is not complete
-      // and we want to avoid creating manifests with invalid values for now. The broader Web Share
-      // Target implementation is being tracked at
-      // https://github.com/GoogleChromeLabs/bubblewrap/issues/21.
-      shareTarget: undefined,
+      shareTarget: TwaManifest.verifyShareTarget(webManifestUrl, webManifest.share_target),
     });
     return twaManifest;
+  }
+
+  private static verifyShareTarget(
+      webManifestUrl: URL, shareTarget?: ShareTarget): ShareTarget | undefined {
+    if (!shareTarget?.action || !shareTarget?.params?.files) {
+      return undefined;
+    }
+
+    for (const file of shareTarget.params.files) {
+      if (!file.accept) {
+        return undefined;
+      }
+    }
+
+    return {
+      ...shareTarget,
+      // Ensure action is an absolute URL.
+      action: new URL(shareTarget.action, webManifestUrl).toString(),
+    };
   }
 
   /**
