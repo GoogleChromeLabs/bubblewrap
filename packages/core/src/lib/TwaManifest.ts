@@ -45,7 +45,9 @@ export function asDisplayMode(input: string): DisplayMode | null {
   return DISPLAY_MODE_VALUES.includes(input) ? input as DisplayMode : null;
 }
 
-const ORIENTATION_VALUES = ['any', 'natural', 'landscape', 'portrait', 'portrait-primary',
+// Possible values for screen orientation, as defined in `android-browser-helper`:
+// https://github.com/GoogleChrome/android-browser-helper/blob/alpha/androidbrowserhelper/src/main/java/com/google/androidbrowserhelper/trusted/LauncherActivityMetadata.java#L191-L216
+const ORIENTATION_VALUES = ['default', 'any', 'natural', 'landscape', 'portrait', 'portrait-primary',
   'portrait-secondary', 'landscape-primary', 'landscape-secondary'];
 export type Orientation = typeof ORIENTATION_VALUES[number];
 export const Orientations: Orientation[] = [...ORIENTATION_VALUES];
@@ -71,7 +73,7 @@ const DEFAULT_SIGNING_KEY_PATH = './android.keystore';
 const DEFAULT_SIGNING_KEY_ALIAS = 'android';
 const DEFAULT_ENABLE_NOTIFICATIONS = false;
 const DEFAULT_GENERATOR_APP_NAME = 'unknown';
-const DEFAULT_ORIENTATION = 'any';
+const DEFAULT_ORIENTATION = 'default';
 
 export type FallbackType = 'customtabs' | 'webview';
 

@@ -99,7 +99,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.maskableIconUrl).toBeUndefined();
       expect(twaManifest.monochromeIconUrl).toBeUndefined();
       expect(twaManifest.display).toBe('standalone');
-      expect(twaManifest.orientation).toBe('any');
+      expect(twaManifest.orientation).toBe('default');
       expect(twaManifest.themeColor.hex()).toBe('#FFFFFF');
       expect(twaManifest.navigationColor.hex()).toBe('#000000');
       expect(twaManifest.navigationColorDark.hex()).toBe('#000000');

@@ -130,6 +130,8 @@ bubblewrap init --manifest="<web-manifest-url>" [--directory="<path-to-output-lo
 Options:
   - `--directory`: path where to generate the project. Defaults to the current directory.
   - `--chromeosonly`: this flag specifies that the build will be used for Chrome OS only and prevents non-Chrome OS devices from installing the app.
+  - `--alphaDependencies`: enables features that depend on upcoming version of the Android library
+  for Trusted Web Activity or that are still unstable.
 
 ## `build`
 
