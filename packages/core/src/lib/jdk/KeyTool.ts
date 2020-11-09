@@ -72,8 +72,10 @@ export class KeyTool {
     const keytoolCmd = [
       'keytool',
       '-genkeypair',
-      `-dname "cn=${keyOptions.fullName}, ou=${keyOptions.organizationalUnit}, ` +
-          `o=${keyOptions.organization}, c=${keyOptions.country}"`,
+      `-dname "cn=${KeyTool.escapeDName(keyOptions.fullName)}, ` +
+          `ou=${KeyTool.escapeDName(keyOptions.organizationalUnit)}, ` +
+          `o=${KeyTool.escapeDName(keyOptions.organization)}, ` +
+          `c=${KeyTool.escapeDName(keyOptions.country)}"`,
       `-alias \"${keyOptions.alias}\"`,
       `-keypass \"${keyOptions.keypassword}\"`,
       `-keystore \"${keyOptions.path}\"`,
@@ -120,6 +122,13 @@ export class KeyTool {
   async keyInfo(keyOptions: KeyOptions): Promise<KeyInfo> {
     const rawKeyInfo = await this.list(keyOptions);
     return KeyTool.parseKeyInfo(rawKeyInfo);
+  }
+
+  /**
+   * The commas in the dname field from key tool must be escaped, so that 'te,st' becomes 'te\,st'.
+   */
+  private static escapeDName(input: string): string {
+    return input.replace(/,/g, '\\,');
   }
 
   /**

@@ -58,9 +58,9 @@ describe('KeyTool', () => {
       alias: 'keyalias',
       keypassword: 'keypass',
       password: 'pass',
-      fullName: 'Test User',
-      organization: 'Test Organization',
-      organizationalUnit: 'Testers',
+      fullName: 'Test, User',
+      organization: 'Test, Organization',
+      organizationalUnit: 'Tes,ters',
       country: 'GB',
     } as CreateKeyOptions;
 
@@ -72,7 +72,7 @@ describe('KeyTool', () => {
       expect(util.execute).toHaveBeenCalledWith([
         'keytool',
         '-genkeypair',
-        `-dname "cn=${keyOptions.fullName}, ou=${keyOptions.organizationalUnit}, ` +
+        `-dname "cn=Test\\, User, ou=Test, Organization, ` +
             `o=${keyOptions.organization}, c=${keyOptions.country}"`,
         `-alias "${keyOptions.alias}"`,
         `-keypass "${keyOptions.keypassword}"`,
