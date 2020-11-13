@@ -143,6 +143,17 @@ android {
 
         resValue "bool", "enableSiteSettingsShortcut", twaManifest.enableSiteSettingsShortcut
         resValue "string", "orientation", twaManifest.orientation
+
+        // This is the value of the screenOrientation for the LauncherActivity which determines the
+        // orientation of the splash screen. The "landscape" and "portrait" values from the TWA
+        // manifest directly maps ot "landscape" and "portrait" screenOrientation. Other values
+        // can't be directly mapped and are left as "unspecified". See more at:
+        // https://developer.android.com/guide/topics/manifest/activity-element#screen
+        def splashOrientation = "unspecified";
+        if (twaManifest.orientation == "landscape" || twaManifest.orientation == "portrait") {
+            splashOrientation.orientation
+        }
+        resValue "string", "splashOrientation", splashOrientation
     }
     buildTypes {
         release {
