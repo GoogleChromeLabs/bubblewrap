@@ -23,6 +23,7 @@ import {exec, execFile, spawn} from 'child_process';
 import {x as extractTar} from 'tar';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 import {Log} from './Log';
+import {Orientation} from './TwaManifest';
 
 const execPromise = promisify(exec);
 const execFilePromise = promisify(execFile);
@@ -288,4 +289,32 @@ export function escapeJsonString(stringToReplace: string): string {
   // The 'g' flag is for replacing all of the instances.
   const regExp = new RegExp('\"', 'g');
   return stringToReplace.replace(regExp, '\\\\\"');
+}
+
+// This is the value of the screenOrientation for the LauncherActivity which determines the
+// orientation of the splash screen.
+// This methods maps the Web Manifest orientation to the android screenOrientation:
+//  - "portrait"            => "userPortrait"
+//  - "portrait-primary"    => "portrait"
+//  - "portrait-secondary"  => "reversePortrait"
+//  - "landscape"           => "userLandscape"
+//  - "landscape-primary"   => "landscape"
+//  - "landscape-secondary" => "reverseLandscape"
+//
+// For more details, check the web orientation lock documentation at:
+// https://developer.mozilla.org/en-US/docs/Web/API/Screen/lockOrientation
+//
+// And the Android screenOrientation at:
+// https://developer.android.com/guide/topics/manifest/activity-element#screen
+//
+export function toAndroidScreenOrientation(orientation: Orientation): string {
+  switch (orientation) {
+    case 'portrait': return 'userPortrait';
+    case 'portrait-primary': return 'portrait';
+    case 'portrait-secondary': return 'reversePortrait';
+    case 'landscape': return 'landscape';
+    case 'landspace-primary': return 'userLandscape';
+    case 'landscape-secondary': return 'reverseLandscape';
+    default: return 'unspecified';
+  }
 }
