@@ -24,7 +24,7 @@ import {ShortcutInfo} from './ShortcutInfo';
 import {Log, ConsoleLog} from './Log';
 import {ImageHelper, IconDefinition} from './ImageHelper';
 import {FeatureManager} from './features/FeatureManager';
-import {rmdir, escapeJsonString} from './util';
+import {rmdir, escapeJsonString, toAndroidScreenOrientation} from './util';
 
 const COPY_FILE_LIST = [
   'settings.gradle',
@@ -359,6 +359,7 @@ export class TwaGenerator {
       ...features,
       generateShortcuts: twaManifest.generateShortcuts,
       escapeJsonString: escapeJsonString,
+      toAndroidScreenOrientation: toAndroidScreenOrientation,
     };
 
     // Generate templated files
