@@ -78,7 +78,7 @@ export class FeatureManager {
 
     if (twaManifest.alphaDependencies?.enabled) {
       this.buildGradle.dependencies.add(
-          'com.google.androidbrowserhelper:androidbrowserhelper:2.1.0-alpha01');
+          'com.google.androidbrowserhelper:androidbrowserhelper:2.1.0-alpha02');
     } else {
       this.buildGradle.dependencies.add(
           'com.google.androidbrowserhelper:androidbrowserhelper:2.0.1');
