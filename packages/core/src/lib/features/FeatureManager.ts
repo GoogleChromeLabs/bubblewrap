@@ -17,6 +17,7 @@
 import {Feature} from './Feature';
 import {AppsFlyerFeature} from './AppsFlyerFeature';
 import {LocationDelegationFeature} from './LocationDelegationFeature';
+import {PlayBillingFeature} from './PlayBillingFeature';
 import {TwaManifest} from '../TwaManifest';
 import {FirstRunFlagFeature} from './FirstRunFlagFeature';
 import {Log, ConsoleLog} from '../Log';
@@ -60,6 +61,15 @@ export class FeatureManager {
       } else {
         log.warn('Skipping LocationDelegationFeature. '+
             'Enable alphaDependencies to add LocationDelegationFeature.');
+      }
+    }
+
+    if (twaManifest.features.playBilling?.enabled) {
+      if (twaManifest.alphaDependencies?.enabled) {
+        this.addFeature(new PlayBillingFeature());
+      } else {
+        log.warn('Skipping PlayBillingFeature. '+
+            'Enable alphaDependencies to add PlayBillingFeature.');
       }
     }
 

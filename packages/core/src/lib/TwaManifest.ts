@@ -25,6 +25,7 @@ import {ShareTarget, WebManifestIcon, WebManifestJson} from './types/WebManifest
 import {ShortcutInfo} from './ShortcutInfo';
 import {AppsFlyerConfig} from './features/AppsFlyerFeature';
 import {LocationDelegationConfig} from './features/LocationDelegationFeature';
+import {PlayBillingConfig} from './features/PlayBillingFeature';
 import {FirstRunFlagConfig} from './features/FirstRunFlagFeature';
 
 // The minimum size needed for the app icon.
@@ -80,6 +81,7 @@ export type FallbackType = 'customtabs' | 'webview';
 type Features = {
   appsFlyer?: AppsFlyerConfig;
   locationDelegation?: LocationDelegationConfig;
+  playBilling?: PlayBillingConfig;
   firstRunFlag?: FirstRunFlagConfig;
 };
 
@@ -504,6 +506,7 @@ export interface TwaManifestJson {
   features?: {
     appsFlyer?: AppsFlyerConfig;
     locationDelegation?: LocationDelegationConfig;
+    playBilling?: PlayBillingConfig;
     firstRunFlag?: FirstRunFlagConfig;
   };
   alphaDependencies?: {
