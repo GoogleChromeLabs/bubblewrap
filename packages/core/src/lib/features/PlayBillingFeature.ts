@@ -24,7 +24,7 @@ export class PlayBillingFeature extends EmptyFeature {
   constructor() {
     super('playbilling');
 
-    this.buildGradle.dependencies.push('com.google.androidbrowserhelper:billing:1.0.0-alpha03');
+    this.buildGradle.dependencies.push('com.google.androidbrowserhelper:billing:1.0.0-alpha04');
 
     this.androidManifest.components.push(`
         <activity
@@ -52,8 +52,8 @@ export class PlayBillingFeature extends EmptyFeature {
         </service> `);
 
     this.delegationService.imports.push(
-				'com.google.androidbrowserhelper.locationdelegation.DigitalGoodsRequestHandler');
+        'com.google.androidbrowserhelper.playbilling.digitalgoods.DigitalGoodsRequestHandler');
     this.delegationService.classConstructor =
-        'registerExtraCommandHandler(new DigitalGoodsRequestHandler());';
+        'registerExtraCommandHandler(new DigitalGoodsRequestHandler(getApplicationContext()));';
   }
 }
