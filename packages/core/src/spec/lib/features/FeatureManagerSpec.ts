@@ -16,8 +16,9 @@
 
 import {FeatureManager} from '../../../lib/features/FeatureManager';
 import {AppsFlyerConfig, AppsFlyerFeature} from '../../../lib/features/AppsFlyerFeature';
-import {LocationDelegationFeature} from '../../../lib/features/LocationDelegationFeature';
 import {FirstRunFlagConfig, FirstRunFlagFeature} from '../../../lib/features/FirstRunFlagFeature';
+import {LocationDelegationFeature} from '../../../lib/features/LocationDelegationFeature';
+import {PlayBillingFeature} from '../../../lib/features/PlayBillingFeature';
 import {TwaManifest} from '../../../lib/TwaManifest';
 import {Feature} from '../../../lib/features/Feature';
 
@@ -178,6 +179,33 @@ describe('FeatureManager', () => {
 
       expect(features.delegationService.classConstructor!)
           .not.toContain(locationDelegationFeature.delegationService.classConstructor!);
+    });
+
+    it('Enables the Play Billing feature', () => {
+      const manifest = {
+        features: {
+          playBilling: {
+            enabled: true,
+          },
+        },
+        alphaDependencies: {
+          enabled: true,
+        },
+      } as TwaManifest;
+
+      const playBillingFeature = new PlayBillingFeature();
+      const features = new FeatureManager(manifest);
+
+      playBillingFeature.androidManifest.components.forEach((component) => {
+        expect(features.androidManifest.components).toContain(component);
+      });
+
+      playBillingFeature.delegationService.imports.forEach((imp) => {
+        expect(features.delegationService.imports).toContain(imp);
+      });
+
+      expect(features.delegationService.classConstructor!)
+          .toContain(playBillingFeature.delegationService.classConstructor!);
     });
   });
 });
