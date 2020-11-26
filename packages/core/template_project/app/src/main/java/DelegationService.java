@@ -6,7 +6,10 @@ import <%= imp %>;
 
 public class DelegationService extends
         com.google.androidbrowserhelper.trusted.DelegationService {
-    public DelegationService() {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
         <% for(const code of delegationService.classConstructor) { %>
             <%= code %>
         <% } %>
