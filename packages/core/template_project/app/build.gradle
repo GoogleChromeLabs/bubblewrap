@@ -45,7 +45,6 @@ def twaManifest = [
     fallbackType: '<%= fallbackType %>',
     enableSiteSettingsShortcut: '<%= enableSiteSettingsShortcut %>',
     orientation: '<%= orientation %>',
-    splashOrientation: '<%= toAndroidScreenOrientation(orientation) %>',
 ]
 
 android {
@@ -144,7 +143,6 @@ android {
 
         resValue "bool", "enableSiteSettingsShortcut", twaManifest.enableSiteSettingsShortcut
         resValue "string", "orientation", twaManifest.orientation
-        resValue "string", "splashOrientation", twaManifest.splashOrientation
     }
     buildTypes {
         release {
