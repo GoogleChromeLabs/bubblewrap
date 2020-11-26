@@ -35,7 +35,7 @@ Download a version of JDK 8 that is compatible with your OS from
 [AdoptOpenJDK](https://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=hotspot)
 and extract it in its own folder.
 
-**Warning:** Using a version lower than 8 will make it impossible to compile the project and higher
+:warning: **Warning:** Using a version lower than 8 will make it impossible to compile the project and higher
 versions are incompatible with the Android command line tools.
 
 ### Get the Android command line tools
@@ -73,6 +73,11 @@ be changed by editing the configuration file at `${USER_HOME}/.bubblewrap/config
 ```shell
 npm i -g @bubblewrap/cli
 ```
+
+:warning: **Warning:** Don't use `sudo npm i -g @bubblewrap/cli` to install Bubblewrap. Using `npm` commands with `sudo`
+can create different kinds of problems and should be avoided (see
+[here](https://medium.com/@ExplosionPills/dont-use-sudo-with-npm-still-66e609f5f92) and
+[here](https://medium.com/@ExplosionPills/dont-use-sudo-with-npm-5711d2726aa3)).
 
 ### Initializing an Android Project
 Generate an Android project from an existing Web Manifest:
