@@ -10,7 +10,7 @@ public class DelegationService extends
     public void onCreate() {
         super.onCreate();
 
-        <% for(const code of delegationService.classConstructor) { %>
+        <% for(const code of delegationService.onCreate) { %>
             <%= code %>
         <% } %>
     }

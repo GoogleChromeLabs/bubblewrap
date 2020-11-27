@@ -53,7 +53,7 @@ export class PlayBillingFeature extends EmptyFeature {
 
     this.delegationService.imports.push(
         'com.google.androidbrowserhelper.playbilling.digitalgoods.DigitalGoodsRequestHandler');
-    this.delegationService.classConstructor =
+    this.delegationService.onCreate =
         'registerExtraCommandHandler(new DigitalGoodsRequestHandler(getApplicationContext()));';
   }
 }
