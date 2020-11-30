@@ -21,7 +21,7 @@ import {template} from 'lodash';
 import {promisify} from 'util';
 import {TwaManifest} from './TwaManifest';
 import {ShortcutInfo} from './ShortcutInfo';
-import {Log, ConsoleLog} from './Log';
+import {Log} from './Log';
 import {ImageHelper, IconDefinition} from './ImageHelper';
 import {FeatureManager} from './features/FeatureManager';
 import {rmdir, escapeJsonString, toAndroidScreenOrientation} from './util';
@@ -178,8 +178,6 @@ class Progress {
 export class TwaGenerator {
   private imageHelper = new ImageHelper();
 
-  constructor(private log: Log = new ConsoleLog('twa-generator')) {}
-
   // Ensures targetDir exists and copies a file from sourceDir to target dir.
   private async copyStaticFile(
       sourceDir: string, targetDir: string, filename: string): Promise<void> {
@@ -328,9 +326,9 @@ export class TwaGenerator {
    * @param {String} targetDirectory the directory where the project will be created
    * @param {Object} twaManifest configurations values for the project.
    */
-  async createTwaProject(targetDirectory: string, twaManifest: TwaManifest,
+  async createTwaProject(targetDirectory: string, twaManifest: TwaManifest, log: Log,
       reportProgress: twaGeneratorProgress = noOpProgress): Promise<void> {
-    const features = new FeatureManager(twaManifest);
+    const features = new FeatureManager(twaManifest, log);
     const progress = new Progress(9, reportProgress);
     const error = twaManifest.validate();
     if (error !== null) {

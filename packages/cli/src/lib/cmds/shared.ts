@@ -17,6 +17,7 @@
 import {InquirerPrompt, Prompt} from '../Prompt';
 import {enUS as messages} from '../strings';
 import {Presets, Bar} from 'cli-progress';
+import {BufferedLog, ConsoleLog} from '@bubblewrap/core';
 import {TwaGenerator, TwaManifest} from '@bubblewrap/core';
 import {green} from 'colors';
 import {createValidateString} from '../inputHelpers';
@@ -34,8 +35,10 @@ export async function generateTwaProject(prompt: Prompt, twaGenerator: TwaGenera
   const progress = (current: number, total: number): void => {
     progressBar.update(current / total * 100);
   };
-  await twaGenerator.createTwaProject(targetDirectory, twaManifest, progress);
+  const log = new BufferedLog(new ConsoleLog("Generating TWA"));
+  await twaGenerator.createTwaProject(targetDirectory, twaManifest, log, progress);
   progressBar.stop();
+  log.flush();
 }
 
 /**
