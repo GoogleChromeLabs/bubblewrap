@@ -23,13 +23,14 @@ enum LogLevel {
   Error,
 }
 
+/** Data class to store level and message of pending */
 class PendingLog {
   constructor(public level: LogLevel, public message: string) {}
 }
 
 /**
  * A Log that wraps another Log, saving up all the log calls to be applied when flush is called.
- * 
+ *
  * It doesn't currently support arguments to the log messages.
  */
 export class BufferedLog implements Log {
@@ -37,16 +38,18 @@ export class BufferedLog implements Log {
 
   constructor(private innerLog: Log) {}
 
+  /* eslint-disable no-invalid-this */
   debug = this.addLogFunction(LogLevel.Debug);
   info = this.addLogFunction(LogLevel.Info);
   warn = this.addLogFunction(LogLevel.Warn);
   error = this.addLogFunction(LogLevel.Error);
+  /* eslint-enable no-invalid-this */
 
   /** Creates a function that adds a log at the given level. */
   private addLogFunction(level: LogLevel): (message: string) => void {
-    return (message: string) => {
+    return (message: string): void => {
       this.pendingLogs.push(new PendingLog(level, message));
-    }
+    };
   }
 
   setVerbose(verbose: boolean): void {
@@ -55,21 +58,21 @@ export class BufferedLog implements Log {
 
   /** Flushes all recorded logs to the underlying object. */
   flush(): void {
-    this.pendingLogs.forEach(pendingLog => {
+    this.pendingLogs.forEach((pendingLog) => {
       const message = pendingLog.message;
 
       switch (pendingLog.level) {
         case LogLevel.Debug:
-          this.innerLog.debug(message)
+          this.innerLog.debug(message);
           break;
         case LogLevel.Info:
-          this.innerLog.info(message)
+          this.innerLog.info(message);
           break;
         case LogLevel.Warn:
-          this.innerLog.warn(message)
+          this.innerLog.warn(message);
           break;
         case LogLevel.Error:
-          this.innerLog.error(message)
+          this.innerLog.error(message);
           break;
       }
     });

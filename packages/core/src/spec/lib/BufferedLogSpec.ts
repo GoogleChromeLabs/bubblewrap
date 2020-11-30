@@ -22,10 +22,10 @@ describe('buffered log', () => {
     const mockLog = new MockLog();
     const bufferedLog = new BufferedLog(mockLog);
 
-    bufferedLog.debug("1");
-    bufferedLog.info("2");
-    bufferedLog.warn("3");
-    bufferedLog.error("4");
+    bufferedLog.debug('1');
+    bufferedLog.info('2');
+    bufferedLog.warn('3');
+    bufferedLog.error('4');
 
     expect(mockLog.getReceivedData()).toEqual([]);
   });
@@ -34,13 +34,13 @@ describe('buffered log', () => {
     const mockLog = new MockLog();
     const bufferedLog = new BufferedLog(mockLog);
 
-    bufferedLog.debug("1");
-    bufferedLog.info("2");
-    bufferedLog.warn("3");
-    bufferedLog.error("4");
+    bufferedLog.debug('1');
+    bufferedLog.info('2');
+    bufferedLog.warn('3');
+    bufferedLog.error('4');
 
     bufferedLog.flush();
 
-    expect(mockLog.getReceivedData()).toEqual(["1", "2", "3", "4"]);
-  })
-})
+    expect(mockLog.getReceivedData()).toEqual(['1', '2', '3', '4']);
+  });
+});

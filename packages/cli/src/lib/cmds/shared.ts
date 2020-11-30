@@ -35,7 +35,7 @@ export async function generateTwaProject(prompt: Prompt, twaGenerator: TwaGenera
   const progress = (current: number, total: number): void => {
     progressBar.update(current / total * 100);
   };
-  const log = new BufferedLog(new ConsoleLog("Generating TWA"));
+  const log = new BufferedLog(new ConsoleLog('Generating TWA'));
   await twaGenerator.createTwaProject(targetDirectory, twaManifest, log, progress);
   progressBar.stop();
   log.flush();
