@@ -56,20 +56,20 @@ export class FeatureManager {
    */
   constructor(twaManifest: TwaManifest, log: Log = new ConsoleLog('FeatureManager')) {
     if (twaManifest.features.locationDelegation?.enabled) {
-      if (twaManifest.alphaDependencies?.enabled) {
+      if (twaManifest.alphaDependencies?.enabled && twaManifest.enableNotifications) {
         this.addFeature(new LocationDelegationFeature());
       } else {
-        log.error('Skipping LocationDelegationFeature. '+
-            'Enable alphaDependencies to add LocationDelegationFeature.');
+        log.error('Cannot enable LocationDelegationFeature without alphaDependencies and '+
+            'enableNotifications enabled.');
       }
     }
 
     if (twaManifest.features.playBilling?.enabled) {
-      if (twaManifest.alphaDependencies?.enabled) {
+      if (twaManifest.alphaDependencies?.enabled && twaManifest.enableNotifications) {
         this.addFeature(new PlayBillingFeature());
       } else {
-        log.error('Skipping PlayBillingFeature. '+
-            'Enable alphaDependencies to add PlayBillingFeature.');
+        log.error('Cannot enable PlayBillingFeature without alphaDependencies and '+
+            'enableNotifications enabled.');
       }
     }
 
