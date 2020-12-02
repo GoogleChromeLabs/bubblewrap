@@ -59,7 +59,7 @@ export class FeatureManager {
       if (twaManifest.alphaDependencies?.enabled) {
         this.addFeature(new LocationDelegationFeature());
       } else {
-        log.warn('Skipping LocationDelegationFeature. '+
+        log.error('Skipping LocationDelegationFeature. '+
             'Enable alphaDependencies to add LocationDelegationFeature.');
       }
     }
@@ -68,7 +68,7 @@ export class FeatureManager {
       if (twaManifest.alphaDependencies?.enabled) {
         this.addFeature(new PlayBillingFeature());
       } else {
-        log.warn('Skipping PlayBillingFeature. '+
+        log.error('Skipping PlayBillingFeature. '+
             'Enable alphaDependencies to add PlayBillingFeature.');
       }
     }

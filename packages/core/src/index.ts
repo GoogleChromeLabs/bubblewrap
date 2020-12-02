@@ -15,6 +15,7 @@
  */
 
 import {AndroidSdkTools} from './lib/androidSdk/AndroidSdkTools';
+import {BufferedLog} from './lib/BufferedLog';
 import {Config} from './lib/Config';
 import {GradleWrapper} from './lib/GradleWrapper';
 import {Log, ConsoleLog} from './lib/Log';
@@ -31,6 +32,7 @@ import {Result} from './lib/Result';
 
 export {
   AndroidSdkTools,
+  BufferedLog,
   Config,
   DigitalAssetLinks,
   GradleWrapper,
