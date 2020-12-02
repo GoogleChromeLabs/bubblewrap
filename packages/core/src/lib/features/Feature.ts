@@ -129,9 +129,9 @@ export interface Feature {
      */
     imports: string[];
     /**
-     * Code segment to be added to the constructor. The code will be called
+     * Code segment to be added to onCreate. The code will be called by each plugin.
      * by each plugin.
      */
-    classConstructor?: string;
+    onCreate?: string;
   };
 }

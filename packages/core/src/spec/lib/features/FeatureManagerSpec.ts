@@ -79,7 +79,7 @@ describe('FeatureManager', () => {
       expect(features.buildGradle.repositories).toEqual(emptySet);
       expect(features.launcherActivity.imports).toEqual(emptySet);
       expect(features.launcherActivity.launchUrl).toEqual([]);
-      expect(features.delegationService.classConstructor).toEqual([]);
+      expect(features.delegationService.onCreate).toEqual([]);
     });
 
     it('Creates from empty features with alpha features enabled', () => {
@@ -153,8 +153,8 @@ describe('FeatureManager', () => {
         expect(features.delegationService.imports).toContain(imp);
       });
 
-      expect(features.delegationService.classConstructor!)
-          .toContain(locationDelegationFeature.delegationService.classConstructor!);
+      expect(features.delegationService.onCreate!)
+          .toContain(locationDelegationFeature.delegationService.onCreate!);
     });
 
     it('LocationDelegation is not enabled without alphaDependencies', () => {
@@ -177,8 +177,8 @@ describe('FeatureManager', () => {
         expect(features.delegationService.imports).not.toContain(imp);
       });
 
-      expect(features.delegationService.classConstructor!)
-          .not.toContain(locationDelegationFeature.delegationService.classConstructor!);
+      expect(features.delegationService.onCreate!)
+          .not.toContain(locationDelegationFeature.delegationService.onCreate!);
     });
 
     it('Enables the Play Billing feature', () => {
@@ -204,8 +204,8 @@ describe('FeatureManager', () => {
         expect(features.delegationService.imports).toContain(imp);
       });
 
-      expect(features.delegationService.classConstructor!)
-          .toContain(playBillingFeature.delegationService.classConstructor!);
+      expect(features.delegationService.onCreate!)
+          .toContain(playBillingFeature.delegationService.onCreate!);
     });
   });
 });

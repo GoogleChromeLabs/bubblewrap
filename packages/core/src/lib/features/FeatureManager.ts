@@ -48,7 +48,7 @@ export class FeatureManager {
   };
   delegationService = {
     imports: new Set<string>(),
-    classConstructor: new Array<string>(),
+    onCreate: new Array<string>(),
   };
 
   /**
@@ -145,8 +145,8 @@ export class FeatureManager {
       this.delegationService.imports.add(imp);
     });
 
-    if (feature.delegationService.classConstructor) {
-      this.delegationService.classConstructor.push(feature.delegationService.classConstructor);
+    if (feature.delegationService.onCreate) {
+      this.delegationService.onCreate.push(feature.delegationService.onCreate);
     }
   }
 }
