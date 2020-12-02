@@ -38,6 +38,9 @@ export class BufferedLog implements Log {
 
   constructor(private innerLog: Log) {}
 
+  // The "no-invalid-this" triggers incorrectly on the below code, see:
+  // https://github.com/eslint/eslint/issues/13894
+  // https://github.com/typescript-eslint/typescript-eslint/issues/2840
   /* eslint-disable no-invalid-this */
   debug = this.addLogFunction(LogLevel.Debug);
   info = this.addLogFunction(LogLevel.Info);
