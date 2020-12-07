@@ -79,15 +79,12 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
       validateDisplayMode,
   );
 
-  // This feature is enabled with the --alphaDependencies flag.
-  // TODO(andreban): Remove the alpha check when androidx.browser becomes stable.
-  if (twaManifest.alphaDependencies) {
-    twaManifest.orientation = await prompt.promptChoice(
-        messages.promptOrientation,
-        Orientations,
-        twaManifest.orientation,
-        validateOrientation);
-  }
+  twaManifest.orientation = await prompt.promptChoice(
+      messages.promptOrientation,
+      Orientations,
+      twaManifest.orientation,
+      validateOrientation,
+  );
 
   twaManifest.themeColor = await prompt.promptInput(
       messages.promptThemeColor,
