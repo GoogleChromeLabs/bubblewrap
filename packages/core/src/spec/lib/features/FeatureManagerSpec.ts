@@ -75,7 +75,7 @@ describe('FeatureManager', () => {
       expect(features.applicationClass.onCreate).toEqual([]);
       expect(features.applicationClass.variables).toEqual([]);
       expect(features.buildGradle.dependencies).toContain(
-          'com.google.androidbrowserhelper:androidbrowserhelper:2.0.1');
+          'com.google.androidbrowserhelper:androidbrowserhelper:2.1.0');
       expect(features.buildGradle.repositories).toEqual(emptySet);
       expect(features.launcherActivity.imports).toEqual(emptySet);
       expect(features.launcherActivity.launchUrl).toEqual([]);
@@ -90,7 +90,7 @@ describe('FeatureManager', () => {
       } as TwaManifest;
       const features = new FeatureManager(manifest);
       expect(features.buildGradle.dependencies).toContain(
-          'com.google.androidbrowserhelper:androidbrowserhelper:2.1.0-alpha02');
+          'com.google.androidbrowserhelper:androidbrowserhelper:2.1.0');
     });
 
     it('Adds INTERNET permission when WebView fallback is enabled', () => {
@@ -137,9 +137,6 @@ describe('FeatureManager', () => {
             enabled: true,
           },
         },
-        alphaDependencies: {
-          enabled: true,
-        },
       } as TwaManifest;
 
       const locationDelegationFeature = new LocationDelegationFeature();
@@ -155,30 +152,6 @@ describe('FeatureManager', () => {
 
       expect(features.delegationService.onCreate!)
           .toContain(locationDelegationFeature.delegationService.onCreate!);
-    });
-
-    it('LocationDelegation is not enabled without alphaDependencies', () => {
-      const manifest = {
-        features: {
-          locationDelegation: {
-            enabled: true,
-          },
-        },
-      } as TwaManifest;
-
-      const locationDelegationFeature = new LocationDelegationFeature();
-      const features = new FeatureManager(manifest);
-
-      locationDelegationFeature.androidManifest.components.forEach((component) => {
-        expect(features.androidManifest.components).not.toContain(component);
-      });
-
-      locationDelegationFeature.delegationService.imports.forEach((imp) => {
-        expect(features.delegationService.imports).not.toContain(imp);
-      });
-
-      expect(features.delegationService.onCreate!)
-          .not.toContain(locationDelegationFeature.delegationService.onCreate!);
     });
 
     it('Enables the Play Billing feature', () => {

@@ -56,12 +56,7 @@ export class FeatureManager {
    */
   constructor(twaManifest: TwaManifest, log: Log = new ConsoleLog('FeatureManager')) {
     if (twaManifest.features.locationDelegation?.enabled) {
-      if (twaManifest.alphaDependencies?.enabled) {
-        this.addFeature(new LocationDelegationFeature());
-      } else {
-        log.error('Skipping LocationDelegationFeature. '+
-            'Enable alphaDependencies to add LocationDelegationFeature.');
-      }
+      this.addFeature(new LocationDelegationFeature());
     }
 
     if (twaManifest.features.playBilling?.enabled) {
@@ -86,13 +81,8 @@ export class FeatureManager {
       this.androidManifest.permissions.add('android.permission.INTERNET');
     }
 
-    if (twaManifest.alphaDependencies?.enabled) {
-      this.buildGradle.dependencies.add(
-          'com.google.androidbrowserhelper:androidbrowserhelper:2.1.0-alpha02');
-    } else {
-      this.buildGradle.dependencies.add(
-          'com.google.androidbrowserhelper:androidbrowserhelper:2.0.1');
-    }
+    this.buildGradle.dependencies.add(
+        'com.google.androidbrowserhelper:androidbrowserhelper:2.1.0');
   }
 
   private addFeature(feature: Feature): void {
