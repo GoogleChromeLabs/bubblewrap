@@ -15,6 +15,7 @@
  */
 
 import * as fs from 'fs';
+import {join, resolve} from 'path';
 import {Config, DisplayModes, JdkHelper, KeyTool, Orientations, TwaGenerator, TwaManifest}
   from '@bubblewrap/core';
 import {validateHost, validateColor, createValidateString, validateDisplayMode, validatePackageId,
@@ -200,6 +201,17 @@ export async function init(
     return false;
   }
   prompt.printMessage(messages.messageInitializingWebManifest(args.manifest));
+  // Ensure `targetDirectory` exists.
+  const targetDirectory = resolve(process.cwd(), args.directory || './');
+  if (!fs.existsSync(targetDirectory)) {
+    // Confirm if the directory should be created. Otherwise, thrown an error.
+    if (!await prompt.promptConfirm(
+        messages.promptCreateDirectory(targetDirectory), true)) {
+      throw new Error(messages.errorDirectoryDoesNotExist(targetDirectory));
+    }
+    fs.promises.mkdir(targetDirectory, {recursive: true});
+  }
+
   let twaManifest = await TwaManifest.fromWebManifest(args.manifest);
   if (args.chromeosonly) {
     twaManifest.isChromeOSOnly = true;
@@ -211,10 +223,11 @@ export async function init(
     };
   }
 
+  // The default path is "./android-keystore". Make sure it's relative to "targetDirectory".
+  twaManifest.signingKey.path = join(targetDirectory, twaManifest.signingKey.path);
   twaManifest = await confirmTwaConfig(twaManifest, prompt);
   const twaGenerator = new TwaGenerator();
-  const targetDirectory = args.directory || process.cwd();
-  await twaManifest.saveToFile('./twa-manifest.json');
+  await twaManifest.saveToFile(join(targetDirectory, '/twa-manifest.json'));
   await generateTwaProject(prompt, twaGenerator, targetDirectory, twaManifest);
   await createSigningKey(twaManifest, config, prompt);
   prompt.printMessage(messages.messageProjectGeneratedSuccess);

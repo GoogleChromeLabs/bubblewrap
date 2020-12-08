@@ -18,6 +18,7 @@ import {cyan, green, underline, bold, italic, red, yellow} from 'colors';
 
 type Messages = {
   errorAssetLinksGeneration: string;
+  errorDirectoryDoesNotExist: (directory: string) => string;
   errorFailedToRunQualityCriteria: string;
   errorMaxLength: (maxLength: number, actualLength: number) => string;
   errorMinLength: (minLength: number, actualLength: number) => string;
@@ -63,6 +64,7 @@ type Messages = {
   messageDecompressJdkBin: string;
   messageDownloadAndroidSdk: string;
   messageDecompressAndroidSdk: string;
+  promptCreateDirectory: (directory: string) => string;
   promptInstallJdk: string;
   promptJdkPath: string;
   promptInstallSdk: string;
@@ -102,6 +104,9 @@ type Messages = {
 
 export const enUS: Messages = {
   errorAssetLinksGeneration: 'Error generating "assetlinks.json"',
+  errorDirectoryDoesNotExist: (directory: string): string => {
+    return `Cannot write to directory: ${directory}.`;
+  },
   errorFailedToRunQualityCriteria:
       yellow('\nFailed to run the PWA Quality Criteria checks. Skipping.'),
   errorMaxLength: (maxLength, actualLength): string => {
@@ -262,6 +267,9 @@ the PWA:
   messageDecompressJdkBin: 'Decompressing the JDK 8 Binaries...',
   messageDownloadAndroidSdk: 'Downloading the Android SDK...',
   messageDecompressAndroidSdk: 'Decompressing the Android SDK...',
+  promptCreateDirectory: (directory: string): string => {
+    return `Directory ${cyan(directory)} does not exist. Do you want to create it now?`;
+  },
   promptInstallJdk: `Do you want Bubblewrap to install JDK?
   (Enter "No" to use your JDK installation)`,
   promptJdkPath: 'Path to your existing JDK:',
