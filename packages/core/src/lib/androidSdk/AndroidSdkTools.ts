@@ -93,8 +93,6 @@ export class AndroidSdkTools {
       }
     }
 
-
-
     this.log.info('Installing Build Tools');
     await util.execInteractive(
         sdkManagerPath,
