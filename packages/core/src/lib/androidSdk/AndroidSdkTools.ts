@@ -78,17 +78,19 @@ export class AndroidSdkTools {
     // TODO(andreban): Check for spaces in the path and throw an Error if one is found.
     let sdkRootEscapeChar = '"';
     let sdkManagerPath = this.pathJoin(this.getAndroidHome(), '/tools/bin/sdkmanager');
-    if (!fs.existsSync(sdkManagerPath)) {
-      // Android SDK version `6858069` and above doesn't have a `tools` folder anymore.
-      sdkManagerPath = this.pathJoin(this.getAndroidHome(), '/bin/sdkmanager');
-      if (!fs.existsSync(sdkManagerPath)) {
-        throw new Error(`Could not find sdkmanager at: ${sdkManagerPath}`);
-      }
-    }
-
     if (this.process.platform === 'win32') {
       sdkRootEscapeChar = '';
       sdkManagerPath += '.bat';
+    }
+    if (!fs.existsSync(sdkManagerPath)) {
+      // Android SDK version `6858069` and above doesn't have a `tools` folder anymore.
+      sdkManagerPath = this.pathJoin(this.getAndroidHome(), '/bin/sdkmanager');
+      if (this.process.platform === 'win32') {
+        sdkManagerPath += '.bat';
+      }
+      if (!fs.existsSync(sdkManagerPath)) {
+        throw new Error(`Could not find sdkmanager at: ${sdkManagerPath}`);
+      }
     }
 
     this.log.info('Installing Build Tools');
