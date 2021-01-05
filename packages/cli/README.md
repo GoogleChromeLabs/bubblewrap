@@ -26,46 +26,10 @@ a Project for an Android application that launches an existing Progressive Web A
 
 ## Setting up the Environment
 
-### Get the Java Development Kit (JDK) 8.
-The Android Command line tools requires the correct version of the JDK to run. To prevent version
-conflicts with a JDK version that is already installed, Bubblewrap uses a JDK that can unzipped in
-a separate folder.
+When running Bubblewrap for the first time, it will offer to automatically download and install
+external dependencies. This is the recommended setup, but it's possible to
+[manually setup the environment](#manually-setting-up-the-environment).
 
-Download a version of JDK 8 that is compatible with your OS from
-[AdoptOpenJDK](https://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=hotspot)
-and extract it in its own folder.
-
-:warning: **Warning:** Using a version lower than 8 will make it impossible to compile the project and higher
-versions are incompatible with the Android command line tools.
-
-### Get the Android command line tools
-Download a version of Android command line tools that is compatible with your OS from
-[https://developer.android.com/studio#command-tools](https://developer.android.com/studio#command-tools).
-Create a folder and extract the downloaded file into it. This will further install the androidSdk and android SDK manager without needing to install the whole Android IDE.
-
-### Tell Bubblewrap where the JDK and Android command line tools are
-When running `bubblewrap` for the first time, it will ask where it can find the JDK and Android command
-line tools. So, take note of the location where both were decompressed.
-
-To ensure if you are taking note of the correct location, check if each directory contains the following files:
-- On **Windows** and **Linux**, the correct **OpenJDK** path should contain `bin`, `include` ,`lib`, etc. On **MacOS**,
-the directory should contain the `Contents` subdirectory.
-- The **AndroidSDK** path should contain `tools` which should have `bin`, `cli`
-
-### Updating the location of the JDK and / or the Android command line tools.
-If the location for the JDK or the Android command line tools have been setup with the wrong path or
-if their location has changed after the initial configuration, the location for either of those can
-be changed by editing the configuration file at `${USER_HOME}/.bubblewrap/config.json`.
-
-#### Sample config.json
-```
-{ 
-  "jdkPath":"\\user\\home\\bubblewrap-user\\open-jdk",
-  "androidSdkPath":"\\user\\home\\bubblewrap-user\\android-cli"
- }
-
-```
-*(Note : Make sure you don't have `spaces` in the androidSdkPath. Check [this link](https://stackoverflow.com/questions/37052934/android-sdk-location-should-not-contain-whitespace-as-this-cause-problems-with) for more details.)*
 ## Quickstart Guide
 
 ### Installing Bubblewrap
@@ -160,6 +124,10 @@ Options:
 
 Regenerates the Android project files from a `twa-manifest.json` file.
 
+:warning: **Warning:** Bubblewrap doesn't expect the generated Android project to be updated using
+external editors. Any files added manually to the Android project will be deleted or overwritten
+when `update` is executed. Changes to `twa-manifest.json` are preserved.
+
 Usage:
 
 ```
@@ -244,6 +212,48 @@ Options:
   - `--ignore`: Ignores all of the fields on the list. Accepts all of the possible fields
   in the Web Manifest.
 
+## Manually setting up the Environment
+
+### Get the Java Development Kit (JDK) 8.
+The Android Command line tools requires the correct version of the JDK to run. To prevent version
+conflicts with a JDK version that is already installed, Bubblewrap uses a JDK that can unzipped in
+a separate folder.
+
+Download a version of JDK 8 that is compatible with your OS from
+[AdoptOpenJDK](https://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=hotspot)
+and extract it in its own folder.
+
+:warning: **Warning:** Using a version lower than 8 will make it impossible to compile the project and higher
+versions are incompatible with the Android command line tools.
+
+### Get the Android command line tools
+Download a version of Android command line tools that is compatible with your OS from
+[https://developer.android.com/studio#command-tools](https://developer.android.com/studio#command-tools).
+Create a folder and extract the downloaded file into it. This will further install the androidSdk and android SDK manager without needing to install the whole Android IDE.
+
+### Tell Bubblewrap where the JDK and Android command line tools are
+When running `bubblewrap` for the first time, it will ask where it can find the JDK and Android command
+line tools. So, take note of the location where both were decompressed.
+
+To ensure if you are taking note of the correct location, check if each directory contains the following files:
+- On **Windows** and **Linux**, the correct **OpenJDK** path should contain `bin`, `include` ,`lib`, etc. On **MacOS**,
+the directory should contain the `Contents` subdirectory.
+- The **AndroidSDK** path should contain `tools` which should have `bin`, `cli`
+
+### Updating the location of the JDK and / or the Android command line tools.
+If the location for the JDK or the Android command line tools have been setup with the wrong path or
+if their location has changed after the initial configuration, the location for either of those can
+be changed by editing the configuration file at `${USER_HOME}/.bubblewrap/config.json`.
+
+#### Sample config.json
+```
+{ 
+  "jdkPath":"\\user\\home\\bubblewrap-user\\open-jdk",
+  "androidSdkPath":"\\user\\home\\bubblewrap-user\\android-cli"
+ }
+
+```
+*(Note : Make sure you don't have `spaces` in the androidSdkPath. Check [this link](https://stackoverflow.com/questions/37052934/android-sdk-location-should-not-contain-whitespace-as-this-cause-problems-with) for more details.)*
 
 ## Contributing
 
