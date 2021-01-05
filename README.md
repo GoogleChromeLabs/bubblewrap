@@ -39,12 +39,10 @@ compare Trusted Web Activity projects against the quality criteria.
 ## Community
 
 We welcome anyone who wants to contribute with issues, feedback, feature requests or just
-generally discuss Bubblewrap. Those are a alternative ways developers can participate
-on the conversation:
-
- - Join the public monthly office hours, which hosted on every first Thursday at 5PM, London
- time. Check when the next office hours is going to happen via [this calendar][5] and join
- the meeting via [this link][3].
+generally discuss Bubblewrap. Alternatively developers can contribute to the conversation
+by joining the public monthly office hours, which hosted on every first Thursday at 5PM,
+London time. Check when the next office hours is going to happen via [this calendar][5]
+and join the meeting via [this link][3].
  
 ## Getting started with GUI tools 
 - If you are just getting started with APK generation from PWA, You might want to check [PWABuilder](https://www.pwabuilder.com/).
