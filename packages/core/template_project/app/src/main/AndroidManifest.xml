@@ -65,6 +65,7 @@
 
         <activity android:name="LauncherActivity"
             android:screenOrientation="<%= toAndroidScreenOrientation(orientation) %>"
+            android:alwaysRetainTaskState="true"
             android:label="@string/launcherName">
             <meta-data android:name="android.support.customtabs.trusted.DEFAULT_URL"
                 android:value="@string/launchUrl" />
