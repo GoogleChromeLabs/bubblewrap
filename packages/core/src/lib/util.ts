@@ -103,6 +103,7 @@ export async function untar(
   await extractTar({
     file: tarFile,
     cwd: destinationPath,
+    unlink: true,
   });
   if (deleteZipWhenDone) {
     fs.unlinkSync(tarFile);
