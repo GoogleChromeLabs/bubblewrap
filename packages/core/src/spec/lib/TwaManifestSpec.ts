@@ -72,7 +72,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.signingKey.path).toBe('./android.keystore');
       expect(twaManifest.signingKey.alias).toBe('android');
       expect(twaManifest.splashScreenFadeOutDuration).toBe(300);
-      expect(twaManifest.enableNotifications).toBeFalse();
+      expect(twaManifest.enableNotifications).toBeTrue();
       expect(twaManifest.webManifestUrl).toEqual(manifestUrl);
       expect(twaManifest.shortcuts.length).toBe(1);
       expect(twaManifest.shortcuts[0].name).toBe('shortcut name');
@@ -111,7 +111,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.signingKey.path).toBe('./android.keystore');
       expect(twaManifest.signingKey.alias).toBe('android');
       expect(twaManifest.splashScreenFadeOutDuration).toBe(300);
-      expect(twaManifest.enableNotifications).toBeFalse();
+      expect(twaManifest.enableNotifications).toBeTrue();
       expect(twaManifest.webManifestUrl).toEqual(manifestUrl);
       expect(twaManifest.shortcuts).toEqual([]);
       expect(twaManifest.generateShortcuts()).toBe('[]');
