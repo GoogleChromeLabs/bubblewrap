@@ -144,8 +144,8 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
       playBilling: {
         enabled: true,
       },
-    }
-  };
+    };
+  }
 
   // Step 5/5 Signing Key Information.
   prompt.printMessage(messages.messageSigningKeyInformation);
