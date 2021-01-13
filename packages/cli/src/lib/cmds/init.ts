@@ -133,6 +133,20 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
   );
   twaManifest.monochromeIconUrl = monochromeIconUrl ? monochromeIconUrl.toString() : undefined;
 
+  const playBillingEnabled = await prompt.promptConfirm(messages.promptPlayBilling, false);
+  if (playBillingEnabled) {
+    twaManifest.alphaDependencies = {
+      enabled: true,
+    };
+
+    twaManifest.features = {
+      ...twaManifest.features,
+      playBilling: {
+        enabled: true,
+      },
+    };
+  }
+
   // Step 5/5 Signing Key Information.
   prompt.printMessage(messages.messageSigningKeyInformation);
   prompt.printMessage(messages.messageSigningKeyInformationDesc);
