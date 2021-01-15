@@ -250,15 +250,22 @@ export class TwaGenerator {
     }));
   }
 
-  private async writeWebManifest(webManifestUrl: URL, targetDirectory: string): Promise<void> {
-    const response = await fetch(webManifestUrl);
+  private async writeWebManifest(twaManifest: TwaManifest, targetDirectory: string): Promise<void> {
+    if (!twaManifest.webManifestUrl) {
+      return;
+    }
+
+    const response = await fetch(twaManifest.webManifestUrl);
     if (response.status !== 200) {
-      throw new Error(`Failed to download Web Manifest ${webManifestUrl}.` +
+      throw new Error(`Failed to download Web Manifest ${twaManifest.webManifestUrl}.` +
           `Responded with status ${response.status}`);
     }
 
     // We're writing as a string, but attempt to convert to check if it's a well-formed JSON.
     const webManifestJson = await response.json();
+
+    // We want to ensure that "start_url" is the same used to launch the Trusted Web Activity.
+    webManifestJson['start_url'] = twaManifest.startUrl;
 
     const webManifestLocation = path.join(targetDirectory, WEB_MANIFEST_LOCATION);
 
@@ -393,7 +400,7 @@ export class TwaGenerator {
 
     if (twaManifest.webManifestUrl) {
       // Save the Web Manifest into the project
-      await this.writeWebManifest(twaManifest.webManifestUrl, targetDirectory);
+      await this.writeWebManifest(twaManifest, targetDirectory);
     }
     progress.done();
   }
