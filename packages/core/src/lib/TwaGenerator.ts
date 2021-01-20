@@ -252,7 +252,8 @@ export class TwaGenerator {
 
   private async writeWebManifest(twaManifest: TwaManifest, targetDirectory: string): Promise<void> {
     if (!twaManifest.webManifestUrl) {
-      return;
+      throw new Error(
+          'Unable to write the Web Manifest. The TWA Manifest does not have a webManifestUrl');
     }
 
     const response = await fetch(twaManifest.webManifestUrl);
