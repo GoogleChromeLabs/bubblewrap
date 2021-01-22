@@ -321,13 +321,15 @@ export class TwaManifest {
 
   private static verifyShareTarget(
       webManifestUrl: URL, shareTarget?: ShareTarget): ShareTarget | undefined {
-    if (!shareTarget?.action || !shareTarget?.params?.files) {
+    if (!shareTarget?.action) {
       return undefined;
     }
 
-    for (const file of shareTarget.params.files) {
-      if (!file.accept) {
-        return undefined;
+    if (shareTarget?.params?.files) {
+      for (const file of shareTarget.params.files) {
+        if (!file.accept) {
+          return undefined;
+        }
       }
     }
 

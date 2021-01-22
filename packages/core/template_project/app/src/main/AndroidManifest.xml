@@ -124,12 +124,22 @@
             <% if (shareTarget) { %>
                 <intent-filter>
                     <action android:name="android.intent.action.SEND" />
-                    <action android:name="android.intent.action.SEND_MULTIPLE" />
+                    <% 
+                       // SEND_MULTIPLE is added when handling images, videos, etc.  
+                       if (shareTarget.params.files) { %>
+                        <action android:name="android.intent.action.SEND_MULTIPLE" />
+                    <% } %>
                     <category android:name="android.intent.category.DEFAULT" />
-                    <% for (const file of shareTarget.params.files) { %>
-                        <% for (const accept of file.accept) { %>
-                            <data android:mimeType="<%= accept %>" />
+                    <% 
+                       if (shareTarget.params.files) { %>
+                        <% for (const file of shareTarget.params.files) { %>
+                            <% for (const accept of file.accept) { %>
+                                <data android:mimeType="<%= accept %>" />
+                            <% } %>
                         <% } %>
+                    <% } else {%>
+                        // When params.files is not available, use "text/plain" the mime-type.  
+                        <data android:mimeType="text/plain" />
                     <% } %>
                 </intent-filter>
             <% } %>
