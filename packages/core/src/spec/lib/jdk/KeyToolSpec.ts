@@ -117,6 +117,7 @@ describe('KeyTool', () => {
       await keyTool.list(keyOptions);
       expect(util.execute).toHaveBeenCalledWith([
         'keytool',
+        '-J-Duser.language=en',
         '-list',
         '-v',
         '-keystore "/"',
