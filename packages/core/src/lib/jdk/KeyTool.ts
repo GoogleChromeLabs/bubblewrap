@@ -100,6 +100,11 @@ export class KeyTool {
     }
     const keyListCmd = [
       'keytool',
+      // Forces the language to 'en' in order to get the expected formatting.
+      // The JVM seems to ignore the LANG and LC_ALL variables, so we set the value
+      // when invoking the command. See https://github.com/GoogleChromeLabs/bubblewrap/issues/446
+      // for more.
+      '-J-Duser.language=en',
       '-list',
       '-v',
       `-keystore \"${keyOptions.path}\"`,
