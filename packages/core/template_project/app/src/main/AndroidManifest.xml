@@ -116,6 +116,9 @@
             <% if (display === 'fullscreen') { %>
             <meta-data android:name="android.support.customtabs.trusted.DISPLAY_MODE"
                 android:value="immersive" />
+            <% } else if (display === 'fullscreen-sticky') { %>
+            <meta-data android:name="android.support.customtabs.trusted.DISPLAY_MODE"
+                android:value="sticky-immersive" />
             <% } %>
 
             <meta-data android:name="android.support.customtabs.trusted.SCREEN_ORIENTATION"
