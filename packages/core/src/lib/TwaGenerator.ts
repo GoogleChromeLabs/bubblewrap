@@ -102,6 +102,11 @@ const NOTIFICATION_IMAGES: IconDefinition[] = [
 const WEB_MANIFEST_LOCATION = '/app/src/main/res/raw/';
 const WEB_MANIFEST_FILE_NAME = 'web_app_manifest.json';
 
+type ShareTargetIntentFilter = {
+  actions: string[];
+  mimeTypes: string[];
+};
+
 function shortcutMaskableTemplateFileMap(assetName: string): Record<string, string> {
   return {
     'app/src/main/res/drawable-anydpi-v26/shortcut_maskable.xml':
@@ -328,6 +333,27 @@ export class TwaGenerator {
     }));
   }
 
+  private static generateShareTargetIntentFilter(
+      twaManifest: TwaManifest): ShareTargetIntentFilter | undefined {
+    if (!twaManifest.shareTarget) {
+      return undefined;
+    }
+
+    const shareTargetIntentFilter: ShareTargetIntentFilter = {
+      actions: ['android.intent.action.SEND'],
+      mimeTypes: [],
+    };
+
+    if (twaManifest.shareTarget?.params?.files) {
+      shareTargetIntentFilter.actions.push('android.intent.action.SEND_MULTIPLE');
+      for (const file of twaManifest.shareTarget.params.files) {
+        file.accept.forEach((accept) => shareTargetIntentFilter.mimeTypes.push(accept));
+      }
+    } else {
+      shareTargetIntentFilter.mimeTypes.push('text/plain');
+    }
+    return shareTargetIntentFilter;
+  }
   /**
    * Creates a new TWA Project.
    *
@@ -363,6 +389,7 @@ export class TwaGenerator {
     const args = {
       ...twaManifest,
       ...features,
+      shareTargetIntentFilter: TwaGenerator.generateShareTargetIntentFilter(twaManifest),
       generateShortcuts: twaManifest.generateShortcuts,
       escapeJsonString: escapeJsonString,
       toAndroidScreenOrientation: toAndroidScreenOrientation,
