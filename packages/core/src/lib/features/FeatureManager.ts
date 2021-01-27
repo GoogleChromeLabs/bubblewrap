@@ -82,7 +82,7 @@ export class FeatureManager {
     }
 
     this.buildGradle.dependencies.add(
-        'com.google.androidbrowserhelper:androidbrowserhelper:2.1.0');
+        'com.google.androidbrowserhelper:androidbrowserhelper:2.2.0');
   }
 
   private addFeature(feature: Feature): void {
