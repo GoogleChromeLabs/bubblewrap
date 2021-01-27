@@ -347,7 +347,7 @@ export class TwaGenerator {
     if (twaManifest.shareTarget?.params?.files) {
       shareTargetIntentFilter.actions.push('android.intent.action.SEND_MULTIPLE');
       for (const file of twaManifest.shareTarget.params.files) {
-        file.accept.forEach((accept) => shareTargetIntentFilter!.mimeTypes.push(accept));
+        file.accept.forEach((accept) => shareTargetIntentFilter.mimeTypes.push(accept));
       }
     } else {
       shareTargetIntentFilter.mimeTypes.push('text/plain');

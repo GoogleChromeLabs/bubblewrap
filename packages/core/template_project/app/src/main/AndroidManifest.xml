@@ -123,13 +123,13 @@
 
             <% if (shareTargetIntentFilter) { %>
                 <intent-filter>
-                    <% for (const action of shareTargetIntentFilter.actions) %>
+                    <% for (const action of shareTargetIntentFilter.actions) { %>
                         <action android:name="<%= action %>" />
-                    <% 
+                    <% } %>
                     <category android:name="android.intent.category.DEFAULT" />
-                    <% for (const mimeType of shareTargetIntentFilter.mimeTypes) %>
+                    <% for (const mimeType of shareTargetIntentFilter.mimeTypes) { %>
                         <data android:mimeType="<%= mimeType %>" />
-                    <% 
+                    <% } %>
                 </intent-filter>
             <% } %>
 
