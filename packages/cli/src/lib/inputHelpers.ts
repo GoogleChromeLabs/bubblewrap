@@ -177,7 +177,7 @@ export async function validateHost(input: string): Promise<Result<string, Error>
   
   // Try building an URL object and validating the input. If it fails, we likely have an invalid host.
   try {
-    const testUrl = new URL('https://' + host);
+    const testUrl = new URL('https://' + parts[1]);
     const ascIIInput = domainToASCII(testUrl.host);
     if (ascIIInput.length === 0) {
       return Result.error(new Error(messages.errorInvalidUrl(input)));
