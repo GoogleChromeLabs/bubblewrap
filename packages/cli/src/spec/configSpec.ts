@@ -45,7 +45,7 @@ describe('config', () => {
           'llama-pack-config.json': '{}',
         }});
       const mockLog = new MockLog();
-      await loadOrCreateConfig(mockLog);
+      await loadOrCreateConfig({log: mockLog});
       // Checks if the file name was changed.
       expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
       expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeFalse();
@@ -63,7 +63,7 @@ describe('config', () => {
               'another file.exe': '{}',
             }});
           const mockLog = new MockLog();
-          await loadOrCreateConfig(mockLog);
+          await loadOrCreateConfig({log: mockLog});
           // Checks if the file name was changed.
           expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
           expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeFalse();
@@ -84,7 +84,7 @@ describe('config', () => {
       mockPrompt.addMessage('jdk'); // The path of the jdk. (not really used).
       mockPrompt.addMessage('false'); // Should bubblewrap download Android SDK?
       mockPrompt.addMessage('sdk'); // The path of the androidSdk. (not really used).
-      await loadOrCreateConfig(mockLog, mockPrompt);
+      await loadOrCreateConfig({log: mockLog, prompt: mockPrompt});
       // Checks if the file name was created.
       expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
       mock.restore();
@@ -101,7 +101,7 @@ describe('config', () => {
               'config.json': '{"content":"some new content"}',
             }});
           const mockLog = new MockLog();
-          await loadOrCreateConfig(mockLog);
+          await loadOrCreateConfig({log: mockLog});
           // Checks if both of the files exists.
           expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
           expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeTrue();

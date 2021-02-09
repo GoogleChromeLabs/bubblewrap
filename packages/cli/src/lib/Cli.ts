@@ -36,9 +36,10 @@ export class Cli {
       throw new Error(`Current Node.js version is ${process.versions.node}.` +
           ' Node.js version 10 or above is required to run bubblewrap.');
     }
-    const config = await loadOrCreateConfig();
-
     const parsedArgs = minimist(args);
+
+    const config = await loadOrCreateConfig(
+      parsedArgs.config != null ? {path: parsedArgs.config}: {});
 
     let command;
     if (parsedArgs._.length === 0) {

@@ -62,7 +62,7 @@ describe('doctor', () => {
       mockPrompt.addMessage('old/path/to/jdk'); // The path of the jdk.
       mockPrompt.addMessage('old/path/to/sdk'); // The path of the androidSdk.
       // Create config file.
-      await loadOrCreateConfig(mockLog, mockPrompt);
+      await loadOrCreateConfig({log: mockLog, prompt: mockPrompt});
       expect(await doctor(mockLog)).toBeTrue();
       // Change the jdkPath of the config file to a path which isn't a valid jdkPath.
       const parsedMockArgs = minimist(['--jdkPath', 'new/path/to/jdk']);
@@ -95,7 +95,7 @@ describe('doctor', () => {
       mockPrompt.addMessage('path/to/jdk'); // The path of the jdk.
       mockPrompt.addMessage('path/to/sdk'); // The path of the androidSdk.
       // Create config file.
-      await loadOrCreateConfig(mockLog, mockPrompt);
+      await loadOrCreateConfig({log: mockLog, prompt: mockPrompt});
       // Change the jdkPath of the config file to a path which isn't a supported jdkPath.
       const parsedMockArgs = minimist(['--jdkPath', 'new/path/to/jdk']);
       await updateConfig(parsedMockArgs, mockLog);
@@ -127,7 +127,7 @@ describe('doctor', () => {
       mockPrompt.addMessage('old/path/to/jdk'); // The path of the jdk.
       mockPrompt.addMessage('old/path/to/sdk'); // The path of the androidSdk.
       // Create config file.
-      await loadOrCreateConfig(mockLog, mockPrompt);
+      await loadOrCreateConfig({log: mockLog, prompt: mockPrompt});
       // Change the androidSdkPath of the config file to a path which isn't a valid one.
       const parsedMockArgs = minimist(['--androidSdkPath', 'new/path/to/sdk']);
       await updateConfig(parsedMockArgs, mockLog);
