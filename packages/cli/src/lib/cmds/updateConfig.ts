@@ -26,7 +26,7 @@ async function updateAndroidSdkPath(path: string, log: Log): Promise<boolean> {
     log.error('Please enter a valid path.');
     return false;
   }
-  const config = await loadOrCreateConfig({});
+  const config = await loadOrCreateConfig();
   const jdkPath = config.jdkPath;
   const newConfig = new Config(jdkPath, path);
   await newConfig.saveConfig(DEFAULT_CONFIG_FILE_PATH);
@@ -38,7 +38,7 @@ async function updateJdkPath(path: string, log: Log): Promise<boolean> {
     log.error('Please enter a valid path.');
     return false;
   }
-  const config = await loadOrCreateConfig({});
+  const config = await loadOrCreateConfig();
   const androidSdkPath = config.androidSdkPath;
   const newConfig = new Config(path, androidSdkPath);
   await newConfig.saveConfig(DEFAULT_CONFIG_FILE_PATH);

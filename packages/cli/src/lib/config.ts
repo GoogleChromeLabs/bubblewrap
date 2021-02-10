@@ -91,8 +91,9 @@ async function renameConfigIfNeeded(log: Log): Promise<void> {
 }
 
 export async function loadOrCreateConfig(
-    {log = new ConsoleLog('config'), prompt = new InquirerPrompt(), path}:
-    {log?: Log; prompt?: Prompt; path?: string}): Promise<Config> {
+    log: Log = new ConsoleLog('config'),
+    prompt: Prompt = new InquirerPrompt(),
+    path?: string): Promise<Config> {
   let configPath;
   if (path === undefined) {
     await renameConfigIfNeeded(log);

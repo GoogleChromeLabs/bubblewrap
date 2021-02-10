@@ -38,8 +38,7 @@ export class Cli {
     }
     const parsedArgs = minimist(args);
 
-    const config = await loadOrCreateConfig(
-      parsedArgs.config != null ? {path: parsedArgs.config}: {});
+    const config = await loadOrCreateConfig(undefined, undefined, parsedArgs.config);
 
     let command;
     if (parsedArgs._.length === 0) {
