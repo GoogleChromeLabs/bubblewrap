@@ -344,13 +344,17 @@ export class TwaGenerator {
       mimeTypes: [],
     };
 
+    if (twaManifest.shareTarget?.params?.url ||
+        twaManifest.shareTarget?.params?.title ||
+        twaManifest.shareTarget?.params?.text) {
+      shareTargetIntentFilter.mimeTypes.push('text/plain');
+    }
+
     if (twaManifest.shareTarget?.params?.files) {
       shareTargetIntentFilter.actions.push('android.intent.action.SEND_MULTIPLE');
       for (const file of twaManifest.shareTarget.params.files) {
         file.accept.forEach((accept) => shareTargetIntentFilter.mimeTypes.push(accept));
       }
-    } else {
-      shareTargetIntentFilter.mimeTypes.push('text/plain');
     }
     return shareTargetIntentFilter;
   }
