@@ -90,13 +90,21 @@ async function renameConfigIfNeeded(log: Log): Promise<void> {
   }
 }
 
-export async function loadOrCreateConfig(log: Log = new ConsoleLog('config'),
-    prompt: Prompt = new InquirerPrompt(), path = DEFAULT_CONFIG_FILE_PATH): Promise<Config> {
-  await renameConfigIfNeeded(log);
-  const existingConfig = await Config.loadConfig(path);
+export async function loadOrCreateConfig(
+    log: Log = new ConsoleLog('config'),
+    prompt: Prompt = new InquirerPrompt(),
+    path?: string): Promise<Config> {
+  let configPath;
+  if (path === undefined) {
+    await renameConfigIfNeeded(log);
+    configPath = DEFAULT_CONFIG_FILE_PATH;
+  } else {
+    configPath = path;
+  }
+  const existingConfig = await Config.loadConfig(configPath);
   if (existingConfig) return existingConfig;
 
   const config = await createConfig(prompt);
-  await config.saveConfig(path);
+  await config.saveConfig(configPath);
   return config;
 }
