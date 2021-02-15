@@ -48,11 +48,11 @@ def twaManifest = [
 ]
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         applicationId "<%= packageId %>"
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode <%= appVersionCode %>
         versionName "<%= appVersionName %>"
 
