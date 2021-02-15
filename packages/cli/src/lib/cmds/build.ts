@@ -26,13 +26,17 @@ import {ParsedArgs} from 'minimist';
 import {createValidateString} from '../inputHelpers';
 
 // Path to the file generated when building an app bundle file using gradle.
-const APP_BUNDLE_BUILD_OUTPUT_FILE_NAME = 'app/build/outputs/bundle/release/app-release.aab';
+const APP_BUNDLE_BUILD_OUTPUT_FILE_NAME = './app/build/outputs/bundle/release/app-release.aab';
 const APP_BUNDLE_SIGNED_FILE_NAME = './app-release-bundle.aab'; // Final signed App Bundle file.
 
 // Path to the file generated when building an APK file using gradle.
 const APK_BUILD_OUTPUT_FILE_NAME = './app/build/outputs/apk/release/app-release-unsigned.apk';
-const APK_SIGNED_FILE_NAME = './app-release-signed.apk'; // Final aligned and signed APK.
-const APK_ALIGNED_FILE_NAME = './app-release-unsigned-aligned.apk'; // Output file for zipalign.
+
+// Final aligned and signed APK.
+const APK_SIGNED_FILE_NAME = './app-release-signed.apk';
+
+// Output file for zipalign.
+const APK_ALIGNED_FILE_NAME = './app-release-unsigned-aligned.apk';
 
 const TWA_MANIFEST_FILE_NAME = './twa-manifest.json';
 const ASSETLINKS_OUTPUT_FILE = './assetlinks.json';
