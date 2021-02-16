@@ -19,7 +19,7 @@ import {util} from '@bubblewrap/core';
 import {Prompt} from './Prompt';
 import {enUS as messages} from './strings';
 
-const SDK_VERSION = '6609375';
+const SDK_VERSION = '6858069';
 const DOWNLOAD_SDK_ROOT = 'https://dl.google.com/android/repository/';
 const WINDOWS_URL = `commandlinetools-win-${SDK_VERSION}_latest.zip`;
 const MAC_URL = `commandlinetools-mac-${SDK_VERSION}_latest.zip`;
