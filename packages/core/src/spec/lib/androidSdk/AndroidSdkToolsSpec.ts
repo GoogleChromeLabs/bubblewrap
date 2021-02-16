@@ -72,13 +72,13 @@ function buildMockProcess(platform: string): NodeJS.Process {
 
 describe('AndroidSdkTools', () => {
   describe('#constructor', () => {
-    it('Throws Error when the path to AndroidSdkHome doesn\'t exist', () => {
+    it('Throws Error when the path to AndroidSdkHome doesn\'t exist', async () => {
       spyOn(fs, 'existsSync').and.returnValue(false);
       const config = buildMockConfig('linux');
       const process = buildMockProcess('linux');
       const jdkHelper = new JdkHelper(process, config);
       const mockLog = new MockLog();
-      expectAsync(AndroidSdkTools.create(process, config, jdkHelper, mockLog))
+      await expectAsync(AndroidSdkTools.create(process, config, jdkHelper, mockLog))
           .toBeRejectedWithError();
     });
   });
@@ -147,7 +147,7 @@ describe('AndroidSdkTools', () => {
 
       // Set existsSync to return false so check for sdkmanager fails.
       fsSpy.and.returnValue(false);
-      expectAsync(androidSdkTools.installBuildTools()).toBeRejectedWithError();
+      await expectAsync(androidSdkTools.installBuildTools()).toBeRejectedWithError();
     });
   });
 
@@ -201,7 +201,8 @@ describe('AndroidSdkTools', () => {
       const mockLog = new MockLog();
       const androidSdkTools = await AndroidSdkTools.create(process, config, jdkHelper, mockLog);
       fsSpy.and.returnValue(false);
-      expectAsync(androidSdkTools.install('./app-release-signed.apk')).toBeRejectedWithError();
+      await expectAsync(androidSdkTools.install('./app-release-signed.apk'))
+          .toBeRejectedWithError();
     });
   });
 

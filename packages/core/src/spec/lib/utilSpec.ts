@@ -251,9 +251,9 @@ describe('util', () => {
       mockFs.restore();
     });
 
-    it('Skips empty directory', () => {
+    it('Skips empty directory', async () => {
       mockFs({});
-      expectAsync(util.rmdir('/app.txt')).toBeResolved();
+      await expectAsync(util.rmdir('/app.txt')).toBeResolved();
       mockFs.restore();
     });
   });
