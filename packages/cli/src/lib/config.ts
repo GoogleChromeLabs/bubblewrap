@@ -61,7 +61,7 @@ async function createConfig(prompt: Prompt = new InquirerPrompt()): Promise<Conf
       prompt.printMessage(messages.messageDownloadSdk + DEFAULT_SDK_FOLDER);
       const androidSdkToolsInstaller = new AndroidSdkToolsInstaller(process, prompt);
       await androidSdkToolsInstaller.install(DEFAULT_SDK_FOLDER);
-      sdkPath = DEFAULT_SDK_FOLDER;
+      sdkPath = join(DEFAULT_SDK_FOLDER, 'cmdline-tools');
     } else {
       throw new Error(messages.errorSdkTerms);
     }
