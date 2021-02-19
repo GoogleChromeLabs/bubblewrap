@@ -130,7 +130,7 @@ describe('KeyTool', () => {
     it('Throws error if keyOptions.path doesn\'t exist', async () => {
       const keyTool = new KeyTool(jdkHelper, new MockLog());
       spyOn(fs, 'existsSync').and.returnValue(false);
-      expectAsync(keyTool.list(keyOptions)).toBeRejectedWithError();
+      await expectAsync(keyTool.list(keyOptions)).toBeRejectedWithError();
     });
   });
 
