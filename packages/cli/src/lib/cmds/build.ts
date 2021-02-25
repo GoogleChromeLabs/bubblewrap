@@ -93,7 +93,7 @@ class Build {
 
   async runValidation(): Promise<Result<PwaValidationResult, Error>> {
     try {
-      const manifestFile = path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
+      const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
       const twaManifest = await TwaManifest.fromFile(manifestFile);
       const pwaValidationResult =
           await PwaValidator.validate(new URL(twaManifest.startUrl, twaManifest.webManifestUrl));
@@ -170,7 +170,8 @@ class Build {
       validationPromise = this.runValidation();
     }
 
-    const twaManifest = await TwaManifest.fromFile(TWA_MANIFEST_FILE_NAME);
+    const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
+    const twaManifest = await TwaManifest.fromFile(manifestFile);
 
     let passwords = null;
     if (!this.args.skipSigning) {

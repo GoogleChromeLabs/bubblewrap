@@ -61,6 +61,7 @@ const HELP_MESSAGES = new Map<string, string>(
         'Options:',
         '--skipPwaValidation ....... skips validating the wrapped PWA against the Quality Criteria',
         '--skipSigning ............. skips signing the built APK and App Bundle',
+        '--manifest ................ directory where the client should look for twa-manifest.json',
       ].join('\n')],
       ['update', [
         'Usage:',
