@@ -35,7 +35,7 @@ type Messages = {
   messageInitializingWebManifest: (manifestUrl: string) => string;
   messageAndroidAppDetails: string;
   messageAndroidAppDetailsDesc: string;
-  messageApkSucess: (filename: string) => string;
+  messageApkSuccess: (filename: string) => string;
   messageAppBundleSuccess: (filename: string) => string;
   messageBuildingApp: string;
   messageDigitalAssetLinksSuccess: (filename: string) => string;
@@ -165,7 +165,7 @@ into a device:
 
 \t- ${bold('Status bar color:')} sets the status bar color used when the
 \t  application is in foreground. Example: ${cyan('#7CC0FF')}\n`,
-  messageApkSucess: (filename: string): string => {
+  messageApkSuccess: (filename: string): string => {
     return `\t- Generated Android APK at ${cyan(filename)}`;
   },
   messageAppBundleSuccess: (filename: string): string => {

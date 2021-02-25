@@ -60,6 +60,7 @@ const HELP_MESSAGES = new Map<string, string>(
         '',
         'Options:',
         '--skipPwaValidation ....... skips validating the wrapped PWA against the Quality Criteria',
+        '--skipSigning ............. skips signing the built APK and App Bundle',
       ].join('\n')],
       ['update', [
         'Usage:',

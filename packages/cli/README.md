@@ -113,11 +113,12 @@ Set `BUBBLEWRAP_KEYSTORE_PASSWORD` for the key store password and `BUBBLEWRAP_KE
 Usage:
 
 ```
-bubblewrap build [--skipPwaValidation]
+bubblewrap build [--skipPwaValidation] [--skipSigning]
 ```
 
 Options: 
   - `--skipPwaValidation`: skips validating the wrapped PWA against the Quality Criteria.
+  - `--skipSigning`: skips signing the built APK and App Bundle.
 
 
 ## `update`

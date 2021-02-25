@@ -171,19 +171,36 @@ class Build {
     }
 
     const twaManifest = await TwaManifest.fromFile(TWA_MANIFEST_FILE_NAME);
-    const passwords = await this.getPasswords(twaManifest.signingKey);
+
+    let passwords = null;
+    if (!this.args.skipSigning) {
+      passwords = await this.getPasswords(twaManifest.signingKey);
+    }
 
     // Builds the Android Studio Project
     this.prompt.printMessage(messages.messageBuildingApp);
+
     await this.buildApk();
-    await this.signApk(twaManifest.signingKey, passwords);
-    this.prompt.printMessage(messages.messageApkSucess(APK_SIGNED_FILE_NAME));
+    if (passwords) {
+      await this.signApk(twaManifest.signingKey, passwords);
+    }
+    const apkFileName = this.args.skipSigning ?
+      APK_ALIGNED_FILE_NAME :
+      APK_SIGNED_FILE_NAME;
+    this.prompt.printMessage(messages.messageApkSuccess(apkFileName));
 
     await this.buildAppBundle();
-    await this.signAppBundle(twaManifest.signingKey, passwords);
-    this.prompt.printMessage(messages.messageAppBundleSuccess(APP_BUNDLE_SIGNED_FILE_NAME));
+    if (passwords) {
+      await this.signAppBundle(twaManifest.signingKey, passwords);
+    }
+    const appBundleFileName = this.args.skipSigning ?
+      APP_BUNDLE_BUILD_OUTPUT_FILE_NAME :
+      APP_BUNDLE_SIGNED_FILE_NAME;
+    this.prompt.printMessage(messages.messageAppBundleSuccess(appBundleFileName));
 
-    await this.generateAssetLinks(twaManifest, passwords);
+    if (passwords) {
+      await this.generateAssetLinks(twaManifest, passwords);
+    }
 
     if (validationPromise !== null) {
       const result = await validationPromise;
