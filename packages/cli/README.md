@@ -113,11 +113,12 @@ Set `BUBBLEWRAP_KEYSTORE_PASSWORD` for the key store password and `BUBBLEWRAP_KE
 Usage:
 
 ```
-bubblewrap build [--skipPwaValidation] [--manifest="<path-twa-manifest>"]
+bubblewrap build [--skipPwaValidation] [--skipSigning] [--manifest="<path-twa-manifest>"]
 ```
 
 Options: 
   - `--skipPwaValidation`: skips validating the wrapped PWA against the Quality Criteria.
+  - `--skipSigning`: skips signing the built APK and App Bundle.
   - `--manifest`: directory where the client should look for `twa-manifest.json`.
 
 
