@@ -16,7 +16,7 @@
 
 import {Config} from '../../../lib/Config';
 import {JdkHelper} from '../../../lib/jdk/JdkHelper';
-import {AndroidSdkTools} from '../../../lib/androidSdk/AndroidSdkTools';
+import {AndroidSdkTools, BUILD_TOOLS_VERSION} from '../../../lib/androidSdk/AndroidSdkTools';
 import util = require('../../../lib/util');
 import * as fs from 'fs';
 import {MockLog} from '../../../lib/mock/MockLog';
@@ -129,7 +129,9 @@ describe('AndroidSdkTools', () => {
         await androidSdkTools.installBuildTools();
         expect(util.execInteractive).toHaveBeenCalledWith(
             test.expectedCwd,
-            ['--install', '"build-tools;29.0.2"', `--sdk_root=${test.expectedSdkRoot}`],
+            ['--install',
+              `"build-tools;${BUILD_TOOLS_VERSION}"`,
+              `--sdk_root=${test.expectedSdkRoot}`],
             androidSdkTools.getEnv());
       });
     });
@@ -209,7 +211,7 @@ describe('AndroidSdkTools', () => {
   describe('#apksigner', () => {
     const tests = [
       {platform: 'linux',
-        expectedCmd: '/home/user/android-sdk/build-tools/29.0.2/apksigner',
+        expectedCmd: `/home/user/android-sdk/build-tools/${BUILD_TOOLS_VERSION}/apksigner`,
         expectedArgs: [
           'sign', '--ks', '/path/to/keystore.ks',
           '--ks-key-alias', 'alias',
@@ -219,7 +221,7 @@ describe('AndroidSdkTools', () => {
           'unsigned.apk',
         ]},
       {platform: 'darwin',
-        expectedCmd: '/home/user/android-sdk/build-tools/29.0.2/apksigner',
+        expectedCmd: `/home/user/android-sdk/build-tools/${BUILD_TOOLS_VERSION}/apksigner`,
         expectedArgs: [
           'sign', '--ks', '/path/to/keystore.ks',
           '--ks-key-alias', 'alias',
@@ -234,7 +236,7 @@ describe('AndroidSdkTools', () => {
           '-Xmx1024M',
           '-Xss1m',
           '-jar',
-          'C:\\Users\\user\\android-sdk\\build-tools\\29.0.2\\lib\\apksigner.jar',
+          `C:\\Users\\user\\android-sdk\\build-tools\\${BUILD_TOOLS_VERSION}\\lib\\apksigner.jar`,
           'sign', '--ks', '/path/to/keystore.ks',
           '--ks-key-alias', 'alias',
           '--ks-pass', 'pass:kspass',
