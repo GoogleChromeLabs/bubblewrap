@@ -15,11 +15,20 @@
  */
 
 export class DigitalAssetLinks {
-  static generateAssetLinks(applicationId: string, sha256Fingerprint: string): string {
-    return `[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target" : { "namespace": "android_app", "package_name": "${applicationId}",
-                   "sha256_cert_fingerprints": ["${sha256Fingerprint}"] }
-    }]\n`;
+  static generateAssetLinks(applicationId: string, ...sha256Fingerprints: string[]): string {
+    const assetlinks = new Array<string>();
+    assetlinks.push('[');
+    sha256Fingerprints.forEach((sha256Fingerprint, index) => {
+      if (index > 0) {
+        assetlinks.push(',');
+      }
+      assetlinks.push(`{
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target" : { "namespace": "android_app", "package_name": "${applicationId}",
+                     "sha256_cert_fingerprints": ["${sha256Fingerprint}"] }
+      }\n`);
+    });
+    assetlinks.push(']');
+    return assetlinks.join('');
   }
 }

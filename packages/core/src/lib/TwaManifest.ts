@@ -153,6 +153,7 @@ export class TwaManifest {
   isChromeOSOnly: boolean;
   shareTarget?: ShareTarget;
   orientation: Orientation;
+  fingerprints: Fingerprint[];
 
   private static log = new ConsoleLog('twa-manifest');
 
@@ -195,6 +196,7 @@ export class TwaManifest {
     this.isChromeOSOnly = data.isChromeOSOnly != undefined ? data.isChromeOSOnly : false;
     this.shareTarget = data.shareTarget;
     this.orientation = data.orientation || DEFAULT_ORIENTATION;
+    this.fingerprints = data.fingerprints || [];
   }
 
   /**
@@ -221,7 +223,6 @@ export class TwaManifest {
    * @param {String} filename the location where the TWA Manifest will be saved.
    */
   async saveToFile(filename: string): Promise<void> {
-    console.log('Saving Config to: ' + filename);
     const json: TwaManifestJson = this.toJson();
     await fs.promises.writeFile(filename, JSON.stringify(json, null, 2));
   }
@@ -518,9 +519,15 @@ export interface TwaManifestJson {
   isChromeOSOnly?: boolean;
   shareTarget?: ShareTarget;
   orientation?: Orientation;
+  fingerprints?: Fingerprint[];
 }
 
 export interface SigningKeyInfo {
   path: string;
   alias: string;
+}
+
+export type Fingerprint = {
+  name?: string;
+  value: string;
 }

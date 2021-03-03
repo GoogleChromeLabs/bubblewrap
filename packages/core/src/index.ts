@@ -24,7 +24,7 @@ import {JarSigner} from './lib/jdk/JarSigner';
 import {JdkHelper} from './lib/jdk/JdkHelper';
 import {KeyTool} from './lib/jdk/KeyTool';
 import {TwaManifest, DisplayModes, DisplayMode, asDisplayMode, Orientation, Orientations,
-  asOrientation, SigningKeyInfo} from './lib/TwaManifest';
+  asOrientation, SigningKeyInfo, Fingerprint} from './lib/TwaManifest';
 import {TwaGenerator} from './lib/TwaGenerator';
 import {DigitalAssetLinks} from './lib/DigitalAssetLinks';
 import * as util from './lib/util';
@@ -35,6 +35,7 @@ export {
   BufferedLog,
   Config,
   DigitalAssetLinks,
+  Fingerprint,
   GradleWrapper,
   JarSigner,
   JdkHelper,
