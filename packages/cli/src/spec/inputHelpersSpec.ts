@@ -16,6 +16,9 @@
 
 import * as inputHelpers from '../lib/inputHelpers';
 
+const VALID_FINGERPRINT =
+  '5F:7B:3E:88:A1:1E:13:96:88:34:5E:78:41:56:C1:90:75:7D:DB:CE:2E:7D:93:19:40:37:1D:1D:AA:F7:F3:F8';
+
 describe('inputHelpers', () => {
   describe('#createValidateString', () => {
     it('Passes validations without constraints', async () => {
@@ -189,6 +192,15 @@ describe('inputHelpers', () => {
       expect((await inputHelpers.validateHost('ftp://www.example.com')).isError()).toBeTrue();
       expect((await inputHelpers.validateHost('')).isError()).toBeTrue();
       expect((await inputHelpers.validateHost('a b c')).isError()).toBeTrue();
+    });
+  });
+
+  describe('#validateSha256Fingerprint', () => {
+    it('Succeeds for valid fingerprints', async () => {
+      expect((await inputHelpers.validateSha256Fingerprint(VALID_FINGERPRINT)).isOk()).toBeTrue();
+    });
+    it('Fails for invalid fingerprints', async () => {
+      expect((await inputHelpers.validateSha256Fingerprint('abc123')).isError()).toBeTrue();
     });
   });
 });

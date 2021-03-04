@@ -14,16 +14,16 @@
  *  limitations under the License.
  */
 
-import {AndroidSdkTools, Config, DigitalAssetLinks, GradleWrapper, JdkHelper, KeyTool, Log,
+import {AndroidSdkTools, Config, GradleWrapper, JdkHelper, KeyTool, Log,
   ConsoleLog, TwaManifest, JarSigner, SigningKeyInfo, Result} from '@bubblewrap/core';
 import * as path from 'path';
-import * as fs from 'fs';
 import {enUS as messages} from '../strings';
 import {Prompt, InquirerPrompt} from '../Prompt';
 import {PwaValidator, PwaValidationResult} from '@bubblewrap/validator';
 import {printValidationResult} from '../pwaValidationHelper';
 import {ParsedArgs} from 'minimist';
 import {createValidateString} from '../inputHelpers';
+import {TWA_MANIFEST_FILE_NAME} from '../constants';
 
 // Path to the file generated when building an app bundle file using gradle.
 const APP_BUNDLE_BUILD_OUTPUT_FILE_NAME = './app/build/outputs/bundle/release/app-release.aab';
@@ -37,9 +37,6 @@ const APK_SIGNED_FILE_NAME = './app-release-signed.apk';
 
 // Output file for zipalign.
 const APK_ALIGNED_FILE_NAME = './app-release-unsigned-aligned.apk';
-
-const TWA_MANIFEST_FILE_NAME = './twa-manifest.json';
-const ASSETLINKS_OUTPUT_FILE = './assetlinks.json';
 
 interface SigningKeyPasswords {
   keystorePassword: string;
@@ -100,34 +97,6 @@ class Build {
       return Result.ok(pwaValidationResult);
     } catch (e) {
       return Result.error(e);
-    }
-  }
-
-  async generateAssetLinks(
-      twaManifest: TwaManifest, passwords: SigningKeyPasswords): Promise<void> {
-    try {
-      const digitalAssetLinksFile = ASSETLINKS_OUTPUT_FILE;
-      const keyInfo = await this.keyTool.keyInfo({
-        path: twaManifest.signingKey.path,
-        alias: twaManifest.signingKey.alias,
-        keypassword: passwords.keyPassword,
-        password: passwords.keystorePassword,
-      });
-
-      const sha256Fingerprint = keyInfo.fingerprints.get('SHA256');
-      if (!sha256Fingerprint) {
-        this.prompt.printMessage(messages.messageSha256FingerprintNotFound);
-        return;
-      }
-
-      const digitalAssetLinks =
-        DigitalAssetLinks.generateAssetLinks(twaManifest.packageId, sha256Fingerprint);
-
-      await fs.promises.writeFile(digitalAssetLinksFile, digitalAssetLinks);
-
-      this.prompt.printMessage(messages.messageDigitalAssetLinksSuccess(digitalAssetLinksFile));
-    } catch (e) {
-      this.prompt.printMessage(messages.errorAssetLinksGeneration);
     }
   }
 
@@ -198,10 +167,6 @@ class Build {
       APP_BUNDLE_BUILD_OUTPUT_FILE_NAME :
       APP_BUNDLE_SIGNED_FILE_NAME;
     this.prompt.printMessage(messages.messageAppBundleSuccess(appBundleFileName));
-
-    if (passwords) {
-      await this.generateAssetLinks(twaManifest, passwords);
-    }
 
     if (validationPromise !== null) {
       const result = await validationPromise;

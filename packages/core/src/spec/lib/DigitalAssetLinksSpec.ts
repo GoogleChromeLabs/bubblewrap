@@ -16,10 +16,11 @@
 
 import {DigitalAssetLinks} from '../../lib/DigitalAssetLinks';
 
+const packageName = 'com.test.twa';
+
 describe('DigitalAssetLinks', () => {
   describe('#generateAssetLinks', () => {
     it('Generates the assetlinks markup', () => {
-      const packageName = 'com.test.twa';
       const fingerprint = 'FINGERPRINT';
       const digitalAssetLinks =
         JSON.parse(DigitalAssetLinks.generateAssetLinks(packageName, fingerprint));
@@ -30,6 +31,28 @@ describe('DigitalAssetLinks', () => {
       expect(digitalAssetLinks[0].target.package_name).toBe(packageName);
       expect(digitalAssetLinks[0].target.sha256_cert_fingerprints.length).toBe(1);
       expect(digitalAssetLinks[0].target.sha256_cert_fingerprints[0]).toBe(fingerprint);
+    });
+
+    it('Generates empty assetlinks.json', () => {
+      const digitalAssetLinks =
+        JSON.parse(DigitalAssetLinks.generateAssetLinks(packageName, ...new Array<string>()));
+      expect(digitalAssetLinks.length).toBe(0);
+    });
+
+    it('Supports multiple fingerprints', () => {
+      const digitalAssetLinks =
+        JSON.parse(DigitalAssetLinks.generateAssetLinks(packageName, '123', '456'));
+      expect(digitalAssetLinks.length).toBe(2);
+      expect(digitalAssetLinks[0].relation[0]).toBe('delegate_permission/common.handle_all_urls');
+      expect(digitalAssetLinks[0].target.namespace).toBe('android_app');
+      expect(digitalAssetLinks[0].target.package_name).toBe(packageName);
+      expect(digitalAssetLinks[0].target.sha256_cert_fingerprints.length).toBe(1);
+      expect(digitalAssetLinks[0].target.sha256_cert_fingerprints[0]).toBe('123');
+      expect(digitalAssetLinks[1].relation[0]).toBe('delegate_permission/common.handle_all_urls');
+      expect(digitalAssetLinks[1].target.namespace).toBe('android_app');
+      expect(digitalAssetLinks[1].target.package_name).toBe(packageName);
+      expect(digitalAssetLinks[1].target.sha256_cert_fingerprints.length).toBe(1);
+      expect(digitalAssetLinks[1].target.sha256_cert_fingerprints[0]).toBe('456');
     });
   });
 });

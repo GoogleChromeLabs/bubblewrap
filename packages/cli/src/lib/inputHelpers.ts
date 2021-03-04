@@ -254,3 +254,18 @@ export async function validatePackageId(input: string): Promise<Result<string, E
 
   return Result.ok(input);
 }
+
+/**
+ * A {@link ValidateFunction} that receives a {@link string} as input and resolves to a
+ * {@link string} when successful. Verifies if the input is a valid SHA-256 fingerprint.
+ * @param {string} input a string representing a SHA-256 fingerprint.
+ * @returns {Result<string, Error>} a result that resolves to a {@link string} on
+ * success or {@link Error} on failure.
+ */
+export async function validateSha256Fingerprint(input: string): Promise<Result<string, Error>> {
+  input = input.toUpperCase();
+  if (input.match(/^([0-9A-F]{2}:){31}[0-9A-F]{2}$/)) {
+    return Result.ok(input);
+  }
+  return Result.error(new Error(messages.errorInvalidSha256Fingerprint(input)));
+}
