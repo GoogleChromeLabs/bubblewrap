@@ -253,7 +253,7 @@ a blank white page to users.
   messageProjectGeneratedSuccess: '\nProject generated successfully. Build it by running ' +
       cyan('bubblewrap build'),
   messageRemovedFingerprint: (fingerprint: Fingerprint): string => {
-    return `Added fingerprint with value ${fingerprint.value}.`;
+    return `Removed fingerprint with value ${fingerprint.value}.`;
   },
   messageSavingTwaManifestTo: (path: string): string => {
     return `Saving TWA Manifest to: ${cyan(path)}`;

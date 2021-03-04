@@ -264,7 +264,7 @@ export async function validatePackageId(input: string): Promise<Result<string, E
  */
 export async function validateSha256Fingerprint(input: string): Promise<Result<string, Error>> {
   input = input.toUpperCase();
-  if (input.match(/([0-9-A-F]{2}:?){32}/)) {
+  if (input.match(/^([0-9-A-F]{2}:){31}[0-9-A-F]{2}$/)) {
     return Result.ok(input);
   }
   return Result.error(new Error(messages.errorInvalidSha256Fingerprint(input)));
