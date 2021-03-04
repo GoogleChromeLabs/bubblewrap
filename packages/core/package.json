@@ -1,6 +1,6 @@
 {
   "name": "@bubblewrap/core",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "description": "Core Library to generate, build and sign TWA projects",
   "scripts": {
     "build": "tsc",
