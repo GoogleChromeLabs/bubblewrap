@@ -152,7 +152,7 @@ const HELP_MESSAGES = new Map<string, string>(
         '',
         ' - generateAssetLinks:  Generates an AssetLinks file from the project configuration.',
         '   Usage:',
-        '     bubblewrap generateAssetLinks <flags>',
+        '     bubblewrap fingerprint generateAssetLinks <flags>',
         '',
         '   Flags:',
         '     --output=<name> .... path from where to load the project configuration.',
