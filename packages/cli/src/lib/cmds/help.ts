@@ -119,6 +119,9 @@ const HELP_MESSAGES = new Map<string, string>(
         '',
         '',
         'Options: ',
+        '--appVersionName ........... version name to be used on on the upgrade. Ignored if ' +
+            '--skipVersionUpgrade is used',
+        '--skipVersionUpgrade ....... skips upgrading appVersion and appVersionCode',
         '--ignore [fields-list]................. the fields which you would like to keep the same.',
         'You can enter each key from your Web Manifest.',
       ].join('\n')],
