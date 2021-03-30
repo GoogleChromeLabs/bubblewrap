@@ -32,11 +32,16 @@ export async function merge(args: ParsedArgs): Promise<boolean> {
   const webManifest = await util.getWebManifest(webManifestUrl);
   const newTwaManifest =
       await TwaManifest.merge(fieldsToIgnore, webManifestUrl, webManifest, twaManifest);
+
   // Update the app (args are not relevant in this case, because update's default values
   // are valid for it. We just send something as an input).
-  const newVersionInfo = await updateVersions(newTwaManifest, twaManifest.appVersionName);
-  newTwaManifest.appVersionName = newVersionInfo.appVersionName;
-  newTwaManifest.appVersionCode = newVersionInfo.appVersionCode;
+  if (!args.skipVersionUpgrade) {
+    const newVersionInfo =
+      await updateVersions(newTwaManifest, args.appVersionName || twaManifest.appVersionName);
+    newTwaManifest.appVersionName = newVersionInfo.appVersionName;
+    newTwaManifest.appVersionCode = newVersionInfo.appVersionCode;
+  }
+
   await newTwaManifest.saveToFile(manifestPath);
   return true;
 }

@@ -211,6 +211,8 @@ bubblewrap merge --ignore [fields-list]
 ```
 
 Options:
+  - `--appVersionName`: version name to be used on on the upgrade. Ignored if `--skipVersionUpgrade` is used.
+  - `--skipVersionUpgrade`: skips upgrading `appVersion` and `appVersionCode`.
   - `--ignore`: Ignores all of the fields on the list. Accepts all of the possible fields
   in the Web Manifest.
 
