@@ -16,7 +16,12 @@
 
 import groovy.xml.MarkupBuilder
 
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+    <% if (serviceAccountJson) { %>
+    id("com.github.triplet.play") version "3.3.0"
+    <% } %>
+}
 
 def twaManifest = [
     applicationId: '<%= packageId %>',
@@ -157,6 +162,12 @@ android {
         checkReleaseBuilds false
     }
 }
+
+<% if (serviceAccountJson) { %>
+play {
+    serviceAccountCredentials.set(file("<%= serviceAccountJson %>"))
+}
+<% } %>
 
 task generateShorcutsFile {
     assert twaManifest.shortcuts.size() < 5, "You can have at most 4 shortcuts."

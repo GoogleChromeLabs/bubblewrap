@@ -220,6 +220,7 @@ describe('TwaManifest', () => {
         fallbackType: 'webview',
         enableSiteSettingsShortcut: false,
         isChromeOSOnly: false,
+        serviceAccountJson: '/home/service-account.json',
       } as TwaManifestJson;
       const twaManifest = new TwaManifest(twaManifestJson);
       expect(twaManifest.packageId).toEqual(twaManifestJson.packageId);
@@ -250,6 +251,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.fallbackType).toBe('webview');
       expect(twaManifest.enableSiteSettingsShortcut).toEqual(false);
       expect(twaManifest.isChromeOSOnly).toEqual(false);
+      expect(twaManifest.serviceAccountJson).toEqual(twaManifestJson.serviceAccountJson);
     });
 
     it('Sets correct default values for optional fields', () => {
@@ -374,6 +376,7 @@ describe('TwaManifest', () => {
         'enableSiteSettingsShortcut': true,
         'isChromeOSOnly': false,
         'appVersion': '1',
+        'serviceAccountJson': '/home/service-account.json',
       });
       // The versions shouldn't change because the update happens in `cli`.
       const expectedTwaManifest = new TwaManifest({
@@ -431,6 +434,7 @@ describe('TwaManifest', () => {
         'enableSiteSettingsShortcut': true,
         'isChromeOSOnly': false,
         'appVersion': '1',
+        'serviceAccountJson': '/home/service-account.json',
       });
       // The versions shouldn't change because the update happens in `cli`.
       const expectedTwaManifest = new TwaManifest({
