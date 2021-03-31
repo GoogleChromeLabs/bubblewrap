@@ -120,7 +120,7 @@ type alphaDependencies = {
  * splashScreenFadeOutDuration: 300
  * isChromeOSOnly: false, // Setting to true will enable a feature that prevents non-ChromeOS devices
  *  from installing the app.
- * serviceAccountJson: '<%= serviceAccountJson %>', //The service account used to communicate with
+ * serviceAccountJson: '<%= serviceAccountJson %>', // The service account used to communicate with
  *  Google Play.
  *
  */
