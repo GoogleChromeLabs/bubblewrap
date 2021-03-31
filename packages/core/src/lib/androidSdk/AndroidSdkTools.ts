@@ -145,7 +145,7 @@ export class AndroidSdkTools {
       input,
     ];
     await util.execute(zipalignCmd, env);
-    fs.copyFileSync(input, output)
+    fs.copyFileSync(input, output);
   }
 
   /**
