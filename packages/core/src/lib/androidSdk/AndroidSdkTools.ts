@@ -141,11 +141,11 @@ export class AndroidSdkTools {
     const env = this.getEnv();
     const zipalignCmd = [
       `"${this.pathJoin(this.getAndroidHome(), `/build-tools/${BUILD_TOOLS_VERSION}/zipalign`)}"`,
-      '-v -f -p 4',
+      '-c -v -p 4',
       input,
-      output,
     ];
     await util.execute(zipalignCmd, env);
+    fs.copyFileSync(input, output)
   }
 
   /**
