@@ -156,7 +156,7 @@ export class TwaManifest {
   shareTarget?: ShareTarget;
   orientation: Orientation;
   fingerprints: Fingerprint[];
-  serviceAccountJson: string | undefined;
+  serviceAccountJsonFile: string | undefined;
 
   private static log = new ConsoleLog('twa-manifest');
 
@@ -200,7 +200,7 @@ export class TwaManifest {
     this.shareTarget = data.shareTarget;
     this.orientation = data.orientation || DEFAULT_ORIENTATION;
     this.fingerprints = data.fingerprints || [];
-    this.serviceAccountJson = data.serviceAccountJson;
+    this.serviceAccountJsonFile = data.serviceAccountJsonFile;
   }
 
   /**
@@ -524,7 +524,7 @@ export interface TwaManifestJson {
   shareTarget?: ShareTarget;
   orientation?: Orientation;
   fingerprints?: Fingerprint[];
-  serviceAccountJson?: string;
+  serviceAccountJsonFile?: string;
 }
 
 export interface SigningKeyInfo {
