@@ -18,7 +18,7 @@ import groovy.xml.MarkupBuilder
 
 plugins {
     id 'com.android.application'
-    <% if (serviceAccountJson) { %>
+    <% if (serviceAccountJsonFile) { %>
     id("com.github.triplet.play") version "3.3.0"
     <% } %>
 }
@@ -163,9 +163,9 @@ android {
     }
 }
 
-<% if (serviceAccountJson) { %>
+<% if (serviceAccountJsonFile) { %>
 play {
-    serviceAccountCredentials.set(file("<%= serviceAccountJson %>"))
+    serviceAccountCredentials.set(file("<%= serviceAccountJsonFile %>"))
 }
 <% } %>
 
