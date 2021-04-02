@@ -153,7 +153,7 @@ export class AndroidSdkTools {
     await util.execute(zipalignCmd, env);
   }
 
-    /**
+  /**
    * Invokes the zipalign tool from the Android SDK with the following flags:
    *  -c   : confirm the alignment of the given file.
    *  -v   : verbose output.
