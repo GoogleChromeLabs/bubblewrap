@@ -102,7 +102,7 @@ class Build {
 
   async buildApk(): Promise<void> {
     await this.gradleWrapper.assembleRelease();
-    await this.androidSdkTools.zipalign(
+    await this.androidSdkTools.zipalignOnlyVerification(
         APK_BUILD_OUTPUT_FILE_NAME, // input file
         APK_ALIGNED_FILE_NAME, // output file
     );
