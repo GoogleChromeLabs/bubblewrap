@@ -105,7 +105,6 @@ class Build {
     await this.gradleWrapper.assembleRelease();
     await this.androidSdkTools.zipalignOnlyVerification(
         APK_BUILD_OUTPUT_FILE_NAME, // input file
-        APK_ALIGNED_FILE_NAME, // output file
     );
     fs.copyFileSync(APK_BUILD_OUTPUT_FILE_NAME, APK_ALIGNED_FILE_NAME);
   }
