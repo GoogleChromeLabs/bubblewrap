@@ -161,9 +161,8 @@ export class AndroidSdkTools {
    * More information on zipalign can be found here:
    *  https://developer.android.com/studio/command-line/zipalign
    * @param {string} input path to the input file.
-   * @param {string} output path to the output file.
    */
-  async zipalignOnlyVerification(input: string, output: string): Promise<void> {
+  async zipalignOnlyVerification(input: string): Promise<void> {
     const env = this.getEnv();
     const zipalignCmd = [
       `"${this.pathJoin(this.getAndroidHome(), `/build-tools/${BUILD_TOOLS_VERSION}/zipalign`)}"`,
@@ -171,7 +170,6 @@ export class AndroidSdkTools {
       input,
     ];
     await util.execute(zipalignCmd, env);
-    fs.copyFileSync(input, output);
   }
 
   /**

@@ -16,6 +16,7 @@
 
 import {AndroidSdkTools, Config, GradleWrapper, JdkHelper, KeyTool, Log,
   ConsoleLog, TwaManifest, JarSigner, SigningKeyInfo, Result} from '@bubblewrap/core';
+import * as fs from 'fs';
 import * as path from 'path';
 import {enUS as messages} from '../strings';
 import {Prompt, InquirerPrompt} from '../Prompt';
@@ -106,6 +107,7 @@ class Build {
         APK_BUILD_OUTPUT_FILE_NAME, // input file
         APK_ALIGNED_FILE_NAME, // output file
     );
+    fs.copyFileSync(APK_BUILD_OUTPUT_FILE_NAME, APK_ALIGNED_FILE_NAME);
   }
 
   async signApk(signingKey: SigningKeyInfo, passwords: SigningKeyPasswords): Promise<void> {
