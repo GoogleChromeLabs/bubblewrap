@@ -62,4 +62,14 @@ export class GradleWrapper {
     await executeFile(
         this.gradleCmd, ['assembleRelease', '--stacktrace'], env, undefined, this.projectLocation);
   }
+
+  /**
+   * Executes gradle commands with custom arguments.
+   * @param args - Arguments supplied to gradle, also considered gradle tasks.
+   */
+  async executeGradleCommand(args: string[]): Promise<void> {
+    const env = this.androidSdkTools.getEnv();
+    await executeFile(
+      this.gradleCmd, args, env, undefined, this.projectLocation);
+  }
 }
