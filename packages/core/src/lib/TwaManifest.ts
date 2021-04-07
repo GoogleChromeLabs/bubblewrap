@@ -120,6 +120,8 @@ type alphaDependencies = {
  * splashScreenFadeOutDuration: 300
  * isChromeOSOnly: false, // Setting to true will enable a feature that prevents non-ChromeOS devices
  *  from installing the app.
+ * serviceAccountJsonFile: '<%= serviceAccountJsonFile %>', // The service account used to communicate with
+ *  Google Play.
  *
  */
 export class TwaManifest {
@@ -154,6 +156,7 @@ export class TwaManifest {
   shareTarget?: ShareTarget;
   orientation: Orientation;
   fingerprints: Fingerprint[];
+  serviceAccountJsonFile: string | undefined;
 
   private static log = new ConsoleLog('twa-manifest');
 
@@ -197,6 +200,7 @@ export class TwaManifest {
     this.shareTarget = data.shareTarget;
     this.orientation = data.orientation || DEFAULT_ORIENTATION;
     this.fingerprints = data.fingerprints || [];
+    this.serviceAccountJsonFile = data.serviceAccountJsonFile;
   }
 
   /**
@@ -520,6 +524,7 @@ export interface TwaManifestJson {
   shareTarget?: ShareTarget;
   orientation?: Orientation;
   fingerprints?: Fingerprint[];
+  serviceAccountJsonFile?: string;
 }
 
 export interface SigningKeyInfo {

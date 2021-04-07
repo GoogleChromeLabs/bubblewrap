@@ -133,7 +133,12 @@ export class AndroidSdkTools {
   }
 
   /**
-   * Invokes the zipalign tool from the Android SDK
+   * Invokes the zipalign tool from the Android SDK with the following flags:
+   *  -f   : overwrite existing outfile.zip.
+   *  -v   : verbose output.
+   *  -p 4 : align all libraries to the 32-bit page boundary.
+   * More information on zipalign can be found here:
+   *  https://developer.android.com/studio/command-line/zipalign
    * @param {string} input path to the input file.
    * @param {string} output path to the output file.
    */
@@ -144,6 +149,25 @@ export class AndroidSdkTools {
       '-v -f -p 4',
       input,
       output,
+    ];
+    await util.execute(zipalignCmd, env);
+  }
+
+  /**
+   * Invokes the zipalign tool from the Android SDK with the following flags:
+   *  -c   : confirm the alignment of the given file.
+   *  -v   : verbose output.
+   *  -p 4 : align all libraries to the 32-bit page boundary.
+   * More information on zipalign can be found here:
+   *  https://developer.android.com/studio/command-line/zipalign
+   * @param {string} input path to the input file.
+   */
+  async zipalignOnlyVerification(input: string): Promise<void> {
+    const env = this.getEnv();
+    const zipalignCmd = [
+      `"${this.pathJoin(this.getAndroidHome(), `/build-tools/${BUILD_TOOLS_VERSION}/zipalign`)}"`,
+      '-v -c -p 4',
+      input,
     ];
     await util.execute(zipalignCmd, env);
   }
