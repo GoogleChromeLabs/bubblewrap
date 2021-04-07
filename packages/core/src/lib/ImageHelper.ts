@@ -38,7 +38,16 @@ interface Icon {
 export class ImageHelper {
   private async saveIcon(icon: Icon, size: number, fileName: string): Promise<void> {
     const image = await Jimp.read(icon.data);
-    image.resize(size, size);
+
+    // Jimp creates artifacts when upscaling images that have an alpha channel. To avoid those
+    // issues we use the nearest neighbor algorithm only when upscaling.
+    // See https://github.com/GoogleChromeLabs/bubblewrap/issues/488#issuecomment-806560923.
+    if (image.hasAlpha() && (size > image.getWidth() || size > image.getHeight())) {
+      console.log('USINT NEAREST NEIGHBOUR');
+      image.resize(size, size, Jimp.RESIZE_NEAREST_NEIGHBOR);
+    } else {
+      image.resize(size, size);
+    }
     await image.writeAsync(fileName);
   }
 
