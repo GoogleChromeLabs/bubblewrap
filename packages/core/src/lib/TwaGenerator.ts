@@ -16,6 +16,7 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
+import * as Color from 'color';
 import fetch from 'node-fetch';
 import {template} from 'lodash';
 import {promisify} from 'util';
@@ -69,17 +70,20 @@ const DELETE_FILE_LIST = [
   'app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml',
 ];
 
+const SPLASH_IMAGES: IconDefinition[] = [
+  {dest: 'app/src/main/res/drawable-hdpi/splash.png', size: 450},
+  {dest: 'app/src/main/res/drawable-mdpi/splash.png', size: 300},
+  {dest: 'app/src/main/res/drawable-xhdpi/splash.png', size: 600},
+  {dest: 'app/src/main/res/drawable-xxhdpi/splash.png', size: 900},
+  {dest: 'app/src/main/res/drawable-xxxhdpi/splash.png', size: 1200},
+];
+
 const IMAGES: IconDefinition[] = [
   {dest: 'app/src/main/res/mipmap-hdpi/ic_launcher.png', size: 72},
   {dest: 'app/src/main/res/mipmap-mdpi/ic_launcher.png', size: 48},
   {dest: 'app/src/main/res/mipmap-xhdpi/ic_launcher.png', size: 96},
   {dest: 'app/src/main/res/mipmap-xxhdpi/ic_launcher.png', size: 144},
   {dest: 'app/src/main/res/mipmap-xxxhdpi/ic_launcher.png', size: 192},
-  {dest: 'app/src/main/res/drawable-hdpi/splash.png', size: 450},
-  {dest: 'app/src/main/res/drawable-mdpi/splash.png', size: 300},
-  {dest: 'app/src/main/res/drawable-xhdpi/splash.png', size: 600},
-  {dest: 'app/src/main/res/drawable-xxhdpi/splash.png', size: 900},
-  {dest: 'app/src/main/res/drawable-xxxhdpi/splash.png', size: 1200},
   {dest: 'store_icon.png', size: 512},
 ];
 
@@ -247,11 +251,11 @@ export class TwaGenerator {
     }));
   }
 
-  private async generateIcons(
-      iconUrl: string, targetDir: string, iconList: IconDefinition[]): Promise<void> {
+  private async generateIcons(iconUrl: string, targetDir: string, iconList: IconDefinition[],
+      backgroundColor?: Color): Promise<void> {
     const icon = await this.imageHelper.fetchIcon(iconUrl);
     await Promise.all(iconList.map((iconDef) => {
-      return this.imageHelper.generateIcon(icon, targetDir, iconDef);
+      return this.imageHelper.generateIcon(icon, targetDir, iconDef, backgroundColor);
     }));
   }
 
@@ -412,6 +416,8 @@ export class TwaGenerator {
     // Generate images
     if (twaManifest.iconUrl) {
       await this.generateIcons(twaManifest.iconUrl, targetDirectory, IMAGES);
+      await this.generateIcons(
+          twaManifest.iconUrl, targetDirectory, SPLASH_IMAGES, twaManifest.backgroundColor);
     }
     progress.update();
 
