@@ -71,16 +71,16 @@ const DELETE_FILE_LIST = [
 ];
 
 const SPLASH_IMAGES: IconDefinition[] = [
-  {dest: 'app/src/main/res/drawable-hdpi/splash.png', size: 450},
   {dest: 'app/src/main/res/drawable-mdpi/splash.png', size: 300},
+  {dest: 'app/src/main/res/drawable-hdpi/splash.png', size: 450},
   {dest: 'app/src/main/res/drawable-xhdpi/splash.png', size: 600},
   {dest: 'app/src/main/res/drawable-xxhdpi/splash.png', size: 900},
   {dest: 'app/src/main/res/drawable-xxxhdpi/splash.png', size: 1200},
 ];
 
 const IMAGES: IconDefinition[] = [
-  {dest: 'app/src/main/res/mipmap-hdpi/ic_launcher.png', size: 72},
   {dest: 'app/src/main/res/mipmap-mdpi/ic_launcher.png', size: 48},
+  {dest: 'app/src/main/res/mipmap-hdpi/ic_launcher.png', size: 72},
   {dest: 'app/src/main/res/mipmap-xhdpi/ic_launcher.png', size: 96},
   {dest: 'app/src/main/res/mipmap-xxhdpi/ic_launcher.png', size: 144},
   {dest: 'app/src/main/res/mipmap-xxxhdpi/ic_launcher.png', size: 192},
@@ -88,8 +88,8 @@ const IMAGES: IconDefinition[] = [
 ];
 
 const ADAPTIVE_IMAGES: IconDefinition[] = [
-  {dest: 'app/src/main/res/mipmap-hdpi/ic_maskable.png', size: 123},
   {dest: 'app/src/main/res/mipmap-mdpi/ic_maskable.png', size: 82},
+  {dest: 'app/src/main/res/mipmap-hdpi/ic_maskable.png', size: 123},
   {dest: 'app/src/main/res/mipmap-xhdpi/ic_maskable.png', size: 164},
   {dest: 'app/src/main/res/mipmap-xxhdpi/ic_maskable.png', size: 246},
   {dest: 'app/src/main/res/mipmap-xxxhdpi/ic_maskable.png', size: 328},
