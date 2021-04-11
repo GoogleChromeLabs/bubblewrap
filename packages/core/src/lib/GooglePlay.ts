@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google Inc. All Rights Reserved.
+ * Copyright 2021 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,16 +14,7 @@
  *  limitations under the License.
  */
 
-import { GradleWrapper } from "..";
-
-export class GooglePlay {
-    private gradleW: GradleWrapper;
-
-    constructor(gradleWrapper: GradleWrapper) {
-        this.gradleW = gradleWrapper;
-    }
-
-    async boostrapPlayListing(): Promise<void> {
-        await this.gradleW.executeGradleCommand(["bootstrap"]);
-    }
+export interface GooglePlay {
+    initPlay(): Promise<void>;
+    publishBundle(): Promise<void>;
 }
