@@ -16,5 +16,12 @@
 
 export interface GooglePlay {
     initPlay(): Promise<void>;
-    publishBundle(): Promise<void>;
+    publishBundle(track: Track): Promise<void>;
+}
+
+export enum Track {
+    Internal,
+    Alpha,
+    Beta,
+    Production,
 }
