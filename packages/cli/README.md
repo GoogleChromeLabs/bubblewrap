@@ -1,13 +1,13 @@
 <!---
 
   Copyright 2019 Google Inc. All Rights Reserved.
- 
+
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
- 
+
        http://www.apache.org/licenses/LICENSE-2.0
- 
+
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -113,12 +113,14 @@ Set `BUBBLEWRAP_KEYSTORE_PASSWORD` for the key store password and `BUBBLEWRAP_KE
 Usage:
 
 ```
-bubblewrap build [--skipPwaValidation] [--skipSigning] [--manifest="<path-twa-manifest>"]
+bubblewrap build [--skipPwaValidation] [--skipSigning] [--manifest="<path-twa-manifest>"] [--signingKeyPath="<path-to-signing-key>"] [--signingKeyAlias="<key-alias>"]
 ```
 
-Options: 
+Options:
   - `--skipPwaValidation`: skips validating the wrapped PWA against the Quality Criteria.
-  - `--skipSigning`: skips signing the built APK and App Bundle.
+  - `--skipSigning`: skips signing the built APK and App Bundle. Other signing-related flags are ignored when this is used.
+  - `--signingKeyPath`: path to keystore to use for signing the built APK and App Bundle. Overrides signingKey.path specified in `twa-manifest.json`.
+  - `--signingKeyAlias`: key name. Overrides signingKey.alias specified in `twa-manifest.json`.
   - `--manifest`: directory where the client should look for `twa-manifest.json`.
 
 
@@ -251,7 +253,7 @@ be changed by editing the configuration file at `${USER_HOME}/.bubblewrap/config
 
 #### Sample config.json
 ```
-{ 
+{
   "jdkPath":"\\user\\home\\bubblewrap-user\\open-jdk",
   "androidSdkPath":"\\user\\home\\bubblewrap-user\\android-cli"
  }
