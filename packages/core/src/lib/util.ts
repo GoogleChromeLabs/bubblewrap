@@ -310,12 +310,12 @@ export function escapeJsonString(stringToReplace: string): string {
 //
 export function toAndroidScreenOrientation(orientation: Orientation): string {
   switch (orientation) {
-    case 'portrait': return 'userPortrait';
-    case 'portrait-primary': return 'portrait';
-    case 'portrait-secondary': return 'reversePortrait';
-    case 'landscape': return 'landscape';
-    case 'landspace-primary': return 'userLandscape';
-    case 'landscape-secondary': return 'reverseLandscape';
-    default: return 'unspecified';
+    case 'portrait': return 'ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT';
+    case 'portrait-primary': return 'ActivityInfo.SCREEN_ORIENTATION_PORTRAIT';
+    case 'portrait-secondary': return 'ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT';
+    case 'landscape': return 'ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE';
+    case 'landspace-primary': return 'ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE';
+    case 'landscape-secondary': return 'ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE';
+    default: return 'ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED';
   }
 }
