@@ -295,6 +295,9 @@ export function escapeJsonString(stringToReplace: string): string {
 // This is the value of the screenOrientation for the LauncherActivity which determines the
 // orientation of the splash screen.
 // This methods maps the Web Manifest orientation to the android screenOrientation:
+//  - "default"             => "unspecified"
+//  - "any"                 => "unspecified"
+//  - "natural "            => "unspecified"
 //  - "portrait"            => "userPortrait"
 //  - "portrait-primary"    => "portrait"
 //  - "portrait-secondary"  => "reversePortrait"
