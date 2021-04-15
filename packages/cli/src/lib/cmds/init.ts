@@ -147,6 +147,17 @@ async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promi
     };
   }
 
+  const locationDelegationEnabled =
+      await prompt.promptConfirm(messages.promptLocationDelegation, false);
+  if (locationDelegationEnabled) {
+    twaManifest.features = {
+      ...twaManifest.features,
+      locationDelegation: {
+        enabled: true,
+      },
+    };
+  }
+
   // Step 5/5 Signing Key Information.
   prompt.printMessage(messages.messageSigningKeyInformation);
   prompt.printMessage(messages.messageSigningKeyInformationDesc);
