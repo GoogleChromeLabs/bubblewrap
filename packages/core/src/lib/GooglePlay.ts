@@ -16,6 +16,13 @@
 
 import {GradleWrapper} from '..';
 
+export enum Track {
+    Internal,
+    Alpha,
+    Beta,
+    Production,
+}
+
 export class GooglePlay {
   /**
    * Constructs a Google Play object with the gradleWrapper so we can use a
@@ -42,16 +49,16 @@ export class GooglePlay {
    * @param track - Specifies the track that the user would like to publish to.
    */
   async publishBundle(track: Track): Promise<void> {
-    // TODO(nohe): Clean this up with the appropriate gradle commands. Might need some fine
-    // tuning.
+    // Uploads the artifact to the default internal track.
     this.gradleWrapper.executeGradleCommand(
         ['publishBundle', '--artifact-dir', 'path/to/app-bundle/dir']);
-  }
-}
 
-export enum Track {
-    Internal,
-    Alpha,
-    Beta,
-    Production,
+    // Uses the promote function to promote from the internal track (default upload) to the user
+    // selected track at 100% rollout
+    if (track !== Track.Internal) {
+      this.gradleWrapper.executeGradleCommand(
+          ['promoteArtifact', '--from-track', 'internal', '--promote-track', Track[track],
+            '--release-status', 'completed']);
+    }
+  }
 }
