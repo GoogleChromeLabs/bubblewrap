@@ -144,8 +144,14 @@ class Build {
     const twaManifest = await TwaManifest.fromFile(manifestFile);
 
     let passwords = null;
+    let signingKey = twaManifest.signingKey;
     if (!this.args.skipSigning) {
-      passwords = await this.getPasswords(twaManifest.signingKey);
+      passwords = await this.getPasswords(signingKey);
+      signingKey = {
+        ...signingKey,
+        ...(this.args.signingKeyPath ? {path: this.args.signingKeyPath} : null),
+        ...(this.args.signingKeyAlias ? {alias: this.args.signingKeyAlias} : null),
+      };
     }
 
     // Builds the Android Studio Project
@@ -153,7 +159,7 @@ class Build {
 
     await this.buildApk();
     if (passwords) {
-      await this.signApk(twaManifest.signingKey, passwords);
+      await this.signApk(signingKey, passwords);
     }
     const apkFileName = this.args.skipSigning ?
       APK_ALIGNED_FILE_NAME :
@@ -162,7 +168,7 @@ class Build {
 
     await this.buildAppBundle();
     if (passwords) {
-      await this.signAppBundle(twaManifest.signingKey, passwords);
+      await this.signAppBundle(signingKey, passwords);
     }
     const appBundleFileName = this.args.skipSigning ?
       APP_BUNDLE_BUILD_OUTPUT_FILE_NAME :
