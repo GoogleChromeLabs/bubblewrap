@@ -62,6 +62,11 @@ const HELP_MESSAGES = new Map<string, string>(
         'Options:',
         '--skipPwaValidation ....... skips validating the wrapped PWA against the Quality Criteria',
         '--skipSigning ............. skips signing the built APK and App Bundle',
+        '--signingKeyPath .......... path to keystore to use for signing the built APK and' +
+            ' App Bundle; overrides signingKey.path specified in twa-manifest.json',
+        '--signingKeyAlias ......... key name; overrides signingKey.alias specified in' +
+            ' twa-manifest.json',
+        '--skipSigning ............. skips signing the built APK and App Bundle',
         '--manifest ................ directory where the client should look for twa-manifest.json',
       ].join('\n')],
       ['update', [

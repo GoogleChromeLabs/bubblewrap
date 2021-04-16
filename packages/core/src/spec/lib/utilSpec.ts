@@ -257,4 +257,32 @@ describe('util', () => {
       mockFs.restore();
     });
   });
+
+  describe('#toAndroidScreenOrientation', () => {
+    it('Returns the correct orientation', () => {
+      expect(util.toAndroidScreenOrientation('portrait'))
+          .toEqual('ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT');
+      expect(util.toAndroidScreenOrientation('portrait-primary'))
+          .toEqual('ActivityInfo.SCREEN_ORIENTATION_PORTRAIT');
+      expect(util.toAndroidScreenOrientation('portrait-secondary'))
+          .toEqual('ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT');
+      expect(util.toAndroidScreenOrientation('landscape'))
+          .toEqual('ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE');
+      expect(util.toAndroidScreenOrientation('landspace-primary'))
+          .toEqual('ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE');
+      expect(util.toAndroidScreenOrientation('landscape-secondary'))
+          .toEqual('ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE');
+      expect(util.toAndroidScreenOrientation('default'))
+          .toEqual('ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED');
+      expect(util.toAndroidScreenOrientation('any'))
+          .toEqual('ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED');
+      expect(util.toAndroidScreenOrientation('natural'))
+          .toEqual('ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED');
+    });
+
+    it('Returns unspecified for invalid values', () => {
+      expect(util.toAndroidScreenOrientation(''))
+          .toEqual('ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED');
+    });
+  });
 });

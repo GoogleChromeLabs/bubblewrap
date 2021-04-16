@@ -92,6 +92,7 @@ type Messages = {
   promptMonochromeIconUrl: string;
   promptShortcuts: string;
   promptPlayBilling: string;
+  promptLocationDelegation: string;
   promptPackageId: string;
   promptKeyPath: string;
   promptKeyAlias: string;
@@ -325,6 +326,7 @@ the PWA:
   promptMonochromeIconUrl: 'Monochrome icon URL:',
   promptShortcuts: 'Include app shortcuts?',
   promptPlayBilling: 'Include support for Play Billing (this relies on alpha dependencies)?',
+  promptLocationDelegation: 'Request geolocation permission?',
   promptPackageId: 'Application ID:',
   promptKeyPath: 'Key store location:',
   promptKeyAlias: 'Key name:',

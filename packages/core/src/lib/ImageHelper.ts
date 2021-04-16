@@ -36,8 +36,32 @@ interface Icon {
 }
 
 export class ImageHelper {
-  private async saveIcon(icon: Icon, size: number, fileName: string): Promise<void> {
+  private async saveIcon(
+      icon: Icon, size: number, fileName: string, backgroundColor?: Color): Promise<void> {
     const image = await Jimp.read(icon.data);
+
+    // Jimp creates artifacts when upscaling images that have an alpha channel. This happens
+    // because even when a pixel is fully transparent the RGB part of the color still gets blended
+    // with other pixels. To avoid this, we apply the RGB part of `backgroundColor` to transparent
+    // pixels so they are blended with that color instead and match a background.
+    // See https://github.com/GoogleChromeLabs/bubblewrap/issues/488#issuecomment-806560923.
+    if (backgroundColor && image.hasAlpha()) {
+      // The replacement colour is the same as the background colour, but fully transparent.
+      const replacementColor = (backgroundColor.rgbNumber() << 8) & 0xFFFFFF00;
+
+      // Iterate over the pixels, check for fully transparent ones and replace with
+      // replacementColor.
+      for (let y = 0; y < image.getHeight(); y++) {
+        for (let x = 0; x < image.getWidth(); x++) {
+          const color = image.getPixelColour(x, y);
+
+          // Apply replacement color if the pixel is fully transparent.
+          if ((color & 0xFF) === 0) {
+            image.setPixelColour(replacementColor, x, y);
+          }
+        }
+      }
+    }
     image.resize(size, size);
     await image.writeAsync(fileName);
   }
@@ -49,11 +73,11 @@ export class ImageHelper {
    * @param {string} targetDir Path to the directory the image will be saved in.
    * @param {Object} iconDef Icon definitions specifying the size the icon should be exported as.
    */
-  async generateIcon(
-      icon: Icon, targetDir: string, iconDef: IconDefinition): Promise<void> {
+  async generateIcon(icon: Icon, targetDir: string, iconDef: IconDefinition,
+      backgroundColor?: Color): Promise<void> {
     const destFile = path.join(targetDir, iconDef.dest);
     await fsMkDir(path.dirname(destFile), {recursive: true});
-    return await this.saveIcon(icon, iconDef.size, destFile);
+    return await this.saveIcon(icon, iconDef.size, destFile, backgroundColor);
   }
 
   /**
