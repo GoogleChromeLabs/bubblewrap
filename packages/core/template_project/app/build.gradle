@@ -19,7 +19,7 @@ import groovy.xml.MarkupBuilder
 plugins {
     id 'com.android.application'
     <% if (serviceAccountJsonFile) { %>
-    id("com.github.triplet.play") version "3.3.0"
+    id("com.github.triplet.play") version "3.4.0"
     <% } %>
 }
 
