@@ -57,7 +57,7 @@ export class GooglePlay {
     // selected track at 100% rollout
     if (track !== Track.Internal) {
       this.gradleWrapper.executeGradleCommand(
-          ['promoteArtifact', '--from-track', 'internal', '--promote-track', Track[track],
+          ['promoteArtifact', '--from-track', 'internal', '--promote-track', Track[track].toLowerCase(),
             '--release-status', 'completed']);
     }
   }
