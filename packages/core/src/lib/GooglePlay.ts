@@ -14,9 +14,39 @@
  *  limitations under the License.
  */
 
-export interface GooglePlay {
-    initPlay(): Promise<void>;
-    publishBundle(track: Track): Promise<void>;
+import {GradleWrapper} from '..';
+
+export class GooglePlay {
+  /**
+   * Constructs a Google Play object with the gradleWrapper so we can use a
+   *   gradle plugin to communicate with Google Play.
+   *
+   * @param gradleWrapper This is the gradle wrapper object that supplies
+   *   hooks into Gradle.
+   */
+  constructor(private gradleWrapper: GradleWrapper) {}
+
+  /**
+   * Initialized Google Play and loads the existing configruation from Google Play.
+   * The resulting files are stored in the play folder in the src directory.
+   * https://github.com/Triple-T/gradle-play-publisher#quickstart
+   */
+  async initPlay(): Promise<void> {
+    this.gradleWrapper.executeGradleCommand(['bootstrap']);
+  }
+
+  /**
+   * This calls the publish bundle command and publishes an existing artifact to Google
+   * Play.
+   * https://github.com/Triple-T/gradle-play-publisher#uploading-a-pre-existing-artifact
+   * @param track - Specifies the track that the user would like to publish to.
+   */
+  async publishBundle(track: Track): Promise<void> {
+    // TODO(nohe): Clean this up with the appropriate gradle commands. Might need some fine
+    // tuning.
+    this.gradleWrapper.executeGradleCommand(
+        ['publishBundle', '--artifact-dir', 'path/to/app-bundle/dir']);
+  }
 }
 
 export enum Track {

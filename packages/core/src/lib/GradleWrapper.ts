@@ -16,12 +16,11 @@
 
 import {executeFile} from './util';
 import {AndroidSdkTools} from './androidSdk/AndroidSdkTools';
-import {GooglePlay, Track} from './GooglePlay';
 
 /**
  * A Wrapper around the Gradle commands.
  */
-export class GradleWrapper implements GooglePlay {
+export class GradleWrapper {
   private process: NodeJS.Process;
   private androidSdkTools: AndroidSdkTools;
   private projectLocation: string;
@@ -64,29 +63,9 @@ export class GradleWrapper implements GooglePlay {
    * Executes gradle commands with custom arguments.
    * @param args - Arguments supplied to gradle, also considered gradle tasks.
    */
-  private async executeGradleCommand(args: string[]): Promise<void> {
+  async executeGradleCommand(args: string[]): Promise<void> {
     const env = this.androidSdkTools.getEnv();
     await executeFile(
         this.gradleCmd, args, env, undefined, this.projectLocation);
-  }
-
-  /**
-   * Initialized Google Play and loads the existing configruation from Google Play.
-   * The resulting files are stored in the play folder in the src directory.
-   * https://github.com/Triple-T/gradle-play-publisher#quickstart
-   */
-  async initPlay(): Promise<void> {
-    this.executeGradleCommand(['bootstrap']);
-  }
-
-  /**
-   * This calls the publish bundle command and publishes an existing artifact to Google
-   * Play.
-   * https://github.com/Triple-T/gradle-play-publisher#uploading-a-pre-existing-artifact
-   */
-  async publishBundle(track: Track): Promise<void> {
-    // TODO(nohe): Clean this up with the appropriate gradle commands. Might need some fine
-    // tuning.
-    this.executeGradleCommand(['publishBundle', '--artifact-dir', 'path/to/app-bundle/dir']);
   }
 }
