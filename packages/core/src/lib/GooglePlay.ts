@@ -48,10 +48,10 @@ export class GooglePlay {
    * https://github.com/Triple-T/gradle-play-publisher#uploading-a-pre-existing-artifact
    * @param track - Specifies the track that the user would like to publish to.
    */
-  async publishBundle(track: Track): Promise<void> {
+  async publishBundle(track: Track, filepath: string): Promise<void> {
     // Uploads the artifact to the default internal track.
     this.gradleWrapper.executeGradleCommand(
-        ['publishBundle', '--artifact-dir', 'path/to/app-bundle/dir']);
+        ['publishBundle', '--artifact-dir', filepath]);
 
     // Uses the promote function to promote from the internal track (default upload) to the user
     // selected track at 100% rollout
