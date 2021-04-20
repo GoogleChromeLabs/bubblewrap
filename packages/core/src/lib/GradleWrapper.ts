@@ -49,23 +49,17 @@ export class GradleWrapper {
    * Invokes `gradle bundleRelease` for the Android project.
    */
   async bundleRelease(): Promise<void> {
-    this.executeGradleCommand(['bundleRelease', '--stacktrace']);
+    const env = this.androidSdkTools.getEnv();
+    await executeFile(
+        this.gradleCmd, ['bundleRelease', '--stacktrace'], env, undefined, this.projectLocation);
   }
 
   /**
    * Invokes `gradle assembleRelease` for the Android project.
    */
   async assembleRelease(): Promise<void> {
-    this.executeGradleCommand(['assembleRelease', '--stacktrace']);
-  }
-
-  /**
-   * Executes gradle commands with custom arguments.
-   * @param args - Arguments supplied to gradle, also considered gradle tasks.
-   */
-  async executeGradleCommand(args: string[]): Promise<void> {
     const env = this.androidSdkTools.getEnv();
     await executeFile(
-        this.gradleCmd, args, env, undefined, this.projectLocation);
+        this.gradleCmd, ['assembleRelease', '--stacktrace'], env, undefined, this.projectLocation);
   }
 }
