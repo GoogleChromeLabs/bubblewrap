@@ -47,7 +47,7 @@ export class ImageHelper {
     // See https://github.com/GoogleChromeLabs/bubblewrap/issues/488#issuecomment-806560923.
     if (backgroundColor && image.hasAlpha()) {
       // The replacement colour is the same as the background colour, but fully transparent.
-      const replacementColor = (backgroundColor.rgbNumber() << 8) & 0xFFFFFF00;
+      const replacementColor = ((backgroundColor.rgbNumber() << 8) & 0xFFFFFF00) >>> 0;
 
       // Iterate over the pixels, check for fully transparent ones and replace with
       // replacementColor.
