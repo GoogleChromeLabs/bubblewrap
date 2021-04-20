@@ -49,14 +49,14 @@ export class GradleWrapper {
    * Invokes `gradle bundleRelease` for the Android project.
    */
   async bundleRelease(): Promise<void> {
-    this.executeGradleCommand(['bundleRelease', '--stacktrace']);
+    await this.executeGradleCommand(['bundleRelease', '--stacktrace']);
   }
 
   /**
    * Invokes `gradle assembleRelease` for the Android project.
    */
   async assembleRelease(): Promise<void> {
-    this.executeGradleCommand(['assembleRelease', '--stacktrace']);
+    await this.executeGradleCommand(['assembleRelease', '--stacktrace']);
   }
 
   /**
