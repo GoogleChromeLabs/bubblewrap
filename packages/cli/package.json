@@ -1,6 +1,6 @@
 {
   "name": "@bubblewrap/cli",
-  "version": "1.11.1",
+  "version": "1.11.2-alpha.7+be3340a",
   "description": "CLI tool to Generate TWA projects from a Web Manifest",
   "bin": {
     "bubblewrap": "bin/bubblewrap.js"
@@ -43,5 +43,6 @@
     "minimist": "^1.2.2",
     "semver": "^7.3.2",
     "valid-url": "^1.0.9"
-  }
+  },
+  "gitHead": "be3340a57736635802fc482e6410c6756d0d4a19"
 }
