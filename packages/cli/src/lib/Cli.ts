@@ -29,6 +29,7 @@ import {updateConfig} from './cmds/updateConfig';
 import {doctor} from './cmds/doctor';
 import {merge} from './cmds/merge';
 import {fingerprint} from './cmds/fingerprint';
+import { play } from './cmds/play';
 
 export class Cli {
   async run(args: string[]): Promise<boolean> {
@@ -82,6 +83,8 @@ export class Cli {
         return await merge(parsedArgs);
       case 'fingerprint':
         return await fingerprint(parsedArgs);
+      case 'play':
+        return await play(config, parsedArgs);
       default:
         throw new Error(
             `"${command}" is not a valid command! Use 'bubblewrap help' for a list of commands`);
