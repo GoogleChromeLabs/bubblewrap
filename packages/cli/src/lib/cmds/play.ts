@@ -34,6 +34,7 @@ class Play {
     await this.googlePlay.initPlay();
   }
 
+  // bubblewrap play --versionCheck can validate the largest version number vs twa-manifest.json and update to give x+1 version number.
   async getLargestVersion(): Promise<void> { 
     // TODO(nohe427): This doesn't exist in the Gradle Play Plugin. Might be wortwhile to build
       // small integration to do this by getting the service account file?
