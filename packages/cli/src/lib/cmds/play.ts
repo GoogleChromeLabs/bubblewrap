@@ -34,22 +34,71 @@ class Play {
     await this.googlePlay.initPlay();
   }
 
-  async publish(): Promise<void> {
-      // Make tmp directory copy file over then clean up.
-      //await this.googlePlay.publishBundle(Track.Internal,)
+  async getLargestVersion(): Promise<void> { 
+    // TODO(nohe427): This doesn't exist in the Gradle Play Plugin. Might be wortwhile to build
+      // small integration to do this by getting the service account file?
   }
 
-  async run(): Promise<boolean> {
-    // Update the TWA-Manifest if service account is supplied
-    if (this.args.serviceAccount) {
-      // This is probably all garbage and should probably be changed.
-      const serviceAccountFile = this.args.serviceAccount;
-      const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
-      const twaManifest = await TwaManifest.fromFile(manifestFile);
-      twaManifest.serviceAccountJsonFile = serviceAccountFile;
+  private isInAvailableTracks(userSpecifiedTrack: string): Boolean {
+    const track: string = (userSpecifiedTrack).toLowerCase();
+    const selectedTrack: Track = (<any>Track)[track];
+    if(selectedTrack == (null || undefined)) {
+      return false; // Should probably spit out an error message that track needs to be in [x,y,z]
     }
+    return true;
+  }
+
+  // bubblewrap play --publish="Internal"
+  async publish(): Promise<void> {
+    //if (this.args.publish) { // This argument should be validated in run()
+    //}
+    //Validate that the publish value is listed in the available Tracks.
+    if(this.isInAvailableTracks((this.args.publish as string).toLowerCase()))
+    if (this.args.appBundleLocation) {
+      // Check this is a directory that contains our specified file name.
+    }
+
+    
+      // Make tmp directory copy file over signed APK then cleanup.
+      // await this.googlePlay.publishBundle(Track.Internal,)
+  }
+
+  private validServiceAccountJsonFile(path: string | undefined): Boolean { // Return an error or boolean? Log a message?
+    if(path == undefined) {
+      // Log an error
+      return false;
+    }
+    if (!fs.existsSync(path)) {
+      // path doesn't exist log an error
+      return false; 
+    }
+    return true;
+  }
+
+  // bubblewrap play --init
+  async run(): Promise<boolean> {
+    const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
+    const twaManifest = await TwaManifest.fromFile(manifestFile);
+    // Update the TWA-Manifest if service account is supplied
+    // bubblewrap play --serviceAccountFile="/path/to/service-account.json"  --manifest="/path/twa-manifest.json"
+    if (this.args.serviceAccountFile) {
+      // Add service account to the TWA-Manifest
+      const serviceAccountFile = this.args.serviceAccount;
+      twaManifest.serviceAccountJsonFile = serviceAccountFile;
+      // Then we need to call bubblewrap update so the gradle plugin has the appropriate file.
+    }
+    // Check if service account file exists on disk.
+
     // Need to validate that the service account file exists in TWA-Manifest
     // and/or on disk. (Thinking about CI/CD scenarios)
+    if (this.validServiceAccountJsonFile(twaManifest.serviceAccountJsonFile)) {
+      // Return an error or log here?
+      return false;
+    }
+
+    // bubblewrap play --init
+    // This might not be useful at all considering that right now, we do not use anything listed in
+    // the play listing.
     if (this.args.init) {
       await this.bootstrapPlay();
       return true;

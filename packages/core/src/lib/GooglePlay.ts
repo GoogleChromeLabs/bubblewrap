@@ -17,10 +17,10 @@
 import {GradleWrapper} from '..';
 
 export enum Track {
-    Internal,
-    Alpha,
-    Beta,
-    Production,
+    internal,
+    alpha,
+    beta,
+    production,
 }
 
 export class GooglePlay {
@@ -55,7 +55,7 @@ export class GooglePlay {
 
     // Uses the promote function to promote from the internal track (default upload) to the user
     // selected track at 100% rollout
-    if (track !== Track.Internal) {
+    if (track !== Track.internal) {
       this.gradleWrapper.executeGradleCommand(
           ['promoteArtifact', '--from-track', 'internal', '--promote-track',
             Track[track].toLowerCase(), '--release-status', 'completed']);
