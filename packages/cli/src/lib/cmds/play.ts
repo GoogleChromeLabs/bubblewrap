@@ -53,7 +53,10 @@ class Play {
     //if (this.args.publish) { // This argument should be validated in run()
     //}
     //Validate that the publish value is listed in the available Tracks.
-    if(this.isInAvailableTracks((this.args.publish as string).toLowerCase()))
+    const userSelectedTrack = this.args.publish.toLowerCase() || "internal"; // If no value was supplied with publish we make it internal.
+    if(!this.isInAvailableTracks(userSelectedTrack)) {
+      return; // Throw error message?
+    }
     if (this.args.appBundleLocation) {
       // Check this is a directory that contains our specified file name.
     }
