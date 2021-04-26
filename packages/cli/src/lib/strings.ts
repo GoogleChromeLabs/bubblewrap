@@ -46,7 +46,6 @@ type Messages = {
   messageDigitalAssetLinksSuccess: (filename: string) => string;
   messageEnterPasswords: (keypath: string, keyalias: string) => string;
   messageGeneratedAssetLinksFile: (outputfile: string) => string;
-  messageGeneratedNewVersion: (appVersionName: string, appVersionCode: number) => string;
   messageGeneratingAndroidProject: string;
   messageInstallingBuildTools: string;
   messageLauncherIconAndSplash: string;
@@ -55,6 +54,7 @@ type Messages = {
   messageOptionFeatures: string;
   messageOptionalFeaturesDesc: string;
   messageProjectGeneratedSuccess: string;
+  messageProjectUpdatedSuccess: string;
   messageRemovedFingerprint: (fingerpring: Fingerprint) => string;
   messageSavingTwaManifestTo: (path: string) => string;
   messageSha256FingerprintNotFound: string;
@@ -62,6 +62,7 @@ type Messages = {
   messageSigningKeyInformation: string;
   messageSigningKeyInformationDesc: string;
   messageSigningKeyNotFound: (path: string) => string;
+  messageUpgradedAppVersion: (appVersionName: string, appVersionCode: number) => string;
   messageUsingPasswordsFromEnv: string;
   messageWebAppDetails: string;
   messageWebAppDetailsDesc: string;
@@ -208,10 +209,6 @@ ${cyan(keyalias)}.\n`;
   messageGeneratedAssetLinksFile: (outputfile: string): string => {
     return `\nGenerated Digital Asset Links file at ${cyan(outputfile)}.`;
   },
-  messageGeneratedNewVersion: (appVersionName: string, appVersionCode: number): string => {
-    return `Generated new version with versionName: ${appVersionName} and ` +
-        `versionCode: ${appVersionCode}`;
-  },
   messageGeneratingAndroidProject: 'Generating Android Project.',
   messageInstallingBuildTools: 'Installing Android Build Tools. Please, read and accept the ' +
       'license agreement.',
@@ -253,6 +250,8 @@ a blank white page to users.
 \t  ${italic('theme_color')}. They will be used for notification icons.\n`,
   messageProjectGeneratedSuccess: '\nProject generated successfully. Build it by running ' +
       cyan('bubblewrap build'),
+  messageProjectUpdatedSuccess: '\nProject updated successfully. Build it by running ' +
+      cyan('bubblewrap build'),
   messageRemovedFingerprint: (fingerprint: Fingerprint): string => {
     return `Removed fingerprint with value ${fingerprint.value}.`;
   },
@@ -277,6 +276,10 @@ Read more about Android signing keys at:
 \t ${cyan('https://developer.android.com/studio/publish/app-signing')}\n`,
   messageSigningKeyNotFound: (path: string): string => {
     return `\nAn existing key store could not be found at "${path}".\n`;
+  },
+  messageUpgradedAppVersion: (appVersionName: string, appVersionCode: number): string => {
+    return `Upgraded app version to versionName: ${appVersionName} and ` +
+        `versionCode: ${appVersionCode}`;
   },
   messageUsingPasswordsFromEnv: 'Using passwords set in the BUBBLEWRAP_KEYSTORE_PASSWORD and ' +
       'BUBBLEWRAP_KEY_PASSWORD environmental variables.',
