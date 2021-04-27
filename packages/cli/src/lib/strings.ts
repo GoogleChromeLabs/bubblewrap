@@ -22,6 +22,8 @@ type Messages = {
   errorCouldNotfindTwaManifest: (file: string) => string;
   errorDirectoryDoesNotExist: (directory: string) => string;
   errorFailedToRunQualityCriteria: string;
+  errorPlayBillingEnableNotifications: string;
+  errorPlayBillingAlphaDependencies: string;
   errorMaxLength: (maxLength: number, actualLength: number) => string;
   errorMinLength: (minLength: number, actualLength: number) => string;
   errorMissingManifestParameter: string;
@@ -124,6 +126,10 @@ export const enUS: Messages = {
   },
   errorFailedToRunQualityCriteria:
       yellow('\nFailed to run the PWA Quality Criteria checks. Skipping.'),
+  errorPlayBillingEnableNotifications: red(`Play Billing requires ${cyan('enableNotifications')} ` +
+      `to be ${cyan('true')}.`),
+  errorPlayBillingAlphaDependencies: red(`Play Billing requires ${cyan('alphaDependencies')} ` +
+      'to be enabled.'),
   errorMaxLength: (maxLength, actualLength): string => {
     return `Maximum length is ${maxLength} but input is ${actualLength}.`;
   },

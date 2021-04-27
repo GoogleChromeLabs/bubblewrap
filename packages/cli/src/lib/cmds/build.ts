@@ -143,6 +143,19 @@ class Build {
     const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
     const twaManifest = await TwaManifest.fromFile(manifestFile);
 
+    const features = twaManifest.features;
+
+    // Check that if Play Billing is enabled, enableNotifications must also be true
+    if (features.playBilling?.enabled && !twaManifest.enableNotifications) {
+      this.prompt.printMessage(messages.errorPlayBillingEnableNotifications);
+      return false;
+    }
+    // Check that if billing is true, alphaDependencies must also be enabled
+    if (features.playBilling?.enabled && !twaManifest.alphaDependencies.enabled) {
+      this.prompt.printMessage(messages.errorPlayBillingAlphaDependencies);
+      return false;
+    }
+
     let passwords = null;
     let signingKey = twaManifest.signingKey;
     if (!this.args.skipSigning) {
