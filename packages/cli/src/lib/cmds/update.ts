@@ -42,13 +42,16 @@ export async function update(
     const newVersionInfo = await updateVersions(twaManifest, args.appVersionName, prompt);
     twaManifest.appVersionName = newVersionInfo.appVersionName;
     twaManifest.appVersionCode = newVersionInfo.appVersionCode;
-    prompt.printMessage(messages.messageGeneratedNewVersion(
+    prompt.printMessage(messages.messageUpgradedAppVersion(
         newVersionInfo.appVersionName, newVersionInfo.appVersionCode));
-    twaManifest.saveToFile(manifestFile);
   }
 
   const twaGenerator = new TwaGenerator();
   await twaGenerator.removeTwaProject(targetDirectory);
   await generateTwaProject(prompt, twaGenerator, targetDirectory, twaManifest);
+  if (!args.skipVersionUpgrade) {
+    twaManifest.saveToFile(manifestFile);
+  }
+  prompt.printMessage(messages.messageProjectUpdatedSuccess);
   return true;
 }
