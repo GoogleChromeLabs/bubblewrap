@@ -38,6 +38,18 @@ export async function update(
   const twaManifest = await TwaManifest.fromFile(manifestFile);
   twaManifest.generatorApp = APP_NAME;
 
+  const features = twaManifest.features;
+  // Check that if Play Billing is enabled, enableNotifications must also be true
+  if (features.playBilling?.enabled && !twaManifest.enableNotifications) {
+    prompt.printMessage(messages.errorPlayBillingEnableNotifications);
+    return false;
+  }
+  // Check that if billing is true, alphaDependencies must also be enabled
+  if (features.playBilling?.enabled && !twaManifest.alphaDependencies.enabled) {
+    prompt.printMessage(messages.errorPlayBillingAlphaDependencies);
+    return false;
+  }
+
   if (!args.skipVersionUpgrade) {
     const newVersionInfo = await updateVersions(twaManifest, args.appVersionName, prompt);
     twaManifest.appVersionName = newVersionInfo.appVersionName;
