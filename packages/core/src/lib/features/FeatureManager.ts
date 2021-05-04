@@ -22,6 +22,11 @@ import {TwaManifest} from '../TwaManifest';
 import {FirstRunFlagFeature} from './FirstRunFlagFeature';
 import {Log, ConsoleLog} from '../Log';
 
+const ANDROID_BROWSER_HELPER_VERSIONS = {
+  stable: 'com.google.androidbrowserhelper:androidbrowserhelper:2.2.0',
+  alpha: 'com.google.androidbrowserhelper:androidbrowserhelper:2.2.1-alpha01',
+};
+
 /**
  * Analyzes a TwaManifest to collect enable features and aggregates all customizations that will
  * be applied when generating the Android project.
@@ -81,8 +86,11 @@ export class FeatureManager {
       this.androidManifest.permissions.add('android.permission.INTERNET');
     }
 
-    this.buildGradle.dependencies.add(
-        'com.google.androidbrowserhelper:androidbrowserhelper:2.2.0');
+    if (twaManifest.alphaDependencies?.enabled) {
+      this.buildGradle.dependencies.add(ANDROID_BROWSER_HELPER_VERSIONS.alpha);
+    } else {
+      this.buildGradle.dependencies.add(ANDROID_BROWSER_HELPER_VERSIONS.stable);
+    }
   }
 
   private addFeature(feature: Feature): void {
