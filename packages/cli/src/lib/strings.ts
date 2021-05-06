@@ -45,6 +45,7 @@ type Messages = {
   messageApkSuccess: (filename: string) => string;
   messageAppBundleSuccess: (filename: string) => string;
   messageBuildingApp: string;
+  messageContinueBuildingApp: string;
   messageDigitalAssetLinksSuccess: (filename: string) => string;
   messageEnterPasswords: (keypath: string, keyalias: string) => string;
   messageGeneratedAssetLinksFile: (outputfile: string) => string;
@@ -108,6 +109,7 @@ type Messages = {
   promptKeyPassword: string;
   promptNewAppVersionName: string;
   promptVersionCode: string;
+  promptUpdateProject: string;
   warnPwaFailedQuality: string;
   updateConfigUsage: string;
   jdkPathIsNotCorrect: string;
@@ -202,6 +204,7 @@ into a device:
     return `\t- Generated Android App Bundle at ${cyan(filename)}`;
   },
   messageBuildingApp: '\nBuilding the Android App...',
+  messageContinueBuildingApp: 'Continuing with ' + cyan('bubblewrap build'),
   messageDigitalAssetLinksSuccess: (filename: string): string => {
     return `\t- Generated Digital Asset Links file at ${cyan(filename)}
 \nRead more about setting up Digital Asset Links at:
@@ -348,6 +351,8 @@ the PWA:
   promptKeyPassword: 'Password for the Key:',
   promptNewAppVersionName: 'versionName for the new App version:',
   promptVersionCode: 'Starting version code for the new app version:',
+  promptUpdateProject: 'There are changes in twa-manifest.json. ' +
+      'Would you like to apply them to the project before building?',
   warnPwaFailedQuality: red('PWA Quality Criteria check failed.'),
   updateConfigUsage: 'Usage: [--jdkPath <path-to-jdk>] [--androidSdkPath <path-to-android-sdk>]' +
       '(You can insert one or both of them)',

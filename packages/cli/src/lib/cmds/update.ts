@@ -20,7 +20,7 @@ import {TwaGenerator, TwaManifest} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
 import {APP_NAME} from '../constants';
 import {enUS as messages} from '../strings';
-import {updateVersions, generateTwaProject} from './shared';
+import {updateVersions, generateTwaProject, generateManifestChecksumFile} from './shared';
 
 /**
  * Updates an existing TWA Project using the `twa-manifest.json`.
@@ -64,6 +64,7 @@ export async function update(
   if (!args.skipVersionUpgrade) {
     twaManifest.saveToFile(manifestFile);
   }
+  await generateManifestChecksumFile(manifestFile, prompt);
   prompt.printMessage(messages.messageProjectUpdatedSuccess);
   return true;
 }

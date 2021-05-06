@@ -14,6 +14,9 @@
  *  limitations under the License.
  */
 
+import * as crypto from 'crypto';
+import * as fs from 'fs';
+import * as path from 'path';
 import {InquirerPrompt, Prompt} from '../Prompt';
 import {enUS as messages} from '../strings';
 import {Presets, Bar} from 'cli-progress';
@@ -83,4 +86,17 @@ export async function updateVersions(
     appVersionCode: appVersionCode,
     appVersionName: appVersionName,
   };
+}
+
+export async function generateManifestChecksumFile(manifestFile: string,
+    prompt: Prompt): Promise<void> {
+  fs.readFile(manifestFile, async function(err, data) {
+    if (err) {
+      prompt.printMessage(err.toString());
+      return;
+    }
+    const csFile = path.join(process.cwd(), 'manifest-checksum.txt');
+    const sum = crypto.createHash('sha1').update(data).digest('hex');
+    await fs.promises.writeFile(csFile, sum);
+  });
 }

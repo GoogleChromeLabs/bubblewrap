@@ -16,6 +16,7 @@
 
 import {AndroidSdkTools, Config, GradleWrapper, JdkHelper, KeyTool, Log,
   ConsoleLog, TwaManifest, JarSigner, SigningKeyInfo, Result} from '@bubblewrap/core';
+import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 import {enUS as messages} from '../strings';
@@ -24,7 +25,9 @@ import {PwaValidator, PwaValidationResult} from '@bubblewrap/validator';
 import {printValidationResult} from '../pwaValidationHelper';
 import {ParsedArgs} from 'minimist';
 import {createValidateString} from '../inputHelpers';
+import {update} from './update';
 import {TWA_MANIFEST_FILE_NAME} from '../constants';
+import minimist = require('minimist');
 
 // Path to the file generated when building an app bundle file using gradle.
 const APP_BUNDLE_BUILD_OUTPUT_FILE_NAME = './app/build/outputs/bundle/release/app-release.aab';
@@ -53,6 +56,28 @@ class Build {
       private jarSigner: JarSigner,
       private log: Log = new ConsoleLog('build'),
       private prompt: Prompt = new InquirerPrompt()) {
+  }
+
+  /**
+   * Checks if the twa-manifest.json file has been changed since the last time the project was generated.
+   */
+  async checkManifest(manifestFile: string): Promise<boolean> {
+    const prompt = this.prompt;
+    const manifestContents = fs.readFileSync(manifestFile);
+    const checksumFile = path.join(process.cwd(), 'manifest-checksum.txt');
+    const prevChecksum = (await fs.promises.readFile(checksumFile)).toString();
+    const currChecksum = crypto.createHash('sha1').update(manifestContents).digest('hex');
+    if (currChecksum != prevChecksum) {
+      const applyChanges = await prompt.promptConfirm(messages.promptUpdateProject, true);
+      if (applyChanges) {
+        const updated = await update(minimist([]));
+        if (updated) {
+          prompt.printMessage(messages.messageContinueBuildingApp);
+        }
+        return updated;
+      }
+    }
+    return true;
   }
 
   /**
@@ -142,6 +167,12 @@ class Build {
 
     const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
     const twaManifest = await TwaManifest.fromFile(manifestFile);
+
+    const manifestCheck = await this.checkManifest(manifestFile);
+
+    if (!manifestCheck) {
+      return false;
+    }
 
     let passwords = null;
     let signingKey = twaManifest.signingKey;
