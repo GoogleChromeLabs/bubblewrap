@@ -218,6 +218,60 @@ Options:
   - `--ignore`: Ignores all of the fields on the list. Accepts all of the possible fields
   in the Web Manifest.
 
+## `fingerprint`
+
+Manages the list of fingerprints used to generate the Digital Asset Links file for the web application.
+
+Usage:
+
+```
+bubblewrap fingerprint [subcommand]
+``` 
+
+Global options:
+  - `--manifest=<manifest>`: path to the Trusted Web Activity configuration.',
+
+### Subcommands:
+
+#### `add`
+Adds a fingerprint to the project configuration.
+
+Usage:
+
+```
+bubblewrap fingerprint add [SHA-256 fingerprint] <flags>
+```
+
+Flags:
+ - `--name=<name>`: he name for the fingerprint.
+
+#### `remove`
+Removes a fingerprint from the project configuration.
+
+Usage:
+```
+bubblewrap fingerprint remove [SHA-256 fingerprint] <flags>
+```
+
+#### `list`
+Lists the fingerprints in the project configuration.
+
+Usage:
+```
+bubblewrap fingerprint list <flags>
+```
+
+#### `generateAssetLinks`
+Generates an AssetLinks file from the project configuration
+
+Usage:
+```
+bubblewrap fingerprint generateAssetLinks <flags>
+```
+
+Flags:
+ - `--output=<filename>`: path from where to load the project configuration.
+
 ## Manually setting up the Environment
 
 ### Get the Java Development Kit (JDK) 8.
