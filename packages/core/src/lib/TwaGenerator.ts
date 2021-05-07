@@ -17,7 +17,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as Color from 'color';
-import fetch from 'node-fetch';
+import {fetch} from 'fetch-h2';
 import {template} from 'lodash';
 import {promisify} from 'util';
 import {TwaManifest} from './TwaManifest';
@@ -266,7 +266,7 @@ export class TwaGenerator {
           'Unable to write the Web Manifest. The TWA Manifest does not have a webManifestUrl');
     }
 
-    const response = await fetch(twaManifest.webManifestUrl);
+    const response = await fetch(twaManifest.webManifestUrl.toString(), {redirect: 'follow'});
     if (response.status !== 200) {
       throw new Error(`Failed to download Web Manifest ${twaManifest.webManifestUrl}.` +
           `Responded with status ${response.status}`);

@@ -17,7 +17,7 @@
 'use strict';
 
 import * as fs from 'fs';
-import fetch from 'node-fetch';
+import {fetch} from 'fetch-h2';
 import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
 import Color = require('color');
 import {ConsoleLog} from './Log';
@@ -354,7 +354,7 @@ export class TwaManifest {
    * @returns {TwaManifest}
    */
   static async fromWebManifest(url: string): Promise<TwaManifest> {
-    const response = await fetch(url);
+    const response = await fetch(url, {redirect: 'follow'});
     const webManifest = await response.json();
     const webManifestUrl: URL = new URL(url);
     return TwaManifest.fromWebManifestJson(webManifestUrl, webManifest);

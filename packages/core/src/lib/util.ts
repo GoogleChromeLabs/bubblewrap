@@ -15,7 +15,7 @@
  */
 
 import * as extractZip from 'extract-zip';
-import fetch from 'node-fetch';
+import {fetch} from 'fetch-h2';
 import * as fs from 'fs';
 import {join} from 'path';
 import {promisify} from 'util';
@@ -59,7 +59,7 @@ export async function executeFile(
  */
 export async function downloadFile(url: string, path: string,
     progressCallback?: (current: number, total: number) => void): Promise<void> {
-  const result = await fetch(url);
+  const result = await fetch(url, {redirect: 'follow'});
 
   // Try to determine the file size via the `Content-Length` header. This may not be available
   // for all cases.
@@ -69,20 +69,22 @@ export async function downloadFile(url: string, path: string,
   const fileStream = fs.createWriteStream(path);
   let received = 0;
 
+  const readableStream = await result.readable();
   await new Promise((resolve, reject) => {
-    result.body.pipe(fileStream);
+    readableStream.pipe(fileStream);
 
     // Even though we're piping the chunks, we intercept them to check for the download progress.
     if (progressCallback) {
-      result.body.on('data', (chunk) => {
+      readableStream.on('data', (chunk) => {
         received = received + chunk.length;
         progressCallback(received, fileSize);
       });
     }
 
-    result.body.on('error', (err) => {
+    readableStream.on('error', (err) => {
       reject(err);
     });
+
     fileStream.on('finish', () => {
       resolve();
     });
@@ -271,7 +273,7 @@ export async function rmdir(path: string): Promise<void> {
    * @returns {Promise<WebManifestJson}
    */
 export async function getWebManifest(webManifestUrl: URL): Promise<WebManifestJson> {
-  const response = await fetch(webManifestUrl);
+  const response = await fetch(webManifestUrl.toString());
   if (response.status !== 200) {
     throw new Error(`Failed to download Web Manifest ${webManifestUrl}. ` +
         `Responded with status ${response.status}`);
