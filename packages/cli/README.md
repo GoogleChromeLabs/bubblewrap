@@ -228,7 +228,7 @@ Usage:
 bubblewrap fingerprint [subcommand]
 ``` 
 
-Global options:
+Global flags:
   - `--manifest=<manifest>`: path to the Trusted Web Activity configuration.',
 
 ### Subcommands:
@@ -242,8 +242,9 @@ Usage:
 bubblewrap fingerprint add [SHA-256 fingerprint] <flags>
 ```
 
-Flags:
- - `--name=<name>`: he name for the fingerprint.
+Additional flags:
+ - `--name=<name>`: optionally set a name to help identify the fingerprint. The name is printed
+along with the fingerprint when using the `list` subcommand.
 
 #### `remove`
 Removes a fingerprint from the project configuration.
