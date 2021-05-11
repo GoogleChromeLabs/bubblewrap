@@ -25,9 +25,8 @@ import {PwaValidator, PwaValidationResult} from '@bubblewrap/validator';
 import {printValidationResult} from '../pwaValidationHelper';
 import {ParsedArgs} from 'minimist';
 import {createValidateString} from '../inputHelpers';
-import {update} from './update';
+import {updateProject} from './shared';
 import {TWA_MANIFEST_FILE_NAME} from '../constants';
-import minimist = require('minimist');
 
 // Path to the file generated when building an app bundle file using gradle.
 const APP_BUNDLE_BUILD_OUTPUT_FILE_NAME = './app/build/outputs/bundle/release/app-release.aab';
@@ -62,22 +61,14 @@ class Build {
    * Checks if the twa-manifest.json file has been changed since the last time the project was generated.
    */
   async checkManifest(manifestFile: string): Promise<boolean> {
-    const prompt = this.prompt;
     const manifestContents = fs.readFileSync(manifestFile);
     const checksumFile = path.join(process.cwd(), 'manifest-checksum.txt');
     const prevChecksum = (await fs.promises.readFile(checksumFile)).toString();
     const currChecksum = crypto.createHash('sha1').update(manifestContents).digest('hex');
     if (currChecksum != prevChecksum) {
-      const applyChanges = await prompt.promptConfirm(messages.promptUpdateProject, true);
-      if (applyChanges) {
-        const updated = await update(minimist([]));
-        if (updated) {
-          prompt.printMessage(messages.messageContinueBuildingApp);
-        }
-        return updated;
-      }
+      return true;
     }
-    return true;
+    return false;
   }
 
   /**
@@ -170,8 +161,16 @@ class Build {
 
     const manifestCheck = await this.checkManifest(manifestFile);
 
-    if (!manifestCheck) {
-      return false;
+    if (manifestCheck) {
+      const applyChanges = await this.prompt.promptConfirm(messages.promptUpdateProject, true);
+      if (applyChanges) {
+        const updated = await updateProject(false, '', this.prompt, '', manifestFile);
+        if (!updated) {
+          return false;
+        }
+      } else {
+        this.prompt.printMessage(messages.messageProjectNotUpdated);
+      }
     }
 
     let passwords = null;

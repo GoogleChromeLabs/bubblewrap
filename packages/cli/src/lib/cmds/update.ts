@@ -14,13 +14,10 @@
  *  limitations under the License.
  */
 
-import * as path from 'path';
 import {Prompt, InquirerPrompt} from '../Prompt';
-import {TwaGenerator, TwaManifest} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
-import {APP_NAME} from '../constants';
 import {enUS as messages} from '../strings';
-import {updateVersions, generateTwaProject, generateManifestChecksumFile} from './shared';
+import {updateProject} from './shared';
 
 /**
  * Updates an existing TWA Project using the `twa-manifest.json`.
@@ -33,38 +30,13 @@ import {updateVersions, generateTwaProject, generateManifestChecksumFile} from '
  */
 export async function update(
     args: ParsedArgs, prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
-  const targetDirectory = args.directory || process.cwd();
-  const manifestFile = args.manifest || path.join(process.cwd(), 'twa-manifest.json');
-  const twaManifest = await TwaManifest.fromFile(manifestFile);
-  twaManifest.generatorApp = APP_NAME;
+  const targetDirectory = args.directory;
+  const manifestFile = args.manifest;
 
-  const features = twaManifest.features;
-  // Check that if Play Billing is enabled, enableNotifications must also be true
-  if (features.playBilling?.enabled && !twaManifest.enableNotifications) {
-    prompt.printMessage(messages.errorPlayBillingEnableNotifications);
-    return false;
+  const updated = await updateProject(args.skipVersionUpgrade, args.appVersionName,
+      prompt, targetDirectory, manifestFile);
+  if (updated) {
+    prompt.printMessage(messages.messageProjectBuildReminder);
   }
-  // Check that if billing is true, alphaDependencies must also be enabled
-  if (features.playBilling?.enabled && !twaManifest.alphaDependencies.enabled) {
-    prompt.printMessage(messages.errorPlayBillingAlphaDependencies);
-    return false;
-  }
-
-  if (!args.skipVersionUpgrade) {
-    const newVersionInfo = await updateVersions(twaManifest, args.appVersionName, prompt);
-    twaManifest.appVersionName = newVersionInfo.appVersionName;
-    twaManifest.appVersionCode = newVersionInfo.appVersionCode;
-    prompt.printMessage(messages.messageUpgradedAppVersion(
-        newVersionInfo.appVersionName, newVersionInfo.appVersionCode));
-  }
-
-  const twaGenerator = new TwaGenerator();
-  await twaGenerator.removeTwaProject(targetDirectory);
-  await generateTwaProject(prompt, twaGenerator, targetDirectory, twaManifest);
-  if (!args.skipVersionUpgrade) {
-    twaManifest.saveToFile(manifestFile);
-  }
-  await generateManifestChecksumFile(manifestFile, prompt);
-  prompt.printMessage(messages.messageProjectUpdatedSuccess);
-  return true;
+  return updated;
 }

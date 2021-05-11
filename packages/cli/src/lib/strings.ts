@@ -45,7 +45,6 @@ type Messages = {
   messageApkSuccess: (filename: string) => string;
   messageAppBundleSuccess: (filename: string) => string;
   messageBuildingApp: string;
-  messageContinueBuildingApp: string;
   messageDigitalAssetLinksSuccess: (filename: string) => string;
   messageEnterPasswords: (keypath: string, keyalias: string) => string;
   messageGeneratedAssetLinksFile: (outputfile: string) => string;
@@ -58,6 +57,8 @@ type Messages = {
   messageOptionalFeaturesDesc: string;
   messageProjectGeneratedSuccess: string;
   messageProjectUpdatedSuccess: string;
+  messageProjectBuildReminder: string;
+  messageProjectNotUpdated: string;
   messageRemovedFingerprint: (fingerpring: Fingerprint) => string;
   messageSavingTwaManifestTo: (path: string) => string;
   messageSha256FingerprintNotFound: string;
@@ -204,7 +205,6 @@ into a device:
     return `\t- Generated Android App Bundle at ${cyan(filename)}`;
   },
   messageBuildingApp: '\nBuilding the Android App...',
-  messageContinueBuildingApp: 'Continuing with ' + cyan('bubblewrap build'),
   messageDigitalAssetLinksSuccess: (filename: string): string => {
     return `\t- Generated Digital Asset Links file at ${cyan(filename)}
 \nRead more about setting up Digital Asset Links at:
@@ -259,8 +259,10 @@ a blank white page to users.
 \t  ${italic('theme_color')}. They will be used for notification icons.\n`,
   messageProjectGeneratedSuccess: '\nProject generated successfully. Build it by running ' +
       cyan('bubblewrap build'),
-  messageProjectUpdatedSuccess: '\nProject updated successfully. Build it by running ' +
-      cyan('bubblewrap build'),
+  messageProjectUpdatedSuccess: '\nProject updated successfully.',
+  messageProjectBuildReminder: 'Build it by running ' + cyan('bubblewrap build'),
+  messageProjectNotUpdated: '\nProject build will continue without newest ' +
+      cyan('twa-manifest.json') + ' changes.',
   messageRemovedFingerprint: (fingerprint: Fingerprint): string => {
     return `Removed fingerprint with value ${fingerprint.value}.`;
   },
