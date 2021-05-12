@@ -22,7 +22,7 @@ projects for Android Applications that launch Progressive Web App (PWA) using
 [Trusted Web Activity (TWA)](https://developers.google.com/web/android/trusted-web-activity/).
 
 ## Requirements
-- [Node.js](https://nodejs.org/en/) 10.0 or above
+- [Node.js](https://nodejs.org/en/) 12.0 or above
 
 ## Getting Started
 - To get started with building an application using Bubblewrap, check the [Trusted Web Activity

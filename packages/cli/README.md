@@ -22,7 +22,7 @@ a Project for an Android application that launches an existing Progressive Web A
 [Trusted Web Activity (TWA)](https://developers.google.com/web/android/trusted-web-activity/).
 
 ## Requirements
-- [Node.js](https://nodejs.org/en/) 10.0 or above
+- [Node.js](https://nodejs.org/en/) 12.0 or above
 
 ## Setting up the Environment
 
