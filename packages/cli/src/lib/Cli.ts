@@ -33,9 +33,9 @@ import {fingerprint} from './cmds/fingerprint';
 export class Cli {
   async run(args: string[]): Promise<boolean> {
     console.log(BUBBLEWRAP_LOGO);
-    if (major(process.versions.node) < 10) {
+    if (major(process.versions.node) < 12) {
       throw new Error(`Current Node.js version is ${process.versions.node}.` +
-          ' Node.js version 10 or above is required to run bubblewrap.');
+          ' Node.js version 12 or above is required to run bubblewrap.');
     }
     const parsedArgs = minimist(args);
 
