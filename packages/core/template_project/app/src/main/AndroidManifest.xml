@@ -169,7 +169,7 @@
             android:enabled="@bool/enableNotification"
             android:exported="@bool/enableNotification">
 
-            <% if (monochromeIconUrl) { %>
+            <% if (enableNotifications && (monochromeIconUrl || iconUrl)) { %>
                 <meta-data
                     android:name="android.support.customtabs.trusted.SMALL_ICON"
                     android:resource="@drawable/ic_notification_icon" />

@@ -431,8 +431,9 @@ export class TwaGenerator {
     progress.update();
 
     // Generate notification images
-    if (twaManifest.monochromeIconUrl) {
-      await this.generateIcons(twaManifest.monochromeIconUrl, targetDirectory, NOTIFICATION_IMAGES);
+    const iconOrMonochromeIconUrl = twaManifest.monochromeIconUrl || twaManifest.iconUrl;
+    if (twaManifest.enableNotifications && iconOrMonochromeIconUrl) {
+      await this.generateIcons(iconOrMonochromeIconUrl, targetDirectory, NOTIFICATION_IMAGES);
     }
     progress.update();
 
