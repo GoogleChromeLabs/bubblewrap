@@ -115,6 +115,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.webManifestUrl).toEqual(manifestUrl);
       expect(twaManifest.shortcuts).toEqual([]);
       expect(twaManifest.generateShortcuts()).toBe('[]');
+      expect(twaManifest.additionalTrustedOrigins).toEqual([]);
     });
 
     it('Uses "name" when "short_name" is not available', () => {
@@ -221,6 +222,7 @@ describe('TwaManifest', () => {
         enableSiteSettingsShortcut: false,
         isChromeOSOnly: false,
         serviceAccountJsonFile: '/home/service-account.json',
+        additionalTrustedOrigins: ['test.com'],
       } as TwaManifestJson;
       const twaManifest = new TwaManifest(twaManifestJson);
       expect(twaManifest.packageId).toEqual(twaManifestJson.packageId);
@@ -252,6 +254,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.enableSiteSettingsShortcut).toEqual(false);
       expect(twaManifest.isChromeOSOnly).toEqual(false);
       expect(twaManifest.serviceAccountJsonFile).toEqual(twaManifestJson.serviceAccountJsonFile);
+      expect(twaManifest.additionalTrustedOrigins).toEqual(['test.com']);
     });
 
     it('Sets correct default values for optional fields', () => {

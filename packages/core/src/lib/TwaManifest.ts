@@ -157,6 +157,7 @@ export class TwaManifest {
   orientation: Orientation;
   fingerprints: Fingerprint[];
   serviceAccountJsonFile: string | undefined;
+  additionalTrustedOrigins: string[];
 
   private static log = new ConsoleLog('twa-manifest');
 
@@ -201,6 +202,7 @@ export class TwaManifest {
     this.orientation = data.orientation || DEFAULT_ORIENTATION;
     this.fingerprints = data.fingerprints || [];
     this.serviceAccountJsonFile = data.serviceAccountJsonFile;
+    this.additionalTrustedOrigins = data.additionalTrustedOrigins || [];
   }
 
   /**
@@ -525,6 +527,7 @@ export interface TwaManifestJson {
   orientation?: Orientation;
   fingerprints?: Fingerprint[];
   serviceAccountJsonFile?: string;
+  additionalTrustedOrigins?: string[];
 }
 
 export interface SigningKeyInfo {
