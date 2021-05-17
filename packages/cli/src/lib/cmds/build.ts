@@ -16,7 +16,6 @@
 
 import {AndroidSdkTools, Config, GradleWrapper, JdkHelper, KeyTool, Log,
   ConsoleLog, TwaManifest, JarSigner, SigningKeyInfo, Result} from '@bubblewrap/core';
-import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 import {enUS as messages} from '../strings';
@@ -25,7 +24,7 @@ import {PwaValidator, PwaValidationResult} from '@bubblewrap/validator';
 import {printValidationResult} from '../pwaValidationHelper';
 import {ParsedArgs} from 'minimist';
 import {createValidateString} from '../inputHelpers';
-import {updateProject} from './shared';
+import {computeChecksum, updateProject} from './shared';
 import {TWA_MANIFEST_FILE_NAME} from '../constants';
 
 // Path to the file generated when building an app bundle file using gradle.
@@ -60,15 +59,15 @@ class Build {
   /**
    * Checks if the twa-manifest.json file has been changed since the last time the project was generated.
    */
-  async checkManifest(manifestFile: string): Promise<boolean> {
-    const manifestContents = fs.readFileSync(manifestFile);
-    const checksumFile = path.join(process.cwd(), 'manifest-checksum.txt');
+  async hasManifestChanged(manifestFile: string): Promise<boolean> {
+    const targetDirectory = this.args.directory || process.cwd();
+    const checksumFile = path.join(targetDirectory, 'manifest-checksum.txt');
     const prevChecksum = (await fs.promises.readFile(checksumFile)).toString();
-    const currChecksum = crypto.createHash('sha1').update(manifestContents).digest('hex');
-    if (currChecksum != prevChecksum) {
-      return true;
-    }
-    return false;
+    const manifestContents = await fs.promises.readFile(manifestFile);
+    const currChecksum = computeChecksum(manifestContents);
+    this.prompt.printMessage('New checksum found to be: ' + currChecksum);
+    this.prompt.printMessage('Old checksum is: ' + prevChecksum);
+    return currChecksum != prevChecksum;
   }
 
   /**
@@ -159,12 +158,12 @@ class Build {
     const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
     const twaManifest = await TwaManifest.fromFile(manifestFile);
 
-    const manifestCheck = await this.checkManifest(manifestFile);
-
-    if (manifestCheck) {
+    const hasManifestChanged = await this.hasManifestChanged(manifestFile);
+    if (hasManifestChanged) {
       const applyChanges = await this.prompt.promptConfirm(messages.promptUpdateProject, true);
       if (applyChanges) {
-        const updated = await updateProject(false, '', this.prompt, '', manifestFile);
+        const updated = await updateProject(false, '', this.prompt,
+            this.args.directory, manifestFile);
         if (!updated) {
           return false;
         }

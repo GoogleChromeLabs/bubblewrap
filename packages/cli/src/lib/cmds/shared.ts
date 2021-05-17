@@ -89,17 +89,16 @@ export async function updateVersions(
   };
 }
 
+export function computeChecksum(data: Buffer): string {
+  return crypto.createHash('sha1').update(data).digest('hex');
+}
+
 export async function generateManifestChecksumFile(manifestFile: string,
-    prompt: Prompt): Promise<void> {
-  fs.readFile(manifestFile, async function(err, data) {
-    if (err) {
-      prompt.printMessage(err.toString());
-      return;
-    }
-    const csFile = path.join(process.cwd(), 'manifest-checksum.txt');
-    const sum = crypto.createHash('sha1').update(data).digest('hex');
-    await fs.promises.writeFile(csFile, sum);
-  });
+    targetDirectory: string): Promise<void> {
+  const manifestContents = await fs.promises.readFile(manifestFile);
+  const checksumFile = path.join(targetDirectory, 'manifest-checksum.txt');
+  const sum = computeChecksum(manifestContents);
+  await fs.promises.writeFile(checksumFile, sum);
 }
 
 export async function updateProject(
@@ -114,12 +113,13 @@ export async function updateProject(
   twaManifest.generatorApp = APP_NAME;
 
   const features = twaManifest.features;
-  // Check that if Play Billing is enabled, enableNotifications must also be true
+
+  // Check that if Play Billing is enabled, enableNotifications must also be true.
   if (features.playBilling?.enabled && !twaManifest.enableNotifications) {
     prompt.printMessage(messages.errorPlayBillingEnableNotifications);
     return false;
   }
-  // Check that if billing is true, alphaDependencies must also be enabled
+  // Check that if Play Billing is enabled, alphaDependencies must also be enabled.
   if (features.playBilling?.enabled && !twaManifest.alphaDependencies.enabled) {
     prompt.printMessage(messages.errorPlayBillingAlphaDependencies);
     return false;
@@ -137,9 +137,9 @@ export async function updateProject(
   await twaGenerator.removeTwaProject(targetDirectory);
   await generateTwaProject(prompt, twaGenerator, targetDirectory, twaManifest);
   if (!skipVersionUpgrade) {
-    twaManifest.saveToFile(manifestFile);
+    await twaManifest.saveToFile(manifestFile);
   }
-  await generateManifestChecksumFile(manifestFile, prompt);
+  await generateManifestChecksumFile(manifestFile, targetDirectory);
   prompt.printMessage(messages.messageProjectUpdatedSuccess);
   return true;
 }

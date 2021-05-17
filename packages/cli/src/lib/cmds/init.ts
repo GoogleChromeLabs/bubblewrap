@@ -254,7 +254,7 @@ export async function init(
   const twaGenerator = new TwaGenerator();
   await twaManifest.saveToFile(join(targetDirectory, '/twa-manifest.json'));
   await generateTwaProject(prompt, twaGenerator, targetDirectory, twaManifest);
-  await generateManifestChecksumFile(join(targetDirectory, '/twa-manifest.json'), prompt);
+  await generateManifestChecksumFile(join(targetDirectory, '/twa-manifest.json'), targetDirectory);
   await createSigningKey(twaManifest, config, prompt);
   prompt.printMessage(messages.messageProjectGeneratedSuccess);
   return true;
