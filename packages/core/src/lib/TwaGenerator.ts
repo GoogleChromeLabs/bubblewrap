@@ -45,6 +45,7 @@ const COPY_FILE_LIST = [
 const TEMPLATE_FILE_LIST = [
   'app/build.gradle',
   'app/src/main/AndroidManifest.xml',
+  'app/src/main/res/values/strings.xml',
 ];
 
 const JAVA_DIR = 'app/src/main/java/';
