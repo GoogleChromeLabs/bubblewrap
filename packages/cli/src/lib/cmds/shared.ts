@@ -48,11 +48,11 @@ export async function generateTwaProject(prompt: Prompt, twaGenerator: TwaGenera
 /**
  * Compute the new app version.
  * @param {TwaManifest} oldTwaManifest current Twa Manifest.
- * @param {string} currentAppVersionName the current app's version name (optional) .
+ * @param {string | null} currentAppVersionName the current app's version name (or null) .
  * @param {Prompt} prompt prompt instance to get information from the user if needed.
  */
 export async function updateVersions(
-    twaManifest: TwaManifest, currentAppVersionName: string,
+    twaManifest: TwaManifest, currentAppVersionName: string | null,
     prompt: Prompt = new InquirerPrompt()): Promise<{
     appVersionName: string;
     appVersionCode: number;
@@ -101,9 +101,18 @@ export async function generateManifestChecksumFile(manifestFile: string,
   await fs.promises.writeFile(checksumFile, sum);
 }
 
+/**
+ * Update the TWA project.
+ * @param skipVersionUpgrade {boolean} Skips upgrading appVersionCode and appVersionName if set to true.
+ * @param appVersionName {string | null} Value to be used for appVersionName when upgrading
+ * versions. Ignored if `args.skipVersionUpgrade` is set to true. If null, a default is used or user will be prompted for one.
+ * @param prompt {Prompt} Prompt instance to get information from the user if necessary.
+ * @param directory {string} TWA project directory.
+ * @param manifest {string} Path to twa-manifest.json file.
+ */
 export async function updateProject(
     skipVersionUpgrade: boolean,
-    appVersionName: string,
+    appVersionName: string | null,
     prompt: Prompt = new InquirerPrompt(),
     directory: string,
     manifest: string): Promise<boolean> {

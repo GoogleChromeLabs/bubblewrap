@@ -65,8 +65,6 @@ class Build {
     const prevChecksum = (await fs.promises.readFile(checksumFile)).toString();
     const manifestContents = await fs.promises.readFile(manifestFile);
     const currChecksum = computeChecksum(manifestContents);
-    this.prompt.printMessage('New checksum found to be: ' + currChecksum);
-    this.prompt.printMessage('Old checksum is: ' + prevChecksum);
     return currChecksum != prevChecksum;
   }
 
@@ -162,7 +160,7 @@ class Build {
     if (hasManifestChanged) {
       const applyChanges = await this.prompt.promptConfirm(messages.promptUpdateProject, true);
       if (applyChanges) {
-        const updated = await updateProject(false, '', this.prompt,
+        const updated = await updateProject(false, null, this.prompt,
             this.args.directory, manifestFile);
         if (!updated) {
           return false;
