@@ -22,7 +22,7 @@ a Project for an Android application that launches an existing Progressive Web A
 [Trusted Web Activity (TWA)](https://developers.google.com/web/android/trusted-web-activity/).
 
 ## Requirements
-- [Node.js](https://nodejs.org/en/) 10.0 or above
+- [Node.js](https://nodejs.org/en/) 12.0 or above
 
 ## Setting up the Environment
 
@@ -217,6 +217,61 @@ Options:
   - `--skipVersionUpgrade`: skips upgrading `appVersion` and `appVersionCode`.
   - `--ignore`: Ignores all of the fields on the list. Accepts all of the possible fields
   in the Web Manifest.
+
+## `fingerprint`
+
+Manages the list of fingerprints used to generate the Digital Asset Links file for the web application.
+
+Usage:
+
+```
+bubblewrap fingerprint [subcommand]
+``` 
+
+Global flags:
+  - `--manifest=<manifest>`: path to the Trusted Web Activity configuration.',
+
+### Subcommands:
+
+#### `add`
+Adds a fingerprint to the project configuration.
+
+Usage:
+
+```
+bubblewrap fingerprint add [SHA-256 fingerprint] <flags>
+```
+
+Additional flags:
+ - `--name=<name>`: optionally set a name to help identify the fingerprint. The name is printed
+along with the fingerprint when using the `list` subcommand.
+
+#### `remove`
+Removes a fingerprint from the project configuration.
+
+Usage:
+```
+bubblewrap fingerprint remove [SHA-256 fingerprint] <flags>
+```
+
+#### `list`
+Lists the fingerprints in the project configuration.
+
+Usage:
+```
+bubblewrap fingerprint list <flags>
+```
+
+#### `generateAssetLinks`
+Generates an AssetLinks file from the project configuration
+
+Usage:
+```
+bubblewrap fingerprint generateAssetLinks <flags>
+```
+
+Flags:
+ - `--output=<filename>`: path from where to load the project configuration.
 
 ## Manually setting up the Environment
 

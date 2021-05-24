@@ -45,6 +45,7 @@ const COPY_FILE_LIST = [
 const TEMPLATE_FILE_LIST = [
   'app/build.gradle',
   'app/src/main/AndroidManifest.xml',
+  'app/src/main/res/values/strings.xml',
 ];
 
 const JAVA_DIR = 'app/src/main/java/';
@@ -431,8 +432,9 @@ export class TwaGenerator {
     progress.update();
 
     // Generate notification images
-    if (twaManifest.monochromeIconUrl) {
-      await this.generateIcons(twaManifest.monochromeIconUrl, targetDirectory, NOTIFICATION_IMAGES);
+    const iconOrMonochromeIconUrl = twaManifest.monochromeIconUrl || twaManifest.iconUrl;
+    if (twaManifest.enableNotifications && iconOrMonochromeIconUrl) {
+      await this.generateIcons(iconOrMonochromeIconUrl, targetDirectory, NOTIFICATION_IMAGES);
     }
     progress.update();
 
