@@ -24,7 +24,7 @@ import {Log, ConsoleLog} from '../Log';
 
 const ANDROID_BROWSER_HELPER_VERSIONS = {
   stable: 'com.google.androidbrowserhelper:androidbrowserhelper:2.2.0',
-  alpha: 'com.google.androidbrowserhelper:androidbrowserhelper:2.2.1-alpha01',
+  alpha: 'com.google.androidbrowserhelper:androidbrowserhelper:2.2.1-alpha02',
 };
 
 /**
