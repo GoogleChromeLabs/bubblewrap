@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import {Result, util} from '@bubblewrap/core';
+import {Result, fetchUtils} from '@bubblewrap/core';
 import {Presets, Bar} from 'cli-progress';
 import {green} from 'colors';
 import * as inquirer from 'inquirer';
@@ -193,7 +193,7 @@ export class InquirerPrompt implements Prompt {
     }, Presets.shades_classic);
 
     progressBar.start(Math.round(totalSize / KILOBYTE_SIZE), 0);
-    await util.downloadFile(url, filename, (current, total) => {
+    await fetchUtils.downloadFile(url, filename, (current, total) => {
       if (total > 0 && total !== totalSize) {
         progressBar.setTotal(Math.round(total / KILOBYTE_SIZE));
         totalSize = total;

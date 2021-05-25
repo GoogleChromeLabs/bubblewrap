@@ -17,7 +17,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as Jimp from 'jimp';
-import {fetch} from 'fetch-h2';
+import {fetchUtils} from './FetchUtils';
 import Color = require('color');
 import {promisify} from 'util';
 import {svg2img} from './wrappers/svg2img';
@@ -109,7 +109,8 @@ export class ImageHelper {
    * @returns an Object containing the original URL and the icon image data.
    */
   async fetchIcon(iconUrl: string): Promise<Icon> {
-    const response = await fetch(iconUrl, {redirect: 'follow'});
+    const response = await fetchUtils.fetch(iconUrl);
+
     if (response.status !== 200) {
       throw new Error(
           `Failed to download icon ${iconUrl}. Responded with status ${response.status}`);

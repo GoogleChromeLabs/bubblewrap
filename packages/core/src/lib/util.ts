@@ -15,7 +15,6 @@
  */
 
 import * as extractZip from 'extract-zip';
-import {fetch} from 'fetch-h2';
 import * as fs from 'fs';
 import {join} from 'path';
 import {promisify} from 'util';
@@ -50,45 +49,6 @@ export async function executeFile(
     log.debug(`Executing command ${cmd} with args ${args}`);
   }
   return await execFilePromise(cmd, args, {env: env, cwd: cwd});
-}
-
-/**
- * Downloads a file from `url` and saves it to `path`. If a `progressCallback` function is passed, it
- * will be invoked for every chunk received. If the value of `total` parameter is -1, it means we
- * were unable to determine to total file size before starting the download.
- */
-export async function downloadFile(url: string, path: string,
-    progressCallback?: (current: number, total: number) => void): Promise<void> {
-  const result = await fetch(url, {redirect: 'follow'});
-
-  // Try to determine the file size via the `Content-Length` header. This may not be available
-  // for all cases.
-  const contentLength = result.headers.get('content-length');
-  const fileSize = contentLength ? parseInt(contentLength) : -1;
-
-  const fileStream = fs.createWriteStream(path);
-  let received = 0;
-
-  const readableStream = await result.readable();
-  await new Promise((resolve, reject) => {
-    readableStream.pipe(fileStream);
-
-    // Even though we're piping the chunks, we intercept them to check for the download progress.
-    if (progressCallback) {
-      readableStream.on('data', (chunk) => {
-        received = received + chunk.length;
-        progressCallback(received, fileSize);
-      });
-    }
-
-    readableStream.on('error', (err) => {
-      reject(err);
-    });
-
-    fileStream.on('finish', () => {
-      resolve();
-    });
-  });
 }
 
 export async function unzipFile(

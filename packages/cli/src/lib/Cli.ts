@@ -29,6 +29,7 @@ import {updateConfig} from './cmds/updateConfig';
 import {doctor} from './cmds/doctor';
 import {merge} from './cmds/merge';
 import {fingerprint} from './cmds/fingerprint';
+import {fetchUtils} from '@bubblewrap/core';
 
 export class Cli {
   async run(args: string[]): Promise<boolean> {
@@ -38,6 +39,10 @@ export class Cli {
           ' Node.js version 12 or above is required to run bubblewrap.');
     }
     const parsedArgs = minimist(args);
+    if (parsedArgs.fetchEngine &&
+        (parsedArgs.fetchEngine == 'node-fetch' || parsedArgs.fetchEngine == 'fetch-h2')) {
+      fetchUtils.setFetchEngine(parsedArgs.fetchEngine);
+    }
 
     const config = await loadOrCreateConfig(undefined, undefined, parsedArgs.config);
 
