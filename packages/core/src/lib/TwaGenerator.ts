@@ -17,7 +17,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as Color from 'color';
-import {fetch} from 'fetch-h2';
 import {template} from 'lodash';
 import {promisify} from 'util';
 import {TwaManifest} from './TwaManifest';
