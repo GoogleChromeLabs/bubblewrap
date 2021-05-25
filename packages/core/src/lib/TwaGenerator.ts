@@ -26,6 +26,7 @@ import {Log} from './Log';
 import {ImageHelper, IconDefinition} from './ImageHelper';
 import {FeatureManager} from './features/FeatureManager';
 import {rmdir, escapeJsonString, toAndroidScreenOrientation} from './util';
+import {fetchUtils} from './FetchUtils';
 
 const COPY_FILE_LIST = [
   'settings.gradle',
@@ -266,7 +267,7 @@ export class TwaGenerator {
           'Unable to write the Web Manifest. The TWA Manifest does not have a webManifestUrl');
     }
 
-    const response = await fetch(twaManifest.webManifestUrl.toString(), {redirect: 'follow'});
+    const response = await fetchUtils.fetch(twaManifest.webManifestUrl.toString());
     if (response.status !== 200) {
       throw new Error(`Failed to download Web Manifest ${twaManifest.webManifestUrl}.` +
           `Responded with status ${response.status}`);
