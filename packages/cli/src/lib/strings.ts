@@ -57,6 +57,8 @@ type Messages = {
   messageOptionalFeaturesDesc: string;
   messageProjectGeneratedSuccess: string;
   messageProjectUpdatedSuccess: string;
+  messageProjectBuildReminder: string;
+  messageProjectNotUpdated: string;
   messageRemovedFingerprint: (fingerpring: Fingerprint) => string;
   messageSavingTwaManifestTo: (path: string) => string;
   messageSha256FingerprintNotFound: string;
@@ -108,6 +110,7 @@ type Messages = {
   promptKeyPassword: string;
   promptNewAppVersionName: string;
   promptVersionCode: string;
+  promptUpdateProject: string;
   warnPwaFailedQuality: string;
   updateConfigUsage: string;
   jdkPathIsNotCorrect: string;
@@ -256,8 +259,10 @@ a blank white page to users.
 \t  ${italic('theme_color')}. They will be used for notification icons.\n`,
   messageProjectGeneratedSuccess: '\nProject generated successfully. Build it by running ' +
       cyan('bubblewrap build'),
-  messageProjectUpdatedSuccess: '\nProject updated successfully. Build it by running ' +
-      cyan('bubblewrap build'),
+  messageProjectUpdatedSuccess: '\nProject updated successfully.',
+  messageProjectBuildReminder: 'Build it by running ' + cyan('bubblewrap build'),
+  messageProjectNotUpdated: '\nProject build will continue without newest ' +
+      cyan('twa-manifest.json') + ' changes.',
   messageRemovedFingerprint: (fingerprint: Fingerprint): string => {
     return `Removed fingerprint with value ${fingerprint.value}.`;
   },
@@ -348,6 +353,8 @@ the PWA:
   promptKeyPassword: 'Password for the Key:',
   promptNewAppVersionName: 'versionName for the new App version:',
   promptVersionCode: 'Starting version code for the new app version:',
+  promptUpdateProject: 'There are changes in twa-manifest.json. ' +
+      'Would you like to apply them to the project before building?',
   warnPwaFailedQuality: red('PWA Quality Criteria check failed.'),
   updateConfigUsage: 'Usage: [--jdkPath <path-to-jdk>] [--androidSdkPath <path-to-android-sdk>]' +
       '(You can insert one or both of them)',
