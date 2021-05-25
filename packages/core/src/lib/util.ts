@@ -23,6 +23,7 @@ import {x as extractTar} from 'tar';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 import {Log} from './Log';
 import {Orientation} from './TwaManifest';
+import {fetchUtils} from './FetchUtils';
 
 const execPromise = promisify(exec);
 const execFilePromise = promisify(execFile);
@@ -227,13 +228,13 @@ export async function rmdir(path: string): Promise<void> {
 };
 
 /**
-   * Given a web manifest's URL, the function retrns the web manifest.
-   *
-   * @param {URL} webManifestUrl the URL where the webManifest is available.
-   * @returns {Promise<WebManifestJson}
-   */
+ * Given a Web Manifest's URL, the function returns the web manifest as a JSON object.
+ *
+ * @param {URL} webManifestUrl the URL where the Web Manifest is available.
+ * @returns {Promise<WebManifestJson}
+ */
 export async function getWebManifest(webManifestUrl: URL): Promise<WebManifestJson> {
-  const response = await fetch(webManifestUrl.toString());
+  const response = await fetchUtils.fetch(webManifestUrl.toString());
   if (response.status !== 200) {
     throw new Error(`Failed to download Web Manifest ${webManifestUrl}. ` +
         `Responded with status ${response.status}`);
@@ -242,7 +243,7 @@ export async function getWebManifest(webManifestUrl: URL): Promise<WebManifestJs
 }
 
 /**
- * Given a string of a JSON, the function retrns an escaped string representing that string.
+ * Given a JSON string, the function returns an escaped representation of the string.
  * eg: Turns every " instance into \\".
  *
  * @param {string} stringToReplace the string before the manipulation.
