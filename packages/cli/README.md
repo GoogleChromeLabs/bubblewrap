@@ -311,8 +311,8 @@ Fields:
 |webManifestUrl|string|false|Full URL to the PWA Web Manifest. Required for the application to be compatible with Chrome OS devices.|
 |fallbackType|`'customtabs'` \| `'webview'`|false|`customtabs` or `webview`|
 |features|[Features](#Features)|false|Enables optional features in the Android application. Read the [Features](#Features) section for details.|
-|alphaDependencies|[AlphaDependencies](#AlphaDependencies)|false||
-|enableSiteSettingsShortcut|boolean|false||
+|alphaDependencies|[AlphaDependencies](#AlphaDependencies)|false|Enables the Android application to use alpha version of dependencies. Defaults to `false`.|
+|enableSiteSettingsShortcut|boolean|false|Adds a shortcut to the site settins in the application launcher. Defaults to `true`.|
 |isChromeOSOnly|boolean|false|Generates an application that targets only ChromeOS devices. Defaults to `false`.|
 |shareTarget|[ShareTarget](https://w3c.github.io/web-share-target/#sharetarget-and-its-members)|false||
 |orientation|`'default'` \| `'any'` \| `'natural'` \| `'landscape'` \| `'portrait'` \| `'portrait-primary'` \| `'portrait-secondary'` \| `'landscape-primary'` \| `'landscape-secondary'`|false|Initial orientation used to launch the Android application. Defaults to `'default'`.|
@@ -332,22 +332,33 @@ Developers can enable additional features in their Android application. Some fea
 |appsFlyer|[AppsFlyerConfig](#appsflyerconfig)|false|Read the [AppsFlyerConfig](#appsflyerconfig) section for details.|
 
 #### AppsFlyerConfig
+Enables the [AppsFlyer SDK](https://support.appsflyer.com/hc/en-us/articles/360002330178-Using-AppsFlyer-with-TWA#introduction) in the Android application. Includes additional libraries and is not compatible with Chrome OS.
+
 |Name|Type|Required|Description|
 |:--:|:--:|:------:|:---------:|
 |enabled|boolean|true|Set to `true` to enable the feature.|
 |appsFlyerId|boolean|true|The appsflyer id.|
 
 #### LocationDelegationConfig
+
+Delegates the location permission dialog to the Android system, instead of showing the browser dialog. Recommended when the application requests the location permission, but not enabled by default as it includes additional dependencies in the application. 
+
 |Name|Type|Required|Description|
 |:--:|:--:|:------:|:---------:|
 |enabled|boolean|true|Set to `true` to enable the feature.|
 
 #### PlayBillingConfig
+
+Enables the Play Billing integration in the application and allows the web application to [use the Digital Goods API to receive payments](https://developer.chrome.com/docs/android/trusted-web-activity/receive-payments-play-billing/). Includes additional dependencies in the Android app.
+
 |Name|Type|Required|Description|
 |:--:|:--:|:------:|:---------:|
 |enabled|boolean|true|Set to `true` to enable the feature.|
 
 #### FirstRunFlagConfig
+
+Adds an extra query parameter when launching the application, indicating if the application is run for the first time.
+
 |Name|Type|Required|Description|
 |:--:|:--:|:------:|:---------:|
 |enabled|boolean|true|Set to `true` to enable the feature.|
