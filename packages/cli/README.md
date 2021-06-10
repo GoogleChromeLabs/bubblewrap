@@ -273,6 +273,101 @@ bubblewrap fingerprint generateAssetLinks <flags>
 Flags:
  - `--output=<filename>`: path from where to load the project configuration.
 
+
+## twa-manifest.json reference
+
+The `twa-manifest.json` file is generated as by the `init` comand and contains the configuration of
+Android application.
+
+Developers who want to change their application configuration after running `init` can do so by
+editing this file then running the `update` command.
+
+Fields:
+
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|packageId|string|true||
+|host|string|true|The origin that will be opened in the Trusted Web Activity.|
+|name|string|true|The name shown on the Android Launcher.|
+|launcherName|string|false|
+|display|string|false|The display mode for the TWA.
+|themeColor|string|true|The color used for the status bar.|
+|navigationColor|string|true|The color used for the navigation bar.|
+|navigationColorDark|string|false|The color used for the dark navbar.|
+|navigationDividerColor|string|false|The color used for the navbar divider.|
+|navigationDividerColorDark|string|false|The color used for the dark navbar divider.|
+|backgroundColor|string|true|The color used for the splash screen background|
+|enableNotifications|boolean|true|Set to true to enable notification delegation.|
+|startUrl|string|true|The start path for the TWA. Must be relative to the domain.|
+|iconUrl|string|true||
+|maskableIconUrl|string|false||
+|monochromeIconUrl|string|false||
+|splashScreenFadeOutDuration|number|true||
+|signingKey|[SigningKeyInfo](#SigningKeyInfo)|true||
+|appVersionCode|number|false||
+|appVersion|string|false||
+|shortcuts|[ShortcutInfo](#ShortcutInfo)[]|false||
+|generatorApp|string|false||
+|webManifestUrl|string|false||
+|fallbackType|string|false|`customtabs` or `webview`|
+|features|[Features](#Features)|false||
+|alphaDependencies|[AlphaDependencies](#AlphaDependencies)|false||
+|enableSiteSettingsShortcut|boolean|false||
+|isChromeOSOnly|boolean|false||
+|shareTarget|[ShareTarget](https://w3c.github.io/web-share-target/#sharetarget-and-its-members)|false||
+|orientation|string|false|Valid values are `default`, `any`, `natural`, `landscape`, `portrait`, `portrait-primary`, `portrait-secondary`, `landscape-primary`, and `landscape-secondary`|
+|fingerprints|[Fingerprint](#fingerprint)[]|false||
+|serviceAccountJsonFile|string|false||
+|additionalTrustedOrigins|string[]|false|
+ 
+### Features
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|locationDelegation|[LocationDelegationConfig](#locationdelegationconfig)|false||
+|playBilling|[PlayBillingConfig](#playbillingconfig)|false||
+|firstRunFlag|[FirstRunFlagConfig](#firstrunflagconfig)|false||
+|appsFlyer|[AppsFlyerConfig](#appsflyerconfig)|false|The appsFlyer feature enables the AppsFlyer SDK in the Trusted Web Activity.|
+
+#### AppsFlyerConfig
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|enabled|boolean|true|Set to `true` to enable the feature.|
+|appsFlyerId|boolean|true|The appsflyer id.|
+
+#### LocationDelegationConfig
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|enabled|boolean|true|Set to `true` to enable the feature.|
+
+#### PlayBillingConfig
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|enabled|boolean|true|Set to `true` to enable the feature.|
+
+#### FirstRunFlagConfig
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|enabled|boolean|true|Set to `true` to enable the feature.|
+|queryParameterName|string|The query parameter name used to attach the first run information to the `start-url`.|
+
+### AlphaDependencies
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|enabled|boolean|false|When set to `true` enables the application to use an alpha version of [`android-browser-helper`](https://github.com/GoogleChrome/android-browser-helper).|
+
+
+### SigningKeyInfo
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|path|string|true|Path to the keystore file in the local filesystem|
+|alias|string|true|Alias for the key used to sign the application in the keystore|
+
+### Fingerprint
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|value|string|true|The SHA-256 value for the fingerprint.|
+|name|string|false|An optional name for the fingerprint.|
+
 ## Manually setting up the Environment
 
 ### Get the Java Development Kit (JDK) 8.
