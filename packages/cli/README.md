@@ -303,7 +303,7 @@ Fields:
 |maskableIconUrl|string|false|Full URL to an the icon used for maskable icons, when supported by the device.|
 |monochromeIconUrl|string|false|Full URL to a monochrome icon, used when displaying notifications.|
 |splashScreenFadeOutDuration|number|true|Duration for the splash screen fade out animation.|
-|signingKey|[SigningKeyInfo](#SigningKeyInfo)|true||
+|signingKey|[SigningKeyInfo](#SigningKeyInfo)|true|Information on the signing keys used to sign the output Android application. Read the [SigningKeyInfo](#SigningKeyInfo) section for details.|
 |appVersionCode|number|false|`versionCode` for the Android application. Check the [Android docs](https://developer.android.com/studio/publish/versioning) for details.|
 |appVersion|string|false|`versionName` for the Android application. Check the [Android docs](https://developer.android.com/studio/publish/versioning) for details.|
 |shortcuts|[ShortcutInfo](#ShortcutInfo)[]|false||
@@ -365,18 +365,25 @@ Adds an extra query parameter when launching the application, indicating if the 
 |queryParameterName|string|The query parameter name used to attach the first run information to the `start-url`.|
 
 ### AlphaDependencies
+
 |Name|Type|Required|Description|
 |:--:|:--:|:------:|:---------:|
 |enabled|boolean|false|When set to `true` enables the application to use an alpha version of [`android-browser-helper`](https://github.com/GoogleChrome/android-browser-helper).|
 
 
 ### SigningKeyInfo
+
+Information on filesystem location and alias used to sign the Android application.
+
 |Name|Type|Required|Description|
 |:--:|:--:|:------:|:---------:|
 |path|string|true|Path to the keystore file in the local filesystem|
 |alias|string|true|Alias for the key used to sign the application in the keystore|
 
 ### Fingerprint
+
+Information on the signature fingerprints for the application. Use to generate the `assetlinks.json` file and managed by the `fingerprint` command.
+
 |Name|Type|Required|Description|
 |:--:|:--:|:------:|:---------:|
 |value|string|true|The SHA-256 value for the fingerprint.|
