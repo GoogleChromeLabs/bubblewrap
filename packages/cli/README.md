@@ -274,7 +274,7 @@ Flags:
  - `--output=<filename>`: path from where to load the project configuration.
 
 
-## twa-manifest.json reference
+## `twa-manifest.json` reference
 
 The `twa-manifest.json` file is generated as by the `init` comand and contains the configuration of
 Android application.
@@ -304,21 +304,21 @@ Fields:
 |monochromeIconUrl|string|false|Full URL to a monochrome icon, used when displaying notifications.|
 |splashScreenFadeOutDuration|number|true|Duration for the splash screen fade out animation.|
 |signingKey|[SigningKeyInfo](#SigningKeyInfo)|true||
-|appVersionCode|number|false||
-|appVersion|string|false||
+|appVersionCode|number|false|`versionCode` for the Android application. Check the [Android docs](https://developer.android.com/studio/publish/versioning) for details.|
+|appVersion|string|false|`versionName` for the Android application. Check the [Android docs](https://developer.android.com/studio/publish/versioning) for details.|
 |shortcuts|[ShortcutInfo](#ShortcutInfo)[]|false||
-|generatorApp|string|false||
-|webManifestUrl|string|false||
+|generatorApp|string|false|Identifier for tool used to generate the Android project. Bubblewrap uses `bubblewrap-cli`. Should only be modified by generator apps.|
+|webManifestUrl|string|false|Full URL to the PWA Web Manifest. Required for the application to be compatible with Chrome OS devices.|
 |fallbackType|`'customtabs'` \| `'webview'`|false|`customtabs` or `webview`|
-|features|[Features](#Features)|false|Enablies optional features in the Android application. Read the [Features](#Features) section for details.|
+|features|[Features](#Features)|false|Enables optional features in the Android application. Read the [Features](#Features) section for details.|
 |alphaDependencies|[AlphaDependencies](#AlphaDependencies)|false||
 |enableSiteSettingsShortcut|boolean|false||
-|isChromeOSOnly|boolean|false||
+|isChromeOSOnly|boolean|false|Generates an application that targets only ChromeOS devices. Defaults to `false`.|
 |shareTarget|[ShareTarget](https://w3c.github.io/web-share-target/#sharetarget-and-its-members)|false||
-|orientation|`'default'` \| `'any'` \| `'natural'` \| `'landscape'` \| `'portrait'` \| `'portrait-primary'` \| `'portrait-secondary'` \| `'landscape-primary'` \| `'landscape-secondary'`|false|Initial orientation to launch the Android application. Defaults to `'default'`.|
-|fingerprints|[Fingerprint](#fingerprint)[]|false||
-|serviceAccountJsonFile|string|false||
-|additionalTrustedOrigins|string[]|false|
+|orientation|`'default'` \| `'any'` \| `'natural'` \| `'landscape'` \| `'portrait'` \| `'portrait-primary'` \| `'portrait-secondary'` \| `'landscape-primary'` \| `'landscape-secondary'`|false|Initial orientation used to launch the Android application. Defaults to `'default'`.|
+|fingerprints|[Fingerprint](#fingerprint)[]|false|List of fingerprints used to generate the Digital Asset Links file. Read the [Fingerprint](#fingerprint) section for details.|
+|serviceAccountJsonFile|string|false|The Play Store serviced account information. Currently unused.|
+|additionalTrustedOrigins|string[]|false|A list of additional origins owned by developer and validated with Digital Asset Links. The user will remain in fullscreen mode when navigating to those origins inside the application.|
  
 ### Features
 
