@@ -310,7 +310,7 @@ Fields:
 |generatorApp|string|false||
 |webManifestUrl|string|false||
 |fallbackType|`'customtabs'` \| `'webview'`|false|`customtabs` or `webview`|
-|features|[Features](#Features)|false||
+|features|[Features](#Features)|false|Enablies optional features in the Android application. Read the [Features](#Features) section for details.|
 |alphaDependencies|[AlphaDependencies](#AlphaDependencies)|false||
 |enableSiteSettingsShortcut|boolean|false||
 |isChromeOSOnly|boolean|false||
@@ -321,12 +321,15 @@ Fields:
 |additionalTrustedOrigins|string[]|false|
  
 ### Features
+
+Developers can enable additional features in their Android application. Some features may include more dependencies into the application and increase the birary size.
+
 |Name|Type|Required|Description|
 |:--:|:--:|:------:|:---------:|
-|locationDelegation|[LocationDelegationConfig](#locationdelegationconfig)|false||
-|playBilling|[PlayBillingConfig](#playbillingconfig)|false||
-|firstRunFlag|[FirstRunFlagConfig](#firstrunflagconfig)|false||
-|appsFlyer|[AppsFlyerConfig](#appsflyerconfig)|false|The appsFlyer feature enables the AppsFlyer SDK in the Trusted Web Activity.|
+|locationDelegation|[LocationDelegationConfig](#locationdelegationconfig)|false|Read the [LocationDelegationConfig](#locationdelegationconfig) section for details.|
+|playBilling|[PlayBillingConfig](#playbillingconfig)|false|Read the [PlayBillingConfig](#playbillingconfig) section for details.|
+|firstRunFlag|[FirstRunFlagConfig](#firstrunflagconfig)|false|Read the [FirstRunFlagConfig](#firstrunflagconfig) section for details.|
+|appsFlyer|[AppsFlyerConfig](#appsflyerconfig)|false|Read the [AppsFlyerConfig](#appsflyerconfig) section for details.|
 
 #### AppsFlyerConfig
 |Name|Type|Required|Description|
