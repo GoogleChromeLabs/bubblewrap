@@ -286,36 +286,36 @@ Fields:
 
 |Name|Type|Required|Description|
 |:--:|:--:|:------:|:---------:|
-|packageId|string|true||
+|packageId|string|true|The [application id](https://developer.android.com/studio/build/application-id) for the output Android app.|
 |host|string|true|The origin that will be opened in the Trusted Web Activity.|
-|name|string|true|The name shown on the Android Launcher.|
-|launcherName|string|false|
-|display|string|false|The display mode for the TWA.
+|name|string|true|Name for the Android application, displayed on vairous places when installed on an Android device.|
+|launcherName|string|false|A short name for the Android application, displayed on the Android launcher|
+|display|`'standalone'` \| `'fullscreen'` \| `'fullscreen-sticky'`|false|The initial display mode for the Android application. Defaults to `standalone`.|
 |themeColor|string|true|The color used for the status bar.|
 |navigationColor|string|true|The color used for the navigation bar.|
-|navigationColorDark|string|false|The color used for the dark navbar.|
-|navigationDividerColor|string|false|The color used for the navbar divider.|
-|navigationDividerColorDark|string|false|The color used for the dark navbar divider.|
-|backgroundColor|string|true|The color used for the splash screen background|
+|navigationColorDark|string|false|The color used for the navigation bar when the device is in dark mode. Defaults to `#000000`.|
+|navigationDividerColor|string|false|The color used for the navigation bar divider. Defaults to `#000000`.|
+|navigationDividerColorDark|string|false|The color used for the navigation bar divider when the device is dark mode. Defaults to `#000000`.|
+|backgroundColor|string|true|Color used for the splash screen background|
 |enableNotifications|boolean|true|Set to true to enable notification delegation.|
 |startUrl|string|true|The start path for the TWA. Must be relative to the domain.|
-|iconUrl|string|true||
-|maskableIconUrl|string|false||
-|monochromeIconUrl|string|false||
-|splashScreenFadeOutDuration|number|true||
+|iconUrl|string|true|Full URL to an the icon used for the application launcher and splash screen. Must be at least 512x512.|
+|maskableIconUrl|string|false|Full URL to an the icon used for maskable icons, when supported by the device.|
+|monochromeIconUrl|string|false|Full URL to a monochrome icon, used when displaying notifications.|
+|splashScreenFadeOutDuration|number|true|Duration for the splash screen fade out animation.|
 |signingKey|[SigningKeyInfo](#SigningKeyInfo)|true||
 |appVersionCode|number|false||
 |appVersion|string|false||
 |shortcuts|[ShortcutInfo](#ShortcutInfo)[]|false||
 |generatorApp|string|false||
 |webManifestUrl|string|false||
-|fallbackType|string|false|`customtabs` or `webview`|
+|fallbackType|`'customtabs'` \| `'webview'`|false|`customtabs` or `webview`|
 |features|[Features](#Features)|false||
 |alphaDependencies|[AlphaDependencies](#AlphaDependencies)|false||
 |enableSiteSettingsShortcut|boolean|false||
 |isChromeOSOnly|boolean|false||
 |shareTarget|[ShareTarget](https://w3c.github.io/web-share-target/#sharetarget-and-its-members)|false||
-|orientation|string|false|Valid values are `default`, `any`, `natural`, `landscape`, `portrait`, `portrait-primary`, `portrait-secondary`, `landscape-primary`, and `landscape-secondary`|
+|orientation|`'default'` \| `'any'` \| `'natural'` \| `'landscape'` \| `'portrait'` \| `'portrait-primary'` \| `'portrait-secondary'` \| `'landscape-primary'` \| `'landscape-secondary'`|false|Initial orientation to launch the Android application. Defaults to `'default'`.|
 |fingerprints|[Fingerprint](#fingerprint)[]|false||
 |serviceAccountJsonFile|string|false||
 |additionalTrustedOrigins|string[]|false|
