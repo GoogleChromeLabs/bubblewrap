@@ -309,7 +309,7 @@ Fields:
 |navigationColorDark|string|false|The color used for the navigation bar when the device is in dark mode. Defaults to `#000000`.|
 |navigationDividerColor|string|false|The color used for the navigation bar divider. Defaults to `#000000`.|
 |navigationDividerColorDark|string|false|The color used for the navigation bar divider when the device is dark mode. Defaults to `#000000`.|
-|orientation|`'default'` \| `'any'` \| `'natural'` \| `'landscape'` \| `'portrait'` \| `'portrait-primary'` \| `'portrait-secondary'` \| `'landscape-primary'` \| `'landscape-secondary'`|
+|orientation|`'default'` \| `'any'` \| `'natural'` \| `'landscape'` \| `'portrait'` \| `'portrait-primary'` \| `'portrait-secondary'` \| `'landscape-primary'` \| `'landscape-secondary'`|false|Initial orientation used to launch the Android application. Defaults to `'default'`.|
 |packageId|string|true|The [application id](https://developer.android.com/studio/build/application-id) for the output Android app.|
 |serviceAccountJsonFile|string|false|The Play Store serviced account information. Currently unused.|
 |shareTarget|[ShareTarget](https://w3c.github.io/web-share-target/#sharetarget-and-its-members)|false||
@@ -319,8 +319,6 @@ Fields:
 |startUrl|string|true|The start path for the TWA. Must be relative to the domain.|
 |themeColor|string|true|The color used for the status bar.|
 |webManifestUrl|string|false|Full URL to the PWA Web Manifest. Required for the application to be compatible with Chrome OS devices.|
-
-false|Initial orientation used to launch the Android application. Defaults to `'default'`.|
  
 ### Features
 
