@@ -312,8 +312,8 @@ Fields:
 |orientation|`'default'` \| `'any'` \| `'natural'` \| `'landscape'` \| `'portrait'` \| `'portrait-primary'` \| `'portrait-secondary'` \| `'landscape-primary'` \| `'landscape-secondary'`|false|Initial orientation used to launch the Android application. Defaults to `'default'`.|
 |packageId|string|true|The [application id](https://developer.android.com/studio/build/application-id) for the output Android app.|
 |serviceAccountJsonFile|string|false|The Play Store serviced account information. Currently unused.|
-|shareTarget|[ShareTarget](https://w3c.github.io/web-share-target/#sharetarget-and-its-members)|false||
-|shortcuts|[ShortcutInfo](#ShortcutInfo)[]|false||
+|shareTarget|[ShareTarget](https://w3c.github.io/web-share-target/#sharetarget-and-its-members)|false|[Web Share Target](https://web.dev/web-share-target/) configuration for the application.|
+|shortcuts|[ShortcutInfo](https://developer.mozilla.org/en-US/docs/Web/Manifest/shortcuts)[]|false|[Shortcuts](https://web.dev/app-shortcuts/) configuration for the application.|
 |signingKey|[SigningKeyInfo](#SigningKeyInfo)|true|Signing key and alias used to sign the Android application. Read the [SigningKeyInfo](#SigningKeyInfo) section for details.|
 |splashScreenFadeOutDuration|number|true|Duration for the splash screen fade out animation.|
 |startUrl|string|true|The start path for the TWA. Must be relative to the domain.|
