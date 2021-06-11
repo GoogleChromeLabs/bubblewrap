@@ -328,18 +328,18 @@ Developers can enable additional features in their Android application. Some fea
 
 |Name|Type|Required|Increases Binary Size|Description|
 |:--:|:--:|:------:|:-------------------:|:---------:|
+|appsFlyer|[AppsFlyerConfig](#appsflyerconfig)|false|true|Read the [AppsFlyerConfig](#appsflyerconfig) section for details.|
+|firstRunFlag|[FirstRunFlagConfig](#firstrunflagconfig)|false|false|Read the [FirstRunFlagConfig](#firstrunflagconfig) section for details.|
 |locationDelegation|[LocationDelegationConfig](#locationdelegationconfig)|false|true|Read the [LocationDelegationConfig](#locationdelegationconfig) section for details.|
 |playBilling|[PlayBillingConfig](#playbillingconfig)|false|true|Read the [PlayBillingConfig](#playbillingconfig) section for details.|
-|firstRunFlag|[FirstRunFlagConfig](#firstrunflagconfig)|false|false|Read the [FirstRunFlagConfig](#firstrunflagconfig) section for details.|
-|appsFlyer|[AppsFlyerConfig](#appsflyerconfig)|false|true|Read the [AppsFlyerConfig](#appsflyerconfig) section for details.|
 
 #### AppsFlyerConfig
 Enables the [AppsFlyer SDK](https://support.appsflyer.com/hc/en-us/articles/360002330178-Using-AppsFlyer-with-TWA#introduction) in the Android application. Includes additional libraries and is not compatible with Chrome OS.
 
 |Name|Type|Required|Description|
 |:--:|:--:|:------:|:---------:|
-|enabled|boolean|true|Set to `true` to enable the feature.|
 |appsFlyerId|boolean|true|The appsflyer id.|
+|enabled|boolean|true|Set to `true` to enable the feature.|
 
 #### LocationDelegationConfig
 
@@ -388,8 +388,8 @@ Information on the signature fingerprints for the application. Use to generate t
 
 |Name|Type|Required|Description|
 |:--:|:--:|:------:|:---------:|
-|value|string|true|The SHA-256 value for the fingerprint.|
 |name|string|false|An optional name for the fingerprint.|
+|value|string|true|The SHA-256 value for the fingerprint.|
 
 ## Manually setting up the Environment
 
