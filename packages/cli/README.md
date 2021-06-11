@@ -294,12 +294,12 @@ Fields:
 |display|`'standalone'` \| `'fullscreen'` \| `'fullscreen-sticky'`|false|The initial display mode for the Android application. Defaults to `standalone`.|
 |enableNotifications|boolean|true|Set to true to enable notification delegation.|
 |enableSiteSettingsShortcut|boolean|false|Adds a shortcut to the site settins in the application launcher. Defaults to `true`.|
-|fallbackType|`'customtabs'` \| `'webview'`|false|`customtabs` or `webview`|
+|fallbackType|`'customtabs'` \| `'webview'`|false|Fallback strategy used when a browser that supports Trusted Web Activity is not available on the users device. Defaults to `'customtabs'`.|
 |features|[Features](#Features)|false|Enables optional features in the Android application. Read the [Features](#Features) section for details.|
 |fingerprints|[Fingerprint](#fingerprint)[]|false|List of fingerprints used to generate the Digital Asset Links file. Read the [Fingerprint](#fingerprint) section for details.|
 |generatorApp|string|false|Identifier for tool used to generate the Android project. Bubblewrap uses `bubblewrap-cli`. Should only be modified by generator apps.|
 |host|string|true|The origin that will be opened in the Trusted Web Activity.|
-|iconUrl|string|true|Full URL to an the icon used for the application launcher and splash screen. Must be at least 512x512.|
+|iconUrl|string|true|Full URL to an the icon used for the application launcher and splash screen. Must be at least 512x512 px.|
 |isChromeOSOnly|boolean|false|Generates an application that targets only ChromeOS devices. Defaults to `false`.|
 |launcherName|string|false|A short name for the Android application, displayed on the Android launcher|
 |maskableIconUrl|string|false|Full URL to an the icon used for maskable icons, when supported by the device.|
@@ -314,7 +314,7 @@ Fields:
 |serviceAccountJsonFile|string|false|The Play Store serviced account information. Currently unused.|
 |shareTarget|[ShareTarget](https://w3c.github.io/web-share-target/#sharetarget-and-its-members)|false||
 |shortcuts|[ShortcutInfo](#ShortcutInfo)[]|false||
-|signingKey|[SigningKeyInfo](#SigningKeyInfo)|true|Information on the signing keys used to sign the output Android application. Read the [SigningKeyInfo](#SigningKeyInfo) section for details.|
+|signingKey|[SigningKeyInfo](#SigningKeyInfo)|true|Signing key and alias used to sign the Android application. Read the [SigningKeyInfo](#SigningKeyInfo) section for details.|
 |splashScreenFadeOutDuration|number|true|Duration for the splash screen fade out animation.|
 |startUrl|string|true|The start path for the TWA. Must be relative to the domain.|
 |themeColor|string|true|The color used for the status bar.|
@@ -324,14 +324,14 @@ false|Initial orientation used to launch the Android application. Defaults to `'
  
 ### Features
 
-Developers can enable additional features in their Android application. Some features may include more dependencies into the application and increase the birary size.
+Developers can enable additional features in their Android application. Some features may include more dependencies into the application and increase the binary size.
 
-|Name|Type|Required|Description|
-|:--:|:--:|:------:|:---------:|
-|locationDelegation|[LocationDelegationConfig](#locationdelegationconfig)|false|Read the [LocationDelegationConfig](#locationdelegationconfig) section for details.|
-|playBilling|[PlayBillingConfig](#playbillingconfig)|false|Read the [PlayBillingConfig](#playbillingconfig) section for details.|
-|firstRunFlag|[FirstRunFlagConfig](#firstrunflagconfig)|false|Read the [FirstRunFlagConfig](#firstrunflagconfig) section for details.|
-|appsFlyer|[AppsFlyerConfig](#appsflyerconfig)|false|Read the [AppsFlyerConfig](#appsflyerconfig) section for details.|
+|Name|Type|Required|Increases Binary Size|Description|
+|:--:|:--:|:------:|:-------------------:|:---------:|
+|locationDelegation|[LocationDelegationConfig](#locationdelegationconfig)|false|true|Read the [LocationDelegationConfig](#locationdelegationconfig) section for details.|
+|playBilling|[PlayBillingConfig](#playbillingconfig)|false|true|Read the [PlayBillingConfig](#playbillingconfig) section for details.|
+|firstRunFlag|[FirstRunFlagConfig](#firstrunflagconfig)|false|false|Read the [FirstRunFlagConfig](#firstrunflagconfig) section for details.|
+|appsFlyer|[AppsFlyerConfig](#appsflyerconfig)|false|true|Read the [AppsFlyerConfig](#appsflyerconfig) section for details.|
 
 #### AppsFlyerConfig
 Enables the [AppsFlyer SDK](https://support.appsflyer.com/hc/en-us/articles/360002330178-Using-AppsFlyer-with-TWA#introduction) in the Android application. Includes additional libraries and is not compatible with Chrome OS.
