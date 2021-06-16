@@ -38,11 +38,12 @@ class Play {
     await this.googlePlay.initPlay();
   }
 
-
   // bubblewrap play --versionCheck can validate the largest version number vs twa-manifest.json and update to give x+1 version number.
-  async getLargestVersion(): Promise<void> {
+  async getLargestVersion(): Promise<Number> {
     // Need to get an editId, then list all apks available. This should allow us to query the highest apk number.
     // This exists in Gradle play plugin but is not easily accessible over CLI.
+    // This should be completed in a future CL.
+    return 0;
   }
 
   private isInAvailableTracks(userSpecifiedTrack: string): boolean {
@@ -63,13 +64,16 @@ class Play {
     if (!this.isInAvailableTracks(userSelectedTrack)) {
       return; // Throw error message?
     }
-    if (this.args.appBundleLocation) {
-      // Check this is a directory that contains our specified file name.
+    if (this.args.appBundleLocation && fs.existsSync(this.args.appBundleLocation!!)) { //appbundlelocation is an option argument.
+      await this.googlePlay.publishBundle(Track.internal, this.args.appBundleLocation);
+      return;
     }
-
-
     // Make tmp directory copy file over signed APK then cleanup.
-    // await this.googlePlay.publishBundle(Track.Internal,)
+    const publishDir = fs.mkdtempSync('bubblewrap');
+    fs.copyFileSync("DEFAULT_FILE_PATH", path.join(publishDir, "DEFAULT_FILE_NAME")); // Need help on default file path and default file name.
+    await this.googlePlay.publishBundle(Track.internal, publishDir);
+    
+    fs.rmdirSync(publishDir);
   }
 
   private validServiceAccountJsonFile(path: string | undefined): boolean { // Return an error or boolean? Log a message?
@@ -96,7 +100,6 @@ class Play {
       twaManifest.serviceAccountJsonFile = serviceAccountFile;
       // Then we need to call bubblewrap update so the gradle plugin has the appropriate file.
     }
-    // Check if service account file exists on disk.
 
     // Need to validate that the service account file exists in TWA-Manifest
     // and/or on disk. (Thinking about CI/CD scenarios)
