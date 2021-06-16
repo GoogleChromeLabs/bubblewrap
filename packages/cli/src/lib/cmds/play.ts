@@ -15,13 +15,15 @@
  */
 
 import {Config, GradleWrapper, JdkHelper, AndroidSdkTools,ConsoleLog, Log, GooglePlay, TwaManifest} from '@bubblewrap/core';
-import { Track } from '@bubblewrap/core/dist/lib/GooglePlay';
+import {Track} from '@bubblewrap/core/dist/lib/GooglePlay';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ParsedArgs } from 'minimist';
-import { TWA_MANIFEST_FILE_NAME } from '../constants';
+import {ParsedArgs} from 'minimist';
+import {TWA_MANIFEST_FILE_NAME} from '../constants';
 import {Prompt, InquirerPrompt} from '../Prompt';
-
+ /**
+  * The Play class is the class that is used to communicate with the Google Play Store.
+  */
 class Play {
   constructor(
     private args: ParsedArgs,
