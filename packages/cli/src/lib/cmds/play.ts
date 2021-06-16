@@ -43,7 +43,7 @@ class Play {
   }
 
   private isInAvailableTracks(userSpecifiedTrack: string): Boolean {
-    const track: string = (userSpecifiedTrack).toLowerCase();
+    const track: string = userSpecifiedTrack.toLowerCase();
     const selectedTrack: Track = (<any>Track)[track];
     if(selectedTrack == (null || undefined)) {
       return false; // Should probably spit out an error message that track needs to be in [x,y,z]
@@ -97,7 +97,7 @@ class Play {
 
     // Need to validate that the service account file exists in TWA-Manifest
     // and/or on disk. (Thinking about CI/CD scenarios)
-    if (this.validServiceAccountJsonFile(twaManifest.serviceAccountJsonFile)) {
+    if (!this.validServiceAccountJsonFile(twaManifest.serviceAccountJsonFile)) {
       // Return an error or log here?
       return false;
     }
@@ -121,6 +121,6 @@ export async function play(config: Config, parsedArgs: ParsedArgs,
   const gradleWrapper = new GradleWrapper(process, androidSdkTools);
   const googlePlay = new GooglePlay(gradleWrapper);
   const play = new Play(parsedArgs, config, androidSdkTools, googlePlay);
-  play.run();
+  await play.run();
   return true;
 }
