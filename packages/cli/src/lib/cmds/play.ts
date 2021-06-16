@@ -38,17 +38,11 @@ class Play {
     await this.googlePlay.initPlay();
   }
 
-  // VersionOnTrack checks the selected track for the version number currently listed on it.
-  private async versionOnTrack(track: string): Promise<number> {
-    // Need to get an editId, then list all apks available. This should allow us to query the highest apk number.
-    return 0;
-  }
 
   // bubblewrap play --versionCheck can validate the largest version number vs twa-manifest.json and update to give x+1 version number.
   async getLargestVersion(): Promise<void> {
-
-    // TODO(nohe427): This doesn't exist in the Gradle Play Plugin. Might be wortwhile to build
-    // small integration to do this by getting the service account file?
+    // Need to get an editId, then list all apks available. This should allow us to query the highest apk number.
+    // This exists in Gradle play plugin but is not easily accessible over CLI.
   }
 
   private isInAvailableTracks(userSpecifiedTrack: string): boolean {
