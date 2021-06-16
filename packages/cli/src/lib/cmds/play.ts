@@ -14,14 +14,16 @@
  *  limitations under the License.
  */
 
-import {Config, GradleWrapper, JdkHelper, AndroidSdkTools,ConsoleLog, Log, GooglePlay, TwaManifest} from '@bubblewrap/core';
+import {
+  Config, GradleWrapper, JdkHelper, AndroidSdkTools, ConsoleLog, Log, GooglePlay, TwaManifest,
+} from '@bubblewrap/core';
 import {Track} from '@bubblewrap/core/dist/lib/GooglePlay';
 import * as fs from 'fs';
 import * as path from 'path';
 import {ParsedArgs} from 'minimist';
 import {TWA_MANIFEST_FILE_NAME} from '../constants';
 import {Prompt, InquirerPrompt} from '../Prompt';
- /**
+/**
   * The Play class is the class that is used to communicate with the Google Play Store.
   */
 class Play {
@@ -30,22 +32,29 @@ class Play {
     private config: Config,
     private androidSdkTools: AndroidSdkTools,
     private googlePlay: GooglePlay,
-  ){}
+  ) {}
 
   async bootstrapPlay(): Promise<void> {
     await this.googlePlay.initPlay();
   }
 
-  // bubblewrap play --versionCheck can validate the largest version number vs twa-manifest.json and update to give x+1 version number.
-  async getLargestVersion(): Promise<void> { 
-    // TODO(nohe427): This doesn't exist in the Gradle Play Plugin. Might be wortwhile to build
-      // small integration to do this by getting the service account file?
+  // VersionOnTrack checks the selected track for the version number currently listed on it.
+  private async versionOnTrack(track: string): Promise<number> {
+    // Need to get an editId, then list all apks available. This should allow us to query the highest apk number.
+    return 0;
   }
 
-  private isInAvailableTracks(userSpecifiedTrack: string): Boolean {
+  // bubblewrap play --versionCheck can validate the largest version number vs twa-manifest.json and update to give x+1 version number.
+  async getLargestVersion(): Promise<void> {
+
+    // TODO(nohe427): This doesn't exist in the Gradle Play Plugin. Might be wortwhile to build
+    // small integration to do this by getting the service account file?
+  }
+
+  private isInAvailableTracks(userSpecifiedTrack: string): boolean {
     const track: string = userSpecifiedTrack.toLowerCase();
-    const selectedTrack: Track = (<any>Track)[track];
-    if(selectedTrack == (null || undefined)) {
+    const selectedTrack: Track = (Track as any)[track];
+    if (selectedTrack == (null || undefined)) {
       return false; // Should probably spit out an error message that track needs to be in [x,y,z]
     }
     return true;
@@ -53,30 +62,30 @@ class Play {
 
   // bubblewrap play --publish="Internal"
   async publish(): Promise<void> {
-    //if (this.args.publish) { // This argument should be validated in run()
-    //}
-    //Validate that the publish value is listed in the available Tracks.
-    const userSelectedTrack = this.args.publish.toLowerCase() || "internal"; // If no value was supplied with publish we make it internal.
-    if(!this.isInAvailableTracks(userSelectedTrack)) {
+    // if (this.args.publish) { // This argument should be validated in run()
+    // }
+    // Validate that the publish value is listed in the available Tracks.
+    const userSelectedTrack = this.args.publish.toLowerCase() || 'internal'; // If no value was supplied with publish we make it internal.
+    if (!this.isInAvailableTracks(userSelectedTrack)) {
       return; // Throw error message?
     }
     if (this.args.appBundleLocation) {
       // Check this is a directory that contains our specified file name.
     }
 
-    
-      // Make tmp directory copy file over signed APK then cleanup.
-      // await this.googlePlay.publishBundle(Track.Internal,)
+
+    // Make tmp directory copy file over signed APK then cleanup.
+    // await this.googlePlay.publishBundle(Track.Internal,)
   }
 
-  private validServiceAccountJsonFile(path: string | undefined): Boolean { // Return an error or boolean? Log a message?
-    if(path == undefined) {
+  private validServiceAccountJsonFile(path: string | undefined): boolean { // Return an error or boolean? Log a message?
+    if (path == undefined) {
       // Log an error
       return false;
     }
     if (!fs.existsSync(path)) {
       // path doesn't exist log an error
-      return false; 
+      return false;
     }
     return true;
   }
@@ -111,7 +120,6 @@ class Play {
     }
     return true;
   }
-
 }
 
 export async function play(config: Config, parsedArgs: ParsedArgs,
