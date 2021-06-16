@@ -14,13 +14,10 @@
  *  limitations under the License.
  */
 
-import * as path from 'path';
 import {Prompt, InquirerPrompt} from '../Prompt';
-import {TwaGenerator, TwaManifest} from '@bubblewrap/core';
 import {ParsedArgs} from 'minimist';
-import {APP_NAME} from '../constants';
 import {enUS as messages} from '../strings';
-import {updateVersions, generateTwaProject} from './shared';
+import {updateProject} from './shared';
 
 /**
  * Updates an existing TWA Project using the `twa-manifest.json`.
@@ -33,22 +30,13 @@ import {updateVersions, generateTwaProject} from './shared';
  */
 export async function update(
     args: ParsedArgs, prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
-  const targetDirectory = args.directory || process.cwd();
-  const manifestFile = args.manifest || path.join(process.cwd(), 'twa-manifest.json');
-  const twaManifest = await TwaManifest.fromFile(manifestFile);
-  twaManifest.generatorApp = APP_NAME;
+  const targetDirectory = args.directory;
+  const manifestFile = args.manifest;
 
-  if (!args.skipVersionUpgrade) {
-    const newVersionInfo = await updateVersions(twaManifest, args.appVersionName, prompt);
-    twaManifest.appVersionName = newVersionInfo.appVersionName;
-    twaManifest.appVersionCode = newVersionInfo.appVersionCode;
-    prompt.printMessage(messages.messageGeneratedNewVersion(
-        newVersionInfo.appVersionName, newVersionInfo.appVersionCode));
-    twaManifest.saveToFile(manifestFile);
+  const updated = await updateProject(args.skipVersionUpgrade, args.appVersionName,
+      prompt, targetDirectory, manifestFile);
+  if (updated) {
+    prompt.printMessage(messages.messageProjectBuildReminder);
   }
-
-  const twaGenerator = new TwaGenerator();
-  await twaGenerator.removeTwaProject(targetDirectory);
-  await generateTwaProject(prompt, twaGenerator, targetDirectory, twaManifest);
-  return true;
+  return updated;
 }

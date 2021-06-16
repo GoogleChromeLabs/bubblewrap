@@ -123,6 +123,12 @@
             <meta-data android:name="android.support.customtabs.trusted.SCREEN_ORIENTATION"
                 android:value="@string/orientation"/>
 
+            <% if (additionalTrustedOrigins.length > 0) { %>
+                <meta-data
+                    android:name="android.support.customtabs.trusted.ADDITIONAL_TRUSTED_ORIGINS"
+                    android:resource="@array/additional_trusted_origins" />
+            <% } %>
+
             <% if (shareTargetIntentFilter) { %>
                 <intent-filter>
                     <% for (const action of shareTargetIntentFilter.actions) { %>
@@ -147,6 +153,16 @@
                 <data android:scheme="https"
                     android:host="@string/hostName"/>
             </intent-filter>
+
+            <% for (const additionalOrigin of additionalTrustedOrigins) { %>
+                <intent-filter android:autoVerify="true">
+                    <action android:name="android.intent.action.VIEW"/>
+                    <category android:name="android.intent.category.DEFAULT" />
+                    <category android:name="android.intent.category.BROWSABLE"/>
+                    <data android:scheme="https"
+                        android:host="<%= additionalOrigin %>"/>
+                </intent-filter>
+            <% } %>
         </activity>
 
         <activity android:name="com.google.androidbrowserhelper.trusted.FocusActivity" />
@@ -169,10 +185,10 @@
             android:enabled="@bool/enableNotification"
             android:exported="@bool/enableNotification">
 
-            <% if (monochromeIconUrl) { %>
+            <% if (enableNotifications && (monochromeIconUrl || iconUrl)) { %>
                 <meta-data
                     android:name="android.support.customtabs.trusted.SMALL_ICON"
-                    android:value="@drawable/ic_notification_icon" />
+                    android:resource="@drawable/ic_notification_icon" />
             <% } %>
 
             <intent-filter>

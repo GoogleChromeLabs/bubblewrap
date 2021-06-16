@@ -22,6 +22,8 @@ type Messages = {
   errorCouldNotfindTwaManifest: (file: string) => string;
   errorDirectoryDoesNotExist: (directory: string) => string;
   errorFailedToRunQualityCriteria: string;
+  errorPlayBillingEnableNotifications: string;
+  errorPlayBillingAlphaDependencies: string;
   errorMaxLength: (maxLength: number, actualLength: number) => string;
   errorMinLength: (minLength: number, actualLength: number) => string;
   errorMissingManifestParameter: string;
@@ -46,7 +48,6 @@ type Messages = {
   messageDigitalAssetLinksSuccess: (filename: string) => string;
   messageEnterPasswords: (keypath: string, keyalias: string) => string;
   messageGeneratedAssetLinksFile: (outputfile: string) => string;
-  messageGeneratedNewVersion: (appVersionName: string, appVersionCode: number) => string;
   messageGeneratingAndroidProject: string;
   messageInstallingBuildTools: string;
   messageLauncherIconAndSplash: string;
@@ -55,6 +56,9 @@ type Messages = {
   messageOptionFeatures: string;
   messageOptionalFeaturesDesc: string;
   messageProjectGeneratedSuccess: string;
+  messageProjectUpdatedSuccess: string;
+  messageProjectBuildReminder: string;
+  messageProjectNotUpdated: string;
   messageRemovedFingerprint: (fingerpring: Fingerprint) => string;
   messageSavingTwaManifestTo: (path: string) => string;
   messageSha256FingerprintNotFound: string;
@@ -62,6 +66,7 @@ type Messages = {
   messageSigningKeyInformation: string;
   messageSigningKeyInformationDesc: string;
   messageSigningKeyNotFound: (path: string) => string;
+  messageUpgradedAppVersion: (appVersionName: string, appVersionCode: number) => string;
   messageUsingPasswordsFromEnv: string;
   messageWebAppDetails: string;
   messageWebAppDetailsDesc: string;
@@ -105,6 +110,7 @@ type Messages = {
   promptKeyPassword: string;
   promptNewAppVersionName: string;
   promptVersionCode: string;
+  promptUpdateProject: string;
   warnPwaFailedQuality: string;
   updateConfigUsage: string;
   jdkPathIsNotCorrect: string;
@@ -123,6 +129,10 @@ export const enUS: Messages = {
   },
   errorFailedToRunQualityCriteria:
       yellow('\nFailed to run the PWA Quality Criteria checks. Skipping.'),
+  errorPlayBillingEnableNotifications: red(`Play Billing requires ${cyan('enableNotifications')} ` +
+      `to be ${cyan('true')}.`),
+  errorPlayBillingAlphaDependencies: red(`Play Billing requires ${cyan('alphaDependencies')} ` +
+      'to be enabled.'),
   errorMaxLength: (maxLength, actualLength): string => {
     return `Maximum length is ${maxLength} but input is ${actualLength}.`;
   },
@@ -208,10 +218,6 @@ ${cyan(keyalias)}.\n`;
   messageGeneratedAssetLinksFile: (outputfile: string): string => {
     return `\nGenerated Digital Asset Links file at ${cyan(outputfile)}.`;
   },
-  messageGeneratedNewVersion: (appVersionName: string, appVersionCode: number): string => {
-    return `Generated new version with versionName: ${appVersionName} and ` +
-        `versionCode: ${appVersionCode}`;
-  },
   messageGeneratingAndroidProject: 'Generating Android Project.',
   messageInstallingBuildTools: 'Installing Android Build Tools. Please, read and accept the ' +
       'license agreement.',
@@ -253,6 +259,10 @@ a blank white page to users.
 \t  ${italic('theme_color')}. They will be used for notification icons.\n`,
   messageProjectGeneratedSuccess: '\nProject generated successfully. Build it by running ' +
       cyan('bubblewrap build'),
+  messageProjectUpdatedSuccess: '\nProject updated successfully.',
+  messageProjectBuildReminder: 'Build it by running ' + cyan('bubblewrap build'),
+  messageProjectNotUpdated: '\nProject build will continue without newest ' +
+      cyan('twa-manifest.json') + ' changes.',
   messageRemovedFingerprint: (fingerprint: Fingerprint): string => {
     return `Removed fingerprint with value ${fingerprint.value}.`;
   },
@@ -277,6 +287,10 @@ Read more about Android signing keys at:
 \t ${cyan('https://developer.android.com/studio/publish/app-signing')}\n`,
   messageSigningKeyNotFound: (path: string): string => {
     return `\nAn existing key store could not be found at "${path}".\n`;
+  },
+  messageUpgradedAppVersion: (appVersionName: string, appVersionCode: number): string => {
+    return `Upgraded app version to versionName: ${appVersionName} and ` +
+        `versionCode: ${appVersionCode}`;
   },
   messageUsingPasswordsFromEnv: 'Using passwords set in the BUBBLEWRAP_KEYSTORE_PASSWORD and ' +
       'BUBBLEWRAP_KEY_PASSWORD environmental variables.',
@@ -339,6 +353,8 @@ the PWA:
   promptKeyPassword: 'Password for the Key:',
   promptNewAppVersionName: 'versionName for the new App version:',
   promptVersionCode: 'Starting version code for the new app version:',
+  promptUpdateProject: 'There are changes in twa-manifest.json. ' +
+      'Would you like to apply them to the project before building?',
   warnPwaFailedQuality: red('PWA Quality Criteria check failed.'),
   updateConfigUsage: 'Usage: [--jdkPath <path-to-jdk>] [--androidSdkPath <path-to-android-sdk>]' +
       '(You can insert one or both of them)',

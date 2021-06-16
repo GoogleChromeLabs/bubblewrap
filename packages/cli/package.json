@@ -1,6 +1,6 @@
 {
   "name": "@bubblewrap/cli",
-  "version": "1.12.1",
+  "version": "1.13.2",
   "description": "CLI tool to Generate TWA projects from a Web Manifest",
   "bin": {
     "bubblewrap": "bin/bubblewrap.js"
@@ -26,8 +26,8 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@bubblewrap/core": "^1.12.1",
-    "@bubblewrap/validator": "^1.11.1",
+    "@bubblewrap/core": "^1.13.2",
+    "@bubblewrap/validator": "^1.12.2",
     "@types/cli-progress": "^3.7.0",
     "@types/color": "^3.0.0",
     "@types/inquirer": "^6.5.0",
@@ -44,5 +44,5 @@
     "semver": "^7.3.2",
     "valid-url": "^1.0.9"
   },
-  "gitHead": "be3340a57736635802fc482e6410c6756d0d4a19"
+  "gitHead": "ba2a8430ee11d6bf650ed3d071c9c144fff31538"
 }

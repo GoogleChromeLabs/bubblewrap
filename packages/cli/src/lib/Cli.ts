@@ -30,15 +30,20 @@ import {doctor} from './cmds/doctor';
 import {merge} from './cmds/merge';
 import {fingerprint} from './cmds/fingerprint';
 import { play } from './cmds/play';
+import {fetchUtils} from '@bubblewrap/core';
 
 export class Cli {
   async run(args: string[]): Promise<boolean> {
     console.log(BUBBLEWRAP_LOGO);
-    if (major(process.versions.node) < 10) {
+    if (major(process.versions.node) < 12) {
       throw new Error(`Current Node.js version is ${process.versions.node}.` +
-          ' Node.js version 10 or above is required to run bubblewrap.');
+          ' Node.js version 12 or above is required to run bubblewrap.');
     }
     const parsedArgs = minimist(args);
+    if (parsedArgs.fetchEngine &&
+        (parsedArgs.fetchEngine == 'node-fetch' || parsedArgs.fetchEngine == 'fetch-h2')) {
+      fetchUtils.setFetchEngine(parsedArgs.fetchEngine);
+    }
 
     const config = await loadOrCreateConfig(undefined, undefined, parsedArgs.config);
 

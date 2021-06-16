@@ -15,7 +15,6 @@
  */
 
 import * as extractZip from 'extract-zip';
-import fetch from 'node-fetch';
 import * as fs from 'fs';
 import {join} from 'path';
 import {promisify} from 'util';
@@ -24,6 +23,7 @@ import {x as extractTar} from 'tar';
 import {WebManifestIcon, WebManifestJson} from './types/WebManifest';
 import {Log} from './Log';
 import {Orientation} from './TwaManifest';
+import {fetchUtils} from './FetchUtils';
 
 const execPromise = promisify(exec);
 const execFilePromise = promisify(execFile);
@@ -50,43 +50,6 @@ export async function executeFile(
     log.debug(`Executing command ${cmd} with args ${args}`);
   }
   return await execFilePromise(cmd, args, {env: env, cwd: cwd});
-}
-
-/**
- * Downloads a file from `url` and saves it to `path`. If a `progressCallback` function is passed, it
- * will be invoked for every chunk received. If the value of `total` parameter is -1, it means we
- * were unable to determine to total file size before starting the download.
- */
-export async function downloadFile(url: string, path: string,
-    progressCallback?: (current: number, total: number) => void): Promise<void> {
-  const result = await fetch(url);
-
-  // Try to determine the file size via the `Content-Length` header. This may not be available
-  // for all cases.
-  const contentLength = result.headers.get('content-length');
-  const fileSize = contentLength ? parseInt(contentLength) : -1;
-
-  const fileStream = fs.createWriteStream(path);
-  let received = 0;
-
-  await new Promise((resolve, reject) => {
-    result.body.pipe(fileStream);
-
-    // Even though we're piping the chunks, we intercept them to check for the download progress.
-    if (progressCallback) {
-      result.body.on('data', (chunk) => {
-        received = received + chunk.length;
-        progressCallback(received, fileSize);
-      });
-    }
-
-    result.body.on('error', (err) => {
-      reject(err);
-    });
-    fileStream.on('finish', () => {
-      resolve();
-    });
-  });
 }
 
 export async function unzipFile(
@@ -265,13 +228,13 @@ export async function rmdir(path: string): Promise<void> {
 };
 
 /**
-   * Given a web manifest's URL, the function retrns the web manifest.
-   *
-   * @param {URL} webManifestUrl the URL where the webManifest is available.
-   * @returns {Promise<WebManifestJson}
-   */
+ * Given a Web Manifest's URL, the function returns the web manifest as a JSON object.
+ *
+ * @param {URL} webManifestUrl the URL where the Web Manifest is available.
+ * @returns {Promise<WebManifestJson}
+ */
 export async function getWebManifest(webManifestUrl: URL): Promise<WebManifestJson> {
-  const response = await fetch(webManifestUrl);
+  const response = await fetchUtils.fetch(webManifestUrl.toString());
   if (response.status !== 200) {
     throw new Error(`Failed to download Web Manifest ${webManifestUrl}. ` +
         `Responded with status ${response.status}`);
@@ -280,7 +243,7 @@ export async function getWebManifest(webManifestUrl: URL): Promise<WebManifestJs
 }
 
 /**
- * Given a string of a JSON, the function retrns an escaped string representing that string.
+ * Given a JSON string, the function returns an escaped representation of the string.
  * eg: Turns every " instance into \\".
  *
  * @param {string} stringToReplace the string before the manipulation.

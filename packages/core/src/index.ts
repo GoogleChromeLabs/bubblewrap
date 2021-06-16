@@ -30,12 +30,14 @@ import {TwaGenerator} from './lib/TwaGenerator';
 import {DigitalAssetLinks} from './lib/DigitalAssetLinks';
 import * as util from './lib/util';
 import {Result} from './lib/Result';
+import {fetchUtils} from './lib/FetchUtils';
 
 export {
   AndroidSdkTools,
   BufferedLog,
   Config,
   DigitalAssetLinks,
+  fetchUtils,
   Fingerprint,
   GooglePlay,
   GradleWrapper,

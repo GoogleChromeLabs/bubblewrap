@@ -17,7 +17,7 @@
 'use strict';
 
 import * as fs from 'fs';
-import fetch from 'node-fetch';
+import {fetchUtils} from './FetchUtils';
 import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
 import Color = require('color');
 import {ConsoleLog} from './Log';
@@ -157,6 +157,7 @@ export class TwaManifest {
   orientation: Orientation;
   fingerprints: Fingerprint[];
   serviceAccountJsonFile: string | undefined;
+  additionalTrustedOrigins: string[];
 
   private static log = new ConsoleLog('twa-manifest');
 
@@ -201,6 +202,7 @@ export class TwaManifest {
     this.orientation = data.orientation || DEFAULT_ORIENTATION;
     this.fingerprints = data.fingerprints || [];
     this.serviceAccountJsonFile = data.serviceAccountJsonFile;
+    this.additionalTrustedOrigins = data.additionalTrustedOrigins || [];
   }
 
   /**
@@ -352,7 +354,7 @@ export class TwaManifest {
    * @returns {TwaManifest}
    */
   static async fromWebManifest(url: string): Promise<TwaManifest> {
-    const response = await fetch(url);
+    const response = await fetchUtils.fetch(url);
     const webManifest = await response.json();
     const webManifestUrl: URL = new URL(url);
     return TwaManifest.fromWebManifestJson(webManifestUrl, webManifest);
@@ -525,6 +527,7 @@ export interface TwaManifestJson {
   orientation?: Orientation;
   fingerprints?: Fingerprint[];
   serviceAccountJsonFile?: string;
+  additionalTrustedOrigins?: string[];
 }
 
 export interface SigningKeyInfo {

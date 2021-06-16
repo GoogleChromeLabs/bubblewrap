@@ -1,6 +1,6 @@
 {
   "name": "@bubblewrap/validator",
-  "version": "1.11.1",
+  "version": "1.12.2",
   "description": "Validate if an app using Trusted Web Activity fulfills the quality criteria",
   "scripts": {
     "build": "tsc",
@@ -25,5 +25,6 @@
   "dependencies": {
     "@types/node-fetch": "^2.5.7",
     "node-fetch": "^2.6.0"
-  }
+  },
+  "gitHead": "ba2a8430ee11d6bf650ed3d071c9c144fff31538"
 }

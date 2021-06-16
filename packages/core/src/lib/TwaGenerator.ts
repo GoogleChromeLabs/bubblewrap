@@ -17,7 +17,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as Color from 'color';
-import fetch from 'node-fetch';
 import {template} from 'lodash';
 import {promisify} from 'util';
 import {TwaManifest} from './TwaManifest';
@@ -26,6 +25,7 @@ import {Log} from './Log';
 import {ImageHelper, IconDefinition} from './ImageHelper';
 import {FeatureManager} from './features/FeatureManager';
 import {rmdir, escapeJsonString, toAndroidScreenOrientation} from './util';
+import {fetchUtils} from './FetchUtils';
 
 const COPY_FILE_LIST = [
   'settings.gradle',
@@ -45,6 +45,7 @@ const COPY_FILE_LIST = [
 const TEMPLATE_FILE_LIST = [
   'app/build.gradle',
   'app/src/main/AndroidManifest.xml',
+  'app/src/main/res/values/strings.xml',
 ];
 
 const JAVA_DIR = 'app/src/main/java/';
@@ -265,7 +266,7 @@ export class TwaGenerator {
           'Unable to write the Web Manifest. The TWA Manifest does not have a webManifestUrl');
     }
 
-    const response = await fetch(twaManifest.webManifestUrl);
+    const response = await fetchUtils.fetch(twaManifest.webManifestUrl.toString());
     if (response.status !== 200) {
       throw new Error(`Failed to download Web Manifest ${twaManifest.webManifestUrl}.` +
           `Responded with status ${response.status}`);
@@ -431,8 +432,9 @@ export class TwaGenerator {
     progress.update();
 
     // Generate notification images
-    if (twaManifest.monochromeIconUrl) {
-      await this.generateIcons(twaManifest.monochromeIconUrl, targetDirectory, NOTIFICATION_IMAGES);
+    const iconOrMonochromeIconUrl = twaManifest.monochromeIconUrl || twaManifest.iconUrl;
+    if (twaManifest.enableNotifications && iconOrMonochromeIconUrl) {
+      await this.generateIcons(iconOrMonochromeIconUrl, targetDirectory, NOTIFICATION_IMAGES);
     }
     progress.update();
 

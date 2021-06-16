@@ -22,7 +22,7 @@ a Project for an Android application that launches an existing Progressive Web A
 [Trusted Web Activity (TWA)](https://developers.google.com/web/android/trusted-web-activity/).
 
 ## Requirements
-- [Node.js](https://nodejs.org/en/) 10.0 or above
+- [Node.js](https://nodejs.org/en/) 12.0 or above
 
 ## Setting up the Environment
 
@@ -217,6 +217,177 @@ Options:
   - `--skipVersionUpgrade`: skips upgrading `appVersion` and `appVersionCode`.
   - `--ignore`: Ignores all of the fields on the list. Accepts all of the possible fields
   in the Web Manifest.
+
+## `fingerprint`
+
+Manages the list of fingerprints used to generate the Digital Asset Links file for the web application.
+
+Usage:
+
+```
+bubblewrap fingerprint [subcommand]
+``` 
+
+Global flags:
+  - `--manifest=<manifest>`: path to the Trusted Web Activity configuration.',
+
+### Subcommands:
+
+#### `add`
+Adds a fingerprint to the project configuration.
+
+Usage:
+
+```
+bubblewrap fingerprint add [SHA-256 fingerprint] <flags>
+```
+
+Additional flags:
+ - `--name=<name>`: optionally set a name to help identify the fingerprint. The name is printed
+along with the fingerprint when using the `list` subcommand.
+
+#### `remove`
+Removes a fingerprint from the project configuration.
+
+Usage:
+```
+bubblewrap fingerprint remove [SHA-256 fingerprint] <flags>
+```
+
+#### `list`
+Lists the fingerprints in the project configuration.
+
+Usage:
+```
+bubblewrap fingerprint list <flags>
+```
+
+#### `generateAssetLinks`
+Generates an AssetLinks file from the project configuration
+
+Usage:
+```
+bubblewrap fingerprint generateAssetLinks <flags>
+```
+
+Flags:
+ - `--output=<filename>`: path from where to load the project configuration.
+
+
+## `twa-manifest.json` reference
+
+The `twa-manifest.json` file is generated as by the `init` comand and contains the configuration of
+Android application.
+
+Developers who want to change their application configuration after running `init` can do so by
+editing this file then running the `update` command.
+
+Fields:
+
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|additionalTrustedOrigins|string[]|false|A list of additional origins owned by developer and validated with Digital Asset Links. The user will remain in fullscreen mode when navigating to those origins inside the application.|
+|alphaDependencies|[AlphaDependencies](#AlphaDependencies)|false|Enables the Android application to use alpha version of dependencies. Defaults to `false`.|
+|appVersion|string|false|`versionName` for the Android application. Check the [Android docs](https://developer.android.com/studio/publish/versioning) for details.|
+|appVersionCode|number|false|`versionCode` for the Android application. Check the [Android docs](https://developer.android.com/studio/publish/versioning) for details.|
+|backgroundColor|string|true|Color used for the splash screen background.|
+|display|`'standalone'` \| `'fullscreen'` \| `'fullscreen-sticky'`|false|The initial [display mode](https://developer.mozilla.org/en-US/docs/Web/Manifest/display) for the Android application. `fullscree-sticky` corresponds to Android's [Immersive Sticky](https://developer.android.com/training/system-ui/immersive#sticky-immersive). Defaults to `standalone`.|
+|enableNotifications|boolean|true|Set to `true` to enable notification delegation.|
+|enableSiteSettingsShortcut|boolean|false|Adds a shortcut to the site settings in the application launcher. Defaults to `true`.|
+|fallbackType|`'customtabs'` \| `'webview'`|false|Fallback strategy used when a browser that supports Trusted Web Activity is not available on the users device. Defaults to `'customtabs'`.|
+|features|[Features](#Features)|false|Enables optional features in the Android application. Read the [Features](#Features) section for details.|
+|fingerprints|[Fingerprint](#fingerprint)[]|false|List of fingerprints used to generate the Digital Asset Links file. Read the [Fingerprint](#fingerprint) section for details.|
+|generatorApp|string|false|Identifier for tool used to generate the Android project. Bubblewrap uses `bubblewrap-cli`. Should only be modified by generator apps.|
+|host|string|true|The origin that will be opened in the Trusted Web Activity.|
+|iconUrl|string|true|Full URL to an the icon used for the application launcher and splash screen. Must be at least 512x512 px.|
+|isChromeOSOnly|boolean|false|Generates an application that targets only ChromeOS devices. Defaults to `false`.|
+|launcherName|string|false|A short name for the Android application, displayed on the Android launcher|
+|maskableIconUrl|string|false|Full URL to an the icon used for maskable icons, when supported by the device.|
+|monochromeIconUrl|string|false|Full URL to a monochrome icon, used when displaying notifications.|
+|name|string|true|Name for the Android application, displayed on vairous places when installed on an Android device.|
+|navigationColor|string|true|The color used for the navigation bar.|
+|navigationColorDark|string|false|The color used for the navigation bar when the device is in dark mode. Defaults to `#000000`.|
+|navigationDividerColor|string|false|The color used for the navigation bar divider. Defaults to `#000000`.|
+|navigationDividerColorDark|string|false|The color used for the navigation bar divider when the device is dark mode. Defaults to `#000000`.|
+|orientation|`'default'` \| `'any'` \| `'natural'` \| `'landscape'` \| `'portrait'` \| `'portrait-primary'` \| `'portrait-secondary'` \| `'landscape-primary'` \| `'landscape-secondary'`|false|Initial orientation used to launch the Android application. Defaults to `'default'`.|
+|packageId|string|true|The [application id](https://developer.android.com/studio/build/application-id) for the output Android app.|
+|serviceAccountJsonFile|string|false|The Play Store serviced account information. Currently unused.|
+|shareTarget|[ShareTarget](https://w3c.github.io/web-share-target/#sharetarget-and-its-members)|false|[Web Share Target](https://web.dev/web-share-target/) configuration for the application.|
+|shortcuts|[ShortcutInfo](https://developer.mozilla.org/en-US/docs/Web/Manifest/shortcuts)[]|false|[Shortcuts](https://web.dev/app-shortcuts/) configuration for the application.|
+|signingKey|[SigningKeyInfo](#SigningKeyInfo)|true|Signing key and alias used to sign the Android application. Read the [SigningKeyInfo](#SigningKeyInfo) section for details.|
+|splashScreenFadeOutDuration|number|true|Duration for the splash screen fade out animation.|
+|startUrl|string|true|The start path for the TWA. Must be relative to the domain.|
+|themeColor|string|true|The color used for the status bar.|
+|webManifestUrl|string|false|Full URL to the PWA Web Manifest. Required for the application to be compatible with Chrome OS devices.|
+ 
+### Features
+
+Developers can enable additional features in their Android application. Some features may include more dependencies into the application and increase the binary size.
+
+|Name|Type|Required|Increases Binary Size|Description|
+|:--:|:--:|:------:|:-------------------:|:---------:|
+|appsFlyer|[AppsFlyerConfig](#appsflyerconfig)|false|true|Read the [AppsFlyerConfig](#appsflyerconfig) section for details.|
+|firstRunFlag|[FirstRunFlagConfig](#firstrunflagconfig)|false|false|Read the [FirstRunFlagConfig](#firstrunflagconfig) section for details.|
+|locationDelegation|[LocationDelegationConfig](#locationdelegationconfig)|false|true|Read the [LocationDelegationConfig](#locationdelegationconfig) section for details.|
+|playBilling|[PlayBillingConfig](#playbillingconfig)|false|true|Read the [PlayBillingConfig](#playbillingconfig) section for details.|
+
+#### AppsFlyerConfig
+Enables the [AppsFlyer SDK](https://support.appsflyer.com/hc/en-us/articles/360002330178-Using-AppsFlyer-with-TWA#introduction) in the Android application. Includes additional libraries and is not compatible with Chrome OS.
+
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|appsFlyerId|boolean|true|The appsflyer id.|
+|enabled|boolean|true|Set to `true` to enable the feature.|
+
+#### LocationDelegationConfig
+
+Delegates the location permission dialog to the Android system, instead of showing the browser dialog. Recommended when the application requests the location permission, but not enabled by default as it includes additional dependencies in the application. 
+
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|enabled|boolean|true|Set to `true` to enable the feature.|
+
+#### PlayBillingConfig
+
+Enables the Play Billing integration in the application and allows the web application to [use the Digital Goods API to receive payments](https://developer.chrome.com/docs/android/trusted-web-activity/receive-payments-play-billing/). Includes additional dependencies in the Android app.
+
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|enabled|boolean|true|Set to `true` to enable the feature.|
+
+#### FirstRunFlagConfig
+
+Adds an extra query parameter when launching the application, indicating if the application is run for the first time.
+
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|enabled|boolean|true|Set to `true` to enable the feature.|
+|queryParameterName|string|true|The query parameter name used to attach the first run information to the `start-url`.|
+
+### AlphaDependencies
+
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|enabled|boolean|false|When set to `true` enables the application to use an alpha version of [`android-browser-helper`](https://github.com/GoogleChrome/android-browser-helper).|
+
+
+### SigningKeyInfo
+
+Information on filesystem location and alias used to sign the Android application.
+
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|path|string|true|Path to the keystore file in the local filesystem|
+|alias|string|true|Alias for the key used to sign the application in the keystore|
+
+### Fingerprint
+
+Information on the signature fingerprints for the application. Use to generate the `assetlinks.json` file and managed by the `fingerprint` command.
+
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|name|string|false|An optional name for the fingerprint.|
+|value|string|true|The SHA-256 value for the fingerprint.|
 
 ## Manually setting up the Environment
 
