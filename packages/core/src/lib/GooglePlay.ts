@@ -51,14 +51,6 @@ export class GooglePlay {
   async publishBundle(track: Track, filepath: string): Promise<void> {
     // Uploads the artifact to the default internal track.
     this.gradleWrapper.executeGradleCommand(
-        ['publishBundle', '--artifact-dir', filepath]);
-
-    // Uses the promote function to promote from the internal track (default upload) to the user
-    // selected track at 100% rollout
-    if (track !== Track.internal) {
-      this.gradleWrapper.executeGradleCommand(
-          ['promoteArtifact', '--from-track', 'internal', '--promote-track',
-            Track[track].toLowerCase(), '--release-status', 'completed']);
-    }
+        ['publishBundle', '--artifact-dir', filepath, '--track', Track[track].toLowerCase()]);
   }
 }
