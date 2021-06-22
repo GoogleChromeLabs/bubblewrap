@@ -15,7 +15,8 @@
  */
 
 import {
-  Config, GradleWrapper, JdkHelper, AndroidSdkTools, ConsoleLog, Log, GooglePlay, TwaManifest, Track,
+  Config, GradleWrapper, JdkHelper, AndroidSdkTools, ConsoleLog, Log, GooglePlay, TwaManifest,
+  asPlayStoreTrack
 } from '@bubblewrap/core';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -46,32 +47,23 @@ class Play {
     throw new Error('Not Implemented');
   }
 
-  private isInAvailableTracks(userSpecifiedTrack: string): boolean {
-    const track: string = userSpecifiedTrack.toLowerCase();
-    const selectedTrack: Track = (Track as any)[track];
-    if (selectedTrack == (null || undefined)) {
-      return false; // Should probably spit out an error message that track needs to be in [x,y,z]
-    }
-    return true;
-  }
-
   // bubblewrap play --publish="Internal"
   async publish(): Promise<void> {
     // if (this.args.publish) { // This argument should be validated in run()
     // }
     // Validate that the publish value is listed in the available Tracks.
-    const userSelectedTrack = this.args.publish.toLowerCase() || 'internal'; // If no value was supplied with publish we make it internal.
-    if (!this.isInAvailableTracks(userSelectedTrack)) {
+    const userSelectedTrack = asPlayStoreTrack(this.args.publish.toLowerCase() || 'internal'); // If no value was supplied with publish we make it internal.
+    if (userSelectedTrack == null) {
       return; // Throw error message?
     }
     if (this.args.appBundleLocation && fs.existsSync(this.args.appBundleLocation!!)) { // appbundlelocation is an option argument.
-      await this.googlePlay.publishBundle(Track.internal, this.args.appBundleLocation);
+      await this.googlePlay.publishBundle(userSelectedTrack, this.args.appBundleLocation);
       return;
     }
     // Make tmp directory copy file over signed APK then cleanup.
     const publishDir = fs.mkdtempSync('bubblewrap');
     fs.copyFileSync('DEFAULT_FILE_PATH', path.join(publishDir, 'DEFAULT_FILE_NAME')); // Need help on default file path and default file name.
-    await this.googlePlay.publishBundle(Track.internal, publishDir);
+    await this.googlePlay.publishBundle(userSelectedTrack, publishDir);
 
     fs.rmdirSync(publishDir);
   }

@@ -16,11 +16,16 @@
 
 import {GradleWrapper} from '..';
 
-export enum Track {
-    internal,
-    alpha,
-    beta,
-    production,
+// Possible values for release tracks
+const TRACK_VALUES = ['alpha', 'beta', 'internal', 'production'];
+export type PlayStoreTrack = typeof TRACK_VALUES[number];
+export const PlayStoreTracks: PlayStoreTrack[] = [...TRACK_VALUES];
+
+export function asPlayStoreTrack(input?: string): PlayStoreTrack | null {
+  if(!input) {
+    return null;
+  }
+  return TRACK_VALUES.includes(input) ? input as PlayStoreTrack : null;
 }
 
 export class GooglePlay {
@@ -48,9 +53,9 @@ export class GooglePlay {
    * https://github.com/Triple-T/gradle-play-publisher#uploading-a-pre-existing-artifact
    * @param track - Specifies the track that the user would like to publish to.
    */
-  async publishBundle(track: Track, filepath: string): Promise<void> {
+  async publishBundle(track: PlayStoreTrack, filepath: string): Promise<void> {
     // Uploads the artifact to the default internal track.
     this.gradleWrapper.executeGradleCommand(
-        ['publishBundle', '--artifact-dir', filepath, '--track', Track[track]]);
+        ['publishBundle', '--artifact-dir', filepath, '--track', track]);
   }
 }
