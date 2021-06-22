@@ -17,7 +17,7 @@
 import {AndroidSdkTools} from './lib/androidSdk/AndroidSdkTools';
 import {BufferedLog} from './lib/BufferedLog';
 import {Config} from './lib/Config';
-import {GooglePlay} from './lib/GooglePlay';
+import {GooglePlay, Track} from './lib/GooglePlay';
 import {GradleWrapper} from './lib/GradleWrapper';
 import {Log, ConsoleLog} from './lib/Log';
 import {MockLog} from './lib/mock/MockLog';
@@ -58,4 +58,5 @@ export {
   util,
   Result,
   SigningKeyInfo,
+  Track,
 };

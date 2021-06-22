@@ -15,14 +15,14 @@
  */
 
 import {
-  Config, GradleWrapper, JdkHelper, AndroidSdkTools, ConsoleLog, Log, GooglePlay, TwaManifest,
+  Config, GradleWrapper, JdkHelper, AndroidSdkTools, ConsoleLog, Log, GooglePlay, TwaManifest, Track,
 } from '@bubblewrap/core';
-import {Track} from '@bubblewrap/core/dist/lib/GooglePlay';
 import * as fs from 'fs';
 import * as path from 'path';
 import {ParsedArgs} from 'minimist';
 import {TWA_MANIFEST_FILE_NAME} from '../constants';
 import {Prompt, InquirerPrompt} from '../Prompt';
+
 /**
   * The Play class is the class that is used to communicate with the Google Play Store.
   */
@@ -39,11 +39,11 @@ class Play {
   }
 
   // bubblewrap play --versionCheck can validate the largest version number vs twa-manifest.json and update to give x+1 version number.
-  async getLargestVersion(): Promise<Number> {
+  async getLargestVersion(): Promise<number> {
     // Need to get an editId, then list all apks available. This should allow us to query the highest apk number.
     // This exists in Gradle play plugin but is not easily accessible over CLI.
     // This should be completed in a future CL.
-    return 0;
+    throw new Error('Not Implemented');
   }
 
   private isInAvailableTracks(userSpecifiedTrack: string): boolean {
@@ -64,15 +64,15 @@ class Play {
     if (!this.isInAvailableTracks(userSelectedTrack)) {
       return; // Throw error message?
     }
-    if (this.args.appBundleLocation && fs.existsSync(this.args.appBundleLocation!!)) { //appbundlelocation is an option argument.
+    if (this.args.appBundleLocation && fs.existsSync(this.args.appBundleLocation!!)) { // appbundlelocation is an option argument.
       await this.googlePlay.publishBundle(Track.internal, this.args.appBundleLocation);
       return;
     }
     // Make tmp directory copy file over signed APK then cleanup.
     const publishDir = fs.mkdtempSync('bubblewrap');
-    fs.copyFileSync("DEFAULT_FILE_PATH", path.join(publishDir, "DEFAULT_FILE_NAME")); // Need help on default file path and default file name.
+    fs.copyFileSync('DEFAULT_FILE_PATH', path.join(publishDir, 'DEFAULT_FILE_NAME')); // Need help on default file path and default file name.
     await this.googlePlay.publishBundle(Track.internal, publishDir);
-    
+
     fs.rmdirSync(publishDir);
   }
 

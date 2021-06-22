@@ -51,6 +51,6 @@ export class GooglePlay {
   async publishBundle(track: Track, filepath: string): Promise<void> {
     // Uploads the artifact to the default internal track.
     this.gradleWrapper.executeGradleCommand(
-        ['publishBundle', '--artifact-dir', filepath, '--track', Track[track].toLowerCase()]);
+        ['publishBundle', '--artifact-dir', filepath, '--track', Track[track]]);
   }
 }
