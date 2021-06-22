@@ -54,6 +54,7 @@ class Play {
     // Validate that the publish value is listed in the available Tracks.
     const userSelectedTrack = asPlayStoreTrack(this.args.publish.toLowerCase() || 'internal'); // If no value was supplied with publish we make it internal.
     if (userSelectedTrack == null) {
+      throw new Error('Selected track must be all lowercase and valid.')
       return; // Throw error message?
     }
     if (this.args.appBundleLocation && fs.existsSync(this.args.appBundleLocation!!)) { // appbundlelocation is an option argument.
@@ -62,7 +63,10 @@ class Play {
     }
     // Make tmp directory copy file over signed APK then cleanup.
     const publishDir = fs.mkdtempSync('bubblewrap');
-    fs.copyFileSync('DEFAULT_FILE_PATH', path.join(publishDir, 'DEFAULT_FILE_NAME')); // Need help on default file path and default file name.
+    const defaultDirPath = process.cwd(); // Where we should find our output file?
+    const signedAppBundleFileName = 'app-release-bundle.aab';
+    
+    fs.copyFileSync(defaultDirPath, path.join(publishDir, signedAppBundleFileName));
     await this.googlePlay.publishBundle(userSelectedTrack, publishDir);
 
     fs.rmdirSync(publishDir);
