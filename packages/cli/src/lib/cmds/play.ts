@@ -54,11 +54,13 @@ class Play {
   }
 
   /**
-  * Can validate the largest version number vs twa-manifest.json and update to give x+1 version number.
+  * @summary Can validate the largest version number vs twa-manifest.json and update
+  * to give x+1 version number.
   * @return {number} The largest version number found in the play console.
   */
   async getLargestVersion(): Promise<number> {
-    // Need to get an editId, then list all apks available. This should allow us to query the highest apk number.
+    // Need to get an editId, then list all apks available.
+    // This should allow us to query the highest apk number.
     // This exists in Gradle play plugin but is not easily accessible over CLI.
     // This should be completed in a future CL.
     throw new Error('Not Implemented');
@@ -85,7 +87,7 @@ class Play {
     const publishDir = fs.mkdtempSync('bubblewrap');
     const defaultDirPath = process.cwd(); // Where we should find our output file
     const signedAppBundleFileName = 'app-release-bundle.aab';
-    
+
     fs.copyFileSync(defaultDirPath, path.join(publishDir, signedAppBundleFileName));
     await this.googlePlay.publishBundle(userSelectedTrack, publishDir);
 
@@ -94,11 +96,11 @@ class Play {
   }
 
   /**
-  * Validates that the service account JSON file exists..
+  * Validates that the service account JSON file exists.
   * @param {string | undefined} path - The path the the JSON file.
-  * @return {boolean} Whether or not the JSON file exists..
+  * @return {boolean} Whether or not the JSON file exists.
   */
-  private validServiceAccountJsonFile(path: string | undefined): boolean { // Return an error or boolean? Log a message?
+  private validServiceAccountJsonFile(path: string | undefined): boolean {
     if (path == undefined) {
       // Log an error
       return false;
@@ -118,7 +120,8 @@ class Play {
     const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
     const twaManifest = await TwaManifest.fromFile(manifestFile);
     // Update the TWA-Manifest if service account is supplied
-    // bubblewrap play --serviceAccountFile="/path/to/service-account.json" --manifest="/path/twa-manifest.json"
+    // bubblewrap play --serviceAccountFile="/path/to/service-account.json"
+    // --manifest="/path/twa-manifest.json"
     if (this.args.serviceAccountFile) {
       twaManifest.serviceAccountJsonFile = this.args.serviceAccountFile;
       // Then we need to call bubblewrap update so the gradle plugin has the appropriate file.
