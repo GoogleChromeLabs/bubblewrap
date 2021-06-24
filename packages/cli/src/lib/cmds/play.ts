@@ -16,30 +16,47 @@
 
 import {
   Config, GradleWrapper, JdkHelper, AndroidSdkTools, ConsoleLog, Log, GooglePlay, TwaManifest,
-  asPlayStoreTrack
+  asPlayStoreTrack,
 } from '@bubblewrap/core';
 import * as fs from 'fs';
 import * as path from 'path';
-import {ParsedArgs} from 'minimist';
 import {TWA_MANIFEST_FILE_NAME} from '../constants';
 import {Prompt, InquirerPrompt} from '../Prompt';
+import {updateProject} from './shared';
+import {enUS} from '../strings';
+
+export interface PlayArgs {
+  publish?: string;
+  init?: boolean;
+  serviceAccountFile?: string;
+  manifest?: string;
+  appBundleLocation?: string;
+  targetDirectory?: string;
+  // versionCheck?: boolean; // Uncomment when getLargetVersion is implemented.
+}
 
 /**
   * The Play class is the class that is used to communicate with the Google Play Store.
   */
 class Play {
   constructor(
-    private args: ParsedArgs,
-    private config: Config,
-    private androidSdkTools: AndroidSdkTools,
+    private args: PlayArgs,
     private googlePlay: GooglePlay,
+    private prompt: Prompt = new InquirerPrompt(),
   ) {}
 
+  /**
+  * Bootstraps the Play listing via the Gradle-Play-Plugin.
+  * @return {void}
+  */
   async bootstrapPlay(): Promise<void> {
     await this.googlePlay.initPlay();
   }
 
-  // bubblewrap play --versionCheck can validate the largest version number vs twa-manifest.json and update to give x+1 version number.
+  /**
+  * Can validate the largest version number vs twa-manifest.json and update to give x+1 version number.
+  * @return {number} The largest version number found in the play console.
+  */
   async getLargestVersion(): Promise<number> {
     // Need to get an editId, then list all apks available. This should allow us to query the highest apk number.
     // This exists in Gradle play plugin but is not easily accessible over CLI.
@@ -47,27 +64,38 @@ class Play {
     throw new Error('Not Implemented');
   }
 
-  // bubblewrap play --publish="Internal"
-  async publish(): Promise<void> {
-    // if (this.args.publish) { // This argument should be validated in run()
-    // }
+  /**
+  * Publishes the Android App Bundle to the specified from the {@link PlayArgs}.
+  * @return {boolean} Whether the publish command completes successfully or not.
+  */
+  async publish(): Promise<boolean> {
     // Validate that the publish value is listed in the available Tracks.
-    const userSelectedTrack = asPlayStoreTrack(this.args.publish.toLowerCase() || 'internal'); // If no value was supplied with publish we make it internal.
+    // If no value was supplied with publish we make it internal.
+    const userSelectedTrack = asPlayStoreTrack(this.args.publish?.toLowerCase() || 'internal');
     if (userSelectedTrack == null) {
-      return; // Throw error message?
+      this.prompt.printMessage(enUS.messageInvalidTrack);
+      return false;
     }
-    if (this.args.appBundleLocation && fs.existsSync(this.args.appBundleLocation!!)) { // appbundlelocation is an option argument.
+    // appbundlelocation is an option argument.
+    if (this.args.appBundleLocation && fs.existsSync(this.args.appBundleLocation!!)) {
       await this.googlePlay.publishBundle(userSelectedTrack, this.args.appBundleLocation);
-      return;
+      return true;
     }
     // Make tmp directory copy file over signed APK then cleanup.
     const publishDir = fs.mkdtempSync('bubblewrap');
-    fs.copyFileSync('DEFAULT_FILE_PATH', path.join(publishDir, 'DEFAULT_FILE_NAME')); // Need help on default file path and default file name.
+    // Need help on default file path and default file name.
+    fs.copyFileSync('DEFAULT_FILE_PATH', path.join(publishDir, 'DEFAULT_FILE_NAME'));
     await this.googlePlay.publishBundle(userSelectedTrack, publishDir);
 
     fs.rmdirSync(publishDir);
+    return true;
   }
 
+  /**
+  * Validates that the service account JSON file exists..
+  * @param {string | undefined} path - The path the the JSON file.
+  * @return {boolean} Whether or not the JSON file exists..
+  */
   private validServiceAccountJsonFile(path: string | undefined): boolean { // Return an error or boolean? Log a message?
     if (path == undefined) {
       // Log an error
@@ -80,44 +108,50 @@ class Play {
     return true;
   }
 
-  // bubblewrap play --init
+  /**
+  * Runs the play command. This allows multiple flags to be handled through here.
+  * @return {boolean} Returns whether or not the run command completed successfully.
+  */
   async run(): Promise<boolean> {
     const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
     const twaManifest = await TwaManifest.fromFile(manifestFile);
     // Update the TWA-Manifest if service account is supplied
-    // bubblewrap play --serviceAccountFile="/path/to/service-account.json"  --manifest="/path/twa-manifest.json"
+    // bubblewrap play --serviceAccountFile="/path/to/service-account.json" --manifest="/path/twa-manifest.json"
     if (this.args.serviceAccountFile) {
-      // Add service account to the TWA-Manifest
-      const serviceAccountFile = this.args.serviceAccount;
-      twaManifest.serviceAccountJsonFile = serviceAccountFile;
+      twaManifest.serviceAccountJsonFile = this.args.serviceAccountFile;
       // Then we need to call bubblewrap update so the gradle plugin has the appropriate file.
+      updateProject(
+          true, null, this.prompt, this.args.targetDirectory || process.cwd(), manifestFile);
+      this.prompt.printMessage(enUS.messageCallBubblewrapBuild);
     }
-
-    // Need to validate that the service account file exists in TWA-Manifest
-    // and/or on disk. (Thinking about CI/CD scenarios)
     if (!this.validServiceAccountJsonFile(twaManifest.serviceAccountJsonFile)) {
-      // Return an error or log here?
+      this.prompt.printMessage(enUS.messageServiceAccountJSONMissing);
       return false;
     }
 
     // bubblewrap play --init
-    // This might not be useful at all considering that right now, we do not use anything listed in
-    // the play listing.
     if (this.args.init) {
       await this.bootstrapPlay();
-      return true;
+    }
+    // bubblewrap play --publish
+    if (this.args.publish) {
+      const success = await this.publish();
+      if (!success) {
+        this.prompt.printMessage(enUS.messagePublishingWasNotSuccessful);
+        return false;
+      }
     }
     return true;
   }
 }
 
-export async function play(config: Config, parsedArgs: ParsedArgs,
+export async function play(config: Config, parsedArgs: PlayArgs,
     log: Log = new ConsoleLog('play'), prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
   const jdkHelper = new JdkHelper(process, config);
   const androidSdkTools = await AndroidSdkTools.create(process, config, jdkHelper, log);
   const gradleWrapper = new GradleWrapper(process, androidSdkTools);
   const googlePlay = new GooglePlay(gradleWrapper);
-  const play = new Play(parsedArgs, config, androidSdkTools, googlePlay);
+  const play = new Play(parsedArgs, googlePlay, prompt);
   await play.run();
   return true;
 }

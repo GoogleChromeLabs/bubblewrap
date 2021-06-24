@@ -45,11 +45,13 @@ type Messages = {
   messageApkSuccess: (filename: string) => string;
   messageAppBundleSuccess: (filename: string) => string;
   messageBuildingApp: string;
+  messageCallBubblewrapBuild: string;
   messageDigitalAssetLinksSuccess: (filename: string) => string;
   messageEnterPasswords: (keypath: string, keyalias: string) => string;
   messageGeneratedAssetLinksFile: (outputfile: string) => string;
   messageGeneratingAndroidProject: string;
   messageInstallingBuildTools: string;
+  messageInvalidTrack: string;
   messageLauncherIconAndSplash: string;
   messageLauncherIconAndSplashDesc: string;
   messageLoadingTwaManifestFrom: (path: string) => string;
@@ -59,8 +61,10 @@ type Messages = {
   messageProjectUpdatedSuccess: string;
   messageProjectBuildReminder: string;
   messageProjectNotUpdated: string;
+  messagePublishingWasNotSuccessful: string;
   messageRemovedFingerprint: (fingerpring: Fingerprint) => string;
   messageSavingTwaManifestTo: (path: string) => string;
+  messageServiceAccountJSONMissing: string;
   messageSha256FingerprintNotFound: string;
   messageSigningKeyCreation: string;
   messageSigningKeyInformation: string;
@@ -205,6 +209,8 @@ into a device:
     return `\t- Generated Android App Bundle at ${cyan(filename)}`;
   },
   messageBuildingApp: '\nBuilding the Android App...',
+  messageCallBubblewrapBuild:
+    '\nCall: bubblewrap build\n to rebuild the project and enable uploading.',
   messageDigitalAssetLinksSuccess: (filename: string): string => {
     return `\t- Generated Digital Asset Links file at ${cyan(filename)}
 \nRead more about setting up Digital Asset Links at:
@@ -221,6 +227,7 @@ ${cyan(keyalias)}.\n`;
   messageGeneratingAndroidProject: 'Generating Android Project.',
   messageInstallingBuildTools: 'Installing Android Build Tools. Please, read and accept the ' +
       'license agreement.',
+  messageInvalidTrack: 'The specified track was not found in the list of available tracks.',
   messageLauncherIconAndSplash: underline(`\nLauncher icons and splash screen ${green('(3/5)')}`),
   messageLauncherIconAndSplashDesc: `
 The Android app requires an image for the launcher icon. It also displays a
@@ -263,12 +270,14 @@ a blank white page to users.
   messageProjectBuildReminder: 'Build it by running ' + cyan('bubblewrap build'),
   messageProjectNotUpdated: '\nProject build will continue without newest ' +
       cyan('twa-manifest.json') + ' changes.',
+  messagePublishingWasNotSuccessful: 'Publishing the project was not successful.',
   messageRemovedFingerprint: (fingerprint: Fingerprint): string => {
     return `Removed fingerprint with value ${fingerprint.value}.`;
   },
   messageSavingTwaManifestTo: (path: string): string => {
     return `Saving TWA Manifest to: ${cyan(path)}`;
   },
+  messageServiceAccountJSONMissing: 'Service account JSON could not be found on disk',
   messageSha256FingerprintNotFound: 'Could not find SHA256 fingerprint. Skipping generating ' +
       '"assetlinks.json"',
   messageSigningKeyCreation: underline('\nSigning key creation'),

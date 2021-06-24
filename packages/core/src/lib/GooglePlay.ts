@@ -22,7 +22,7 @@ export type PlayStoreTrack = typeof TRACK_VALUES[number];
 export const PlayStoreTracks: PlayStoreTrack[] = [...TRACK_VALUES];
 
 export function asPlayStoreTrack(input?: string): PlayStoreTrack | null {
-  if(!input) {
+  if (!input) {
     return null;
   }
   return TRACK_VALUES.includes(input) ? input as PlayStoreTrack : null;
