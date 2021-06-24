@@ -44,7 +44,7 @@ export class GooglePlay {
    * https://github.com/Triple-T/gradle-play-publisher#quickstart
    */
   async initPlay(): Promise<void> {
-    this.gradleWrapper.executeGradleCommand(['bootstrap']);
+    await this.gradleWrapper.executeGradleCommand(['bootstrap']);
   }
 
   /**
@@ -55,7 +55,7 @@ export class GooglePlay {
    */
   async publishBundle(track: PlayStoreTrack, filepath: string): Promise<void> {
     // Uploads the artifact to the default internal track.
-    this.gradleWrapper.executeGradleCommand(
+    await this.gradleWrapper.executeGradleCommand(
         ['publishBundle', '--artifact-dir', filepath, '--track', track]);
   }
 }

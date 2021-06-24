@@ -85,12 +85,14 @@ class Play {
     }
     // Make tmp directory copy file over signed APK then cleanup.
     const publishDir = fs.mkdtempSync('bubblewrap');
-    const defaultDirPath = process.cwd(); // Where we should find our output file
     const signedAppBundleFileName = 'app-release-bundle.aab';
+    // Where we should find our output file
+    const defaultPath = path.join(process.cwd(), signedAppBundleFileName);
 
-    fs.copyFileSync(defaultDirPath, path.join(publishDir, signedAppBundleFileName));
+    fs.copyFileSync(defaultPath, path.join(publishDir, signedAppBundleFileName));
     await this.googlePlay.publishBundle(userSelectedTrack, publishDir);
 
+    fs.unlinkSync(path.join(publishDir, signedAppBundleFileName));
     fs.rmdirSync(publishDir);
     return true;
   }
@@ -124,8 +126,9 @@ class Play {
     // --manifest="/path/twa-manifest.json"
     if (this.args.serviceAccountFile) {
       twaManifest.serviceAccountJsonFile = this.args.serviceAccountFile;
+      twaManifest.saveToFile(manifestFile);
       // Then we need to call bubblewrap update so the gradle plugin has the appropriate file.
-      updateProject(
+      await updateProject(
           true, null, this.prompt, this.args.targetDirectory || process.cwd(), manifestFile);
       this.prompt.printMessage(enUS.messageCallBubblewrapBuild);
     }
