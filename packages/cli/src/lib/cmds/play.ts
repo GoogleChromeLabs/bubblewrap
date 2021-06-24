@@ -148,6 +148,7 @@ class Play {
         this.prompt.printMessage(enUS.messagePublishingWasNotSuccessful);
         return false;
       }
+        this.prompt.printMessage(enUS.messagePlayUploadSuccess);
     }
     return true;
   }

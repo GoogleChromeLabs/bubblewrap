@@ -57,6 +57,7 @@ type Messages = {
   messageLoadingTwaManifestFrom: (path: string) => string;
   messageOptionFeatures: string;
   messageOptionalFeaturesDesc: string;
+  messagePlayUploadSuccess: string;
   messageProjectGeneratedSuccess: string;
   messageProjectUpdatedSuccess: string;
   messageProjectBuildReminder: string;
@@ -264,6 +265,7 @@ a blank white page to users.
 \t  be used when generating monochrome icons. Monochrome icons should
 \t  look good when displayed with a single color, the PWA's
 \t  ${italic('theme_color')}. They will be used for notification icons.\n`,
+  messagePlayUploadSuccess: 'Project uploaded to Google Play Store',
   messageProjectGeneratedSuccess: '\nProject generated successfully. Build it by running ' +
       cyan('bubblewrap build'),
   messageProjectUpdatedSuccess: '\nProject updated successfully.',
