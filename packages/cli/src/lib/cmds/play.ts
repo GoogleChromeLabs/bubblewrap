@@ -83,8 +83,10 @@ class Play {
     }
     // Make tmp directory copy file over signed APK then cleanup.
     const publishDir = fs.mkdtempSync('bubblewrap');
-    // Need help on default file path and default file name.
-    fs.copyFileSync('DEFAULT_FILE_PATH', path.join(publishDir, 'DEFAULT_FILE_NAME'));
+    const defaultDirPath = process.cwd(); // Where we should find our output file
+    const signedAppBundleFileName = 'app-release-bundle.aab';
+    
+    fs.copyFileSync(defaultDirPath, path.join(publishDir, signedAppBundleFileName));
     await this.googlePlay.publishBundle(userSelectedTrack, publishDir);
 
     fs.rmdirSync(publishDir);
