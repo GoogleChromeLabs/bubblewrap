@@ -119,6 +119,9 @@ class Play {
   * @return {boolean} Returns whether or not the run command completed successfully.
   */
   async run(): Promise<boolean> {
+    if (!await this.prompt.promptConfirm(enUS.promptExperimentalFeature, false)) {
+      return true;
+    }
     const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
     const twaManifest = await TwaManifest.fromFile(manifestFile);
     // Update the TWA-Manifest if service account is supplied

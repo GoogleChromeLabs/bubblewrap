@@ -84,6 +84,7 @@ type Messages = {
   messageDownloadAndroidSdk: string;
   messageDecompressAndroidSdk: string;
   promptCreateDirectory: (directory: string) => string;
+  promptExperimentalFeature: string;
   promptInstallJdk: string;
   promptJdkPath: string;
   promptInstallSdk: string;
@@ -331,6 +332,7 @@ the PWA:
   promptCreateDirectory: (directory: string): string => {
     return `Directory ${cyan(directory)} does not exist. Do you want to create it now?`;
   },
+  promptExperimentalFeature: 'This is an experimental feature. Are you sure you want to continue?',
   promptInstallJdk: `Do you want Bubblewrap to install JDK?
   (Enter "No" to use your JDK installation)`,
   promptJdkPath: 'Path to your existing JDK:',
