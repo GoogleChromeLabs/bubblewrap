@@ -17,6 +17,7 @@
 import {AndroidSdkTools} from './lib/androidSdk/AndroidSdkTools';
 import {BufferedLog} from './lib/BufferedLog';
 import {Config} from './lib/Config';
+import {GooglePlay, PlayStoreTrack, asPlayStoreTrack, PlayStoreTracks} from './lib/GooglePlay';
 import {GradleWrapper} from './lib/GradleWrapper';
 import {Log, ConsoleLog} from './lib/Log';
 import {MockLog} from './lib/mock/MockLog';
@@ -24,7 +25,8 @@ import {JarSigner} from './lib/jdk/JarSigner';
 import {JdkHelper} from './lib/jdk/JdkHelper';
 import {KeyTool} from './lib/jdk/KeyTool';
 import {TwaManifest, DisplayModes, DisplayMode, asDisplayMode, Orientation, Orientations,
-  asOrientation, SigningKeyInfo, Fingerprint} from './lib/TwaManifest';
+  asOrientation, SigningKeyInfo, Fingerprint}
+  from './lib/TwaManifest';
 import {TwaGenerator} from './lib/TwaGenerator';
 import {DigitalAssetLinks} from './lib/DigitalAssetLinks';
 import * as util from './lib/util';
@@ -38,6 +40,7 @@ export {
   DigitalAssetLinks,
   fetchUtils,
   Fingerprint,
+  GooglePlay,
   GradleWrapper,
   JarSigner,
   JdkHelper,
@@ -56,4 +59,7 @@ export {
   util,
   Result,
   SigningKeyInfo,
+  PlayStoreTrack,
+  asPlayStoreTrack,
+  PlayStoreTracks,
 };
