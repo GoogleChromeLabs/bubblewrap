@@ -285,3 +285,14 @@ export function toAndroidScreenOrientation(orientation: Orientation): string {
     default: return 'ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED';
   }
 }
+
+/**
+ * Escapes a string that will be written to the Gradle file. The characters need to be escaped
+ * multiple times, as they also need to be escaped inside the Gradle file.
+ *
+ * As an example, "Andre's Code" needs to be written as "Andre\\\'s Code" to the Gradle file, so
+ * it is properly escaped when passed to AAPT.
+ */
+export function escapeGradleString(input: string): string {
+  return input.replace(/[\\']/g, '\\\\\\$&');
+}
