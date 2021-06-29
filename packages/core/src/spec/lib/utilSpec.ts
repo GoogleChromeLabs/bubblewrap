@@ -292,9 +292,9 @@ describe('util', () => {
           .toEqual('Single quote \\\\\\\'');
     });
 
-    it('Escapes forward slashes', () => {
-      expect(util.escapeGradleString('Forward slash \\'))
-          .toEqual('Forward slash \\\\\\\\');
+    it('Escapes backwards slashes', () => {
+      expect(util.escapeGradleString('Backwards slash \\'))
+          .toEqual('Backwards slash \\\\\\\\');
     });
   });
 });
