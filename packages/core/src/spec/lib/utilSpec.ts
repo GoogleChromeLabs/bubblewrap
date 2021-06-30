@@ -285,4 +285,16 @@ describe('util', () => {
           .toEqual('ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED');
     });
   });
+
+  describe('#escapeGradleString', () => {
+    it('Escapes single quotes', () => {
+      expect(util.escapeGradleString('Single quote \''))
+          .toEqual('Single quote \\\\\\\'');
+    });
+
+    it('Escapes backwards slashes', () => {
+      expect(util.escapeGradleString('Backwards slash \\'))
+          .toEqual('Backwards slash \\\\\\\\');
+    });
+  });
 });

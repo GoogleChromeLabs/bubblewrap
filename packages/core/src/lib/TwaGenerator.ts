@@ -24,7 +24,7 @@ import {ShortcutInfo} from './ShortcutInfo';
 import {Log} from './Log';
 import {ImageHelper, IconDefinition} from './ImageHelper';
 import {FeatureManager} from './features/FeatureManager';
-import {rmdir, escapeJsonString, toAndroidScreenOrientation} from './util';
+import {rmdir, escapeGradleString, escapeJsonString, toAndroidScreenOrientation} from './util';
 import {fetchUtils} from './FetchUtils';
 
 const COPY_FILE_LIST = [
@@ -401,6 +401,7 @@ export class TwaGenerator {
       shareTargetIntentFilter: TwaGenerator.generateShareTargetIntentFilter(twaManifest),
       generateShortcuts: twaManifest.generateShortcuts,
       escapeJsonString: escapeJsonString,
+      escapeGradleString: escapeGradleString,
       toAndroidScreenOrientation: toAndroidScreenOrientation,
     };
 
