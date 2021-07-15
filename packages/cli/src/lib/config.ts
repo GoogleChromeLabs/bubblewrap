@@ -35,7 +35,6 @@ const DEFAULT_JDK_FOLDER = join(DEFAULT_CONFIG_FOLDER, 'jdk');
 const DEFAULT_SDK_FOLDER = join(DEFAULT_CONFIG_FOLDER, 'android_sdk');
 
 async function configAndroidSdk(prompt: Prompt = new InquirerPrompt()): Promise<string> {
-
   const sdkInstallRequest = await prompt.promptConfirm(messages.promptInstallSdk, true);
 
   let sdkPath;
@@ -107,7 +106,7 @@ export async function loadOrCreateConfig(
   }
   let config = await Config.loadConfig(configPath);
   if (!config) {
-    config = new Config("","");
+    config = new Config('', '');
     config.saveConfig(configPath);
   }
 
