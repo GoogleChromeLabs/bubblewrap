@@ -34,19 +34,7 @@ const LEGACY_CONFIG_FILE_PATH = join(LEGACY_CONFIG_FOLDER, LEGACY_CONFIG_NAME);
 const DEFAULT_JDK_FOLDER = join(DEFAULT_CONFIG_FOLDER, 'jdk');
 const DEFAULT_SDK_FOLDER = join(DEFAULT_CONFIG_FOLDER, 'android_sdk');
 
-async function createConfig(prompt: Prompt = new InquirerPrompt()): Promise<Config> {
-  const jdkInstallRequest = await prompt.promptConfirm(messages.promptInstallJdk, true);
-
-  let jdkPath;
-  if (!jdkInstallRequest) {
-    jdkPath = await prompt.promptInput(messages.promptJdkPath, null,
-        JdkHelper.validatePath);
-  } else {
-    await fsPromises.mkdir(DEFAULT_JDK_FOLDER, {recursive: true});
-    prompt.printMessage(messages.messageDownloadJdk + DEFAULT_JDK_FOLDER);
-    const jdkInstaller = new JdkInstaller(process, prompt);
-    jdkPath = await jdkInstaller.install(DEFAULT_JDK_FOLDER);
-  }
+async function configAndroidSdk(prompt: Prompt = new InquirerPrompt()): Promise<string> {
 
   const sdkInstallRequest = await prompt.promptConfirm(messages.promptInstallSdk, true);
 
@@ -67,7 +55,23 @@ async function createConfig(prompt: Prompt = new InquirerPrompt()): Promise<Conf
     }
   }
 
-  return new Config(jdkPath, sdkPath);
+  return sdkPath;
+}
+
+async function configureJdk(prompt: Prompt = new InquirerPrompt()): Promise<string> {
+  const jdkInstallRequest = await prompt.promptConfirm(messages.promptInstallJdk, true);
+
+  let jdkPath;
+  if (!jdkInstallRequest) {
+    jdkPath = await prompt.promptInput(messages.promptJdkPath, null,
+        JdkHelper.validatePath);
+  } else {
+    await fsPromises.mkdir(DEFAULT_JDK_FOLDER, {recursive: true});
+    prompt.printMessage(messages.messageDownloadJdk + DEFAULT_JDK_FOLDER);
+    const jdkInstaller = new JdkInstaller(process, prompt);
+    jdkPath = await jdkInstaller.install(DEFAULT_JDK_FOLDER);
+  }
+  return jdkPath;
 }
 
 async function renameConfigIfNeeded(log: Log): Promise<void> {
@@ -101,10 +105,23 @@ export async function loadOrCreateConfig(
   } else {
     configPath = path;
   }
-  const existingConfig = await Config.loadConfig(configPath);
-  if (existingConfig) return existingConfig;
+  let config = await Config.loadConfig(configPath);
+  if (!config) {
+    config = new Config("","");
+    config.saveConfig(configPath);
+  }
 
-  const config = await createConfig(prompt);
-  await config.saveConfig(configPath);
+  if (!config.jdkPath) {
+    const jdkPath = await configureJdk(prompt);
+    config.jdkPath = jdkPath;
+    config.saveConfig(configPath);
+  }
+
+  if (!config.androidSdkPath) {
+    const androidSdkPath = await configAndroidSdk(prompt);
+    config.androidSdkPath = androidSdkPath;
+    config.saveConfig(configPath);
+  }
+
   return config;
 }
