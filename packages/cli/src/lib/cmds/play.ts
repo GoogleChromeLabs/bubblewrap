@@ -156,7 +156,7 @@ class Play {
         const updateVersion = await this.prompt.promptConfirm(enUS.promptVersionMismatch(
             twaManifest.appVersionCode.toString(), version.toString()), true);
         if (updateVersion) {
-          twaManifest.appVersionCode = version;
+          twaManifest.appVersionCode = version +1;
           await twaManifest.saveToFile(manifestFile);
           await this.updateProjectAndWarn(manifestFile);
         }
