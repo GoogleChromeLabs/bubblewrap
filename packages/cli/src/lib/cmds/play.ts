@@ -61,7 +61,7 @@ class Play {
   */
   async getLargestVersion(twaManifest: TwaManifest): Promise<number> {
     const versionNumber = await this.googlePlay.getLargestVersion(
-      twaManifest.packageId, twaManifest.serviceAccountJsonFile!);
+        twaManifest.packageId, twaManifest.serviceAccountJsonFile!);
     return versionNumber;
   }
 

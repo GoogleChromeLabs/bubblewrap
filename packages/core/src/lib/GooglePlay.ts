@@ -65,11 +65,13 @@ export class GooglePlay {
   /**
    * This calls the Google Play Console through the nodejs api and then calls bundles.list which
    * lists all current Android App Bundles of the app and edit which should help us narrow down the
-   * highest uploaded app bundle in the play console. This works irrespective of whether this is a 
+   * highest uploaded app bundle in the play console. This works irrespective of whether this is a
    * Chrome OS or Android only release.
    */
-  async getLargestVersion(packageName: string, serviceAccountJsonFilePath: string): Promise<number>
-  {
+  async getLargestVersion(
+      packageName: string,
+      serviceAccountJsonFilePath: string,
+  ): Promise<number> {
     if (!this._googlePlayApi) {
       this._googlePlayApi = this.getAndroidClient(serviceAccountJsonFilePath);
     }
@@ -92,13 +94,14 @@ export class GooglePlay {
   /**
    * This goes and fetches the Android client using the bubblewrap configuration file.
    */
-  private getAndroidClient(serviceAccountJsonFilePath: string): androidpublisher_v3.Androidpublisher {
-    
+  private getAndroidClient(
+      serviceAccountJsonFilePath: string,
+  ): androidpublisher_v3.Androidpublisher {
     // Initialize the Google API Client from service account credentials
     const jwtClient = new google.auth.JWT({
-        keyFile: serviceAccountJsonFilePath, //key file
-        scopes: ['https://www.googleapis.com/auth/androidpublisher'],
-      }
+      keyFile: serviceAccountJsonFilePath,
+      scopes: ['https://www.googleapis.com/auth/androidpublisher'],
+    },
     );
 
     // Connect to the Google Play Developer API with JWT Client
