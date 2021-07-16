@@ -63,12 +63,11 @@ export class GooglePlay {
   }
 
   /**
-   * This calls the Google Play Console through the nodejs api and then calls bundles.list which
-   * lists all current Android App Bundles of the app and edit which should help us narrow down the
-   * highest uploaded app bundle in the play console. This works irrespective of whether this is a
-   * Chrome OS or Android only release.
+   * Connects to the Google Play Console and retrieves a list of all Android App Bundles for the
+   * given packageName. Finds the largest versionCode of those bundles and returns it. Considers
+   * both ChromeOS and Android Releases.
    */
-  async getLargestVersion(
+  async getLargestVersionCode(
       packageName: string,
       serviceAccountJsonFilePath: string,
   ): Promise<number> {
@@ -79,12 +78,7 @@ export class GooglePlay {
     const editId = edit.data.id!;
     const bundleResponse =
       await this._googlePlayApi.edits.bundles.list({packageName: packageName, editId: editId});
-    let versionCode = 1;
-    for (const bundle of bundleResponse.data.bundles!) {
-      if (versionCode < bundle.versionCode!) {
-        versionCode = bundle.versionCode!;
-      }
-    }
+    const versionCode = Math.max(...bundleResponse.data.bundles!!.map(bundle => bundle.versionCode!!));
     // cleanup
     await this._googlePlayApi.edits.delete({editId: editId, packageName: packageName});
 
@@ -92,7 +86,7 @@ export class GooglePlay {
   }
 
   /**
-   * This goes and fetches the Android client using the bubblewrap configuration file.
+   * This fetches the Android client using the bubblewrap configuration file.
    */
   private getAndroidClient(
       serviceAccountJsonFilePath: string,

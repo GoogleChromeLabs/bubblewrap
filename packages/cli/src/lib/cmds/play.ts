@@ -59,7 +59,7 @@ class Play {
   * @return {number} The largest version number found in the play console.
   */
   async getLargestVersion(twaManifest: TwaManifest): Promise<number> {
-    const versionNumber = await this.googlePlay.getLargestVersion(
+    const versionNumber = await this.googlePlay.getLargestVersionCode(
         twaManifest.packageId, twaManifest.serviceAccountJsonFile!);
     return versionNumber;
   }
@@ -150,13 +150,11 @@ class Play {
     // bubblewrap play --versionCheck
     if (this.args.versionCheck) {
       const version = await this.getLargestVersion(twaManifest);
-      this.prompt.printMessage(version.toString());
-      this.prompt.printMessage(twaManifest.appVersionCode.toString());
       if (version >= twaManifest.appVersionCode) {
         const updateVersion = await this.prompt.promptConfirm(enUS.promptVersionMismatch(
             twaManifest.appVersionCode.toString(), version.toString()), true);
         if (updateVersion) {
-          twaManifest.appVersionCode = version +1;
+          twaManifest.appVersionCode = version + 1;
           await twaManifest.saveToFile(manifestFile);
           await this.updateProjectAndWarn(manifestFile);
         }
