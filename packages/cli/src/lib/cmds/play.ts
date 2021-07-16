@@ -112,6 +112,12 @@ class Play {
     return true;
   }
 
+  private async updateProjectAndWarn(manifestFile: string): Promise<void> {
+    await updateProject(
+        true, null, this.prompt, this.args.targetDirectory || process.cwd(), manifestFile);
+    this.prompt.printMessage(enUS.messageCallBubblewrapBuild);
+  }
+
   /**
   * Runs the play command. This allows multiple flags to be handled through here.
   * @return {boolean} Returns whether or not the run command completed successfully.
@@ -129,9 +135,7 @@ class Play {
       twaManifest.serviceAccountJsonFile = this.args.serviceAccountFile;
       twaManifest.saveToFile(manifestFile);
       // Then we need to call bubblewrap update so the gradle plugin has the appropriate file.
-      await updateProject(
-          true, null, this.prompt, this.args.targetDirectory || process.cwd(), manifestFile);
-      this.prompt.printMessage(enUS.messageCallBubblewrapBuild);
+      await this.updateProjectAndWarn(manifestFile);
     }
     if (!this.validServiceAccountJsonFile(twaManifest.serviceAccountJsonFile)) {
       this.prompt.printMessage(enUS.messageServiceAccountJSONMissing);
@@ -142,6 +146,23 @@ class Play {
     if (this.args.init) {
       await this.bootstrapPlay();
     }
+
+    // bubblewrap play --versionCheck
+    if (this.args.versionCheck) {
+      const version = await this.getLargestVersion(twaManifest);
+      this.prompt.printMessage(version.toString());
+      this.prompt.printMessage(twaManifest.appVersionCode.toString());
+      if (version >= twaManifest.appVersionCode) {
+        const updateVersion = await this.prompt.promptConfirm(enUS.promptVersionMismatch(
+            twaManifest.appVersionCode.toString(), version.toString()), true);
+        if (updateVersion) {
+          twaManifest.appVersionCode = version;
+          await twaManifest.saveToFile(manifestFile);
+          await this.updateProjectAndWarn(manifestFile);
+        }
+      }
+    }
+
     // bubblewrap play --publish
     if (this.args.publish) {
       const success = await this.publish();
@@ -152,11 +173,6 @@ class Play {
       this.prompt.printMessage(enUS.messagePlayUploadSuccess);
     }
 
-    // bubblewrap play --versionCheck
-    if (this.args.versionCheck) {
-      const version = await this.getLargestVersion(twaManifest);
-      this.prompt.printMessage(version.toString());
-    }
     return true;
   }
 }
