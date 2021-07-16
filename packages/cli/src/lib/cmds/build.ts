@@ -143,7 +143,6 @@ class Build {
   }
 
   /**
-   *
    * Based on the promptResponse to update the project or not, run an update or print the relevant warning message.
    */
   async runUpdate(
