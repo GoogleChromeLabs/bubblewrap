@@ -33,7 +33,6 @@ export interface PlayArgs {
   appBundleLocation?: string;
   targetDirectory?: string;
   versionCheck?: boolean;
-  // versionCheck?: boolean; // Uncomment when getLargetVersion is implemented.
 }
 
 /**
