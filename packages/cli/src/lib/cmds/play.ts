@@ -32,6 +32,7 @@ export interface PlayArgs {
   manifest?: string;
   appBundleLocation?: string;
   targetDirectory?: string;
+  versionCheck?: boolean;
   // versionCheck?: boolean; // Uncomment when getLargetVersion is implemented.
 }
 
@@ -58,12 +59,10 @@ class Play {
   * to give x+1 version number.
   * @return {number} The largest version number found in the play console.
   */
-  async getLargestVersion(): Promise<number> {
-    // Need to get an editId, then list all apks available.
-    // This should allow us to query the highest apk number.
-    // This exists in Gradle play plugin but is not easily accessible over CLI.
-    // This should be completed in a future CL.
-    throw new Error('Not Implemented');
+  async getLargestVersion(twaManifest: TwaManifest): Promise<number> {
+    const versionNumber = await this.googlePlay.getLargestVersion(
+      twaManifest.packageId, twaManifest.serviceAccountJsonFile!);
+    return versionNumber;
   }
 
   /**
@@ -152,6 +151,12 @@ class Play {
         return false;
       }
       this.prompt.printMessage(enUS.messagePlayUploadSuccess);
+    }
+
+    // bubblewrap play --versionCheck
+    if (this.args.versionCheck) {
+      const version = await this.getLargestVersion(twaManifest);
+      this.prompt.printMessage(version.toString());
     }
     return true;
   }

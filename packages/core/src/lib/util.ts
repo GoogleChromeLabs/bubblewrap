@@ -183,7 +183,7 @@ export function validateNotEmpty(
  * @param {string} input the package name to be validated
  * @returns {string | null} a description of the error or null if no erro is found.
  */
-export function validatePackageId(input: string): string | null{
+export function validatePackageId(input: string): string | null {
   const error = validateNotEmpty(input, 'packageId');
   if (error !== null) {
     return error;
