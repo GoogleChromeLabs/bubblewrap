@@ -24,7 +24,7 @@ import {Presets, Bar} from 'cli-progress';
 import {BufferedLog, ConsoleLog} from '@bubblewrap/core';
 import {TwaGenerator, TwaManifest} from '@bubblewrap/core';
 import {green} from 'colors';
-import {createValidateString} from '../inputHelpers';
+import {createValidateString, validateImageUrl} from '../inputHelpers';
 
 /**
  * Wraps generating a project with a progress bar.
@@ -132,6 +132,14 @@ export async function updateProject(
   if (features.playBilling?.enabled && !twaManifest.alphaDependencies.enabled) {
     prompt.printMessage(messages.errorPlayBillingAlphaDependencies);
     return false;
+  }
+  
+  // Check that the iconUrl is valid.
+  if (twaManifest.iconUrl) {
+    const result = await validateImageUrl(twaManifest.iconUrl);
+    if (result.isError()) {
+      throw result.unwrapError();
+    }
   }
 
   if (!skipVersionUpgrade) {
