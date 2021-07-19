@@ -156,7 +156,7 @@ class Build {
       return true;
     }
     return await updateProject(false, null, this.prompt,
-      this.args.directory, manifestFile);
+        this.args.directory, manifestFile);
   }
 
   async build(): Promise<boolean> {
