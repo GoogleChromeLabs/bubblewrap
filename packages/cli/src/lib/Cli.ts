@@ -88,8 +88,8 @@ export class Cli {
         return await merge(parsedArgs);
       case 'fingerprint':
         return await fingerprint(parsedArgs);
-      case 'play':
-        return await play(config, parsedArgs as unknown as PlayArgs);
+      // case 'play':
+      //   return await play(config, parsedArgs as unknown as PlayArgs);
       default:
         throw new Error(
             `"${command}" is not a valid command! Use 'bubblewrap help' for a list of commands`);
