@@ -144,21 +144,19 @@ class Build {
 
   /**
    * Based on the promptResponse to update the project or not, run an update or print the relevant warning message.
+   *
+   * @returns {Promise<boolean>} whether the appropriate action taken (update project or print warning) was successful
    */
   async runUpdate(
       promptResponse: boolean,
       manifestFile: string,
       noUpdateMessage: string): Promise<boolean> {
-    if (promptResponse) {
-      const updated = await updateProject(false, null, this.prompt,
-          this.args.directory, manifestFile);
-      if (!updated) {
-        return false;
-      }
-    } else {
+    if (!promptResponse) {
       this.prompt.printMessage(noUpdateMessage);
+      return true;
     }
-    return true;
+    return await updateProject(false, null, this.prompt,
+      this.args.directory, manifestFile);
   }
 
   async build(): Promise<boolean> {
@@ -177,13 +175,13 @@ class Build {
 
     const targetDirectory = this.args.directory || process.cwd();
     const checksumFile = path.join(targetDirectory, 'manifest-checksum.txt');
-    let updateResult = true;
+    let updateSuccessful = true;
     if (!fs.existsSync(checksumFile)) {
       // If checksum file doesn't exist, prompt the user about updating their project
       const applyChanges = await this.prompt.promptConfirm(
           messages.messageNoChecksumFileFound,
           true);
-      updateResult = await this.runUpdate(
+      updateSuccessful = await this.runUpdate(
           applyChanges,
           manifestFile,
           messages.messageNoChecksumNoUpdate);
@@ -191,13 +189,13 @@ class Build {
       const hasManifestChanged = await this.hasManifestChanged(manifestFile);
       if (hasManifestChanged) {
         const applyChanges = await this.prompt.promptConfirm(messages.promptUpdateProject, true);
-        updateResult = await this.runUpdate(
+        updateSuccessful = await this.runUpdate(
             applyChanges,
             manifestFile,
             messages.messageProjectNotUpdated);
       }
     }
-    if (!updateResult) {
+    if (!updateSuccessful) {
       return false;
     }
     let passwords = null;
