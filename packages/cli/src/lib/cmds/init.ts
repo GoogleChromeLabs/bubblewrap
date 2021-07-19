@@ -34,6 +34,9 @@ export interface InitArgs {
 }
 
 async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promise<TwaManifest> {
+  // Warn about the Google Play Family Policy
+  prompt.printMessage(messages.warnFamilyPolicy);
+
   // Step 1/5 - Collect information on the Web App.
   prompt.printMessage(messages.messageWebAppDetails);
   prompt.printMessage(messages.messageWebAppDetailsDesc);
