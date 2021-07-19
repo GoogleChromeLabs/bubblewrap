@@ -42,7 +42,7 @@ describe('config', () => {
       // Creates a mock file system.
       mock({
         [LEGACY_CONFIG_FOLDER]: {
-          'llama-pack-config.json': '{}',
+          'llama-pack-config.json': '{"jdkPath":"/path/to/jdk","androidSdkPath":"/path/to/android-sdk"}',
         }});
       const mockLog = new MockLog();
       await loadOrCreateConfig(mockLog);
@@ -59,7 +59,7 @@ describe('config', () => {
           // Creates a mock file systes.
           mock({
             [LEGACY_CONFIG_FOLDER]: {
-              'llama-pack-config.json': '{}',
+              'llama-pack-config.json': '{"jdkPath":"/path/to/jdk","androidSdkPath":"/path/to/android-sdk"}',
               'another file.exe': '{}',
             }});
           const mockLog = new MockLog();
@@ -95,10 +95,10 @@ describe('config', () => {
           // Creates a mock file systes.
           mock({
             [LEGACY_CONFIG_FOLDER]: {
-              'llama-pack-config.json': '{"content":"some old content"}',
+              'llama-pack-config.json': '{"content":"some old content", "jdkPath":"/path/to/jdk","androidSdkPath":"/path/to/android-sdk"}',
             },
             [DEFAULT_CONFIG_FOLDER]: {
-              'config.json': '{"content":"some new content"}',
+              'config.json': '{"content":"some old content", "jdkPath":"/path/to/jdk","androidSdkPath":"/path/to/android-sdk"}',
             }});
           const mockLog = new MockLog();
           await loadOrCreateConfig(mockLog);
