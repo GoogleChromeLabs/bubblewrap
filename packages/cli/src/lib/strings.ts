@@ -22,6 +22,7 @@ type Messages = {
   errorCouldNotfindTwaManifest: (file: string) => string;
   errorDirectoryDoesNotExist: (directory: string) => string;
   errorFailedToRunQualityCriteria: string;
+  errorIconUrlMustExist: (manifest: string) => string;
   errorPlayBillingEnableNotifications: string;
   errorPlayBillingAlphaDependencies: string;
   errorMaxLength: (maxLength: number, actualLength: number) => string;
@@ -119,6 +120,7 @@ type Messages = {
   promptNewAppVersionName: string;
   promptVersionCode: string;
   promptUpdateProject: string;
+  warnFamilyPolicy: string;
   warnPwaFailedQuality: string;
   updateConfigUsage: string;
   jdkPathIsNotCorrect: string;
@@ -134,6 +136,9 @@ export const enUS: Messages = {
   },
   errorDirectoryDoesNotExist: (directory: string): string => {
     return `Cannot write to directory: ${directory}.`;
+  },
+  errorIconUrlMustExist: (manifest: string): string => {
+    return `iconUrl field is missing from ${manifest}. Please add an iconUrl to continue.`;
   },
   errorFailedToRunQualityCriteria:
       yellow('\nFailed to run the PWA Quality Criteria checks. Skipping.'),
@@ -377,6 +382,12 @@ the PWA:
   promptVersionCode: 'Starting version code for the new app version:',
   promptUpdateProject: 'There are changes in twa-manifest.json. ' +
       'Would you like to apply them to the project before building?',
+  warnFamilyPolicy:
+      bold(yellow('WARNING: ')) + 'Trusted Web Activities are currently incompatible' +
+      ' with applications\ntargeting children under the age of 13.' +
+      ' Check out the Play for' +
+      ' Families\npolicies to learn more.\n' +
+      cyan('https://play.google.com/console/about/families/'),
   warnPwaFailedQuality: red('PWA Quality Criteria check failed.'),
   updateConfigUsage: 'Usage: [--jdkPath <path-to-jdk>] [--androidSdkPath <path-to-android-sdk>]' +
       '(You can insert one or both of them)',
