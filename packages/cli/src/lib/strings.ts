@@ -117,6 +117,7 @@ type Messages = {
   promptNewAppVersionName: string;
   promptVersionCode: string;
   promptUpdateProject: string;
+  warnFamilyPolicy: string;
   warnPwaFailedQuality: string;
   updateConfigUsage: string;
   jdkPathIsNotCorrect: string;
@@ -368,6 +369,12 @@ the PWA:
   promptVersionCode: 'Starting version code for the new app version:',
   promptUpdateProject: 'There are changes in twa-manifest.json. ' +
       'Would you like to apply them to the project before building?',
+  warnFamilyPolicy:
+      bold(yellow('WARNING: ')) + 'Trusted Web Activities are currently incompatible' +
+      ' with applications\ntargeting children under the age of 13.' +
+      ' Check out the Play for' +
+      ' Families\npolicies to learn more.\n' +
+      cyan('https://play.google.com/console/about/families/'),
   warnPwaFailedQuality: red('PWA Quality Criteria check failed.'),
   updateConfigUsage: 'Usage: [--jdkPath <path-to-jdk>] [--androidSdkPath <path-to-android-sdk>]' +
       '(You can insert one or both of them)',
