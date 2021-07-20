@@ -15,6 +15,7 @@
  */
 
 import {GradleWrapper} from '..';
+import {androidpublisher_v3 as androidPublisher, google} from 'googleapis';
 
 // Possible values for release tracks
 const TRACK_VALUES = ['alpha', 'beta', 'internal', 'production'];
@@ -29,6 +30,8 @@ export function asPlayStoreTrack(input?: string): PlayStoreTrack | null {
 }
 
 export class GooglePlay {
+  private _googlePlayApi?: androidPublisher.Androidpublisher;
+
   /**
    * Constructs a Google Play object with the gradleWrapper so we can use a
    *   gradle plugin to communicate with Google Play.
@@ -57,5 +60,49 @@ export class GooglePlay {
     // Uploads the artifact to the default internal track.
     await this.gradleWrapper.executeGradleCommand(
         ['publishBundle', '--artifact-dir', filepath, '--track', track]);
+  }
+
+  /**
+   * Connects to the Google Play Console and retrieves a list of all Android App Bundles for the
+   * given packageName. Finds the largest versionCode of those bundles and returns it. Considers
+   * both ChromeOS and Android Releases.
+   */
+  async getLargestVersionCode(
+      packageName: string,
+      serviceAccountJsonFilePath: string,
+  ): Promise<number> {
+    if (!this._googlePlayApi) {
+      this._googlePlayApi = this.getAndroidClient(serviceAccountJsonFilePath);
+    }
+    const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
+    const editId = edit.data.id!;
+    const bundleResponse =
+      await this._googlePlayApi.edits.bundles.list({packageName: packageName, editId: editId});
+    const versionCode = Math.max(
+        ...bundleResponse.data.bundles!!.map((bundle) => bundle.versionCode!!));
+    // cleanup
+    await this._googlePlayApi.edits.delete({editId: editId, packageName: packageName});
+
+    return versionCode;
+  }
+
+  /**
+   * This fetches the Android client using the bubblewrap configuration file.
+   */
+  private getAndroidClient(
+      serviceAccountJsonFilePath: string,
+  ): androidPublisher.Androidpublisher {
+    // Initialize the Google API Client from service account credentials
+    const jwtClient = new google.auth.JWT({
+      keyFile: serviceAccountJsonFilePath,
+      scopes: ['https://www.googleapis.com/auth/androidpublisher'],
+    },
+    );
+
+    // Connect to the Google Play Developer API with JWT Client
+    return google.androidpublisher({
+      version: 'v3',
+      auth: jwtClient,
+    });
   }
 }
