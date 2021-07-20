@@ -117,6 +117,7 @@ type Messages = {
   promptKeyPassword: string;
   promptNewAppVersionName: string;
   promptVersionCode: string;
+  promptVersionMismatch: (currentVersion: string, playStoreVerison: string) => string;
   promptUpdateProject: string;
   warnFamilyPolicy: string;
   warnPwaFailedQuality: string;
@@ -217,7 +218,7 @@ into a device:
   },
   messageBuildingApp: '\nBuilding the Android App...',
   messageCallBubblewrapBuild:
-    '\nCall: bubblewrap build\n to rebuild the project and enable uploading.',
+    red('\nCall: bubblewrap build\n to rebuild the project and enable uploading.'),
   messageDigitalAssetLinksSuccess: (filename: string): string => {
     return `\t- Generated Digital Asset Links file at ${cyan(filename)}
 \nRead more about setting up Digital Asset Links at:
@@ -371,6 +372,11 @@ the PWA:
   promptKeyPassword: 'Password for the Key:',
   promptNewAppVersionName: 'versionName for the new App version:',
   promptVersionCode: 'Starting version code for the new app version:',
+  promptVersionMismatch: (currentVersion: string, playStoreVerison: string): string => {
+    return `The current play store version (${cyan(playStoreVerison)}) is higher than your twa
+    manifest version (${cyan(currentVersion)}). Do you want to update your TWA Manifest version
+    now?`;
+  },
   promptUpdateProject: 'There are changes in twa-manifest.json. ' +
       'Would you like to apply them to the project before building?',
   warnFamilyPolicy:
