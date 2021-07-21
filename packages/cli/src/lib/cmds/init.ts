@@ -15,7 +15,7 @@
  */
 
 import * as fs from 'fs';
-import {join, resolve} from 'path';
+import {join, resolve, basename} from 'path';
 import {Config, DisplayModes, JdkHelper, KeyTool, Orientations, TwaGenerator, TwaManifest}
   from '@bubblewrap/core';
 import {validateHost, validateColor, createValidateString, validateDisplayMode, validatePackageId,
@@ -259,6 +259,10 @@ export async function init(
   await generateTwaProject(prompt, twaGenerator, targetDirectory, twaManifest);
   await generateManifestChecksumFile(join(targetDirectory, '/twa-manifest.json'), targetDirectory);
   await createSigningKey(twaManifest, config, prompt);
+  // Create .gitignore and add the signing key to it
+  const gitignoreFile = join(targetDirectory, '.gitignore');
+  const keystoreFileName = basename(twaManifest.signingKey.path);
+  await fs.promises.writeFile(gitignoreFile, keystoreFileName);
   prompt.printMessage(messages.messageProjectGeneratedSuccess);
   return true;
 }
