@@ -56,6 +56,8 @@ type Messages = {
   messageLauncherIconAndSplash: string;
   messageLauncherIconAndSplashDesc: string;
   messageLoadingTwaManifestFrom: (path: string) => string;
+  messageNoChecksumFileFound: string;
+  messageNoChecksumNoUpdate: string;
   messageOptionFeatures: string;
   messageOptionalFeaturesDesc: string;
   messagePlayUploadSuccess: string;
@@ -260,6 +262,13 @@ a blank white page to users.
   messageLoadingTwaManifestFrom: (path: string): string => {
     return `Loading TWA Manifest from: ${cyan(path)}`;
   },
+  messageNoChecksumFileFound: `
+No checksum file was found to verify the state of the ${cyan('twa-manifest.json')} file.
+To make sure your project is up-to-date, would you like to regenerate your project?
+If you are sure your project is updated and you have already run ${cyan('bubblewrap update')}
+then you may enter "no"`,
+  messageNoChecksumNoUpdate: `
+Project build will continue without regenerating project even though no checksum file was found.`,
   messageOptionFeatures: underline(`\nOptional Features ${green('(4/5)')}`),
   messageOptionalFeaturesDesc: `
 \t- ${bold('Include app shortcuts:')} This question is only prompted if a
