@@ -14,7 +14,6 @@
  *  limitations under the License.
  */
 
-import {GradleWrapper} from '..';
 import {androidpublisher_v3 as androidPublisher, google} from 'googleapis';
 import {createReadStream} from 'fs';
 
@@ -31,7 +30,7 @@ export function asPlayStoreTrack(input?: string): PlayStoreTrack | null {
 }
 
 export class GooglePlay {
-  private _googlePlayApi?: androidPublisher.Androidpublisher;
+  private _googlePlayApi: androidPublisher.Androidpublisher;
 
   /**
    * Constructs a Google Play object with the gradleWrapper so we can use a
@@ -40,15 +39,8 @@ export class GooglePlay {
    * @param gradleWrapper This is the gradle wrapper object that supplies
    *   hooks into Gradle.
    */
-  constructor(private gradleWrapper: GradleWrapper) {}
-
-  /**
-   * Initialized Google Play and loads the existing configruation from Google Play.
-   * The resulting files are stored in the play folder in the src directory.
-   * https://github.com/Triple-T/gradle-play-publisher#quickstart
-   */
-  async initPlay(): Promise<void> {
-    await this.gradleWrapper.executeGradleCommand(['bootstrap']);
+  constructor(private serviceAccountJsonFilePath: string) {
+    this._googlePlayApi = this.getAndroidClient(this.serviceAccountJsonFilePath);
   }
 
   /**
@@ -61,15 +53,8 @@ export class GooglePlay {
       track: PlayStoreTrack,
       filepath: string,
       packageName: string,
-      serviceAccountJsonFilePath: string,
       retainedBundles: number[],
-      progressCallback?: (progressevent: number) => {},
   ): Promise<void> {
-    // Set the GooglePlayAPI up if its not configured already.
-    if (!this._googlePlayApi) {
-      this._googlePlayApi = this.getAndroidClient(serviceAccountJsonFilePath);
-    }
-
     const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
     const editId = edit.data.id;
     const result = await this._googlePlayApi.edits.bundles.upload(
@@ -78,18 +63,17 @@ export class GooglePlay {
           editId: editId!,
           packageName: packageName,
           media: {
-            mimeType: 'application/zip',
+            // mimeType: 'application/zip',
             body: createReadStream(filepath),
           },
         },
         {
-          timeout: 1000,
-          onUploadProgress: progressCallback,
+          timeout: 160000,
         });
 
     const versionCodeUploaded = result.data.versionCode;
     const retainedBundlesStr = retainedBundles.map(((n) => n.toString()));
-    this.addBundleToTrack(
+    await this.addBundleToTrack(
         track,
         [versionCodeUploaded?.toString()!, ...retainedBundlesStr],
         packageName,
@@ -114,12 +98,14 @@ export class GooglePlay {
       packageName: packageName,
       editId: editId,
       requestBody: {
-        releases: [{versionCodes: versionCodes, status: 'completed'}],
+        releases: [{
+          versionCodes: versionCodes,
+          status: 'completed',
+        }],
         track: track,
       },
     };
-    // const result =
-    await this._googlePlayApi?.edits.tracks.update(tracksUpdate);
+    await this._googlePlayApi.edits.tracks.update(tracksUpdate);
   }
 
   /**
@@ -127,13 +113,7 @@ export class GooglePlay {
    * given packageName. Finds the largest versionCode of those bundles and returns it. Considers
    * both ChromeOS and Android Releases.
    */
-  async getLargestVersionCode(
-      packageName: string,
-      serviceAccountJsonFilePath: string,
-  ): Promise<number> {
-    if (!this._googlePlayApi) {
-      this._googlePlayApi = this.getAndroidClient(serviceAccountJsonFilePath);
-    }
+  async getLargestVersionCode(packageName: string): Promise<number> {
     const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
     const editId = edit.data.id!;
     const bundleResponse =
@@ -149,15 +129,12 @@ export class GooglePlay {
   /**
    * This fetches the Android client using the bubblewrap configuration file.
    */
-  private getAndroidClient(
-      serviceAccountJsonFilePath: string,
-  ): androidPublisher.Androidpublisher {
+  private getAndroidClient(serviceAccountJsonFilePath: string): androidPublisher.Androidpublisher {
     // Initialize the Google API Client from service account credentials
     const jwtClient = new google.auth.JWT({
       keyFile: serviceAccountJsonFilePath,
       scopes: ['https://www.googleapis.com/auth/androidpublisher'],
-    },
-    );
+    });
 
     // Connect to the Google Play Developer API with JWT Client
     return google.androidpublisher({
