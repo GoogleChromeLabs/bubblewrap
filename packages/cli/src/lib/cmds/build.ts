@@ -202,6 +202,16 @@ class Build {
       APP_BUNDLE_SIGNED_FILE_NAME;
     this.prompt.printMessage(messages.messageAppBundleSuccess(appBundleFileName));
 
+    // Add build artifacts to .gitignore file
+    const targetDirectory = this.args.directory || process.cwd();
+    const gitignoreFile = path.join(targetDirectory, '.gitignore');
+    const buildArtifacts = `
+.gradle/
+*.aab
+*.apk
+*.idsig`;
+    await fs.promises.appendFile(gitignoreFile, buildArtifacts);
+
     if (validationPromise !== null) {
       const result = await validationPromise;
       if (result.isOk()) {
