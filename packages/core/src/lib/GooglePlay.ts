@@ -114,7 +114,7 @@ export class GooglePlay {
       packageName: packageName,
       editId: editId,
       requestBody: {
-        releases: [{versionCodes: versionCodes}],
+        releases: [{versionCodes: versionCodes, status: 'completed'}],
         track: track,
       },
     };
