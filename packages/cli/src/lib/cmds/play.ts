@@ -43,14 +43,6 @@ class Play {
   ) {}
 
   /**
-  * Bootstraps the Play listing via the Gradle-Play-Plugin.
-  * @return {void}
-  */
-  async bootstrapPlay(): Promise<void> {
-    this.prompt.printMessage('This does nothing now');
-  }
-
-  /**
   * @summary Can validate the largest version number vs twa-manifest.json and update
   * to give x+1 version number.
   * @return {number} The largest version number found in the play console.
@@ -153,11 +145,6 @@ class Play {
     }
     // Setup Google Play since we can confirm that the serviceAccountJsonFile is valid.
     this.googlePlay = new GooglePlay(twaManifest.serviceAccountJsonFile!);
-
-    // bubblewrap play --init
-    if (this.args.init) {
-      await this.bootstrapPlay();
-    }
 
     // bubblewrap play --versionCheck
     if (this.args.versionCheck) {
