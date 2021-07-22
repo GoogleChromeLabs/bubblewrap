@@ -33,11 +33,11 @@ export class GooglePlay {
   private _googlePlayApi: androidPublisher.Androidpublisher;
 
   /**
-   * Constructs a Google Play object with the gradleWrapper so we can use a
-   *   gradle plugin to communicate with Google Play.
+   * Constructs a Google Play object with a service account file so we can use a
+   *   the play publisher api to communicate directly with the play console.
    *
-   * @param gradleWrapper This is the gradle wrapper object that supplies
-   *   hooks into Gradle.
+   * @param serviceAccountJsonFilePath This is the service account file to communicate with the
+   *   play publisher API.
    */
   constructor(private serviceAccountJsonFilePath: string) {
     this._googlePlayApi = this.getAndroidClient(this.serviceAccountJsonFilePath);
@@ -46,8 +46,18 @@ export class GooglePlay {
   /**
    * This calls the publish bundle command and publishes an existing artifact to Google
    * Play.
-   * https://github.com/Triple-T/gradle-play-publisher#uploading-a-pre-existing-artifact
+   * Calls the following Play API commands in order:
+   * Edits.Insert
+   * Edits.Bunldes.Upload
+   * Edits.Tracks.Update
+   * Edits.Commit
+   * https://developers.google.com/android-publisher/api-ref/rest/v3/edits.bundles/upload
+   * https://developers.google.com/android-publisher/edits#workflow
    * @param track - Specifies the track that the user would like to publish to.
+   * @param filepath - Filepath of the App bundle you would like to upload.
+   * @param packageName - packageName of the bundle.
+   * @param retainedBundles - all bundles that should be retained on upload. This is useful for
+   *   ChromeOS only releases.
    */
   async publishBundle(
       track: PlayStoreTrack,
@@ -63,7 +73,6 @@ export class GooglePlay {
           editId: editId!,
           packageName: packageName,
           media: {
-            // mimeType: 'application/zip',
             body: createReadStream(filepath),
           },
         },
@@ -88,6 +97,15 @@ export class GooglePlay {
     );
   }
 
+  /**
+   * This calls the Edits.Tracks.Update play publisher api command. This will do the updating of
+   * the user selected track for the reelase to the play store.
+   * @param track - Specifies the track that the user would like to publish to.
+   * @param versionCodes - Specifies all versions of the app bundle to be included on release
+   *   (including retained artifacts).
+   * @param packageName - packageName of the bundle.
+   * @param editId - The current edit hosted on Google Play.
+   */
   async addBundleToTrack(
       track: PlayStoreTrack,
       versionCodes: string[],
@@ -112,6 +130,7 @@ export class GooglePlay {
    * Connects to the Google Play Console and retrieves a list of all Android App Bundles for the
    * given packageName. Finds the largest versionCode of those bundles and returns it. Considers
    * both ChromeOS and Android Releases.
+   * @param packageName - The packageName of the versionCode we are looking up.
    */
   async getLargestVersionCode(packageName: string): Promise<number> {
     const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
@@ -128,6 +147,8 @@ export class GooglePlay {
 
   /**
    * This fetches the Android client using the bubblewrap configuration file.
+   * @param serviceAccountJsonFilePath - The file path to the service account file. This allows
+   *   communication to the Play Publisher API.
    */
   private getAndroidClient(serviceAccountJsonFilePath: string): androidPublisher.Androidpublisher {
     // Initialize the Google API Client from service account credentials

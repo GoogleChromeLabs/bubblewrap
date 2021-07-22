@@ -80,6 +80,10 @@ class Play {
     return await this.internalPublish(defaultPath, userSelectedTrack, twaManifest);
   }
 
+  /**
+  * Calls the internalPublish commands.
+  * @return {boolean} Whether the publish command completes successfully or not.
+  */
   private async internalPublish(
       bundleLocation: string,
       userSelectedTrack: string,
@@ -111,6 +115,12 @@ class Play {
     return true;
   }
 
+  /**
+  * Updates the gradle file based on the updates to the twa-manifest.json file and warns the user
+  *   that they need to call build again.
+  * @param {string} manifestFile - The path to the the TwaManifest JSON file.
+  * @param {string} appVersionName - Optional: Changes the string representation of the version.
+  */
   private async updateProjectAndWarn(manifestFile: string, appVersionName?: string): Promise<void> {
     await updateProject(
         true,
