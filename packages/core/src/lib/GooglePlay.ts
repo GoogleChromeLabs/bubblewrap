@@ -16,6 +16,7 @@
 
 import {GradleWrapper} from '..';
 import {androidpublisher_v3 as androidPublisher, google} from 'googleapis';
+import {createReadStream} from 'fs';
 
 // Possible values for release tracks
 const TRACK_VALUES = ['alpha', 'beta', 'internal', 'production'];
@@ -56,10 +57,69 @@ export class GooglePlay {
    * https://github.com/Triple-T/gradle-play-publisher#uploading-a-pre-existing-artifact
    * @param track - Specifies the track that the user would like to publish to.
    */
-  async publishBundle(track: PlayStoreTrack, filepath: string): Promise<void> {
-    // Uploads the artifact to the default internal track.
-    await this.gradleWrapper.executeGradleCommand(
-        ['publishBundle', '--artifact-dir', filepath, '--track', track]);
+  async publishBundle(
+      track: PlayStoreTrack,
+      filepath: string,
+      packageName: string,
+      serviceAccountJsonFilePath: string,
+      retainedBundles: number[],
+      progressCallback?: (progressevent: number) => {},
+  ): Promise<void> {
+    // Set the GooglePlayAPI up if its not configured already.
+    if (!this._googlePlayApi) {
+      this._googlePlayApi = this.getAndroidClient(serviceAccountJsonFilePath);
+    }
+
+    const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
+    const editId = edit.data.id;
+    const result = await this._googlePlayApi.edits.bundles.upload(
+        {
+          ackBundleInstallationWarning: false,
+          editId: editId!,
+          packageName: packageName,
+          media: {
+            mimeType: 'application/zip',
+            body: createReadStream(filepath),
+          },
+        },
+        {
+          timeout: 1000,
+          onUploadProgress: progressCallback,
+        });
+
+    const versionCodeUploaded = result.data.versionCode;
+    const retainedBundlesStr = retainedBundles.map(((n) => n.toString()));
+    this.addBundleToTrack(
+        track,
+        [versionCodeUploaded?.toString()!, ...retainedBundlesStr],
+        packageName,
+      editId!,
+    );
+    await this._googlePlayApi.edits.commit(
+        {
+          changesNotSentForReview: false,
+          editId: editId!,
+          packageName: packageName,
+        },
+    );
+  }
+
+  async addBundleToTrack(
+      track: PlayStoreTrack,
+      versionCodes: string[],
+      packageName: string,
+      editId: string): Promise<void> {
+    const tracksUpdate: androidPublisher.Params$Resource$Edits$Tracks$Update = {
+      track: track,
+      packageName: packageName,
+      editId: editId,
+      requestBody: {
+        releases: [{versionCodes: versionCodes}],
+        track: track,
+      },
+    };
+    // const result =
+    await this._googlePlayApi?.edits.tracks.update(tracksUpdate);
   }
 
   /**
