@@ -113,13 +113,13 @@ export async function loadOrCreateConfig(
   if (!config.jdkPath) {
     const jdkPath = await configureJdk(prompt);
     config.jdkPath = jdkPath;
-    config.saveConfig(configPath);
+    await config.saveConfig(configPath);
   }
 
   if (!config.androidSdkPath) {
     const androidSdkPath = await configAndroidSdk(prompt);
     config.androidSdkPath = androidSdkPath;
-    config.saveConfig(configPath);
+    await config.saveConfig(configPath);
   }
 
   return config;
