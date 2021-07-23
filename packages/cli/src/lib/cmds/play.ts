@@ -36,9 +36,9 @@ export interface PlayArgs {
   * The Play class is the class that is used to communicate with the Google Play Store.
   */
 class Play {
-  private googlePlay?: GooglePlay;
   constructor(
     private args: PlayArgs,
+    private googlePlay: GooglePlay,
     private prompt: Prompt = new InquirerPrompt(),
   ) {}
 
@@ -48,7 +48,7 @@ class Play {
   * @return {number} The largest version number found in the play console.
   */
   async getLargestVersion(twaManifest: TwaManifest): Promise<number> {
-    const versionNumber = await this.googlePlay!.getLargestVersionCode(twaManifest.packageId);
+    const versionNumber = await this.googlePlay.getLargestVersionCode(twaManifest.packageId);
     return versionNumber;
   }
 
@@ -89,29 +89,12 @@ class Play {
       userSelectedTrack: string,
       twaManifest: TwaManifest,
   ): Promise<boolean> {
-    await this.googlePlay!.publishBundle(
+    await this.googlePlay.publishBundle(
         userSelectedTrack,
         bundleLocation,
         twaManifest.packageId,
         [], // TODO: add a retainedBundles array to the twaManifest.
     );
-    return true;
-  }
-
-  /**
-  * Validates that the service account JSON file exists.
-  * @param {string | undefined} path - The path the the JSON file.
-  * @return {boolean} Whether or not the JSON file exists.
-  */
-  private validServiceAccountJsonFile(path: string | undefined): boolean {
-    if (path == undefined) {
-      // Log an error
-      return false;
-    }
-    if (!fs.existsSync(path)) {
-      // path doesn't exist log an error
-      return false;
-    }
     return true;
   }
 
@@ -140,21 +123,9 @@ class Play {
     if (!await this.prompt.promptConfirm(enUS.promptExperimentalFeature, false)) {
       return true;
     }
+
     const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
     const twaManifest = await TwaManifest.fromFile(manifestFile);
-    // Update the TWA-Manifest if service account is supplied
-    // bubblewrap play --serviceAccountFile="/path/to/service-account.json"
-    // --manifest="/path/twa-manifest.json"
-    if (this.args.serviceAccountFile) {
-      twaManifest.serviceAccountJsonFile = this.args.serviceAccountFile;
-      await twaManifest.saveToFile(manifestFile);
-    }
-    if (!this.validServiceAccountJsonFile(twaManifest.serviceAccountJsonFile)) {
-      this.prompt.printMessage(enUS.messageServiceAccountJSONMissing);
-      return false;
-    }
-    // Setup Google Play since we can confirm that the serviceAccountJsonFile is valid.
-    this.googlePlay = new GooglePlay(twaManifest.serviceAccountJsonFile!);
 
     // bubblewrap play --versionCheck
     if (this.args.versionCheck) {
@@ -184,9 +155,44 @@ class Play {
   }
 }
 
+/**
+  * Validates that the service account JSON file exists.
+  * @param {string | undefined} path - The path the the JSON file.
+  * @return {boolean} Whether or not the JSON file exists.
+  */
+ function validServiceAccountJsonFile(path: string | undefined): boolean {
+  if (path == undefined) {
+    // Log an error
+    return false;
+  }
+  if (!fs.existsSync(path)) {
+    // path doesn't exist log an error
+    return false;
+  }
+  return true;
+}
+
+async function setupGooglePlay(args: PlayArgs): Promise<GooglePlay> {
+  const manifestFile = args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
+  const twaManifest = await TwaManifest.fromFile(manifestFile);
+  // Update the TWA-Manifest if service account is supplied
+  // bubblewrap play --serviceAccountFile="/path/to/service-account.json"
+  // --manifest="/path/twa-manifest.json"
+  if (args.serviceAccountFile) {
+    twaManifest.serviceAccountJsonFile = args.serviceAccountFile;
+    await twaManifest.saveToFile(manifestFile);
+  }
+  if (!validServiceAccountJsonFile(twaManifest.serviceAccountJsonFile)) {
+    throw new Error('enUS.messageServiceAccountJSONMissing');
+  }
+  // Setup Google Play since we can confirm that the serviceAccountJsonFile is valid.
+  return new GooglePlay(twaManifest.serviceAccountJsonFile!);
+}
+
 export async function play(parsedArgs: PlayArgs,
     prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
-  const play = new Play(parsedArgs, prompt);
+  const googlePlay = await setupGooglePlay(parsedArgs);
+  const play = new Play(parsedArgs, googlePlay, prompt);
   await play.run();
   return true;
 }
