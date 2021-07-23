@@ -160,7 +160,7 @@ class Play {
   * @param {string | undefined} path - The path the the JSON file.
   * @return {boolean} Whether or not the JSON file exists.
   */
- function validServiceAccountJsonFile(path: string | undefined): boolean {
+function validServiceAccountJsonFile(path: string | undefined): boolean {
   if (path == undefined) {
     // Log an error
     return false;
