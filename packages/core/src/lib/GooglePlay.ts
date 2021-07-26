@@ -38,8 +38,14 @@ export class GooglePlay {
    *
    * @param gradleWrapper This is the gradle wrapper object that supplies
    *   hooks into Gradle.
+   * @param serviceAccountJsonFilePath This is the service account file to communicate with the
+   *   play publisher API.
    */
-  constructor(private gradleWrapper: GradleWrapper) {}
+  constructor(private gradleWrapper: GradleWrapper, serviceAccountJsonFilePath?: string) {
+    if (serviceAccountJsonFilePath) {
+      this._googlePlayApi = this.getAndroidClient(serviceAccountJsonFilePath);
+    }
+  }
 
   /**
    * Initialized Google Play and loads the existing configruation from Google Play.
@@ -66,13 +72,12 @@ export class GooglePlay {
    * Connects to the Google Play Console and retrieves a list of all Android App Bundles for the
    * given packageName. Finds the largest versionCode of those bundles and returns it. Considers
    * both ChromeOS and Android Releases.
+   * @param packageName - The packageName of the versionCode we are looking up.
    */
-  async getLargestVersionCode(
-      packageName: string,
-      serviceAccountJsonFilePath: string,
-  ): Promise<number> {
+  async getLargestVersionCode(packageName: string): Promise<number> {
+    // TODO(@nohe427): Remove this check when refactor is finished.
     if (!this._googlePlayApi) {
-      this._googlePlayApi = this.getAndroidClient(serviceAccountJsonFilePath);
+      return 0;
     }
     const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
     const editId = edit.data.id!;
@@ -88,16 +93,15 @@ export class GooglePlay {
 
   /**
    * This fetches the Android client using the bubblewrap configuration file.
+   * @param serviceAccountJsonFilePath - The file path to the service account file. This allows
+   *   communication to the Play Publisher API.
    */
-  private getAndroidClient(
-      serviceAccountJsonFilePath: string,
-  ): androidPublisher.Androidpublisher {
+  private getAndroidClient(serviceAccountJsonFilePath: string): androidPublisher.Androidpublisher {
     // Initialize the Google API Client from service account credentials
     const jwtClient = new google.auth.JWT({
       keyFile: serviceAccountJsonFilePath,
       scopes: ['https://www.googleapis.com/auth/androidpublisher'],
-    },
-    );
+    });
 
     // Connect to the Google Play Developer API with JWT Client
     return google.androidpublisher({
