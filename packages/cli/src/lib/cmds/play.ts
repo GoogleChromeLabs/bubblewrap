@@ -59,7 +59,7 @@ class Play {
   * @return {number} The largest version number found in the play console.
   */
   async getLargestVersion(twaManifest: TwaManifest): Promise<number> {
-    //TODO(@nohe427): This will return 0 until refactor finished.
+    // TODO(@nohe427): This will return 0 until refactor finished.
     const versionNumber = await this.googlePlay.getLargestVersionCode(twaManifest.packageId);
     return versionNumber;
   }
