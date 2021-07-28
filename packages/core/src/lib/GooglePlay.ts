@@ -85,7 +85,7 @@ export class GooglePlay {
    * @param retainedBundles - all bundles that should be retained on upload. This is useful for
    *   ChromeOS only releases.
    */
-     async publishBundle(
+  async publishBundle(
       track: PlayStoreTrack,
       filepath: string,
       packageName: string,
@@ -141,7 +141,7 @@ export class GooglePlay {
       versionCodes: string[],
       packageName: string,
       editId: string): Promise<void> {
-        // TODO(@nohe427): Remove this check when refactor is finished.
+    // TODO(@nohe427): Remove this check when refactor is finished.
     if (!this._googlePlayApi) {
       return;
     }
