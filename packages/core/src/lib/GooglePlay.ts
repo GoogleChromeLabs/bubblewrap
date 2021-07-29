@@ -48,15 +48,6 @@ export class GooglePlay {
   }
 
   /**
-   * Initialized Google Play and loads the existing configruation from Google Play.
-   * The resulting files are stored in the play folder in the src directory.
-   * https://github.com/Triple-T/gradle-play-publisher#quickstart
-   */
-  async initPlay(): Promise<void> {
-    await this.gradleWrapper.executeGradleCommand(['bootstrap']);
-  }
-
-  /**
    * This calls the publish bundle command and publishes an existing artifact to Google
    * Play.
    * https://github.com/Triple-T/gradle-play-publisher#uploading-a-pre-existing-artifact

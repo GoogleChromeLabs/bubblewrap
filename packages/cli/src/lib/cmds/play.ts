@@ -27,7 +27,6 @@ import {enUS} from '../strings';
 
 export interface PlayArgs {
   publish?: string;
-  init?: boolean;
   serviceAccountFile?: string;
   manifest?: string;
   appBundleLocation?: string;
@@ -44,14 +43,6 @@ class Play {
     private googlePlay: GooglePlay,
     private prompt: Prompt = new InquirerPrompt(),
   ) {}
-
-  /**
-  * Bootstraps the Play listing via the Gradle-Play-Plugin.
-  * @return {void}
-  */
-  async bootstrapPlay(): Promise<void> {
-    await this.googlePlay.initPlay();
-  }
 
   /**
   * @summary Can validate the largest version number vs twa-manifest.json and update
@@ -140,11 +131,6 @@ class Play {
     if (!this.validServiceAccountJsonFile(twaManifest.serviceAccountJsonFile)) {
       this.prompt.printMessage(enUS.messageServiceAccountJSONMissing);
       return false;
-    }
-
-    // bubblewrap play --init
-    if (this.args.init) {
-      await this.bootstrapPlay();
     }
 
     // bubblewrap play --versionCheck
