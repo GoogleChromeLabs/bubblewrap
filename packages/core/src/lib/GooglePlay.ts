@@ -23,6 +23,8 @@ const TRACK_VALUES = ['alpha', 'beta', 'internal', 'production'];
 export type PlayStoreTrack = typeof TRACK_VALUES[number];
 export const PlayStoreTracks: PlayStoreTrack[] = [...TRACK_VALUES];
 
+const PLAY_API_TIMEOUT = 180000;
+
 export function asPlayStoreTrack(input?: string): PlayStoreTrack | null {
   if (!input) {
     return null;
@@ -74,15 +76,15 @@ export class GooglePlay {
    * Play.
    * Calls the following Play API commands in order:
    * Edits.Insert
-   * Edits.Bunldes.Upload
+   * Edits.Bundles.Upload
    * Edits.Tracks.Update
    * Edits.Commit
    * https://developers.google.com/android-publisher/api-ref/rest/v3/edits.bundles/upload
    * https://developers.google.com/android-publisher/edits#workflow
    * @param track - Specifies the track that the user would like to publish to.
    * @param filepath - Filepath of the App bundle you would like to upload.
-   * @param packageName - packageName of the bundle.
-   * @param retainedBundles - all bundles that should be retained on upload. This is useful for
+   * @param packageName - Package name of the bundle.
+   * @param retainedBundles - All bundles that should be retained on upload. This is useful for
    *   ChromeOS only releases.
    */
   async publishBundle(
@@ -93,35 +95,41 @@ export class GooglePlay {
   ): Promise<void> {
     // TODO(@nohe427): Remove this check when refactor is finished.
     if (!this._googlePlayApi) {
-      return;
+      throw new Error('Service Account JSON file not set.');
     }
     const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
     const editId = edit.data.id;
+    if (!editId) {
+      throw new Error('Could not create a Google Play edit');
+    }
     const result = await this._googlePlayApi.edits.bundles.upload(
         {
           ackBundleInstallationWarning: false,
-          editId: editId!,
+          editId: editId,
           packageName: packageName,
           media: {
             body: createReadStream(filepath),
           },
         },
         {
-          timeout: 160000,
+          timeout: PLAY_API_TIMEOUT,
         });
 
     const versionCodeUploaded = result.data.versionCode;
-    const retainedBundlesStr = retainedBundles.map(((n) => n.toString()));
+    if(!versionCodeUploaded) {
+      throw new Error('Version code could not be found from Play API.');
+    }
+    const retainedBundlesStr = retainedBundles.map(n => n.toString());
     await this.addBundleToTrack(
         track,
-        [versionCodeUploaded?.toString()!, ...retainedBundlesStr],
+        [versionCodeUploaded.toString(), ...retainedBundlesStr],
         packageName,
-      editId!,
+      editId,
     );
     await this._googlePlayApi.edits.commit(
         {
           changesNotSentForReview: false,
-          editId: editId!,
+          editId: editId,
           packageName: packageName,
         },
     );
@@ -173,11 +181,17 @@ export class GooglePlay {
       return 0;
     }
     const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
-    const editId = edit.data.id!;
+    const editId = edit.data.id;
+    if (!editId) {
+      throw new Error('Could not create a Google Play edit');
+    }
     const bundleResponse =
       await this._googlePlayApi.edits.bundles.list({packageName: packageName, editId: editId});
+    if(!bundleResponse.data.bundles){
+      throw new Error('No bundles found from Google Play');
+    }
     const versionCode = Math.max(
-        ...bundleResponse.data.bundles!!.map((bundle) => bundle.versionCode!!));
+        ...bundleResponse.data.bundles.map((bundle) => bundle.versionCode!!));
     // cleanup
     await this._googlePlayApi.edits.delete({editId: editId, packageName: packageName});
 
