@@ -116,15 +116,15 @@ export class GooglePlay {
         });
 
     const versionCodeUploaded = result.data.versionCode;
-    if(!versionCodeUploaded) {
+    if (!versionCodeUploaded) {
       throw new Error('Version code could not be found from Play API.');
     }
-    const retainedBundlesStr = retainedBundles.map(n => n.toString());
+    const retainedBundlesStr = retainedBundles.map((n) => n.toString());
     await this.addBundleToTrack(
         track,
         [versionCodeUploaded.toString(), ...retainedBundlesStr],
         packageName,
-      editId,
+        editId,
     );
     await this._googlePlayApi.edits.commit(
         {
@@ -187,7 +187,7 @@ export class GooglePlay {
     }
     const bundleResponse =
       await this._googlePlayApi.edits.bundles.list({packageName: packageName, editId: editId});
-    if(!bundleResponse.data.bundles){
+    if (!bundleResponse.data.bundles) {
       throw new Error('No bundles found from Google Play');
     }
     const versionCode = Math.max(
