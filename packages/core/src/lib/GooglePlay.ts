@@ -44,7 +44,7 @@ export class GooglePlay {
    * @param serviceAccountJsonFilePath This is the service account file to communicate with the
    *   play publisher API.
    */
-  constructor(private gradleWrapper: GradleWrapper, serviceAccountJsonFilePath?: string) {
+  constructor(private gradleWrapper?: GradleWrapper, serviceAccountJsonFilePath?: string) {
     if (serviceAccountJsonFilePath) {
       this._googlePlayApi = this.getAndroidClient(serviceAccountJsonFilePath);
     }
@@ -58,7 +58,7 @@ export class GooglePlay {
    */
   async publishBundleWithGradle(track: PlayStoreTrack, filepath: string): Promise<void> {
     // Uploads the artifact to the default internal track.
-    await this.gradleWrapper.executeGradleCommand(
+    await this.gradleWrapper?.executeGradleCommand(
         ['publishBundle', '--artifact-dir', filepath, '--track', track]);
   }
 
