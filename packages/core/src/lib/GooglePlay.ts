@@ -23,7 +23,7 @@ const TRACK_VALUES = ['alpha', 'beta', 'internal', 'production'];
 export type PlayStoreTrack = typeof TRACK_VALUES[number];
 export const PlayStoreTracks: PlayStoreTrack[] = [...TRACK_VALUES];
 
-const PLAY_API_TIMEOUT = 180000;
+const PLAY_API_TIMEOUT_MS = 180000;
 
 export function asPlayStoreTrack(input?: string): PlayStoreTrack | null {
   if (!input) {
@@ -100,6 +100,7 @@ export class GooglePlay {
     const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
     const editId = edit.data.id;
     if (!editId) {
+      // TODO(@nohe427): Try to recover and understand instances where this might fail.
       throw new Error('Could not create a Google Play edit');
     }
     const result = await this._googlePlayApi.edits.bundles.upload(
@@ -112,7 +113,7 @@ export class GooglePlay {
           },
         },
         {
-          timeout: PLAY_API_TIMEOUT,
+          timeout: PLAY_API_TIMEOUT_MS,
         });
 
     const versionCodeUploaded = result.data.versionCode;
