@@ -16,11 +16,14 @@
 
 import {GradleWrapper} from '..';
 import {androidpublisher_v3 as androidPublisher, google} from 'googleapis';
+import {createReadStream} from 'fs';
 
 // Possible values for release tracks
 const TRACK_VALUES = ['alpha', 'beta', 'internal', 'production'];
 export type PlayStoreTrack = typeof TRACK_VALUES[number];
 export const PlayStoreTracks: PlayStoreTrack[] = [...TRACK_VALUES];
+
+const PLAY_API_TIMEOUT_MS = 180000;
 
 export function asPlayStoreTrack(input?: string): PlayStoreTrack | null {
   if (!input) {
@@ -53,11 +56,110 @@ export class GooglePlay {
    * https://github.com/Triple-T/gradle-play-publisher#uploading-a-pre-existing-artifact
    * @param track - Specifies the track that the user would like to publish to.
    */
-  async publishBundle(track: PlayStoreTrack, filepath: string): Promise<void> {
+  async publishBundleWithGradle(track: PlayStoreTrack, filepath: string): Promise<void> {
     // Uploads the artifact to the default internal track.
     await this.gradleWrapper.executeGradleCommand(
         ['publishBundle', '--artifact-dir', filepath, '--track', track]);
   }
+
+  /**
+   * This calls the publish bundle command and publishes an existing artifact to Google
+   * Play.
+   * Calls the following Play API commands in order:
+   * Edits.Insert
+   * Edits.Bundles.Upload
+   * Edits.Tracks.Update
+   * Edits.Commit
+   * https://developers.google.com/android-publisher/api-ref/rest/v3/edits.bundles/upload
+   * https://developers.google.com/android-publisher/edits#workflow
+   * @param track - Specifies the track that the user would like to publish to.
+   * @param filepath - Filepath of the App bundle you would like to upload.
+   * @param packageName - Package name of the bundle.
+   * @param retainedBundles - All bundles that should be retained on upload. This is useful for
+   *   ChromeOS only releases.
+   */
+  async publishBundle(
+      track: PlayStoreTrack,
+      filepath: string,
+      packageName: string,
+      retainedBundles: number[],
+  ): Promise<void> {
+    // TODO(@nohe427): Remove this check when refactor is finished.
+    if (!this._googlePlayApi) {
+      throw new Error('Service Account JSON file not set.');
+    }
+    const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
+    const editId = edit.data.id;
+    if (!editId) {
+      // TODO(@nohe427): Try to recover and understand instances where this might fail.
+      throw new Error('Could not create a Google Play edit');
+    }
+    const result = await this._googlePlayApi.edits.bundles.upload(
+        {
+          ackBundleInstallationWarning: false,
+          editId: editId,
+          packageName: packageName,
+          media: {
+            body: createReadStream(filepath),
+          },
+        },
+        {
+          timeout: PLAY_API_TIMEOUT_MS,
+        });
+
+    const versionCodeUploaded = result.data.versionCode;
+    if (!versionCodeUploaded) {
+      throw new Error('Version code could not be found from Play API.');
+    }
+    const retainedBundlesStr = retainedBundles.map((n) => n.toString());
+    await this.addBundleToTrack(
+        track,
+        [versionCodeUploaded.toString(), ...retainedBundlesStr],
+        packageName,
+        editId,
+    );
+    await this._googlePlayApi.edits.commit(
+        {
+          changesNotSentForReview: false,
+          editId: editId,
+          packageName: packageName,
+        },
+    );
+  }
+
+  /**
+   * This calls the Edits.Tracks.Update play publisher api command. This will do the updating of
+   * the user selected track for the reelase to the play store.
+   * @param track - Specifies the track that the user would like to publish to.
+   * @param versionCodes - Specifies all versions of the app bundle to be included on release
+   *   (including retained artifacts).
+   * @param packageName - packageName of the bundle.
+   * @param editId - The current edit hosted on Google Play.
+   */
+  async addBundleToTrack(
+      track: PlayStoreTrack,
+      versionCodes: string[],
+      packageName: string,
+      editId: string): Promise<void> {
+    // TODO(@nohe427): Remove this check when refactor is finished.
+    if (!this._googlePlayApi) {
+      return;
+    }
+    const tracksUpdate: androidPublisher.Params$Resource$Edits$Tracks$Update = {
+      track: track,
+      packageName: packageName,
+      editId: editId,
+      requestBody: {
+        releases: [{
+          versionCodes: versionCodes,
+          status: 'completed',
+        }],
+        track: track,
+      },
+    };
+    await this._googlePlayApi.edits.tracks.update(tracksUpdate);
+  }
+
 
   /**
    * Connects to the Google Play Console and retrieves a list of all Android App Bundles for the
@@ -71,11 +173,17 @@ export class GooglePlay {
       return 0;
     }
     const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
-    const editId = edit.data.id!;
+    const editId = edit.data.id;
+    if (!editId) {
+      throw new Error('Could not create a Google Play edit');
+    }
     const bundleResponse =
       await this._googlePlayApi.edits.bundles.list({packageName: packageName, editId: editId});
+    if (!bundleResponse.data.bundles) {
+      throw new Error('No bundles found from Google Play');
+    }
     const versionCode = Math.max(
-        ...bundleResponse.data.bundles!!.map((bundle) => bundle.versionCode!!));
+        ...bundleResponse.data.bundles.map((bundle) => bundle.versionCode!!));
     // cleanup
     await this._googlePlayApi.edits.delete({editId: editId, packageName: packageName});
 

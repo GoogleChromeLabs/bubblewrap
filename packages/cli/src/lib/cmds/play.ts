@@ -69,7 +69,7 @@ class Play {
     }
     // appbundlelocation is an option argument.
     if (this.args.appBundleLocation && fs.existsSync(this.args.appBundleLocation!!)) {
-      await this.googlePlay.publishBundle(userSelectedTrack, this.args.appBundleLocation);
+      await this.googlePlay.publishBundleWithGradle(userSelectedTrack, this.args.appBundleLocation);
       return true;
     }
     // Make tmp directory copy file over signed APK then cleanup.
@@ -79,7 +79,7 @@ class Play {
     const defaultPath = path.join(process.cwd(), signedAppBundleFileName);
 
     fs.copyFileSync(defaultPath, path.join(publishDir, signedAppBundleFileName));
-    await this.googlePlay.publishBundle(userSelectedTrack, publishDir);
+    await this.googlePlay.publishBundleWithGradle(userSelectedTrack, publishDir);
 
     fs.unlinkSync(path.join(publishDir, signedAppBundleFileName));
     fs.rmdirSync(publishDir);
