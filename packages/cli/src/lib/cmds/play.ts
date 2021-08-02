@@ -31,6 +31,9 @@ export interface PlayArgs {
   versionCheck?: boolean;
 }
 
+// Default file path
+const defaultSignedAppBundleFileName = 'app-release-bundle.aab';
+
 /**
   * The Play class is the class that is used to communicate with the Google Play Store.
   */
@@ -63,8 +66,6 @@ class Play {
       return false;
     }
 
-    // Default file path
-    const defaultSignedAppBundleFileName = 'app-release-bundle.aab';
     // Where we should find our default output file
     const defaultPath = path.join(process.cwd(), defaultSignedAppBundleFileName);
 
@@ -144,11 +145,11 @@ class Play {
   */
 function validServiceAccountJsonFile(path: string | undefined): boolean {
   if (path == undefined) {
-    // Log an error
+    // TODO(@nohe427): Log an error
     return false;
   }
   if (!fs.existsSync(path)) {
-    // path doesn't exist log an error
+    // TODO(@nohe427): path doesn't exist log an error
     return false;
   }
   return true;
