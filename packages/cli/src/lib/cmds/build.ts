@@ -142,6 +142,23 @@ class Build {
         APP_BUNDLE_BUILD_OUTPUT_FILE_NAME, APP_BUNDLE_SIGNED_FILE_NAME);
   }
 
+  /**
+   * Based on the promptResponse to update the project or not, run an update or print the relevant warning message.
+   *
+   * @returns {Promise<boolean>} whether the appropriate action taken (update project or print warning) was successful
+   */
+  async runUpdate(
+      promptResponse: boolean,
+      manifestFile: string,
+      noUpdateMessage: string): Promise<boolean> {
+    if (!promptResponse) {
+      this.prompt.printMessage(noUpdateMessage);
+      return true;
+    }
+    return await updateProject(false, null, this.prompt,
+        this.args.directory, manifestFile);
+  }
+
   async build(): Promise<boolean> {
     if (!await this.androidSdkTools.checkBuildTools()) {
       this.prompt.printMessage(messages.messageInstallingBuildTools);
@@ -156,20 +173,31 @@ class Build {
     const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
     const twaManifest = await TwaManifest.fromFile(manifestFile);
 
-    const hasManifestChanged = await this.hasManifestChanged(manifestFile);
-    if (hasManifestChanged) {
-      const applyChanges = await this.prompt.promptConfirm(messages.promptUpdateProject, true);
-      if (applyChanges) {
-        const updated = await updateProject(false, null, this.prompt,
-            this.args.directory, manifestFile);
-        if (!updated) {
-          return false;
-        }
-      } else {
-        this.prompt.printMessage(messages.messageProjectNotUpdated);
+    const targetDirectory = this.args.directory || process.cwd();
+    const checksumFile = path.join(targetDirectory, 'manifest-checksum.txt');
+    let updateSuccessful = true;
+    if (!fs.existsSync(checksumFile)) {
+      // If checksum file doesn't exist, prompt the user about updating their project
+      const applyChanges = await this.prompt.promptConfirm(
+          messages.messageNoChecksumFileFound,
+          true);
+      updateSuccessful = await this.runUpdate(
+          applyChanges,
+          manifestFile,
+          messages.messageNoChecksumNoUpdate);
+    } else {
+      const hasManifestChanged = await this.hasManifestChanged(manifestFile);
+      if (hasManifestChanged) {
+        const applyChanges = await this.prompt.promptConfirm(messages.promptUpdateProject, true);
+        updateSuccessful = await this.runUpdate(
+            applyChanges,
+            manifestFile,
+            messages.messageProjectNotUpdated);
       }
     }
-
+    if (!updateSuccessful) {
+      return false;
+    }
     let passwords = null;
     let signingKey = twaManifest.signingKey;
     if (!this.args.skipSigning) {

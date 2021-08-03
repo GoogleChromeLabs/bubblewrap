@@ -56,6 +56,8 @@ type Messages = {
   messageLauncherIconAndSplash: string;
   messageLauncherIconAndSplashDesc: string;
   messageLoadingTwaManifestFrom: (path: string) => string;
+  messageNoChecksumFileFound: string;
+  messageNoChecksumNoUpdate: string;
   messageOptionFeatures: string;
   messageOptionalFeaturesDesc: string;
   messagePlayUploadSuccess: string;
@@ -117,6 +119,7 @@ type Messages = {
   promptKeyPassword: string;
   promptNewAppVersionName: string;
   promptVersionCode: string;
+  promptVersionMismatch: (currentVersion: string, playStoreVerison: string) => string;
   promptUpdateProject: string;
   warnFamilyPolicy: string;
   warnPwaFailedQuality: string;
@@ -217,7 +220,7 @@ into a device:
   },
   messageBuildingApp: '\nBuilding the Android App...',
   messageCallBubblewrapBuild:
-    '\nCall: bubblewrap build\n to rebuild the project and enable uploading.',
+    red('\nCall: bubblewrap build\n to rebuild the project and enable uploading.'),
   messageDigitalAssetLinksSuccess: (filename: string): string => {
     return `\t- Generated Digital Asset Links file at ${cyan(filename)}
 \nRead more about setting up Digital Asset Links at:
@@ -259,6 +262,13 @@ a blank white page to users.
   messageLoadingTwaManifestFrom: (path: string): string => {
     return `Loading TWA Manifest from: ${cyan(path)}`;
   },
+  messageNoChecksumFileFound: `
+No checksum file was found to verify the state of the ${cyan('twa-manifest.json')} file.
+To make sure your project is up-to-date, would you like to regenerate your project?
+If you are sure your project is updated and you have already run ${cyan('bubblewrap update')}
+then you may enter "no"`,
+  messageNoChecksumNoUpdate: `
+Project build will continue without regenerating project even though no checksum file was found.`,
   messageOptionFeatures: underline(`\nOptional Features ${green('(4/5)')}`),
   messageOptionalFeaturesDesc: `
 \t- ${bold('Include app shortcuts:')} This question is only prompted if a
@@ -371,6 +381,11 @@ the PWA:
   promptKeyPassword: 'Password for the Key:',
   promptNewAppVersionName: 'versionName for the new App version:',
   promptVersionCode: 'Starting version code for the new app version:',
+  promptVersionMismatch: (currentVersion: string, playStoreVerison: string): string => {
+    return `The current play store version (${cyan(playStoreVerison)}) is higher than your twa
+    manifest version (${cyan(currentVersion)}). Do you want to update your TWA Manifest version
+    now?`;
+  },
   promptUpdateProject: 'There are changes in twa-manifest.json. ' +
       'Would you like to apply them to the project before building?',
   warnFamilyPolicy:

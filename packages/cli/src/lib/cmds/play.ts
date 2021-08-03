@@ -32,7 +32,7 @@ export interface PlayArgs {
   manifest?: string;
   appBundleLocation?: string;
   targetDirectory?: string;
-  // versionCheck?: boolean; // Uncomment when getLargetVersion is implemented.
+  versionCheck?: boolean;
 }
 
 /**
@@ -58,12 +58,10 @@ class Play {
   * to give x+1 version number.
   * @return {number} The largest version number found in the play console.
   */
-  async getLargestVersion(): Promise<number> {
-    // Need to get an editId, then list all apks available.
-    // This should allow us to query the highest apk number.
-    // This exists in Gradle play plugin but is not easily accessible over CLI.
-    // This should be completed in a future CL.
-    throw new Error('Not Implemented');
+  async getLargestVersion(twaManifest: TwaManifest): Promise<number> {
+    const versionNumber = await this.googlePlay.getLargestVersionCode(
+        twaManifest.packageId, twaManifest.serviceAccountJsonFile!);
+    return versionNumber;
   }
 
   /**
@@ -114,6 +112,12 @@ class Play {
     return true;
   }
 
+  private async updateProjectAndWarn(manifestFile: string): Promise<void> {
+    await updateProject(
+        true, null, this.prompt, this.args.targetDirectory || process.cwd(), manifestFile);
+    this.prompt.printMessage(enUS.messageCallBubblewrapBuild);
+  }
+
   /**
   * Runs the play command. This allows multiple flags to be handled through here.
   * @return {boolean} Returns whether or not the run command completed successfully.
@@ -131,9 +135,7 @@ class Play {
       twaManifest.serviceAccountJsonFile = this.args.serviceAccountFile;
       twaManifest.saveToFile(manifestFile);
       // Then we need to call bubblewrap update so the gradle plugin has the appropriate file.
-      await updateProject(
-          true, null, this.prompt, this.args.targetDirectory || process.cwd(), manifestFile);
-      this.prompt.printMessage(enUS.messageCallBubblewrapBuild);
+      await this.updateProjectAndWarn(manifestFile);
     }
     if (!this.validServiceAccountJsonFile(twaManifest.serviceAccountJsonFile)) {
       this.prompt.printMessage(enUS.messageServiceAccountJSONMissing);
@@ -144,6 +146,21 @@ class Play {
     if (this.args.init) {
       await this.bootstrapPlay();
     }
+
+    // bubblewrap play --versionCheck
+    if (this.args.versionCheck) {
+      const version = await this.getLargestVersion(twaManifest);
+      if (version >= twaManifest.appVersionCode) {
+        const updateVersion = await this.prompt.promptConfirm(enUS.promptVersionMismatch(
+            twaManifest.appVersionCode.toString(), version.toString()), true);
+        if (updateVersion) {
+          twaManifest.appVersionCode = version + 1;
+          await twaManifest.saveToFile(manifestFile);
+          await this.updateProjectAndWarn(manifestFile);
+        }
+      }
+    }
+
     // bubblewrap play --publish
     if (this.args.publish) {
       const success = await this.publish();
@@ -153,6 +170,7 @@ class Play {
       }
       this.prompt.printMessage(enUS.messagePlayUploadSuccess);
     }
+
     return true;
   }
 }
