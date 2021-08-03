@@ -54,7 +54,8 @@ class Play {
   }
 
   /**
-  * Publishes the Android App Bundle to the specified from the {@link PlayArgs}.
+  * Publishes the Android App Bundle to the user specified {@link PlayStoreTrack} from the
+  * {@link PlayArgs}.
   * @return {boolean} Whether the publish command completes successfully or not.
   */
   async publish(twaManifest: TwaManifest): Promise<boolean> {
@@ -66,13 +67,12 @@ class Play {
       return false;
     }
 
-    // Where we should find our default output file
     const defaultPath = path.join(process.cwd(), defaultSignedAppBundleFileName);
 
     const publishFilePath = this.args.appBundleLocation || defaultPath;
 
     if (!fs.existsSync(publishFilePath)) {
-      throw new Error(`App Bundle not found on disk at location: ${publishFilePath}`);
+      throw new Error(`App Bundle not found on disk: ${publishFilePath}`);
     }
 
     // TODO(@nohe427): Add cli commands for retained bundles.
