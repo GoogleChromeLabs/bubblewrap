@@ -14,7 +14,6 @@
  *  limitations under the License.
  */
 
-import {GradleWrapper} from '..';
 import {androidpublisher_v3 as androidPublisher, google} from 'googleapis';
 import {createReadStream} from 'fs';
 
@@ -33,33 +32,20 @@ export function asPlayStoreTrack(input?: string): PlayStoreTrack | null {
 }
 
 export class GooglePlay {
-  private _googlePlayApi?: androidPublisher.Androidpublisher;
+  private _googlePlayApi: androidPublisher.Androidpublisher;
 
   /**
    * Constructs a Google Play object with the gradleWrapper so we can use a
    *   gradle plugin to communicate with Google Play.
    *
-   * @param gradleWrapper This is the gradle wrapper object that supplies
-   *   hooks into Gradle.
    * @param serviceAccountJsonFilePath This is the service account file to communicate with the
    *   play publisher API.
    */
-  constructor(private gradleWrapper?: GradleWrapper, serviceAccountJsonFilePath?: string) {
-    if (serviceAccountJsonFilePath) {
-      this._googlePlayApi = this.getAndroidClient(serviceAccountJsonFilePath);
+  constructor(serviceAccountJsonFilePath: string) {
+    this._googlePlayApi = this.getAndroidClient(serviceAccountJsonFilePath);
+    if (!this._googlePlayApi) {
+      throw new Error('Could not create a Google Play API client');
     }
-  }
-
-  /**
-   * This calls the publish bundle command and publishes an existing artifact to Google
-   * Play.
-   * https://github.com/Triple-T/gradle-play-publisher#uploading-a-pre-existing-artifact
-   * @param track - Specifies the track that the user would like to publish to.
-   */
-  async publishBundleWithGradle(track: PlayStoreTrack, filepath: string): Promise<void> {
-    // Uploads the artifact to the default internal track.
-    await this.gradleWrapper?.executeGradleCommand(
-        ['publishBundle', '--artifact-dir', filepath, '--track', track]);
   }
 
   /**
@@ -84,10 +70,6 @@ export class GooglePlay {
       packageName: string,
       retainedBundles: number[],
   ): Promise<void> {
-    // TODO(@nohe427): Remove this check when refactor is finished.
-    if (!this._googlePlayApi) {
-      throw new Error('Service Account JSON file not set.');
-    }
     const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
     const editId = edit.data.id;
     if (!editId) {
@@ -141,10 +123,6 @@ export class GooglePlay {
       versionCodes: string[],
       packageName: string,
       editId: string): Promise<void> {
-    // TODO(@nohe427): Remove this check when refactor is finished.
-    if (!this._googlePlayApi) {
-      return;
-    }
     const tracksUpdate: androidPublisher.Params$Resource$Edits$Tracks$Update = {
       track: track,
       packageName: packageName,
@@ -168,10 +146,6 @@ export class GooglePlay {
    * @param packageName - The packageName of the versionCode we are looking up.
    */
   async getLargestVersionCode(packageName: string): Promise<number> {
-    // TODO(@nohe427): Remove this check when refactor is finished.
-    if (!this._googlePlayApi) {
-      return 0;
-    }
     const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
     const editId = edit.data.id;
     if (!editId) {
