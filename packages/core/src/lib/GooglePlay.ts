@@ -149,16 +149,16 @@ export class GooglePlay {
     }
     const versionCode = Math.max(
         ...bundleResponse.data.bundles.map((bundle) => bundle.versionCode!!));
-    
+
     await this.endPlayOperation(packageName, editId);
-    
+
     return versionCode;
   }
 
   /**
    * Starts an edit on the Play servers. This is the basis for any play publishing api operation.
    * @param packageName - the packageName of the app we want to interact with.
-   * 
+   *
    */
   private async startPlayOperation(packageName: string): Promise<string> {
     const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
@@ -182,7 +182,7 @@ export class GooglePlay {
    * Checks to see if the version that we want to retain already exists within the Play Store.
    * @param packageName - The packageName of the versionCode we are looking up.
    * @param versionCode - The version code of the APK / Bundle we want to retain.
-   * 
+   *
    */
   async versionExists(packageName: string, versionCode: number): Promise<boolean> {
     const editId = await this.startPlayOperation(packageName);
@@ -190,23 +190,22 @@ export class GooglePlay {
     const uploadedApks =
       await this._googlePlayApi.edits.apks.list({packageName: packageName, editId: editId});
 
-    uploadedApks.data.apks?.filter(async obj => {
-      if (obj.versionCode == versionCode) {
-        await this.endPlayOperation(packageName, editId);
-        return true;
-      }
-    })
+    let found = uploadedApks.data.apks?.find(async (obj) => obj.versionCode == versionCode);
+
+    if (found) {
+      await this.endPlayOperation(packageName, editId);
+      return true;
+    }
 
     const uploadedBundles =
       await this._googlePlayApi.edits.bundles.list({packageName: packageName, editId: editId});
 
-    uploadedBundles.data.bundles?.filter(async obj => {
-      if (obj.versionCode == versionCode) {
-        await this.endPlayOperation(packageName, editId);
-        return true;
-      }
-    })
+    found = uploadedBundles.data.bundles?.find(async (obj) => obj.versionCode == versionCode);
 
+    if (found) {
+      await this.endPlayOperation(packageName, editId);
+      return true;
+    }
 
     await this.endPlayOperation(packageName, editId);
     return false;

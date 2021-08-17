@@ -137,7 +137,8 @@ class Play {
         // Cannot retain a higher version as that would take presendence.
         const approveVersionDifference =
           await this.prompt.promptConfirm(
-            enUS.versionToRetainHigherThanBuildVersion(twaManifest.appVersionCode, versionToRetain), false);
+              enUS.versionToRetainHigherThanBuildVersion(
+                  twaManifest.appVersionCode, versionToRetain), false);
         if (!approveVersionDifference) {
           return false;
         }
@@ -148,24 +149,24 @@ class Play {
       }
 
       twaManifest.retainedBundles.push(versionToRetain);
-      
+
       await twaManifest.saveToFile(manifestFile);
     }
 
     // bubblewrap play --removeRetained 86
     if (this.args.removeRetained) {
       const versionToRemove = this.args.removeRetained;
-      twaManifest.retainedBundles.filter(obj => {
+      twaManifest.retainedBundles.filter((obj) => {
         return obj != versionToRemove;
-      })
+      });
       await twaManifest.saveToFile(manifestFile);
     }
 
     // bubblewrap play --listRetained
     if (this.args.listRetained) {
-      twaManifest.retainedBundles.forEach(version => {
+      twaManifest.retainedBundles.forEach((version) => {
         this.prompt.printMessage(`${version}`);
-      })
+      });
     }
 
     // bubblewrap play --publish

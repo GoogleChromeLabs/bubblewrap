@@ -224,7 +224,7 @@ describe('TwaManifest', () => {
         isChromeOSOnly: false,
         serviceAccountJsonFile: '/home/service-account.json',
         additionalTrustedOrigins: ['test.com'],
-        retainedBundles: [3,4,5],
+        retainedBundles: [3, 4, 5],
       } as TwaManifestJson;
       const twaManifest = new TwaManifest(twaManifestJson);
       expect(twaManifest.packageId).toEqual(twaManifestJson.packageId);
@@ -257,7 +257,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.isChromeOSOnly).toEqual(false);
       expect(twaManifest.serviceAccountJsonFile).toEqual(twaManifestJson.serviceAccountJsonFile);
       expect(twaManifest.additionalTrustedOrigins).toEqual(['test.com']);
-      expect(twaManifest.retainedBundles).toEqual([3,4,5]);
+      expect(twaManifest.retainedBundles).toEqual([3, 4, 5]);
     });
 
     it('Sets correct default values for optional fields', () => {
