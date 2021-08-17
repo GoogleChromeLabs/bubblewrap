@@ -163,8 +163,8 @@ async function setupGooglePlay(args: PlayArgs): Promise<GooglePlay> {
     twaManifest.serviceAccountJsonFile = args.serviceAccountFile;
     await twaManifest.saveToFile(manifestFile);
   }
-  if (!validServiceAccountJsonFile(twaManifest.serviceAccountJsonFile) ||
-    !twaManifest.serviceAccountJsonFile) {
+  if (!twaManifest.serviceAccountJsonFile ||
+      !validServiceAccountJsonFile(twaManifest.serviceAccountJsonFile)) {
     throw new Error(enUS.messageServiceAccountJSONMissing);
   }
   // Setup Google Play since we can confirm that the serviceAccountJsonFile is valid.
