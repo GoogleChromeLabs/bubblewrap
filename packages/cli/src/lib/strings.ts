@@ -128,6 +128,9 @@ type Messages = {
   jdkIsNotSupported: string;
   androidSdkPathIsNotCorrect: string;
   bothPathsAreValid: string;
+  versionDoesNotExistOnServer: string;
+  versionToRetainHigherThanBuildVersion: (currentVersion: number, versionToRetain: number) => string;
+  versionRetainedNotAnInteger: string;
 }
 
 export const enUS: Messages = {
@@ -406,4 +409,11 @@ the PWA:
       'command to update it:\nbubblewrap updateConfig --androidSdkPath <path-to-sdk>, such that ' +
       'the folder of the path contains the folder "build". Then run bubblewrap doctor again.',
   bothPathsAreValid: 'Your jdkpath and androidSdkPath are valid.',
+  versionDoesNotExistOnServer: 'The supplied version code does not exist on Google Plays Servers.',
+  versionToRetainHigherThanBuildVersion: (currentVersion: number, versionToRetain: number): string => {
+    return `The version to retain (${cyan(versionToRetain.toString())}) is currently higher than
+    the current version you want to publish (${cyan(currentVersion.toString())}). Do you want to
+    continue?`;
+  },
+  versionRetainedNotAnInteger: 'The retained version code must be an integer.',
 };

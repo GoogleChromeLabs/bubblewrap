@@ -29,6 +29,9 @@ export interface PlayArgs {
   appBundleLocation?: string;
   targetDirectory?: string;
   versionCheck?: boolean;
+  retain?: number;
+  removeRetained?: number;
+  listRetained?: boolean;
 }
 
 // Default file path
@@ -75,8 +78,7 @@ class Play {
       throw new Error(`App Bundle not found on disk: ${publishFilePath}`);
     }
 
-    // TODO(@nohe427): Add cli commands for retained bundles.
-    const retainedBundles = [] as number[];
+    const retainedBundles = twaManifest.retainedBundles;
     await this.googlePlay.publishBundle(
         userSelectedTrack, publishFilePath, twaManifest.packageId, retainedBundles);
 
@@ -122,6 +124,48 @@ class Play {
           await this.updateProjectAndWarn(manifestFile);
         }
       }
+    }
+
+    // bubblewrap play --retain 86
+    if (this.args.retain) {
+      const versionToRetain = this.args.retain;
+      // Validate an integer was supplied.
+      if (!Number.isInteger(versionToRetain)) {
+        throw new Error(enUS.versionRetainedNotAnInteger);
+      }
+      if (versionToRetain > twaManifest.appVersionCode) {
+        // Cannot retain a higher version as that would take presendence.
+        const approveVersionDifference =
+          await this.prompt.promptConfirm(
+            enUS.versionToRetainHigherThanBuildVersion(twaManifest.appVersionCode, versionToRetain), false);
+        if (!approveVersionDifference) {
+          return false;
+        }
+      }
+      // Validate that the version exists on the Play Servers.
+      if (!this.googlePlay.versionExists(twaManifest.packageId, versionToRetain)) {
+        throw new Error(enUS.versionDoesNotExistOnServer);
+      }
+
+      twaManifest.retainedBundles.push(versionToRetain);
+      
+      await twaManifest.saveToFile(manifestFile);
+    }
+
+    // bubblewrap play --removeRetained 86
+    if (this.args.removeRetained) {
+      const versionToRemove = this.args.removeRetained;
+      twaManifest.retainedBundles.filter(obj => {
+        return obj != versionToRemove;
+      })
+      await twaManifest.saveToFile(manifestFile);
+    }
+
+    // bubblewrap play --listRetained
+    if (this.args.listRetained) {
+      twaManifest.retainedBundles.forEach(version => {
+        this.prompt.printMessage(`${version}`);
+      })
     }
 
     // bubblewrap play --publish
