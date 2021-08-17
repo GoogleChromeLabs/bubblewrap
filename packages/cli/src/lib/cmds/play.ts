@@ -145,11 +145,9 @@ class Play {
   */
 function validServiceAccountJsonFile(path: string | undefined): boolean {
   if (path == undefined) {
-    // TODO(@nohe427): Log an error
     return false;
   }
   if (!fs.existsSync(path)) {
-    // TODO(@nohe427): path doesn't exist log an error
     return false;
   }
   return true;
@@ -165,11 +163,12 @@ async function setupGooglePlay(args: PlayArgs): Promise<GooglePlay> {
     twaManifest.serviceAccountJsonFile = args.serviceAccountFile;
     await twaManifest.saveToFile(manifestFile);
   }
-  if (!validServiceAccountJsonFile(twaManifest.serviceAccountJsonFile)) {
-    throw new Error('enUS.messageServiceAccountJSONMissing');
+  if (!twaManifest.serviceAccountJsonFile ||
+      !validServiceAccountJsonFile(twaManifest.serviceAccountJsonFile)) {
+    throw new Error(enUS.messageServiceAccountJSONMissing);
   }
   // Setup Google Play since we can confirm that the serviceAccountJsonFile is valid.
-  return new GooglePlay(undefined, twaManifest.serviceAccountJsonFile);
+  return new GooglePlay(twaManifest.serviceAccountJsonFile);
 }
 
 export async function play(parsedArgs: PlayArgs,
