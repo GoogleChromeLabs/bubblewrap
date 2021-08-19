@@ -135,9 +135,9 @@ class Play {
       }
       if (versionToRetain > twaManifest.appVersionCode) {
         // Cannot retain a higher version as that would take precedence.
-          await this.prompt.printMessage(
-              enUS.versionToRetainHigherThanBuildVersion(
-                  twaManifest.appVersionCode, versionToRetain));
+        await this.prompt.printMessage(
+            enUS.versionToRetainHigherThanBuildVersion(
+                twaManifest.appVersionCode, versionToRetain));
       }
       // Validate that the version exists on the Play Servers.
       if (!this.googlePlay.versionExists(twaManifest.packageId, versionToRetain)) {
