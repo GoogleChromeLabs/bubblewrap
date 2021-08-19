@@ -134,14 +134,10 @@ class Play {
         throw new Error(enUS.versionRetainedNotAnInteger);
       }
       if (versionToRetain > twaManifest.appVersionCode) {
-        // Cannot retain a higher version as that would take presendence.
-        const approveVersionDifference =
-          await this.prompt.promptConfirm(
+        // Cannot retain a higher version as that would take precedence.
+          await this.prompt.printMessage(
               enUS.versionToRetainHigherThanBuildVersion(
-                  twaManifest.appVersionCode, versionToRetain), false);
-        if (!approveVersionDifference) {
-          return false;
-        }
+                  twaManifest.appVersionCode, versionToRetain));
       }
       // Validate that the version exists on the Play Servers.
       if (!this.googlePlay.versionExists(twaManifest.packageId, versionToRetain)) {
