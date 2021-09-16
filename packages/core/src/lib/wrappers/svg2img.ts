@@ -36,7 +36,7 @@ export interface Svg2imgOptions {
 
 export function svg2img(svg: string, options: Svg2imgOptions = {}): Promise<Buffer> {
   return new Promise((resolve, reject) => {
-    _svg2img(svg, options, (error: string, buffer: Buffer | undefined) => {
+    _svg2img(svg, options, (error: string, buffer: Buffer) => {
       if (error) {
         return reject(error);
       }
