@@ -53,7 +53,12 @@ class Play {
   * @return {number} The largest version number found in the play console.
   */
   async getLargestVersion(twaManifest: TwaManifest): Promise<number> {
-    return await this.googlePlay.getLargestVersionCode(twaManifest.packageId);
+    const result = await this.googlePlay.performPlayOperation(
+        twaManifest.packageId, await this.googlePlay.getLargestVersionCode(twaManifest.packageId));
+    if (result.getLargestVersionCodeResult) {
+      return result.getLargestVersionCodeResult;
+    }
+    throw new Error('Play operation failed. Could not find largest version code.');
   }
 
   /**
@@ -79,8 +84,10 @@ class Play {
     }
 
     const retainedBundles = twaManifest.retainedBundles;
-    await this.googlePlay.publishBundle(
-        userSelectedTrack, publishFilePath, twaManifest.packageId, retainedBundles);
+    await this.googlePlay.performPlayOperation(twaManifest.packageId,
+        await this.googlePlay.publishBundle(
+            userSelectedTrack, publishFilePath, twaManifest.packageId, retainedBundles),
+    );
 
     return true;
   }
@@ -140,7 +147,9 @@ class Play {
                 twaManifest.appVersionCode, versionToRetain));
       }
       // Validate that the version exists on the Play Servers.
-      if (!this.googlePlay.versionExists(twaManifest.packageId, versionToRetain)) {
+      const result = await this.googlePlay.performPlayOperation(twaManifest.packageId,
+          await this.googlePlay.versionExists(twaManifest.packageId, versionToRetain));
+      if (!result.versionExistsResult) {
         throw new Error(enUS.versionDoesNotExistOnServer);
       }
 
