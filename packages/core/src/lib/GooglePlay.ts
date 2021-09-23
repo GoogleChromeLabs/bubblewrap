@@ -53,6 +53,12 @@ export class GooglePlay {
     }
   }
 
+  /**
+   * Generates an editId that should be used in all play operations.
+   * @param packageName - The package that will be worked upon.
+   * @param operation - The Play Operation which requires an editId injected
+   * @returns - A PlayOperationResult which contains the output of the operation in a field that was worked upon.
+   */
   async performPlayOperation(packageName: string,
       operation: (editId: string) => Promise<PlayOperationResult>): Promise<PlayOperationResult> {
     const editId = await this.startPlayOperation(packageName);
@@ -82,42 +88,41 @@ export class GooglePlay {
       filepath: string,
       packageName: string,
       retainedBundles: number[],
-  ): Promise<(editId: string) => Promise<PlayOperationResult>> {
-    return async (editId): Promise<PlayOperationResult> => {
-      const result = await this._googlePlayApi.edits.bundles.upload(
-          {
-            ackBundleInstallationWarning: false,
-            editId: editId,
-            packageName: packageName,
-            media: {
-              body: createReadStream(filepath),
-            },
+      editId: string,
+  ): Promise<PlayOperationResult> {
+    const result = await this._googlePlayApi.edits.bundles.upload(
+        {
+          ackBundleInstallationWarning: false,
+          editId: editId,
+          packageName: packageName,
+          media: {
+            body: createReadStream(filepath),
           },
-          {
-            timeout: PLAY_API_TIMEOUT_MS,
-          });
+        },
+        {
+          timeout: PLAY_API_TIMEOUT_MS,
+        });
 
-      const versionCodeUploaded = result.data.versionCode;
-      if (!versionCodeUploaded) {
-        throw new Error('Version code could not be found from Play API.');
-      }
-      const retainedBundlesStr = retainedBundles.map((n) => n.toString());
-      await this.addBundleToTrack(
-          track,
-          [versionCodeUploaded.toString(), ...retainedBundlesStr],
-          packageName,
-          editId,
-      );
-      await this._googlePlayApi.edits.commit(
-          {
-            changesNotSentForReview: false,
-            editId: editId,
-            packageName: packageName,
-          },
-      );
-      const playOpsResult: PlayOperationResult = {};
-      return playOpsResult;
-    };
+    const versionCodeUploaded = result.data.versionCode;
+    if (!versionCodeUploaded) {
+      throw new Error('Version code could not be found from Play API.');
+    }
+    const retainedBundlesStr = retainedBundles.map((n) => n.toString());
+    await this.addBundleToTrack(
+        track,
+        [versionCodeUploaded.toString(), ...retainedBundlesStr],
+        packageName,
+        editId,
+    );
+    await this._googlePlayApi.edits.commit(
+        {
+          changesNotSentForReview: false,
+          editId: editId,
+          packageName: packageName,
+        },
+    );
+    const playOpsResult: PlayOperationResult = {};
+    return playOpsResult;
   }
 
   /**
@@ -156,20 +161,18 @@ export class GooglePlay {
    * both ChromeOS and Android Releases.
    * @param packageName - The packageName of the versionCode we are looking up.
    */
-  async getLargestVersionCode(packageName: string):
-      Promise<(editId: string) => Promise<PlayOperationResult>> {
-    return async (editId: string): Promise<PlayOperationResult> => {
-      const bundleResponse =
+  async getLargestVersionCode(packageName: string, editId: string):
+      Promise<PlayOperationResult> {
+    const bundleResponse =
         await this._googlePlayApi.edits.bundles.list({packageName: packageName, editId: editId});
-      if (!bundleResponse.data.bundles) {
-        throw new Error('No bundles found from Google Play');
-      }
-      const versionCode = Math.max(
-          ...bundleResponse.data.bundles.map((bundle) => bundle.versionCode!!));
+    if (!bundleResponse.data.bundles) {
+      throw new Error('No bundles found from Google Play');
+    }
+    const versionCode = Math.max(
+        ...bundleResponse.data.bundles.map((bundle) => bundle.versionCode!!));
 
-      const playOpsResult: PlayOperationResult = {getLargestVersionCodeResult: versionCode};
-      return playOpsResult;
-    };
+    const playOpsResult: PlayOperationResult = {getLargestVersionCodeResult: versionCode};
+    return playOpsResult;
   }
 
   /**
@@ -201,34 +204,32 @@ export class GooglePlay {
    * @param versionCode - The version code of the APK / Bundle we want to retain.
    *
    */
-  async versionExists(packageName: string, versionCode: number):
-      Promise<(editId: string) => Promise<PlayOperationResult>> {
-    return async (editId: string): Promise<PlayOperationResult> => {
-      const playOpsResult: PlayOperationResult = {};
+  async versionExists(packageName: string, versionCode: number, editId: string):
+      Promise<PlayOperationResult> {
+    const playOpsResult: PlayOperationResult = {};
 
-      const uploadedApks =
+    const uploadedApks =
         await this._googlePlayApi.edits.apks.list({packageName: packageName, editId: editId});
 
-      let found = uploadedApks.data.apks?.find(async (obj) => obj.versionCode == versionCode);
+    let found = uploadedApks.data.apks?.find(async (obj) => obj.versionCode == versionCode);
 
-      if (found) {
-        playOpsResult.versionExistsResult = true;
-        return playOpsResult;
-      }
+    if (found) {
+      playOpsResult.versionExistsResult = true;
+      return playOpsResult;
+    }
 
-      const uploadedBundles =
+    const uploadedBundles =
         await this._googlePlayApi.edits.bundles.list({packageName: packageName, editId: editId});
 
-      found = uploadedBundles.data.bundles?.find(async (obj) => obj.versionCode == versionCode);
+    found = uploadedBundles.data.bundles?.find(async (obj) => obj.versionCode == versionCode);
 
-      if (found) {
-        playOpsResult.versionExistsResult = true;
-        return playOpsResult;
-      }
-
-      playOpsResult.versionExistsResult = false;
+    if (found) {
+      playOpsResult.versionExistsResult = true;
       return playOpsResult;
-    };
+    }
+
+    playOpsResult.versionExistsResult = false;
+    return playOpsResult;
   }
 
   /**
