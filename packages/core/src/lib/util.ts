@@ -299,8 +299,8 @@ export function escapeGradleString(input: string): string {
 
 /**
  * Escapes a string that will be used inside a double quoted block in the shell. The characters
- * ", $, `, and \ need escaping even when the string is surrounded by double quotes.  
+ * ", $, `, and \ need escaping even when the string is surrounded by double quotes.
  */
 export function escapeDoubleQuotedShellString(input: string): string {
   return input.replace(/([\$"`\\])/g, '\\$1');
-} 
+}
