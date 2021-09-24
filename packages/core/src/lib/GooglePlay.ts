@@ -196,7 +196,6 @@ export class GooglePlay {
    */
   async versionExists(packageName: string, versionCode: number, editId: string):
       Promise<boolean> {
-
     const uploadedApks =
         await this._googlePlayApi.edits.apks.list({packageName: packageName, editId: editId});
 
