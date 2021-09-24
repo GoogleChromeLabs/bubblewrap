@@ -178,7 +178,6 @@ export class GooglePlay {
   /**
    * Starts an edit on the Play servers. This is the basis for any play publishing api operation.
    * @param packageName - the packageName of the app we want to interact with.
-   *
    */
   private async startPlayOperation(packageName: string): Promise<string> {
     const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
@@ -202,7 +201,6 @@ export class GooglePlay {
    * Checks to see if the version that we want to retain already exists within the Play Store.
    * @param packageName - The packageName of the versionCode we are looking up.
    * @param versionCode - The version code of the APK / Bundle we want to retain.
-   *
    */
   async versionExists(packageName: string, versionCode: number, editId: string):
       Promise<PlayOperationResult> {
@@ -211,7 +209,7 @@ export class GooglePlay {
     const uploadedApks =
         await this._googlePlayApi.edits.apks.list({packageName: packageName, editId: editId});
 
-    let found = uploadedApks.data.apks?.find(async (obj) => obj.versionCode == versionCode);
+    let found = uploadedApks.data.apks?.find((obj) => obj.versionCode == versionCode);
 
     if (found) {
       playOpsResult.versionExistsResult = true;

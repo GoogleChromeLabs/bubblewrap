@@ -411,7 +411,7 @@ the PWA:
       'the folder of the path contains the folder "build". Then run bubblewrap doctor again.',
   bothPathsAreValid: 'Your jdkpath and androidSdkPath are valid.',
   versionDoesNotExistOnServer: 'The supplied version code does not exist on the Google Play' +
-    'Servers.',
+    ' Servers.',
   versionToRetainHigherThanBuildVersion:
     (currentVersion: number, versionToRetain: number): string => {
       return `The version to retain (${cyan(versionToRetain.toString())}) is currently higher than
