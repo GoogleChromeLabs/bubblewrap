@@ -31,11 +31,6 @@ export function asPlayStoreTrack(input?: string): PlayStoreTrack | null {
   return TRACK_VALUES.includes(input) ? input as PlayStoreTrack : null;
 }
 
-export interface PlayOperationResult {
-  getLargestVersionCodeResult?: number;
-  versionExistsResult?: boolean;
-}
-
 export class GooglePlay {
   private _googlePlayApi: androidPublisher.Androidpublisher;
 
@@ -59,8 +54,8 @@ export class GooglePlay {
    * @param operation - The Play Operation which requires an editId injected
    * @returns - A PlayOperationResult which contains the output of the operation in a field that was worked upon.
    */
-  async performPlayOperation(packageName: string,
-      operation: (editId: string) => Promise<PlayOperationResult>): Promise<PlayOperationResult> {
+  async performPlayOperation<Type>(packageName: string,
+      operation: (editId: string) => Promise<Type>): Promise<Type> {
     const editId = await this.startPlayOperation(packageName);
     const result = await operation(editId);
     await this.endPlayOperation(packageName, editId);
@@ -89,7 +84,7 @@ export class GooglePlay {
       packageName: string,
       retainedBundles: number[],
       editId: string,
-  ): Promise<PlayOperationResult> {
+  ): Promise<void> {
     const result = await this._googlePlayApi.edits.bundles.upload(
         {
           ackBundleInstallationWarning: false,
@@ -121,8 +116,6 @@ export class GooglePlay {
           packageName: packageName,
         },
     );
-    const playOpsResult: PlayOperationResult = {};
-    return playOpsResult;
   }
 
   /**
@@ -162,7 +155,7 @@ export class GooglePlay {
    * @param packageName - The packageName of the versionCode we are looking up.
    */
   async getLargestVersionCode(packageName: string, editId: string):
-      Promise<PlayOperationResult> {
+      Promise<number> {
     const bundleResponse =
         await this._googlePlayApi.edits.bundles.list({packageName: packageName, editId: editId});
     if (!bundleResponse.data.bundles) {
@@ -171,8 +164,7 @@ export class GooglePlay {
     const versionCode = Math.max(
         ...bundleResponse.data.bundles.map((bundle) => bundle.versionCode!!));
 
-    const playOpsResult: PlayOperationResult = {getLargestVersionCodeResult: versionCode};
-    return playOpsResult;
+    return versionCode;
   }
 
   /**
@@ -203,8 +195,7 @@ export class GooglePlay {
    * @param versionCode - The version code of the APK / Bundle we want to retain.
    */
   async versionExists(packageName: string, versionCode: number, editId: string):
-      Promise<PlayOperationResult> {
-    const playOpsResult: PlayOperationResult = {};
+      Promise<boolean> {
 
     const uploadedApks =
         await this._googlePlayApi.edits.apks.list({packageName: packageName, editId: editId});
@@ -212,8 +203,7 @@ export class GooglePlay {
     let found = uploadedApks.data.apks?.find((obj) => obj.versionCode == versionCode);
 
     if (found) {
-      playOpsResult.versionExistsResult = true;
-      return playOpsResult;
+      return true;
     }
 
     const uploadedBundles =
@@ -222,12 +212,10 @@ export class GooglePlay {
     found = uploadedBundles.data.bundles?.find(async (obj) => obj.versionCode == versionCode);
 
     if (found) {
-      playOpsResult.versionExistsResult = true;
-      return playOpsResult;
+      return true;
     }
 
-    playOpsResult.versionExistsResult = false;
-    return playOpsResult;
+    return false;
   }
 
   /**

@@ -21,7 +21,6 @@ import {TWA_MANIFEST_FILE_NAME} from '../constants';
 import {Prompt, InquirerPrompt} from '../Prompt';
 import {updateProject} from './shared';
 import {enUS} from '../strings';
-import {PlayOperationResult} from '@bubblewrap/core/dist/lib/GooglePlay';
 
 export interface PlayArgs {
   publish?: string;
@@ -54,14 +53,11 @@ class Play {
   * @return {number} The largest version number found in the play console.
   */
   async getLargestVersion(twaManifest: TwaManifest): Promise<number> {
-    const result = await this.googlePlay.performPlayOperation(
-        twaManifest.packageId, async (editId: string): Promise<PlayOperationResult> => {
+    const versionCode = await this.googlePlay.performPlayOperation(
+        twaManifest.packageId, async (editId: string): Promise<number> => {
           return await this.googlePlay.getLargestVersionCode(twaManifest.packageId, editId);
         });
-    if (result.getLargestVersionCodeResult) {
-      return result.getLargestVersionCodeResult;
-    }
-    throw new Error('Play operation failed. Could not find largest version code.');
+    return versionCode;
   }
 
   /**
@@ -88,7 +84,7 @@ class Play {
 
     const retainedBundles = twaManifest.retainedBundles;
     await this.googlePlay.performPlayOperation(twaManifest.packageId,
-        async (editId: string): Promise<PlayOperationResult> => {
+        async (editId: string): Promise<void> => {
           return await this.googlePlay.publishBundle(
               userSelectedTrack, publishFilePath, twaManifest.packageId, retainedBundles, editId);
         });
@@ -151,12 +147,12 @@ class Play {
                 twaManifest.appVersionCode, versionToRetain));
       }
       // Validate that the version exists on the Play Servers.
-      const result = await this.googlePlay.performPlayOperation(twaManifest.packageId,
-          async (editId: string): Promise<PlayOperationResult> => {
+      const exists = await this.googlePlay.performPlayOperation(twaManifest.packageId,
+          async (editId: string): Promise<boolean> => {
             return await this.googlePlay.versionExists(
                 twaManifest.packageId, versionToRetain, editId);
           });
-      if (!result.versionExistsResult) {
+      if (!exists) {
         throw new Error(enUS.versionDoesNotExistOnServer);
       }
 
