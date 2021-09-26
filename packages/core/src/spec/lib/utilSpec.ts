@@ -297,4 +297,11 @@ describe('util', () => {
           .toEqual('Backwards slash \\\\\\\\');
     });
   });
+
+  describe('#escapeDoubleQuotedShellString', () => {
+    it('Escapes \\, `, $, and "', () => {
+      expect(util.escapeDoubleQuotedShellString('"$Hello\\Wo`eld"'))
+          .toEqual('\\"\\$Hello\\\\Wo\\`eld\\"');
+    });
+  });
 });

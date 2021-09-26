@@ -15,7 +15,7 @@
  */
 
 import {existsSync, promises} from 'fs';
-import {execute} from '../util';
+import {execute, escapeDoubleQuotedShellString} from '../util';
 import {JdkHelper} from './JdkHelper';
 import {Log, ConsoleLog} from '../Log';
 
@@ -69,17 +69,19 @@ export class KeyTool {
     }
 
     // Execute Java Keytool
+    const dname = `cn=${KeyTool.escapeDName(keyOptions.fullName)}, ` +
+        `ou=${KeyTool.escapeDName(keyOptions.organizationalUnit)}, ` +
+        `o=${KeyTool.escapeDName(keyOptions.organization)}, ` +
+        `c=${KeyTool.escapeDName(keyOptions.country)}`;
+
     const keytoolCmd = [
       'keytool',
       '-genkeypair',
-      `-dname "cn=${KeyTool.escapeDName(keyOptions.fullName)}, ` +
-          `ou=${KeyTool.escapeDName(keyOptions.organizationalUnit)}, ` +
-          `o=${KeyTool.escapeDName(keyOptions.organization)}, ` +
-          `c=${KeyTool.escapeDName(keyOptions.country)}"`,
-      `-alias \"${keyOptions.alias}\"`,
-      `-keypass \"${keyOptions.keypassword}\"`,
-      `-keystore \"${keyOptions.path}\"`,
-      `-storepass \"${keyOptions.password}\"`,
+      `-dname "${dname}"`,
+      `-alias "${escapeDoubleQuotedShellString(keyOptions.alias)}"`,
+      `-keypass "${escapeDoubleQuotedShellString(keyOptions.keypassword)}"`,
+      `-keystore "${escapeDoubleQuotedShellString(keyOptions.path)}"`,
+      `-storepass "${escapeDoubleQuotedShellString(keyOptions.password)}"`,
       '-validity 20000',
       '-keyalg RSA',
     ];
@@ -107,10 +109,10 @@ export class KeyTool {
       '-J-Duser.language=en',
       '-list',
       '-v',
-      `-keystore \"${keyOptions.path}\"`,
-      `-alias \"${keyOptions.alias}\"`,
-      `-storepass \"${keyOptions.password}\"`,
-      `-keypass \"${keyOptions.keypassword}\"`,
+      `-keystore "${escapeDoubleQuotedShellString(keyOptions.path)}"`,
+      `-alias "${escapeDoubleQuotedShellString(keyOptions.alias)}"`,
+      `-storepass "${escapeDoubleQuotedShellString(keyOptions.password)}"`,
+      `-keypass "${escapeDoubleQuotedShellString(keyOptions.keypassword)}"`,
     ];
     const env = this.jdkHelper.getEnv();
     const result = await execute(keyListCmd, env);
@@ -133,7 +135,7 @@ export class KeyTool {
    * The commas in the dname field from key tool must be escaped, so that 'te,st' becomes 'te\,st'.
    */
   private static escapeDName(input: string): string {
-    return input.replace(/,/g, '\\,');
+    return input.replace(/([,$`])/g, '\\$1');
   }
 
   /**
