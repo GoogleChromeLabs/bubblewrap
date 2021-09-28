@@ -47,7 +47,8 @@ export function isSvgSupported(): boolean {
 export function svg2img(svg: string, options: Svg2imgOptions = {}): Promise<Buffer> {
   if (!_svg2img) {
     return Promise.reject(
-        new Error('Failed to parse the SVG. The svg2img library is not installed'));
+        new Error('Failed to parse the SVG. The installation of the "svg2img" dependency failed ' +
+            'or Bubblewrap was installed with "--no-optional".'));
   }
 
   return new Promise((resolve, reject) => {
