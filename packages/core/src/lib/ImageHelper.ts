@@ -17,7 +17,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as Jimp from 'jimp';
-import fetch from 'node-fetch';
+import {fetchUtils} from './FetchUtils';
 import Color = require('color');
 import {promisify} from 'util';
 import {isSvgSupported, svg2img} from './wrappers/svg2img';
@@ -109,7 +109,8 @@ export class ImageHelper {
    * @returns an Object containing the original URL and the icon image data.
    */
   async fetchIcon(iconUrl: string): Promise<Icon> {
-    const response = await fetch(iconUrl);
+    const response = await fetchUtils.fetch(iconUrl);
+
     if (response.status !== 200) {
       throw new Error(
           `Failed to download icon ${iconUrl}. Responded with status ${response.status}`);
@@ -120,8 +121,7 @@ export class ImageHelper {
       throw new Error(`Received icon "${iconUrl}" with invalid Content-Type.` +
           ` Responded with Content-Type "${contentType}"`);
     }
-    let body;
-    body = await response.buffer();
+    let body = await response.arrayBuffer();
     if (contentType.startsWith('image/svg')) {
       if (!isSvgSupported()) {
         throw new Error(`This installation doesn't support image/svg. Please, ensure the optional
@@ -131,7 +131,7 @@ export class ImageHelper {
     }
     return {
       url: iconUrl,
-      data: await Jimp.read(body),
+      data: await Jimp.read(Buffer.from(body)),
     };
   }
 }

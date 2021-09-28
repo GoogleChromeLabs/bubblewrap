@@ -24,7 +24,7 @@ import {validateHost, validateColor, createValidateString, validateDisplayMode, 
 import {APP_NAME} from '../constants';
 import {Prompt, InquirerPrompt} from '../Prompt';
 import {enUS as messages} from '../strings';
-import {generateTwaProject} from './shared';
+import {generateTwaProject, generateManifestChecksumFile} from './shared';
 
 export interface InitArgs {
   manifest?: string;
@@ -34,6 +34,9 @@ export interface InitArgs {
 }
 
 async function confirmTwaConfig(twaManifest: TwaManifest, prompt: Prompt): Promise<TwaManifest> {
+  // Warn about the Google Play Family Policy
+  prompt.printMessage(messages.warnFamilyPolicy);
+
   // Step 1/5 - Collect information on the Web App.
   prompt.printMessage(messages.messageWebAppDetails);
   prompt.printMessage(messages.messageWebAppDetailsDesc);
@@ -254,6 +257,7 @@ export async function init(
   const twaGenerator = new TwaGenerator();
   await twaManifest.saveToFile(join(targetDirectory, '/twa-manifest.json'));
   await generateTwaProject(prompt, twaGenerator, targetDirectory, twaManifest);
+  await generateManifestChecksumFile(join(targetDirectory, '/twa-manifest.json'), targetDirectory);
   await createSigningKey(twaManifest, config, prompt);
   prompt.printMessage(messages.messageProjectGeneratedSuccess);
   return true;

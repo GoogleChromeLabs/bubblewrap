@@ -58,7 +58,7 @@ See [LICENSE](./LICENSE) for more.
 
 ## Disclaimer
 
-This is not a Google product.
+This is not an officially supported Google product.
 
 [1]: https://developers.google.com/web/android/trusted-web-activity/quick-start
 [2]: https://join.slack.com/t/chromiumdev/shared_invite/zt-4b4af0yu-1mZ7uF6pCjYMC4poRr8Bkg

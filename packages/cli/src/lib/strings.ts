@@ -22,6 +22,7 @@ type Messages = {
   errorCouldNotfindTwaManifest: (file: string) => string;
   errorDirectoryDoesNotExist: (directory: string) => string;
   errorFailedToRunQualityCriteria: string;
+  errorIconUrlMustExist: (manifest: string) => string;
   errorPlayBillingEnableNotifications: string;
   errorPlayBillingAlphaDependencies: string;
   errorMaxLength: (maxLength: number, actualLength: number) => string;
@@ -45,20 +46,29 @@ type Messages = {
   messageApkSuccess: (filename: string) => string;
   messageAppBundleSuccess: (filename: string) => string;
   messageBuildingApp: string;
+  messageCallBubblewrapBuild: string;
   messageDigitalAssetLinksSuccess: (filename: string) => string;
   messageEnterPasswords: (keypath: string, keyalias: string) => string;
   messageGeneratedAssetLinksFile: (outputfile: string) => string;
   messageGeneratingAndroidProject: string;
   messageInstallingBuildTools: string;
+  messageInvalidTrack: string;
   messageLauncherIconAndSplash: string;
   messageLauncherIconAndSplashDesc: string;
   messageLoadingTwaManifestFrom: (path: string) => string;
+  messageNoChecksumFileFound: string;
+  messageNoChecksumNoUpdate: string;
   messageOptionFeatures: string;
   messageOptionalFeaturesDesc: string;
+  messagePlayUploadSuccess: string;
   messageProjectGeneratedSuccess: string;
   messageProjectUpdatedSuccess: string;
+  messageProjectBuildReminder: string;
+  messageProjectNotUpdated: string;
+  messagePublishingWasNotSuccessful: string;
   messageRemovedFingerprint: (fingerpring: Fingerprint) => string;
   messageSavingTwaManifestTo: (path: string) => string;
+  messageServiceAccountJSONMissing: string;
   messageSha256FingerprintNotFound: string;
   messageSigningKeyCreation: string;
   messageSigningKeyInformation: string;
@@ -77,6 +87,7 @@ type Messages = {
   messageDownloadAndroidSdk: string;
   messageDecompressAndroidSdk: string;
   promptCreateDirectory: (directory: string) => string;
+  promptExperimentalFeature: string;
   promptInstallJdk: string;
   promptJdkPath: string;
   promptInstallSdk: string;
@@ -108,6 +119,9 @@ type Messages = {
   promptKeyPassword: string;
   promptNewAppVersionName: string;
   promptVersionCode: string;
+  promptVersionMismatch: (currentVersion: string, playStoreVerison: string) => string;
+  promptUpdateProject: string;
+  warnFamilyPolicy: string;
   warnPwaFailedQuality: string;
   updateConfigUsage: string;
   jdkPathIsNotCorrect: string;
@@ -123,6 +137,9 @@ export const enUS: Messages = {
   },
   errorDirectoryDoesNotExist: (directory: string): string => {
     return `Cannot write to directory: ${directory}.`;
+  },
+  errorIconUrlMustExist: (manifest: string): string => {
+    return `iconUrl field is missing from ${manifest}. Please add an iconUrl to continue.`;
   },
   errorFailedToRunQualityCriteria:
       yellow('\nFailed to run the PWA Quality Criteria checks. Skipping.'),
@@ -202,6 +219,8 @@ into a device:
     return `\t- Generated Android App Bundle at ${cyan(filename)}`;
   },
   messageBuildingApp: '\nBuilding the Android App...',
+  messageCallBubblewrapBuild:
+    red('\nCall: bubblewrap build\n to rebuild the project and enable uploading.'),
   messageDigitalAssetLinksSuccess: (filename: string): string => {
     return `\t- Generated Digital Asset Links file at ${cyan(filename)}
 \nRead more about setting up Digital Asset Links at:
@@ -218,6 +237,7 @@ ${cyan(keyalias)}.\n`;
   messageGeneratingAndroidProject: 'Generating Android Project.',
   messageInstallingBuildTools: 'Installing Android Build Tools. Please, read and accept the ' +
       'license agreement.',
+  messageInvalidTrack: 'The specified track was not found in the list of available tracks.',
   messageLauncherIconAndSplash: underline(`\nLauncher icons and splash screen ${green('(3/5)')}`),
   messageLauncherIconAndSplashDesc: `
 The Android app requires an image for the launcher icon. It also displays a
@@ -242,6 +262,13 @@ a blank white page to users.
   messageLoadingTwaManifestFrom: (path: string): string => {
     return `Loading TWA Manifest from: ${cyan(path)}`;
   },
+  messageNoChecksumFileFound: `
+No checksum file was found to verify the state of the ${cyan('twa-manifest.json')} file.
+To make sure your project is up-to-date, would you like to regenerate your project?
+If you are sure your project is updated and you have already run ${cyan('bubblewrap update')}
+then you may enter "no"`,
+  messageNoChecksumNoUpdate: `
+Project build will continue without regenerating project even though no checksum file was found.`,
   messageOptionFeatures: underline(`\nOptional Features ${green('(4/5)')}`),
   messageOptionalFeaturesDesc: `
 \t- ${bold('Include app shortcuts:')} This question is only prompted if a
@@ -254,16 +281,21 @@ a blank white page to users.
 \t  be used when generating monochrome icons. Monochrome icons should
 \t  look good when displayed with a single color, the PWA's
 \t  ${italic('theme_color')}. They will be used for notification icons.\n`,
+  messagePlayUploadSuccess: 'Project uploaded to Google Play Store',
   messageProjectGeneratedSuccess: '\nProject generated successfully. Build it by running ' +
       cyan('bubblewrap build'),
-  messageProjectUpdatedSuccess: '\nProject updated successfully. Build it by running ' +
-      cyan('bubblewrap build'),
+  messageProjectUpdatedSuccess: '\nProject updated successfully.',
+  messageProjectBuildReminder: 'Build it by running ' + cyan('bubblewrap build'),
+  messageProjectNotUpdated: '\nProject build will continue without newest ' +
+      cyan('twa-manifest.json') + ' changes.',
+  messagePublishingWasNotSuccessful: 'Publishing the project was not successful.',
   messageRemovedFingerprint: (fingerprint: Fingerprint): string => {
     return `Removed fingerprint with value ${fingerprint.value}.`;
   },
   messageSavingTwaManifestTo: (path: string): string => {
     return `Saving TWA Manifest to: ${cyan(path)}`;
   },
+  messageServiceAccountJSONMissing: 'Service account JSON could not be found on disk',
   messageSha256FingerprintNotFound: 'Could not find SHA256 fingerprint. Skipping generating ' +
       '"assetlinks.json"',
   messageSigningKeyCreation: underline('\nSigning key creation'),
@@ -315,6 +347,7 @@ the PWA:
   promptCreateDirectory: (directory: string): string => {
     return `Directory ${cyan(directory)} does not exist. Do you want to create it now?`;
   },
+  promptExperimentalFeature: 'This is an experimental feature. Are you sure you want to continue?',
   promptInstallJdk: `Do you want Bubblewrap to install JDK?
   (Enter "No" to use your JDK installation)`,
   promptJdkPath: 'Path to your existing JDK:',
@@ -348,6 +381,19 @@ the PWA:
   promptKeyPassword: 'Password for the Key:',
   promptNewAppVersionName: 'versionName for the new App version:',
   promptVersionCode: 'Starting version code for the new app version:',
+  promptVersionMismatch: (currentVersion: string, playStoreVerison: string): string => {
+    return `The current play store version (${cyan(playStoreVerison)}) is higher than your twa
+    manifest version (${cyan(currentVersion)}). Do you want to update your TWA Manifest version
+    now?`;
+  },
+  promptUpdateProject: 'There are changes in twa-manifest.json. ' +
+      'Would you like to apply them to the project before building?',
+  warnFamilyPolicy:
+      bold(yellow('WARNING: ')) + 'Trusted Web Activities are currently incompatible' +
+      ' with applications\ntargeting children under the age of 13.' +
+      ' Check out the Play for' +
+      ' Families\npolicies to learn more.\n' +
+      cyan('https://play.google.com/console/about/families/'),
   warnPwaFailedQuality: red('PWA Quality Criteria check failed.'),
   updateConfigUsage: 'Usage: [--jdkPath <path-to-jdk>] [--androidSdkPath <path-to-android-sdk>]' +
       '(You can insert one or both of them)',

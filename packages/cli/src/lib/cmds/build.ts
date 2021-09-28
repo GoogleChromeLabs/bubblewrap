@@ -24,6 +24,7 @@ import {PwaValidator, PwaValidationResult} from '@bubblewrap/validator';
 import {printValidationResult} from '../pwaValidationHelper';
 import {ParsedArgs} from 'minimist';
 import {createValidateString} from '../inputHelpers';
+import {computeChecksum, updateProject} from './shared';
 import {TWA_MANIFEST_FILE_NAME} from '../constants';
 
 // Path to the file generated when building an app bundle file using gradle.
@@ -53,6 +54,18 @@ class Build {
       private jarSigner: JarSigner,
       private log: Log = new ConsoleLog('build'),
       private prompt: Prompt = new InquirerPrompt()) {
+  }
+
+  /**
+   * Checks if the twa-manifest.json file has been changed since the last time the project was generated.
+   */
+  async hasManifestChanged(manifestFile: string): Promise<boolean> {
+    const targetDirectory = this.args.directory || process.cwd();
+    const checksumFile = path.join(targetDirectory, 'manifest-checksum.txt');
+    const prevChecksum = (await fs.promises.readFile(checksumFile)).toString();
+    const manifestContents = await fs.promises.readFile(manifestFile);
+    const currChecksum = computeChecksum(manifestContents);
+    return currChecksum != prevChecksum;
   }
 
   /**
@@ -129,6 +142,23 @@ class Build {
         APP_BUNDLE_BUILD_OUTPUT_FILE_NAME, APP_BUNDLE_SIGNED_FILE_NAME);
   }
 
+  /**
+   * Based on the promptResponse to update the project or not, run an update or print the relevant warning message.
+   *
+   * @returns {Promise<boolean>} whether the appropriate action taken (update project or print warning) was successful
+   */
+  async runUpdate(
+      promptResponse: boolean,
+      manifestFile: string,
+      noUpdateMessage: string): Promise<boolean> {
+    if (!promptResponse) {
+      this.prompt.printMessage(noUpdateMessage);
+      return true;
+    }
+    return await updateProject(false, null, this.prompt,
+        this.args.directory, manifestFile);
+  }
+
   async build(): Promise<boolean> {
     if (!await this.androidSdkTools.checkBuildTools()) {
       this.prompt.printMessage(messages.messageInstallingBuildTools);
@@ -143,6 +173,31 @@ class Build {
     const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
     const twaManifest = await TwaManifest.fromFile(manifestFile);
 
+    const targetDirectory = this.args.directory || process.cwd();
+    const checksumFile = path.join(targetDirectory, 'manifest-checksum.txt');
+    let updateSuccessful = true;
+    if (!fs.existsSync(checksumFile)) {
+      // If checksum file doesn't exist, prompt the user about updating their project
+      const applyChanges = await this.prompt.promptConfirm(
+          messages.messageNoChecksumFileFound,
+          true);
+      updateSuccessful = await this.runUpdate(
+          applyChanges,
+          manifestFile,
+          messages.messageNoChecksumNoUpdate);
+    } else {
+      const hasManifestChanged = await this.hasManifestChanged(manifestFile);
+      if (hasManifestChanged) {
+        const applyChanges = await this.prompt.promptConfirm(messages.promptUpdateProject, true);
+        updateSuccessful = await this.runUpdate(
+            applyChanges,
+            manifestFile,
+            messages.messageProjectNotUpdated);
+      }
+    }
+    if (!updateSuccessful) {
+      return false;
+    }
     let passwords = null;
     let signingKey = twaManifest.signingKey;
     if (!this.args.skipSigning) {
