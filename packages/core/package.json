@@ -50,12 +50,11 @@
     "lodash.template": "^4.5.0",
     "mime-types": "^2.1.28",
     "node-fetch": "^2.6.1",
-    "svg2img": "^0.9.3",
     "tar": "^6.1.0",
     "valid-url": "^1.0.9"
   },
   "optionalDependencies": {
-    "svg2img": "^0.8.1"
+    "svg2img": "^0.9.3"
   },
   "gitHead": "ba2a8430ee11d6bf650ed3d071c9c144fff31538"
 }
