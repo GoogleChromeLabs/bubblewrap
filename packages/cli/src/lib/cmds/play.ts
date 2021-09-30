@@ -87,7 +87,7 @@ class Play {
         async (editId: string): Promise<void> => {
           return await this.googlePlay.publishBundle(
               userSelectedTrack, publishFilePath, twaManifest.packageId, retainedBundles, editId);
-        });
+        }, true);
 
     return true;
   }
@@ -156,7 +156,12 @@ class Play {
         throw new Error(enUS.versionDoesNotExistOnServer);
       }
 
-      twaManifest.retainedBundles.push(versionToRetain);
+      const alreadyRetained = twaManifest.retainedBundles.find(
+          (version) => version == versionToRetain);
+
+      if (!alreadyRetained) {
+        twaManifest.retainedBundles.push(versionToRetain);
+      }
 
       await twaManifest.saveToFile(manifestFile);
     }
