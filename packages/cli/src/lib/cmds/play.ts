@@ -29,6 +29,9 @@ export interface PlayArgs {
   appBundleLocation?: string;
   targetDirectory?: string;
   versionCheck?: boolean;
+  retain?: number;
+  removeRetained?: number;
+  listRetained?: boolean;
 }
 
 // Default file path
@@ -50,7 +53,11 @@ class Play {
   * @return {number} The largest version number found in the play console.
   */
   async getLargestVersion(twaManifest: TwaManifest): Promise<number> {
-    return await this.googlePlay.getLargestVersionCode(twaManifest.packageId);
+    const versionCode = await this.googlePlay.performPlayOperation(
+        twaManifest.packageId, async (editId: string): Promise<number> => {
+          return await this.googlePlay.getLargestVersionCode(twaManifest.packageId, editId);
+        });
+    return versionCode;
   }
 
   /**
@@ -75,10 +82,12 @@ class Play {
       throw new Error(`App Bundle not found on disk: ${publishFilePath}`);
     }
 
-    // TODO(@nohe427): Add cli commands for retained bundles.
-    const retainedBundles = [] as number[];
-    await this.googlePlay.publishBundle(
-        userSelectedTrack, publishFilePath, twaManifest.packageId, retainedBundles);
+    const retainedBundles = twaManifest.retainedBundles;
+    await this.googlePlay.performPlayOperation(twaManifest.packageId,
+        async (editId: string): Promise<void> => {
+          return await this.googlePlay.publishBundle(
+              userSelectedTrack, publishFilePath, twaManifest.packageId, retainedBundles, editId);
+        });
 
     return true;
   }
@@ -122,6 +131,50 @@ class Play {
           await this.updateProjectAndWarn(manifestFile);
         }
       }
+    }
+
+    // bubblewrap play --retain 86
+    if (this.args.retain) {
+      const versionToRetain = this.args.retain;
+      // Validate an integer was supplied.
+      if (!Number.isInteger(versionToRetain)) {
+        throw new Error(enUS.versionRetainedNotAnInteger);
+      }
+      if (versionToRetain > twaManifest.appVersionCode) {
+        // Cannot retain a higher version as that would take precedence.
+        await this.prompt.printMessage(
+            enUS.versionToRetainHigherThanBuildVersion(
+                twaManifest.appVersionCode, versionToRetain));
+      }
+      // Validate that the version exists on the Play Servers.
+      const exists = await this.googlePlay.performPlayOperation(twaManifest.packageId,
+          async (editId: string): Promise<boolean> => {
+            return await this.googlePlay.versionExists(
+                twaManifest.packageId, versionToRetain, editId);
+          });
+      if (!exists) {
+        throw new Error(enUS.versionDoesNotExistOnServer);
+      }
+
+      twaManifest.retainedBundles.push(versionToRetain);
+
+      await twaManifest.saveToFile(manifestFile);
+    }
+
+    // bubblewrap play --removeRetained 86
+    if (this.args.removeRetained) {
+      const versionToRemove = this.args.removeRetained;
+      twaManifest.retainedBundles.filter((obj) => {
+        return obj != versionToRemove;
+      });
+      await twaManifest.saveToFile(manifestFile);
+    }
+
+    // bubblewrap play --listRetained
+    if (this.args.listRetained) {
+      twaManifest.retainedBundles.forEach((version) => {
+        this.prompt.printMessage(`${version}`);
+      });
     }
 
     // bubblewrap play --publish

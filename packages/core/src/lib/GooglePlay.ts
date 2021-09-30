@@ -49,6 +49,20 @@ export class GooglePlay {
   }
 
   /**
+   * Generates an editId that should be used in all play operations.
+   * @param packageName - The package that will be worked upon.
+   * @param operation - The Play Operation which requires an editId injected
+   * @returns - A PlayOperationResult which contains the output of the operation in a field that was worked upon.
+   */
+  async performPlayOperation<Type>(packageName: string,
+      operation: (editId: string) => Promise<Type>): Promise<Type> {
+    const editId = await this.startPlayOperation(packageName);
+    const result = await operation(editId);
+    await this.endPlayOperation(packageName, editId);
+    return result;
+  }
+
+  /**
    * This calls the publish bundle command and publishes an existing artifact to Google
    * Play.
    * Calls the following Play API commands in order:
@@ -69,13 +83,8 @@ export class GooglePlay {
       filepath: string,
       packageName: string,
       retainedBundles: number[],
+      editId: string,
   ): Promise<void> {
-    const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
-    const editId = edit.data.id;
-    if (!editId) {
-      // TODO(@nohe427): Try to recover and understand instances where this might fail.
-      throw new Error('Could not create a Google Play edit');
-    }
     const result = await this._googlePlayApi.edits.bundles.upload(
         {
           ackBundleInstallationWarning: false,
@@ -118,7 +127,7 @@ export class GooglePlay {
    * @param packageName - packageName of the bundle.
    * @param editId - The current edit hosted on Google Play.
    */
-  async addBundleToTrack(
+  private async addBundleToTrack(
       track: PlayStoreTrack,
       versionCodes: string[],
       packageName: string,
@@ -145,23 +154,67 @@ export class GooglePlay {
    * both ChromeOS and Android Releases.
    * @param packageName - The packageName of the versionCode we are looking up.
    */
-  async getLargestVersionCode(packageName: string): Promise<number> {
-    const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
-    const editId = edit.data.id;
-    if (!editId) {
-      throw new Error('Could not create a Google Play edit');
-    }
+  async getLargestVersionCode(packageName: string, editId: string):
+      Promise<number> {
     const bundleResponse =
-      await this._googlePlayApi.edits.bundles.list({packageName: packageName, editId: editId});
+        await this._googlePlayApi.edits.bundles.list({packageName: packageName, editId: editId});
     if (!bundleResponse.data.bundles) {
       throw new Error('No bundles found from Google Play');
     }
     const versionCode = Math.max(
         ...bundleResponse.data.bundles.map((bundle) => bundle.versionCode!!));
-    // cleanup
-    await this._googlePlayApi.edits.delete({editId: editId, packageName: packageName});
 
     return versionCode;
+  }
+
+  /**
+   * Starts an edit on the Play servers. This is the basis for any play publishing api operation.
+   * @param packageName - the packageName of the app we want to interact with.
+   */
+  private async startPlayOperation(packageName: string): Promise<string> {
+    const edit = await this._googlePlayApi.edits.insert({packageName: packageName});
+    const editId = edit.data.id;
+    if (!editId) {
+      throw new Error('Could not create a Google Play edit');
+    }
+    return editId;
+  }
+
+  /**
+   * Cancels the edit in progress on the Play server.
+   * @param packageName - The packageName of the app we are interacting with.
+   * @param editId - The editId that is currently in progress.
+   */
+  private async endPlayOperation(packageName: string, editId: string): Promise<void> {
+    await this._googlePlayApi.edits.delete({editId: editId, packageName: packageName});
+  }
+
+  /**
+   * Checks to see if the version that we want to retain already exists within the Play Store.
+   * @param packageName - The packageName of the versionCode we are looking up.
+   * @param versionCode - The version code of the APK / Bundle we want to retain.
+   */
+  async versionExists(packageName: string, versionCode: number, editId: string):
+      Promise<boolean> {
+    const uploadedApks =
+        await this._googlePlayApi.edits.apks.list({packageName: packageName, editId: editId});
+
+    let found = uploadedApks.data.apks?.find((obj) => obj.versionCode == versionCode);
+
+    if (found) {
+      return true;
+    }
+
+    const uploadedBundles =
+        await this._googlePlayApi.edits.bundles.list({packageName: packageName, editId: editId});
+
+    found = uploadedBundles.data.bundles?.find(async (obj) => obj.versionCode == versionCode);
+
+    if (found) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
