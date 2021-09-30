@@ -164,7 +164,7 @@ class Play {
     // bubblewrap play --removeRetained 86
     if (this.args.removeRetained) {
       const versionToRemove = this.args.removeRetained;
-      twaManifest.retainedBundles.filter((obj) => {
+      twaManifest.retainedBundles = twaManifest.retainedBundles.filter((obj) => {
         return obj != versionToRemove;
       });
       await twaManifest.saveToFile(manifestFile);
