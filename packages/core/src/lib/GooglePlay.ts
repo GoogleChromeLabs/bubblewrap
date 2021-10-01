@@ -52,13 +52,16 @@ export class GooglePlay {
    * Generates an editId that should be used in all play operations.
    * @param packageName - The package that will be worked upon.
    * @param operation - The Play Operation which requires an editId injected
+   * @param commitEdit - Whether or not this edit is a action or query edit. true indicates an action edit.
    * @returns - A PlayOperationResult which contains the output of the operation in a field that was worked upon.
    */
   async performPlayOperation<Type>(packageName: string,
-      operation: (editId: string) => Promise<Type>): Promise<Type> {
+      operation: (editId: string) => Promise<Type>, commitEdit = false): Promise<Type> {
     const editId = await this.startPlayOperation(packageName);
     const result = await operation(editId);
-    await this.endPlayOperation(packageName, editId);
+    if (!commitEdit) {
+      await this.endPlayOperation(packageName, editId);
+    }
     return result;
   }
 
@@ -208,7 +211,7 @@ export class GooglePlay {
     const uploadedBundles =
         await this._googlePlayApi.edits.bundles.list({packageName: packageName, editId: editId});
 
-    found = uploadedBundles.data.bundles?.find(async (obj) => obj.versionCode == versionCode);
+    found = uploadedBundles.data.bundles?.find((obj) => obj.versionCode == versionCode);
 
     if (found) {
       return true;
