@@ -127,7 +127,7 @@ class Play {
             twaManifest.appVersionCode.toString(), version.toString()), true);
         if (updateVersion) {
           if (twaManifest.appVersionCode.toString() == twaManifest.appVersionName) {
-            twaManifest.appVersionName = (version+1).toString();
+            twaManifest.appVersionName = (version + 1).toString();
           }
           twaManifest.appVersionCode = version + 1;
           await twaManifest.saveToFile(manifestFile);
