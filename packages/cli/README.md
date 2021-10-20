@@ -291,7 +291,7 @@ Fields:
 |appVersion|string|false|`versionName` for the Android application. Check the [Android docs](https://developer.android.com/studio/publish/versioning) for details.|
 |appVersionCode|number|false|`versionCode` for the Android application. Check the [Android docs](https://developer.android.com/studio/publish/versioning) for details.|
 |backgroundColor|string|true|Color used for the splash screen background.|
-|display|`'standalone'` \| `'fullscreen'` \| `'fullscreen-sticky'`|false|The initial [display mode](https://developer.mozilla.org/en-US/docs/Web/Manifest/display) for the Android application. `fullscree-sticky` corresponds to Android's [Immersive Sticky](https://developer.android.com/training/system-ui/immersive#sticky-immersive). Defaults to `standalone`.|
+|display|`'standalone'` \| `'fullscreen'` \| `'fullscreen-sticky'`|false|The initial [display mode](https://developer.mozilla.org/en-US/docs/Web/Manifest/display) for the Android application. `fullscreen-sticky` corresponds to Android's [Immersive Sticky](https://developer.android.com/training/system-ui/immersive#sticky-immersive). Defaults to `standalone`.|
 |enableNotifications|boolean|true|Set to `true` to enable notification delegation.|
 |enableSiteSettingsShortcut|boolean|false|Adds a shortcut to the site settings in the application launcher. Defaults to `true`.|
 |fallbackType|`'customtabs'` \| `'webview'`|false|Fallback strategy used when a browser that supports Trusted Web Activity is not available on the users device. Defaults to `'customtabs'`.|
