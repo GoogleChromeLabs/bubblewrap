@@ -273,6 +273,28 @@ bubblewrap fingerprint generateAssetLinks <flags>
 Flags:
  - `--output=<filename>`: path from where to load the project configuration.
 
+## `play`
+
+Manages the artifacts for your Google Play Project.
+
+Usage:
+
+```
+bubblewrap play --serivceAccountFile="/path/to/serivce/account"  --retain 86 --publish
+```
+
+This tool requires a service account file to work correctly. Please see [this documentation](https://github.com/chromeos/pwa-play-billing#setup-a-service-account) for setting up a service acocunt.
+
+Options:
+  - `--publish`: publishes the prebuilt file to the Google Play Store under the internal track or specificed track.
+  - `--serviceAccountJsonFile`: sets the service acocunt json file location in the twa-manifest.
+  - `--manifest`: specifies the manifest file to use if not in the current directory.
+  - `--appBundleLocation`: specifies the location of the appbundle to upload to Google Play.
+  - `--targetDirectory`: the directory that versionCheck should run in.
+  - `--versionCheck`: checks that the version specified is higher than the one currently in the Google Play Store.
+  - `--retain`: specifies the bundles to retain for release (this would be Android only bundles if releasing a Chrome OS only release).
+  - `--removeRetained`: removes the specified bundle if no longer relevant.
+  - `--listRetained`: shows a list of existing retained bundles.
 
 ## `twa-manifest.json` reference
 
@@ -311,7 +333,8 @@ Fields:
 |navigationDividerColorDark|string|false|The color used for the navigation bar divider when the device is dark mode. Defaults to `#000000`.|
 |orientation|`'default'` \| `'any'` \| `'natural'` \| `'landscape'` \| `'portrait'` \| `'portrait-primary'` \| `'portrait-secondary'` \| `'landscape-primary'` \| `'landscape-secondary'`|false|Initial orientation used to launch the Android application. Defaults to `'default'`.|
 |packageId|string|true|The [application id](https://developer.android.com/studio/build/application-id) for the output Android app.|
-|serviceAccountJsonFile|string|false|The Play Store serviced account information. Currently unused.|
+|retainedBundles|Array<number>|false|These are the bundles of app bundles that you want to retain when publishing a new bundle.|
+|serviceAccountJsonFile|string|false|The Play Store serviced account information. [Guide to setting up](https://github.com/chromeos/pwa-play-billing#setup-a-service-account)|
 |shareTarget|[ShareTarget](https://w3c.github.io/web-share-target/#sharetarget-and-its-members)|false|[Web Share Target](https://web.dev/web-share-target/) configuration for the application.|
 |shortcuts|[ShortcutInfo](https://developer.mozilla.org/en-US/docs/Web/Manifest/shortcuts)[]|false|[Shortcuts](https://web.dev/app-shortcuts/) configuration for the application.|
 |signingKey|[SigningKeyInfo](#SigningKeyInfo)|true|Signing key and alias used to sign the Android application. Read the [SigningKeyInfo](#SigningKeyInfo) section for details.|
