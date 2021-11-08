@@ -282,17 +282,17 @@ Manages the artifacts for your Google Play Project.
 Usage:
 
 ```
-bubblewrap play --serivceAccountFile="/path/to/serivce/account"  --retain 86 --publish
+bubblewrap play --serviceAccountFile="/path/to/service/account.json"  --retain 86 --publish
 ```
 
 This tool requires a service account file to work correctly. Please see [this documentation](https://github.com/chromeos/pwa-play-billing#setup-a-service-account) for setting up a service acocunt.
 
 Options:
-  - `--publish`: publishes the prebuilt file to the Google Play Store under the internal track or specificed track.
-  - `--serviceAccountJsonFile`: sets the service acocunt json file location in the twa-manifest.
+  - `--publish`: publishes the prebuilt file to the Google Play Store specificed track (defaults to internal track).
+  - `--serviceAccountJsonFile`: sets the service account json file location in the twa-manifest.
   - `--manifest`: specifies the manifest file to use if not in the current directory.
   - `--appBundleLocation`: specifies the location of the appbundle to upload to Google Play.
-  - `--targetDirectory`: the directory that versionCheck should run in.
+  - `--targetDirectory`: the directory that versionCheck should run in (defaults to the current directory).
   - `--versionCheck`: checks that the version specified is higher than the one currently in the Google Play Store.
   - `--retain`: specifies the bundles to retain for release (this would be Android only bundles if releasing a Chrome OS only release).
   - `--removeRetained`: removes the specified bundle if no longer relevant.
