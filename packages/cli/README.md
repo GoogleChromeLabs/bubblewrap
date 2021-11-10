@@ -279,24 +279,51 @@ Flags:
 
 Manages the artifacts for your Google Play Project.
 
+**Note**:
+These feature requires a service account file to work correctly. Please see [this documentation](https://github.com/chromeos/pwa-play-billing#setup-a-service-account) for setting up a service acocunt.
+
+The following options can be applied to all of the features commands:
+  - `--serviceAccountJsonFile`: sets the service account json file location in the twa-manifest.
+  - `--manifest`: specifies the manifest file to use if not in the current directory.
+
+### Subcommands
+
+#### `playPublish`
+
 Usage:
 
 ```
-bubblewrap play --serviceAccountFile="/path/to/service/account.json"  --retain 86 --publish
+bubblewrap playPublish --serviceAccountFile="/path/to/service/account.json"  --track="beta" --appBundleLocation="/home/appBundle.aab"
 ```
 
-This tool requires a service account file to work correctly. Please see [this documentation](https://github.com/chromeos/pwa-play-billing#setup-a-service-account) for setting up a service acocunt.
+Options:
+  - `--track`: publishes the prebuilt file to the Google Play Store specificed track (defaults to internal track).
+  - `--appBundleLocation`: specifies the location of the appbundle to upload to Google Play.
+
+#### `playRetain`
+
+Usage:
+
+```
+bubblewrap playRetain --add=86
+```
 
 Options:
-  - `--publish`: publishes the prebuilt file to the Google Play Store specificed track (defaults to internal track).
-  - `--serviceAccountJsonFile`: sets the service account json file location in the twa-manifest.
-  - `--manifest`: specifies the manifest file to use if not in the current directory.
-  - `--appBundleLocation`: specifies the location of the appbundle to upload to Google Play.
-  - `--targetDirectory`: the directory that versionCheck should run in (defaults to the current directory).
-  - `--versionCheck`: checks that the version specified is higher than the one currently in the Google Play Store.
-  - `--retain`: specifies the bundles to retain for release (this would be Android only bundles if releasing a Chrome OS only release).
-  - `--removeRetained`: removes the specified bundle if no longer relevant.
-  - `--listRetained`: shows a list of existing retained bundles.
+  - `--add`: specifies the bundles to retain for release (this would be Android only bundles if releasing a Chrome OS only release).
+  - `--remove`: removes the specified bundle if no longer relevant.
+  - `--list`: shows a list of existing retained bundles in the twa-manifest.json, not what is listed as retained from play.
+
+#### `playVersionCheck`
+
+Usage:
+
+```
+bubblewrap playVersionCheck --serviceAccountFile="/path/to/service/account.json"  --track="beta"
+```
+
+Options:
+  - `--targetDirectory`: the directory that versionCheck should run in (defaults to the current directory). This should be your bubblewrap project directory.
+  - `--versionCheck`: checks that the version in your app is higher than the one currently in the Google Play Store.
 
 ## `twa-manifest.json` reference
 
