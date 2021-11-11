@@ -27,6 +27,7 @@ import {AppsFlyerConfig} from './features/AppsFlyerFeature';
 import {LocationDelegationConfig} from './features/LocationDelegationFeature';
 import {PlayBillingConfig} from './features/PlayBillingFeature';
 import {FirstRunFlagConfig} from './features/FirstRunFlagFeature';
+import {ArCoreConfig} from './features/ArCoreFeature';
 
 // The minimum size needed for the app icon.
 const MIN_ICON_SIZE = 512;
@@ -83,6 +84,7 @@ type Features = {
   locationDelegation?: LocationDelegationConfig;
   playBilling?: PlayBillingConfig;
   firstRunFlag?: FirstRunFlagConfig;
+  arCore?: ArCoreConfig;
 };
 
 type alphaDependencies = {
@@ -404,7 +406,7 @@ export class TwaManifest {
           shortcuts.push(shortcutInfo);
         }
       } catch (err) {
-        TwaManifest.log.warn(`Skipping shortcut[${i}] for ${err.message}.`);
+        TwaManifest.log.warn(`Skipping shortcut[${i}] for ${err}.`);
       }
       if (shortcuts.length === 4) {
         break;
@@ -517,6 +519,7 @@ export interface TwaManifestJson {
     locationDelegation?: LocationDelegationConfig;
     playBilling?: PlayBillingConfig;
     firstRunFlag?: FirstRunFlagConfig;
+    arCore?: ArCoreConfig;
   };
   alphaDependencies?: {
     enabled: boolean;

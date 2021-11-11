@@ -14,13 +14,14 @@
  *  limitations under the License.
  */
 
-import {Feature} from './Feature';
+import {Feature, Metadata} from './Feature';
 import {AppsFlyerFeature} from './AppsFlyerFeature';
 import {LocationDelegationFeature} from './LocationDelegationFeature';
 import {PlayBillingFeature} from './PlayBillingFeature';
 import {TwaManifest} from '../TwaManifest';
 import {FirstRunFlagFeature} from './FirstRunFlagFeature';
 import {Log, ConsoleLog} from '../Log';
+import {ArCoreFeature} from './ArCoreFeature';
 
 const ANDROID_BROWSER_HELPER_VERSIONS = {
   stable: 'com.google.androidbrowserhelper:androidbrowserhelper:2.3.0',
@@ -39,6 +40,7 @@ export class FeatureManager {
   androidManifest = {
     permissions: new Set<string>(),
     components: new Array<string>(),
+    applicationMetadata: new Array<Metadata>(),
   };
   applicationClass = {
     imports: new Set<string>(),
@@ -91,6 +93,10 @@ export class FeatureManager {
     } else {
       this.buildGradle.dependencies.add(ANDROID_BROWSER_HELPER_VERSIONS.stable);
     }
+
+    if (twaManifest.features.arCore?.enabled) {
+      this.addFeature(new ArCoreFeature());
+    }
   }
 
   private addFeature(feature: Feature): void {
@@ -121,6 +127,10 @@ export class FeatureManager {
 
     feature.androidManifest.components.forEach((component) => {
       this.androidManifest.components.push(component);
+    });
+
+    feature.androidManifest.applicationMetadata.forEach((metadata) => {
+      this.androidManifest.applicationMetadata.push(metadata);
     });
 
     // Adds properties to launcherActivity.
