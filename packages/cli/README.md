@@ -318,12 +318,11 @@ Options:
 Usage:
 
 ```
-bubblewrap playVersionCheck --serviceAccountFile="/path/to/service/account.json"  --track="beta"
+bubblewrap playVersionCheck --serviceAccountFile="/path/to/service/account.json"  --targetDirectory="/home/my/app/dir"
 ```
 
 Options:
   - `--targetDirectory`: the directory that versionCheck should run in (defaults to the current directory). This should be your bubblewrap project directory.
-  - `--versionCheck`: checks that the version in your app is higher than the one currently in the Google Play Store.
 
 ## `twa-manifest.json` reference
 
