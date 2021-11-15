@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import {Feature} from './Feature';
+import {Feature, Metadata} from './Feature';
 
 export class EmptyFeature implements Feature {
   name: string;
@@ -29,9 +29,11 @@ export class EmptyFeature implements Feature {
   androidManifest: {
     permissions: string[];
     components: string[];
+    applicationMetadata: Metadata[];
   } = {
     permissions: new Array<string>(),
     components: new Array<string>(),
+    applicationMetadata: new Array<Metadata>(),
   };
 
   applicationClass: {

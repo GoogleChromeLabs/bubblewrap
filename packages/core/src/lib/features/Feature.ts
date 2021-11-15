@@ -14,6 +14,10 @@
  *  limitations under the License.
  */
 
+export class Metadata {
+  constructor(public readonly name: string, public readonly value: string) {};
+}
+
 /**
  * Specifies a set of customizations to be applied when generating the Android project
  * in order to enable a feature.
@@ -61,6 +65,10 @@ export interface Feature {
      * ```
      */
     components: string[];
+    /**
+     * Additional meta-data items to be added into the `application` tag.
+     */
+    applicationMetadata: Metadata[];
   };
   /**
    * Customizations to be added to `app/src/main/java/<app-package>/Application.java`.

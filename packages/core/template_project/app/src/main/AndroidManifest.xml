@@ -55,6 +55,12 @@
             android:name="twa_generator"
             android:value="@string/generatorApp" />
 
+        <% for (const metadata of androidManifest.applicationMetadata) {%>
+            <meta-data
+                android:name="<%= metadata.name %>"
+                android:value="<%= metadata.value %>" />
+        <% } %>
+
         <% if (enableSiteSettingsShortcut) { %>
             <activity android:name="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity">
             <meta-data
