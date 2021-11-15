@@ -280,7 +280,7 @@ Flags:
 Manages the artifacts for your Google Play Project.
 
 **Note**:
-These feature requires a service account file to work correctly. Please see [this documentation](https://github.com/chromeos/pwa-play-billing#setup-a-service-account) for setting up a service acocunt.
+These feature requires a service account file to work correctly. Please see [this documentation](https://github.com/chromeos/pwa-play-billing#setup-a-service-account) for setting up a service account.
 
 The following options can be applied to all of the features commands:
   - `--serviceAccountJsonFile`: sets the service account json file location in the twa-manifest.
