@@ -298,7 +298,7 @@ bubblewrap playPublish --serviceAccountFile="/path/to/service/account.json"  --t
 
 Options:
   - `--track`: publishes the prebuilt file to the Google Play Store specificed track (defaults to internal track).
-  - `--appBundleLocation`: specifies the location of the appbundle to upload to Google Play.
+  - `--appBundleLocation`: specifies the location of the appbundle to upload to Google Play (defaults to current directory).
 
 #### `playRetain`
 
