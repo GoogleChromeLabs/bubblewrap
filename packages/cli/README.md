@@ -293,7 +293,7 @@ The following options can be applied to all of the features commands:
 Usage:
 
 ```
-bubblewrap playPublish --serviceAccountFile="/path/to/service/account.json"  --track="beta" --appBundleLocation="/home/appBundle.aab"
+bubblewrap playPublish --serviceAccountFile="/path/to/service/account.json" --track="beta" --appBundleLocation="/home/appBundle.aab"
 ```
 
 Options:
