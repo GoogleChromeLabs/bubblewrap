@@ -31,6 +31,7 @@ import {merge} from './cmds/merge';
 import {fingerprint} from './cmds/fingerprint';
 // import {play, PlayArgs} from './cmds/play';
 import {fetchUtils} from '@bubblewrap/core';
+import { play, PlayArgs } from './cmds/play';
 // import { play, PlayArgs, playPublish } from './cmds/play';
 
 export class Cli {
@@ -93,6 +94,8 @@ export class Cli {
       //   return await play(parsedArgs as unknown as PlayArgs);
       // case 'playPublish':
       //   return await play(parsedArgs as unknown as PlayArgs, 'publish');
+      // case 'playVersionCheck':
+      //     return await play(parsedArgs as unknown as PlayArgs, 'versionCheck');
       default:
         throw new Error(
             `"${command}" is not a valid command! Use 'bubblewrap help' for a list of commands`);
