@@ -28,7 +28,6 @@ export interface PlayArgs {
   manifest?: string;
   appBundleLocation?: string;
   targetDirectory?: string;
-  versionCheck?: boolean;
   retain?: number;
   removeRetained?: number;
   listRetained?: boolean;
@@ -119,23 +118,6 @@ class Play {
     const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
     const twaManifest = await TwaManifest.fromFile(manifestFile);
 
-    // bubblewrap play --versionCheck
-    if (this.args.versionCheck) {
-      const version = await this.getLargestVersion(twaManifest);
-      if (version >= twaManifest.appVersionCode) {
-        const updateVersion = await this.prompt.promptConfirm(enUS.promptVersionMismatch(
-            twaManifest.appVersionCode.toString(), version.toString()), true);
-        if (updateVersion) {
-          if (twaManifest.appVersionCode.toString() == twaManifest.appVersionName) {
-            twaManifest.appVersionName = (version + 1).toString();
-          }
-          twaManifest.appVersionCode = version + 1;
-          await twaManifest.saveToFile(manifestFile);
-          await this.updateProjectAndWarn(manifestFile);
-        }
-      }
-    }
-
     // bubblewrap play --retain 86
     if (this.args.retain) {
       const versionToRetain = this.args.retain;
@@ -196,6 +178,26 @@ class Play {
     }
 
     return true;
+  }
+
+  async versionCheck(): Promise<boolean> {
+    const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
+    const twaManifest = await TwaManifest.fromFile(manifestFile);
+
+    // bubblewrap playVersionCheck
+    const version = await this.getLargestVersion(twaManifest);
+    if (version >= twaManifest.appVersionCode) {
+      const updateVersion = await this.prompt.promptConfirm(enUS.promptVersionMismatch(
+          twaManifest.appVersionCode.toString(), version.toString()), true);
+      if (updateVersion) {
+        if (twaManifest.appVersionCode.toString() == twaManifest.appVersionName) {
+          twaManifest.appVersionName = (version + 1).toString();
+        }
+        twaManifest.appVersionCode = version + 1;
+        await twaManifest.saveToFile(manifestFile);
+        await this.updateProjectAndWarn(manifestFile);
+      }
+    }
   }
 }
 
