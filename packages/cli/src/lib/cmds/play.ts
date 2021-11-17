@@ -37,6 +37,8 @@ export interface PlayArgs {
 // Default file path
 const defaultSignedAppBundleFileName = 'app-release-bundle.aab';
 
+type PlayCommand = 'publish' | 'retain' | 'versionCheck';
+
 /**
   * The Play class is the class that is used to communicate with the Google Play Store.
   */
@@ -238,24 +240,16 @@ async function setupGooglePlay(args: PlayArgs): Promise<GooglePlay> {
   return new GooglePlay(twaManifest.serviceAccountJsonFile);
 }
 
-export async function playPublish(parsedArgs: PlayArgs,
-    prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
-  // TODO(@nohe427): Remove after experimental
-  if (!await prompt.promptConfirm(enUS.promptExperimentalFeature, false)) {
-    return true;
-  }
-  const googlePlay = await setupGooglePlay(parsedArgs);
-  const play = new Play(parsedArgs, googlePlay, prompt);
-  return await play.runPlayPublish();
-}
-
 export async function play(parsedArgs: PlayArgs,
-    prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
+    command: PlayCommand, prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
   // TODO(@nohe427): Remove after experimental
   if (!await prompt.promptConfirm(enUS.promptExperimentalFeature, false)) {
     return true;
   }
   const googlePlay = await setupGooglePlay(parsedArgs);
   const play = new Play(parsedArgs, googlePlay, prompt);
+  if (command == 'publish') {
+    return await play.runPlayPublish();
+  }
   return await play.run();
 }
