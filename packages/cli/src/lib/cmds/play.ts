@@ -23,7 +23,7 @@ import {updateProject} from './shared';
 import {enUS} from '../strings';
 
 export interface PlayArgs {
-  publish?: string;
+  track?: string;
   serviceAccountFile?: string;
   manifest?: string;
   appBundleLocation?: string;
@@ -35,6 +35,8 @@ export interface PlayArgs {
 
 // Default file path
 const defaultSignedAppBundleFileName = 'app-release-bundle.aab';
+
+type PlayCommand = 'publish' | 'retain' | 'versionCheck';
 
 /**
   * The Play class is the class that is used to communicate with the Google Play Store.
@@ -67,7 +69,7 @@ class Play {
   async publish(twaManifest: TwaManifest): Promise<boolean> {
     // Validate that the publish value is listed in the available Tracks.
     // If no value was supplied with publish we make it internal.
-    const userSelectedTrack = asPlayStoreTrack(this.args.publish?.toLowerCase() || 'internal');
+    const userSelectedTrack = asPlayStoreTrack(this.args.track?.toLowerCase() || 'internal');
     if (userSelectedTrack == null) {
       this.prompt.printMessage(enUS.messageInvalidTrack);
       return false;
@@ -112,9 +114,6 @@ class Play {
   * @return {boolean} Returns whether or not the run command completed successfully.
   */
   async run(): Promise<boolean> {
-    if (!await this.prompt.promptConfirm(enUS.promptExperimentalFeature, false)) {
-      return true;
-    }
     const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
     const twaManifest = await TwaManifest.fromFile(manifestFile);
 
@@ -167,16 +166,25 @@ class Play {
       });
     }
 
-    // bubblewrap play --publish
-    if (this.args.publish) {
-      const success = await this.publish(twaManifest);
-      if (!success) {
-        this.prompt.printMessage(enUS.messagePublishingWasNotSuccessful);
-        return false;
-      }
-      this.prompt.printMessage(enUS.messagePlayUploadSuccess);
-    }
+    return true;
+  }
 
+  /**
+   * Calls the publish workflow to the Play Store. This takes a user supplied track (or internal)
+   *  and an appBundleLocation (defaults to the current directory) and uploads these artifacts to
+   *  the Google Play Store.
+   * @returns whether the playPublish command completed successfully
+   */
+  async runPlayPublish(): Promise<boolean> {
+    const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
+    const twaManifest = await TwaManifest.fromFile(manifestFile);
+
+    const success = await this.publish(twaManifest);
+    if (!success) {
+      this.prompt.printMessage(enUS.messagePublishingWasNotSuccessful);
+      return false;
+    }
+    this.prompt.printMessage(enUS.messagePlayUploadSuccess);
     return true;
   }
 
@@ -235,9 +243,15 @@ async function setupGooglePlay(args: PlayArgs): Promise<GooglePlay> {
 }
 
 export async function play(parsedArgs: PlayArgs,
-    prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
+    command: PlayCommand, prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
+  // TODO(@nohe427): Remove after experimental
+  if (!await prompt.promptConfirm(enUS.promptExperimentalFeature, false)) {
+    return true;
+  }
   const googlePlay = await setupGooglePlay(parsedArgs);
   const play = new Play(parsedArgs, googlePlay, prompt);
-  await play.run();
-  return true;
+  if (command == 'publish') {
+    return await play.runPlayPublish();
+  }
+  return await play.run();
 }
