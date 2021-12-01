@@ -93,6 +93,8 @@ export class Cli {
       //   return await play(parsedArgs as unknown as PlayArgs);
       // case 'playPublish':
       //   return await play(parsedArgs as unknown as PlayArgs, 'publish');
+      // case 'playVersionCheck':
+      //     return await play(parsedArgs as unknown as PlayArgs, 'versionCheck');
       default:
         throw new Error(
             `"${command}" is not a valid command! Use 'bubblewrap help' for a list of commands`);

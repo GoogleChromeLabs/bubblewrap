@@ -28,7 +28,6 @@ export interface PlayArgs {
   manifest?: string;
   appBundleLocation?: string;
   targetDirectory?: string;
-  versionCheck?: boolean;
   retain?: number;
   removeRetained?: number;
   listRetained?: boolean;
@@ -118,23 +117,6 @@ class Play {
     const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
     const twaManifest = await TwaManifest.fromFile(manifestFile);
 
-    // bubblewrap play --versionCheck
-    if (this.args.versionCheck) {
-      const version = await this.getLargestVersion(twaManifest);
-      if (version >= twaManifest.appVersionCode) {
-        const updateVersion = await this.prompt.promptConfirm(enUS.promptVersionMismatch(
-            twaManifest.appVersionCode.toString(), version.toString()), true);
-        if (updateVersion) {
-          if (twaManifest.appVersionCode.toString() == twaManifest.appVersionName) {
-            twaManifest.appVersionName = (version + 1).toString();
-          }
-          twaManifest.appVersionCode = version + 1;
-          await twaManifest.saveToFile(manifestFile);
-          await this.updateProjectAndWarn(manifestFile);
-        }
-      }
-    }
-
     // bubblewrap play --retain 86
     if (this.args.retain) {
       const versionToRetain = this.args.retain;
@@ -205,6 +187,30 @@ class Play {
     this.prompt.printMessage(enUS.messagePlayUploadSuccess);
     return true;
   }
+
+  /**
+   * Runs the version check workflow. If the published version is higher than that of the twaManifest,
+   *  we assume that the version that exists locally is needs to be updated to a higher version.
+   */
+  async runVersionCheck(): Promise<void> {
+    const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
+    const twaManifest = await TwaManifest.fromFile(manifestFile);
+
+    // bubblewrap playVersionCheck
+    const version = await this.getLargestVersion(twaManifest);
+    if (version >= twaManifest.appVersionCode) {
+      const updateVersion = await this.prompt.promptConfirm(enUS.promptVersionMismatch(
+          twaManifest.appVersionCode.toString(), version.toString()), true);
+      if (updateVersion) {
+        if (twaManifest.appVersionCode.toString() == twaManifest.appVersionName) {
+          twaManifest.appVersionName = (version + 1).toString();
+        }
+        twaManifest.appVersionCode = version + 1;
+        await twaManifest.saveToFile(manifestFile);
+        await this.updateProjectAndWarn(manifestFile);
+      }
+    }
+  }
 }
 
 /**
@@ -248,8 +254,12 @@ export async function play(parsedArgs: PlayArgs,
   }
   const googlePlay = await setupGooglePlay(parsedArgs);
   const play = new Play(parsedArgs, googlePlay, prompt);
-  if (command == 'publish') {
-    return await play.runPlayPublish();
+  switch (command) {
+    case 'publish':
+      return await play.runPlayPublish();
+    case 'versionCheck':
+      await play.runVersionCheck();
+      return true;
   }
   return await play.run();
 }
