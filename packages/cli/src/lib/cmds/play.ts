@@ -29,8 +29,9 @@ export interface PlayArgs {
   appBundleLocation?: string;
   targetDirectory?: string;
   retain?: number;
-  removeRetained?: number;
-  listRetained?: boolean;
+  remove?: number;
+  list?: boolean;
+  add?: number;
 }
 
 // Default file path
@@ -110,16 +111,16 @@ class Play {
   }
 
   /**
-  * Runs the play command. This allows multiple flags to be handled through here.
+  * Runs the playRetain command. This handles the retaining of packages that are published on Play.
   * @return {boolean} Returns whether or not the run command completed successfully.
   */
-  async run(): Promise<boolean> {
+  async runRetain(): Promise<boolean> {
     const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
     const twaManifest = await TwaManifest.fromFile(manifestFile);
 
-    // bubblewrap play --retain 86
-    if (this.args.retain) {
-      const versionToRetain = this.args.retain;
+    // bubblewrap playRetain --add 86
+    if (this.args.add) {
+      const versionToRetain = this.args.add;
       // Validate an integer was supplied.
       if (!Number.isInteger(versionToRetain)) {
         throw new Error(enUS.versionRetainedNotAnInteger);
@@ -150,17 +151,17 @@ class Play {
       await twaManifest.saveToFile(manifestFile);
     }
 
-    // bubblewrap play --removeRetained 86
-    if (this.args.removeRetained) {
-      const versionToRemove = this.args.removeRetained;
+    // bubblewrap playRetain --remove 86
+    if (this.args.remove) {
+      const versionToRemove = this.args.remove;
       twaManifest.retainedBundles = twaManifest.retainedBundles.filter((obj) => {
         return obj != versionToRemove;
       });
       await twaManifest.saveToFile(manifestFile);
     }
 
-    // bubblewrap play --listRetained
-    if (this.args.listRetained) {
+    // bubblewrap playRetain --list
+    if (this.args.list) {
       twaManifest.retainedBundles.forEach((version) => {
         this.prompt.printMessage(`${version}`);
       });
@@ -260,6 +261,7 @@ export async function play(parsedArgs: PlayArgs,
     case 'versionCheck':
       await play.runVersionCheck();
       return true;
+    case 'retain':
+      return await play.runRetain();
   }
-  return await play.run();
 }
