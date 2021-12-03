@@ -31,6 +31,7 @@ import {merge} from './cmds/merge';
 import {fingerprint} from './cmds/fingerprint';
 // import {play, PlayArgs} from './cmds/play';
 import {fetchUtils} from '@bubblewrap/core';
+// import { play, PlayArgs, playPublish } from './cmds/play';
 
 export class Cli {
   async run(args: string[]): Promise<boolean> {
@@ -89,7 +90,13 @@ export class Cli {
       case 'fingerprint':
         return await fingerprint(parsedArgs);
       // case 'play':
-      //   return await play(config, parsedArgs as unknown as PlayArgs);
+      //   return await play(parsedArgs as unknown as PlayArgs);
+      // case 'playPublish':
+      //   return await play(parsedArgs as unknown as PlayArgs, 'publish');
+      // case 'playVersionCheck':
+      //     return await play(parsedArgs as unknown as PlayArgs, 'versionCheck');
+      // case 'playRetain':
+      //     return await play(parsedArgs as unknown as PlayArgs, 'retain');
       default:
         throw new Error(
             `"${command}" is not a valid command! Use 'bubblewrap help' for a list of commands`);
