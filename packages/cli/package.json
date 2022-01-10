@@ -37,7 +37,7 @@
     "@types/valid-url": "^1.0.3",
     "cli-progress": "^3.8.2",
     "color": "^3.1.2",
-    "colors": "^1.4.0",
+    "colors": "1.4.0",
     "inquirer": "^7.3.2",
     "mime-types": "^2.1.27",
     "minimist": "^1.2.2",
