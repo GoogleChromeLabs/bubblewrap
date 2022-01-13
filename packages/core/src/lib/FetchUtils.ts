@@ -24,7 +24,7 @@ const DEFAULT_FETCH_ENGINE: FetchEngine = 'fetch-h2';
 export type NodeFetchOrFetchH2Response = FetchH2Response | NodeFetchResponse;
 
 const userAgent = 'Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/81.0';
-const fetchh2Ctx = context({userAgent:userAgent, overwriteUserAgent: true});
+const fetchh2Ctx = context({userAgent: userAgent, overwriteUserAgent: true});
 const fetchh2 = fetchh2Ctx.fetch;
 
 class FetchUtils {
@@ -36,7 +36,7 @@ class FetchUtils {
 
   async fetch(input: string): Promise<NodeFetchOrFetchH2Response> {
     if (this.fetchEngine == 'node-fetch') {
-      return await nodefetch(input, {redirect: 'follow'});
+      return await nodefetch(input, {redirect: 'follow', headers: {'User-Agent': userAgent}});
     } else {
       return await fetchh2(input, {redirect: 'follow'});
     }
