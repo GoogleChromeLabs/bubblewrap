@@ -15,13 +15,17 @@
  */
 
 import * as fs from 'fs';
-import {fetch as fetchh2, Response as FetchH2Response} from 'fetch-h2';
+import {context, Response as FetchH2Response} from 'fetch-h2';
 import nodefetch, {Response as NodeFetchResponse} from 'node-fetch';
 
 export type FetchEngine = 'node-fetch' | 'fetch-h2';
 const DEFAULT_FETCH_ENGINE: FetchEngine = 'fetch-h2';
 
 export type NodeFetchOrFetchH2Response = FetchH2Response | NodeFetchResponse;
+
+const userAgent = 'Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/81.0';
+const fetchh2Ctx = context({userAgent:userAgent, overwriteUserAgent: true});
+const fetchh2 = fetchh2Ctx.fetch;
 
 class FetchUtils {
   private fetchEngine = DEFAULT_FETCH_ENGINE;
