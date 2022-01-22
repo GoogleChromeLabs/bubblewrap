@@ -24,7 +24,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@types/node-fetch": "^2.5.7",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^3.1.1"
   },
   "gitHead": "ba2a8430ee11d6bf650ed3d071c9c144fff31538"
 }
