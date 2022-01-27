@@ -127,7 +127,11 @@ export class ImageHelper {
         throw new Error(`This installation doesn't support image/svg. Please, ensure the optional
             "svg2img" library is installed or use an alternative image format.`);
       }
-      body = await svg2img(iconUrl);
+      try {
+        body = await svg2img(iconUrl);
+      } catch (error) {
+        throw new Error(`Problem reading ${iconUrl}: ${error.message}`);
+      }
     }
     return {
       url: iconUrl,
