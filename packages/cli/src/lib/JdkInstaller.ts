@@ -19,19 +19,19 @@ import {util} from '@bubblewrap/core';
 import {Prompt} from './Prompt';
 import {enUS as messages} from './strings';
 
-const JDK_VERSION = '8u265-b01';
-const JDK_DIR = `jdk${JDK_VERSION}`;
-const DOWNLOAD_JDK_BIN_ROOT = `https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk${JDK_VERSION}/`;
-const DOWNLOAD_JDK_SRC_ROOT = 'https://github.com/AdoptOpenJDK/openjdk-jdk8u/archive/';
-const JDK_BIN_VERSION = JDK_VERSION.replace('-', '');
-const JDK_FILE_NAME_MAC = `OpenJDK8U-jdk_x64_mac_hotspot_${JDK_BIN_VERSION}.tar.gz`;
-const JDK_FILE_NAME_WIN32 = `OpenJDK8U-jdk_x86-32_windows_hotspot_${JDK_BIN_VERSION}.zip`;
-const JDK_FILE_NAME_LINUX64 = `OpenJDK8U-jdk_x64_linux_hotspot_${JDK_BIN_VERSION}.tar.gz`;
-const JDK_SRC_ZIP = `jdk${JDK_VERSION}.zip`;
-const JDK_SOURCE_SIZE = 136130622;
+const JDK_VERSION = '11.0.1+13';
+const JDK_DIR = `jdk-${JDK_VERSION}`;
+const DOWNLOAD_JDK_BIN_ROOT = `https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-${JDK_VERSION}/`;
+const DOWNLOAD_JDK_SRC_ROOT = 'https://github.com/adoptium/jdk11u/archive/refs/tags/';
+const JDK_BIN_VERSION = JDK_VERSION.replace('+', '_');
+const JDK_FILE_NAME_MAC = `OpenJDK11U-jdk_x64_mac_hotspot_${JDK_BIN_VERSION}.tar.gz`;
+const JDK_FILE_NAME_WIN32 = `OpenJDK11U-jdk_x86-32_windows_hotspot_${JDK_BIN_VERSION}.zip`;
+const JDK_FILE_NAME_LINUX64 = `OpenJDK11U-jdk_x64_linux_hotspot_${JDK_BIN_VERSION}.tar.gz`;
+const JDK_SRC_ZIP = `jdk-${JDK_VERSION}.zip`;
+const JDK_SOURCE_SIZE = 190391098;
 
 /**
- * Install JDK 8 by downloading the binary and source code and
+ * Install JDK 11 by downloading the binary and source code and
  * decompressing it. Source code is required
  * based on discussions with legal team about licensing.
  */
@@ -73,7 +73,7 @@ export class JdkInstaller {
   }
 
   /**
-   * Downloads the platform-appropriate version of JDK 8, including
+   * Downloads the platform-appropriate version of JDK 11, including
    * binary and source code.
    *
    * @param installPath {string} path to install JDK at.

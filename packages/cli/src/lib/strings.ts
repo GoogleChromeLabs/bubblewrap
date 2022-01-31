@@ -340,12 +340,12 @@ the PWA:
 
 \t\t- To open ${italic('https://example.com/')}: ${cyan('/')}
 \t\t- To open ${italic('https://example.com/path-to-pwa/')}: ${cyan('/path-to-pwa/')}\n`,
-  messageDownloadJdk: 'Downloading JDK 8 to ',
+  messageDownloadJdk: 'Downloading JDK 11 to ',
   messageDownloadSdk: 'Downloading Android SDK to ',
-  messageDownloadJdkSrc: 'Downloading the JDK 8 Sources...',
-  messageDecompressJdkSrc: 'Decompressing the JDK 8 Sources...',
-  messageDownloadJdkBin: 'Downloading the JDK 8 Binaries...',
-  messageDecompressJdkBin: 'Decompressing the JDK 8 Binaries...',
+  messageDownloadJdkSrc: 'Downloading the JDK 11 Sources...',
+  messageDecompressJdkSrc: 'Decompressing the JDK 11 Sources...',
+  messageDownloadJdkBin: 'Downloading the JDK 11 Binaries...',
+  messageDecompressJdkBin: 'Decompressing the JDK 11 Binaries...',
   messageDownloadAndroidSdk: 'Downloading the Android SDK...',
   messageDecompressAndroidSdk: 'Decompressing the Android SDK...',
   promptCreateDirectory: (directory: string): string => {
@@ -404,8 +404,8 @@ the PWA:
   jdkPathIsNotCorrect: 'The jdkPath isn\'t correct, please run the following command to update ' +
       'it:\nbubblewrap updateConfig --jdkPath <path-to-jdk>, such that the folder of the path' +
       'contains the file "release". Then run bubblewrap doctor again.',
-  jdkIsNotSupported: 'Unsupported jdk version. Please download "OpenJDK 8(LTS)" at the link ' +
-      'below:\nhttps://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=hotspot.',
+  jdkIsNotSupported: 'Unsupported jdk version. Please download "OpenJDK 11(LTS)" at the link ' +
+      'below:\nhttps://adoptopenjdk.net/releases.html?variant=openjdk11&jvmVariant=hotspot.',
   androidSdkPathIsNotCorrect: 'The androidSdkPath isn\'t correct, please run the following ' +
       'command to update it:\nbubblewrap updateConfig --androidSdkPath <path-to-sdk>, such that ' +
       'the folder of the path contains the folder "build". Then run bubblewrap doctor again.',
