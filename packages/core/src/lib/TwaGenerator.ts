@@ -38,7 +38,6 @@ const COPY_FILE_LIST = [
   'app/src/main/res/values/colors.xml',
   'app/src/main/res/xml/filepaths.xml',
   'app/src/main/res/xml/shortcuts.xml',
-  'app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml',
   'app/src/main/res/drawable-anydpi/shortcut_legacy_background.xml',
 ];
 
@@ -46,6 +45,7 @@ const TEMPLATE_FILE_LIST = [
   'app/build.gradle',
   'app/src/main/AndroidManifest.xml',
   'app/src/main/res/values/strings.xml',
+  'app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml',
 ];
 
 const JAVA_DIR = 'app/src/main/java/';
@@ -71,6 +71,20 @@ const DELETE_FILE_LIST = [
   'app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml',
 ];
 
+function scaledIconDefinitions(
+    folder: string,
+    filename: string,
+    mdpiSize: number,
+): IconDefinition[] {
+  return [
+    {dest: `app/src/main/res/${folder}-mdpi/${filename}`, size: mdpiSize},
+    {dest: `app/src/main/res/${folder}-hdpi/${filename}`, size: mdpiSize * 1.5},
+    {dest: `app/src/main/res/${folder}-xhdpi/${filename}`, size: mdpiSize * 2},
+    {dest: `app/src/main/res/${folder}-xxhdpi/${filename}`, size: mdpiSize * 3},
+    {dest: `app/src/main/res/${folder}-xxxhdpi/${filename}`, size: mdpiSize * 4},
+  ];
+}
+
 const SPLASH_IMAGES: IconDefinition[] = scaledIconDefinitions('drawable', 'splash.png', 300);
 
 const IMAGES: IconDefinition[] = [
@@ -80,7 +94,10 @@ const IMAGES: IconDefinition[] = [
 
 const ADAPTIVE_IMAGES: IconDefinition[] = scaledIconDefinitions('mipmap', 'ic_maskable.png', 82);
 
-const NOTIFICATION_IMAGES: IconDefinition[] = scaledIconDefinitions('drawable', 'ic_notification_icon.png', 24);
+const THEMED_IMAGES: IconDefinition[] = scaledIconDefinitions('mipmap', 'ic_monochrome.png', 82);
+
+const NOTIFICATION_IMAGES: IconDefinition[] =
+    scaledIconDefinitions('drawable', 'ic_notification_icon.png', 24);
 
 const WEB_MANIFEST_LOCATION = '/app/src/main/res/raw/';
 const WEB_MANIFEST_FILE_NAME = 'web_app_manifest.json';
@@ -89,16 +106,6 @@ type ShareTargetIntentFilter = {
   actions: string[];
   mimeTypes: string[];
 };
-
-function scaledIconDefinitions(folder: string, filename: string, mdpiSize: number): IconDefinition[] {
-  return [
-    {dest: `app/src/main/res/${folder}-mdpi/${filename}`, size: mdpiSize},
-    {dest: `app/src/main/res/${folder}-hdpi/${filename}`, size: mdpiSize * 1.5},
-    {dest: `app/src/main/res/${folder}-xhdpi/${filename}`, size: mdpiSize * 2},
-    {dest: `app/src/main/res/${folder}-xxhdpi/${filename}`, size: mdpiSize * 3},
-    {dest: `app/src/main/res/${folder}-xxxhdpi/${filename}`, size: mdpiSize * 4},
-  ];
-}
 
 function shortcutMaskableTemplateFileMap(assetName: string): Record<string, string> {
   return {
@@ -354,7 +361,7 @@ export class TwaGenerator {
   async createTwaProject(targetDirectory: string, twaManifest: TwaManifest, log: Log,
       reportProgress: twaGeneratorProgress = noOpProgress): Promise<void> {
     const features = new FeatureManager(twaManifest, log);
-    const progress = new Progress(9, reportProgress);
+    const progress = new Progress(10, reportProgress);
     const error = twaManifest.validate();
     if (error !== null) {
       throw new Error(`Invalid TWA Manifest: ${error}`);
@@ -363,8 +370,12 @@ export class TwaGenerator {
     const templateDirectory = path.join(__dirname, '../../template_project');
 
     const copyFileList = new Set(COPY_FILE_LIST);
+    const templateFileList = new Set(TEMPLATE_FILE_LIST);
     if (!twaManifest.maskableIconUrl) {
-      DELETE_FILE_LIST.forEach((file) => copyFileList.delete(file));
+      DELETE_FILE_LIST.forEach((file) => {
+        copyFileList.delete(file);
+        templateFileList.delete(file);
+      });
     }
     progress.update();
 
@@ -389,7 +400,7 @@ export class TwaGenerator {
 
     // Generate templated files
     await this.applyTemplateList(
-        templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, args);
+        templateDirectory, targetDirectory, Array.from(templateFileList), args);
     progress.update();
 
     // Generate java files
@@ -411,6 +422,12 @@ export class TwaGenerator {
     // Generate adaptive images
     if (twaManifest.maskableIconUrl) {
       await this.generateIcons(twaManifest.maskableIconUrl, targetDirectory, ADAPTIVE_IMAGES);
+    }
+    progress.update();
+
+    // Generate themed images
+    if (twaManifest.monochromeIconUrl) {
+      await this.generateIcons(twaManifest.monochromeIconUrl, targetDirectory, THEMED_IMAGES);
     }
     progress.update();
 
