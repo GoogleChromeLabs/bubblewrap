@@ -19,7 +19,7 @@ import {util} from '@bubblewrap/core';
 import {Prompt} from './Prompt';
 import {enUS as messages} from './strings';
 
-const JDK_VERSION = '11.0.1+13';
+const JDK_VERSION = '11.0.9.1+1';
 const JDK_DIR = `jdk-${JDK_VERSION}`;
 const DOWNLOAD_JDK_BIN_ROOT = `https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-${JDK_VERSION}/`;
 const DOWNLOAD_JDK_SRC_ROOT = 'https://github.com/adoptium/jdk11u/archive/refs/tags/';
