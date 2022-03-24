@@ -110,9 +110,9 @@ export class JdkHelper {
     try {
       const releaseFilePath = join(javaHome, 'release');
       const file = await fsPromises.readFile(releaseFilePath, 'utf-8');
-      if (file.indexOf('JAVA_VERSION="11.0.9.1') < 0) { // Checks if the jdk's version is 11 as needed
+      if (file.indexOf('JAVA_VERSION="11.0') < 0) { // Checks if the jdk's version is 11 as needed
         return Result.error(new ValidatePathError(
-            'JDK version not supported. JDK version 11.0.9.1 is required.', 'PathIsNotSupported'));
+            'JDK version not supported. JDK version 11 is required.', 'PathIsNotSupported'));
       }
     } catch (e) {
       return Result.error(new ValidatePathError(
