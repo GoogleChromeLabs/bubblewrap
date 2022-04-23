@@ -34,6 +34,17 @@ const extractZipPromise = promisify(extractZip);
 const DISALLOWED_ANDROID_PACKAGE_CHARS_REGEX = /[^a-zA-Z0-9_\.]/g;
 const VALID_PACKAGE_ID_SEGMENT_REGEX = /^[a-zA-Z][A-Za-z0-9_]*$/;
 
+// List of keywords for Java 11, as listed at
+// https://docs.oracle.com/javase/specs/jls/se11/html/jls-3.html#jls-3.9.
+const JAVA_KEYWORDS = [
+  'abstract', 'continue', 'for', 'new', 'switch', 'assert', 'default', 'if', 'package',
+  'synchronized', 'boolean', 'do', 'goto', 'private', 'this', 'break', 'double', 'implements',
+  'protected', 'throw', 'byte', 'else', 'import', 'public', 'throws', 'case', 'enum', 'instanceof',
+  'return', 'transient', 'catch', 'extends', 'int', 'short', 'try', 'char', 'final', 'interface',
+  'static', 'void', 'class', 'finally', 'long', 'strictfp', 'volatile', 'const', 'float', 'native',
+  'super', 'while',
+];
+
 export async function execute(
     cmd: string[], env: NodeJS.ProcessEnv, log?: Log): Promise<{stdout: string; stderr: string}> {
   const joinedCmd = cmd.join(' ');
@@ -146,6 +157,14 @@ export function generatePackageId(host: string): string | null {
     if (part.trim().length === 0) {
       continue;
     }
+
+    // Package names cannot contain Java keywords. The recommendation is adding an '_' before the
+    // keyword. See https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html.
+    if (JAVA_KEYWORDS.indexOf(part) >= 0) {
+      packageId.push('_'  + part);
+      continue;
+    }
+
     packageId.push(part);
   }
 
@@ -195,6 +214,14 @@ export function validatePackageId(input: string): string | null {
   }
 
   for (const part of parts) {
+
+    // Package names cannot contain Java keywords. The recommendation is adding an '_' before the
+    // keyword. See https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html.
+    if (JAVA_KEYWORDS.indexOf(part) >= 0) {
+      return `Invalid packageId section: "${part}". ${part} is a Java keyword and cannot be used` +
+          'as a package section. Consider adding an "_" before the section name.';
+    }
+
     if (part.match(VALID_PACKAGE_ID_SEGMENT_REGEX) === null) {
       return `Invalid packageId section: "${part}". Only alphanumeric characters and ` +
           'underscore [a-zA-Z0-9_] are allowed in packageId sections. Each section must ' +
