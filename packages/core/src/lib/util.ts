@@ -161,7 +161,7 @@ export function generatePackageId(host: string): string | null {
     // Package names cannot contain Java keywords. The recommendation is adding an '_' before the
     // keyword. See https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html.
     if (JAVA_KEYWORDS.indexOf(part) >= 0) {
-      packageId.push('_'  + part);
+      packageId.push('_' + part);
       continue;
     }
 
@@ -214,7 +214,6 @@ export function validatePackageId(input: string): string | null {
   }
 
   for (const part of parts) {
-
     // Package names cannot contain Java keywords. The recommendation is adding an '_' before the
     // keyword. See https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html.
     if (JAVA_KEYWORDS.indexOf(part) >= 0) {
