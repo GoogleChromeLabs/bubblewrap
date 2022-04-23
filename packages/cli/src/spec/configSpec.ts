@@ -103,7 +103,7 @@ describe('config', () => {
             },
             [DEFAULT_CONFIG_FOLDER]: {
               'config.json':
-              '{"content":"some old content",' +
+              '{"content":"some new content",' +
               ' "jdkPath":"/path/to/jdk","androidSdkPath":"/path/to/android-sdk"}',
             }});
           const mockLog = new MockLog();
@@ -114,8 +114,8 @@ describe('config', () => {
           // checks if the contents of the files didn't change.
           const file1 = await fsPromises.readFile(LEGACY_CONFIG_FILE_PATH, 'utf8');
           const file2 = await fsPromises.readFile(DEFAULT_CONFIG_FILE_PATH, 'utf8');
-          expect(file1).toEqual('{\"content\":\"some old content\"}');
-          expect(file2).toEqual('{\"content\":\"some new content\"}');
+          expect(file1.indexOf('old content')).toBeGreaterThanOrEqual(0);
+          expect(file2.indexOf('new content')).toBeGreaterThanOrEqual(0);
           mock.restore();
         });
   });
