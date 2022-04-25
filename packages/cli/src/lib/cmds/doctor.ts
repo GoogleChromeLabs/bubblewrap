@@ -43,8 +43,9 @@ async function androidSdkDoctor(config: Config, log: Log): Promise<boolean> {
   return true;
 }
 
-export async function doctor(log: Log = new ConsoleLog('doctor')): Promise<boolean> {
-  const config = await loadOrCreateConfig(log);
+export async function doctor(
+    log: Log = new ConsoleLog('doctor'), configPath?: string | undefined): Promise<boolean> {
+  const config = await loadOrCreateConfig(log, undefined, configPath);
   const jdkResult = await jdkDoctor(config, log);
   const androidSdkResult = await androidSdkDoctor(config, log);
   if (jdkResult && androidSdkResult) {
