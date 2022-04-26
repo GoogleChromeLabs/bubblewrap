@@ -175,6 +175,11 @@ describe('util', () => {
       expect(result).toBe('com.appspot.pwa_directory_test.twa');
     });
 
+    it('adds _ to section with Java keywords', () => {
+      const result = util.generatePackageId('new.example.com');
+      expect(result).toBe('com.example._new.twa');
+    });
+
     it('handles input that generates empty section', () => {
       expect(util.generatePackageId('.pwadirectory')).toBe('pwadirectory.twa');
       expect(util.generatePackageId('pwadirectory.')).toBe('pwadirectory.twa');
@@ -224,6 +229,10 @@ describe('util', () => {
       expect(util.validatePackageId('1com.char.twa')).not.toBeNull();
       expect(util.validatePackageId('com.char.1twa')).not.toBeNull();
       expect(util.validatePackageId('_com.char.1twa')).not.toBeNull();
+    });
+
+    it('package sections cannot be Java keywords', () => {
+      expect(util.validatePackageId('com.example.new')).not.toBeNull();
     });
   });
 
