@@ -37,12 +37,12 @@ const VALID_PACKAGE_ID_SEGMENT_REGEX = /^[a-zA-Z][A-Za-z0-9_]*$/;
 // List of keywords for Java 11, as listed at
 // https://docs.oracle.com/javase/specs/jls/se11/html/jls-3.html#jls-3.9.
 const JAVA_KEYWORDS = [
-  'abstract', 'continue', 'for', 'new', 'switch', 'assert', 'default', 'if', 'package',
-  'synchronized', 'boolean', 'do', 'goto', 'private', 'this', 'break', 'double', 'implements',
-  'protected', 'throw', 'byte', 'else', 'import', 'public', 'throws', 'case', 'enum', 'instanceof',
-  'return', 'transient', 'catch', 'extends', 'int', 'short', 'try', 'char', 'final', 'interface',
-  'static', 'void', 'class', 'finally', 'long', 'strictfp', 'volatile', 'const', 'float', 'native',
-  'super', 'while',
+  'abstract', 'assert', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class', 'const',
+  'continue', 'default', 'do', 'double', 'else', 'enum', 'extends', 'final', 'finally', 'float',
+  'for', 'goto', 'if', 'implements', 'import', 'instanceof', 'int', 'interface', 'long', 'native',
+  'new', 'package', 'private', 'protected', 'public', 'return', 'short', 'static', 'strictfp',
+  'super', 'switch', 'synchronized', 'this', 'throw', 'throws', 'transient', 'try', 'void',
+  'volatile', 'while',
 ];
 
 export async function execute(
@@ -160,7 +160,7 @@ export function generatePackageId(host: string): string | null {
 
     // Package names cannot contain Java keywords. The recommendation is adding an '_' before the
     // keyword. See https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html.
-    if (JAVA_KEYWORDS.indexOf(part) >= 0) {
+    if (JAVA_KEYWORDS.includes(part)) {
       packageId.push('_' + part);
       continue;
     }
@@ -216,7 +216,7 @@ export function validatePackageId(input: string): string | null {
   for (const part of parts) {
     // Package names cannot contain Java keywords. The recommendation is adding an '_' before the
     // keyword. See https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html.
-    if (JAVA_KEYWORDS.indexOf(part) >= 0) {
+    if (JAVA_KEYWORDS.includes(part)) {
       return `Invalid packageId section: "${part}". ${part} is a Java keyword and cannot be used` +
           'as a package section. Consider adding an "_" before the section name.';
     }
