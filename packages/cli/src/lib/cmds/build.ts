@@ -15,13 +15,11 @@
  */
 
 import {AndroidSdkTools, Config, GradleWrapper, JdkHelper, KeyTool, Log,
-  ConsoleLog, TwaManifest, JarSigner, SigningKeyInfo, Result} from '@bubblewrap/core';
+  ConsoleLog, TwaManifest, JarSigner, SigningKeyInfo} from '@bubblewrap/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import {enUS as messages} from '../strings';
 import {Prompt, InquirerPrompt} from '../Prompt';
-import {PwaValidator, PwaValidationResult} from '@bubblewrap/validator';
-import {printValidationResult} from '../pwaValidationHelper';
 import {ParsedArgs} from 'minimist';
 import {createValidateString} from '../inputHelpers';
 import {computeChecksum, updateProject} from './shared';
@@ -102,18 +100,6 @@ class Build {
     };
   }
 
-  async runValidation(): Promise<Result<PwaValidationResult, Error>> {
-    try {
-      const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
-      const twaManifest = await TwaManifest.fromFile(manifestFile);
-      const pwaValidationResult =
-          await PwaValidator.validate(new URL(twaManifest.startUrl, twaManifest.webManifestUrl));
-      return Result.ok(pwaValidationResult);
-    } catch (e) {
-      return Result.error(e);
-    }
-  }
-
   async buildApk(): Promise<void> {
     await this.gradleWrapper.assembleRelease();
     await this.androidSdkTools.zipalignOnlyVerification(
@@ -163,11 +149,6 @@ class Build {
     if (!await this.androidSdkTools.checkBuildTools()) {
       this.prompt.printMessage(messages.messageInstallingBuildTools);
       await this.androidSdkTools.installBuildTools();
-    }
-
-    let validationPromise = null;
-    if (!this.args.skipPwaValidation) {
-      validationPromise = this.runValidation();
     }
 
     const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
@@ -229,22 +210,6 @@ class Build {
       APP_BUNDLE_BUILD_OUTPUT_FILE_NAME :
       APP_BUNDLE_SIGNED_FILE_NAME;
     this.prompt.printMessage(messages.messageAppBundleSuccess(appBundleFileName));
-
-    if (validationPromise !== null) {
-      const result = await validationPromise;
-      if (result.isOk()) {
-        const pwaValidationResult = result.unwrap();
-        printValidationResult(pwaValidationResult, this.log);
-
-        if (pwaValidationResult.status === 'FAIL') {
-          this.prompt.printMessage(messages.warnPwaFailedQuality);
-        }
-      } else {
-        const e = result.unwrapError();
-        this.log.debug(e.message);
-        this.prompt.printMessage(messages.errorFailedToRunQualityCriteria);
-      }
-    }
     return true;
   }
 }
