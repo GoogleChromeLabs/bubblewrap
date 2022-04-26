@@ -306,13 +306,14 @@ describe('util', () => {
   });
 
   describe('#escapeJsonString combined with #escapeGradleString returns the expected results',
-   () => {
-    it ('Escapes double and single quotes', () => {
-      // String.raw prevents escape characters from being applied, so we can simplify howe we write
-      // the expected value.
-      let expected = String.raw`\\"Hello Worl\\\'d\\"`;
-      expect(util.escapeJsonString(util.escapeGradleString(`"Hello Worl'd"`)))
-          .toEqual(expected);
-    });
-  });
+      () => {
+        it('Escapes double and single quotes', () => {
+          // String.raw prevents escape characters from being applied, so we can simplify howe we write
+          // the expected value.
+          const input = String.raw`"Hello Worl'd"`;
+          const expected = String.raw`\\"Hello Worl\\\'d\\"`;
+          expect(util.escapeJsonString(util.escapeGradleString(input)))
+              .toEqual(expected);
+        });
+      });
 });
