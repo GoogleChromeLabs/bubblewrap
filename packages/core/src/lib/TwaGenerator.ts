@@ -273,7 +273,7 @@ export class TwaGenerator {
     }
 
     // We're writing as a string, but attempt to convert to check if it's a well-formed JSON.
-    const webManifestJson = await response.json();
+    const webManifestJson = JSON.parse((await response.text()).trim());
 
     // We want to ensure that "start_url" is the same used to launch the Trusted Web Activity.
     webManifestJson['start_url'] = twaManifest.startUrl;
