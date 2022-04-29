@@ -359,7 +359,7 @@ export class TwaManifest {
    */
   static async fromWebManifest(url: string): Promise<TwaManifest> {
     const response = await fetchUtils.fetch(url);
-    const webManifest = await response.json();
+    const webManifest = JSON.parse((await response.text()).trim());
     const webManifestUrl: URL = new URL(url);
     return TwaManifest.fromWebManifestJson(webManifestUrl, webManifest);
   }
