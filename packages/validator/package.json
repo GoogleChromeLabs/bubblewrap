@@ -1,6 +1,6 @@
 {
   "name": "@bubblewrap/validator",
-  "version": "1.17.1",
+  "version": "1.17.2",
   "description": "Validate if an app using Trusted Web Activity fulfills the quality criteria",
   "scripts": {
     "build": "tsc",
