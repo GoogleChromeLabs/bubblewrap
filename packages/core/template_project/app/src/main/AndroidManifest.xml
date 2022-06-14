@@ -26,8 +26,23 @@
         <uses-permission android:name="<%= permission %>"/>
     <% } %>
 
+    <% if (isMetaQuest) { %>
+    <uses-permission android:name="com.oculus.permission.HAND_TRACKING" />
+    <% } %>
+
     <% if (isChromeOSOnly) { %>
     <uses-feature android:name="org.chromium.arc" android:required="true" />
+    <% } %>
+
+    <% if (isMetaQuest) { %>
+    <uses-feature
+        android:name="android.hardware.vr.headtracking"
+        android:required="false"
+        android:version="1" />
+
+    <uses-feature
+        android:name="oculus.software.handtracking"
+        android:required="false" />
     <% } %>
 
     <application
@@ -59,6 +74,20 @@
             <meta-data
                 android:name="<%= metadata.name %>"
                 android:value="<%= metadata.value %>" />
+        <% } %>
+
+        <% if (isMetaQuest) { %>
+        <meta-data
+            android:name="com.oculus.pwa.NAME"
+            android:value="@string/appName" />
+
+        <meta-data
+            android:name="com.oculus.pwa.START_URL"
+            android:value="@string/launchUrl" />
+
+        <meta-data
+            android:name="com.oculus.pwa.SCOPE"
+            android:value="@string/launchUrl" />
         <% } %>
 
         <% if (enableSiteSettingsShortcut) { %>

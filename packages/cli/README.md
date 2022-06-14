@@ -93,12 +93,13 @@ parse the Web manifest and generate default values for the Android project, wher
 will prompt the user to confirm or input values where one could not be generated.
 
 ```
-bubblewrap init --manifest="<web-manifest-url>" [--directory="<path-to-output-location>"] [--chromeosonly]
+bubblewrap init --manifest="<web-manifest-url>" [--directory="<path-to-output-location>"] [--chromeosonly] [--metaquest]
 ```
 
 Options:
   - `--directory`: path where to generate the project. Defaults to the current directory.
   - `--chromeosonly`: this flag specifies that the build will be used for Chrome OS only and prevents non-Chrome OS devices from installing the app.
+  - `--metaquest`: this flag specifies that the build will be compatible with Meta Quest devices.
   - `--alphaDependencies`: enables features that depend on upcoming version of the Android library
   for Trusted Web Activity or that are still unstable.
 
@@ -351,6 +352,7 @@ Fields:
 |host|string|true|The origin that will be opened in the Trusted Web Activity.|
 |iconUrl|string|true|Full URL to an the icon used for the application launcher and splash screen. Must be at least 512x512 px.|
 |isChromeOSOnly|boolean|false|Generates an application that targets only ChromeOS devices. Defaults to `false`.|
+|isMetaQuest|boolean|false|Generates an application that compatible with Meta Quest devices. Defaults to `false`.|
 |launcherName|string|false|A short name for the Android application, displayed on the Android launcher|
 |maskableIconUrl|string|false|Full URL to an the icon used for maskable icons, when supported by the device.|
 |monochromeIconUrl|string|false|Full URL to a monochrome icon, used when displaying notifications.|

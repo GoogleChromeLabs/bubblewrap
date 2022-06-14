@@ -222,6 +222,7 @@ describe('TwaManifest', () => {
         fallbackType: 'webview',
         enableSiteSettingsShortcut: false,
         isChromeOSOnly: false,
+        isMetaQuest: false,
         serviceAccountJsonFile: '/home/service-account.json',
         additionalTrustedOrigins: ['test.com'],
         retainedBundles: [3, 4, 5],
@@ -255,6 +256,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.fallbackType).toBe('webview');
       expect(twaManifest.enableSiteSettingsShortcut).toEqual(false);
       expect(twaManifest.isChromeOSOnly).toEqual(false);
+      expect(twaManifest.isMetaQuest).toEqual(false);
       expect(twaManifest.serviceAccountJsonFile).toEqual(twaManifestJson.serviceAccountJsonFile);
       expect(twaManifest.additionalTrustedOrigins).toEqual(['test.com']);
       expect(twaManifest.retainedBundles).toEqual([3, 4, 5]);
@@ -381,6 +383,7 @@ describe('TwaManifest', () => {
         'features': {},
         'enableSiteSettingsShortcut': true,
         'isChromeOSOnly': false,
+        'isMetaQuest': false,
         'appVersion': '1',
         'serviceAccountJsonFile': '/home/service-account.json',
       });
@@ -439,6 +442,7 @@ describe('TwaManifest', () => {
         'features': {},
         'enableSiteSettingsShortcut': true,
         'isChromeOSOnly': false,
+        'isMetaQuest': false,
         'appVersion': '1',
         'serviceAccountJsonFile': '/home/service-account.json',
       });

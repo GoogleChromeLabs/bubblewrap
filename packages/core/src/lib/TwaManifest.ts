@@ -122,6 +122,7 @@ type alphaDependencies = {
  * splashScreenFadeOutDuration: 300
  * isChromeOSOnly: false, // Setting to true will enable a feature that prevents non-ChromeOS devices
  *  from installing the app.
+ * isMetaQuest: false, // Setting to true will generate the build compatible with Meta Quest devices.
  * serviceAccountJsonFile: '<%= serviceAccountJsonFile %>', // The service account used to communicate with
  *  Google Play.
  *
@@ -155,6 +156,7 @@ export class TwaManifest {
   alphaDependencies: alphaDependencies;
   enableSiteSettingsShortcut: boolean;
   isChromeOSOnly: boolean;
+  isMetaQuest: boolean;
   shareTarget?: ShareTarget;
   orientation: Orientation;
   fingerprints: Fingerprint[];
@@ -201,6 +203,7 @@ export class TwaManifest {
     this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ?
       data.enableSiteSettingsShortcut : true;
     this.isChromeOSOnly = data.isChromeOSOnly != undefined ? data.isChromeOSOnly : false;
+    this.isMetaQuest = data.isMetaQuest != undefined ? data.isMetaQuest : false;
     this.shareTarget = data.shareTarget;
     this.orientation = data.orientation || DEFAULT_ORIENTATION;
     this.fingerprints = data.fingerprints || [];
@@ -528,6 +531,7 @@ export interface TwaManifestJson {
   };
   enableSiteSettingsShortcut?: boolean;
   isChromeOSOnly?: boolean;
+  isMetaQuest?: boolean;
   shareTarget?: ShareTarget;
   orientation?: Orientation;
   fingerprints?: Fingerprint[];
