@@ -48,8 +48,9 @@ const HELP_MESSAGES = new Map<string, string>(
         '--directory ........... path where to generate the project. Defaults to the current' +
             ' directory',
         '--chromeosonly ........ specifies that the build will be used for Chrome OS only and' +
-            ' prevents non-Chrome OS devices from installing the app.',
-        '--metaquest ........... specifies that the build will be compatible with Meta Quest devices.',
+            ' prevents non-Chrome OS devices (except Meta Quest devices) from installing the app.',
+        '--metaquest ........... specifies that the build will be compatible with Meta Quest' +
+            ' devices.',
         '--alphaDependencies ... enables features that depend on upcoming version of the ' +
             ' Android library for Trusted Web Activity or that are still unstable.',
       ].join('\n')],

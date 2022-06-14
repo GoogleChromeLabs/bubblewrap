@@ -121,7 +121,7 @@ type alphaDependencies = {
  * // The duration of fade out animation in milliseconds to be played when removing splash screen.
  * splashScreenFadeOutDuration: 300
  * isChromeOSOnly: false, // Setting to true will enable a feature that prevents non-ChromeOS devices
- *  from installing the app.
+ *  (except Meta Quest devices) from installing the app.
  * isMetaQuest: false, // Setting to true will generate the build compatible with Meta Quest devices.
  * serviceAccountJsonFile: '<%= serviceAccountJsonFile %>', // The service account used to communicate with
  *  Google Play.
