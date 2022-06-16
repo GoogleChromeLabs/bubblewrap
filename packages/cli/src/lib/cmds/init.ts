@@ -248,6 +248,7 @@ export async function init(
 
   if (args.metaquest) {
     twaManifest.isMetaQuest = true;
+    twaManifest.minSdkVersion = 23;
   }
 
   if (args.alphaDependencies) {

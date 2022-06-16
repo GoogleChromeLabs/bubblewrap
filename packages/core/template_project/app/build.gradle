@@ -53,7 +53,7 @@ android {
     compileSdkVersion 31
     defaultConfig {
         applicationId "<%= packageId %>"
-        minSdkVersion 19
+        minSdkVersion <%= minSdkVersion %>
         targetSdkVersion 31
         versionCode <%= appVersionCode %>
         versionName "<%= appVersionName %>"
@@ -74,6 +74,9 @@ android {
             // the TWA, as it will probably give a better user experience for non-mobile devices.
             resValue "string", "webManifestUrl", '<%= webManifestUrl %>'
         <% } %>
+
+        // This is used by Meta Quest.
+        resValue "string", "fullScopeUrl", '<%= fullScopeUrl %>'
 
         <% if (shareTarget) { %>
             // The data for the app to support web share target.

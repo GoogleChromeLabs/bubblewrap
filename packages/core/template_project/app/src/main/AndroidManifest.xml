@@ -87,7 +87,7 @@
 
         <meta-data
             android:name="com.oculus.pwa.SCOPE"
-            android:value="@string/launchUrl" />
+            android:value="@string/fullScopeUrl" />
         <% } %>
 
         <% if (enableSiteSettingsShortcut) { %>
