@@ -158,7 +158,6 @@ export class TwaManifest {
   enableSiteSettingsShortcut: boolean;
   isChromeOSOnly: boolean;
   isMetaQuest: boolean;
-  scope: string | undefined;
   fullScopeUrl?: URL;
   minSdkVersion: number;
   shareTarget?: ShareTarget;
@@ -208,7 +207,6 @@ export class TwaManifest {
       data.enableSiteSettingsShortcut : true;
     this.isChromeOSOnly = data.isChromeOSOnly != undefined ? data.isChromeOSOnly : false;
     this.isMetaQuest = data.isMetaQuest != undefined ? data.isMetaQuest : false;
-    this.scope = data.scope;
     this.fullScopeUrl = data.fullScopeUrl ? new URL(data.fullScopeUrl) : undefined;
     this.minSdkVersion = data.minSdkVersion || DEFAULT_MIN_SDK_VERSION;
     this.shareTarget = data.shareTarget;
@@ -337,7 +335,6 @@ export class TwaManifest {
       features: {},
       shareTarget: TwaManifest.verifyShareTarget(webManifestUrl, webManifest.share_target),
       orientation: asOrientation(webManifest.orientation) || DEFAULT_ORIENTATION,
-      scope: webManifest['scope'],
       fullScopeUrl: new URL(webManifest['scope'] || '.', webManifestUrl).toString(),
     });
     return twaManifest;
@@ -486,8 +483,9 @@ export class TwaManifest {
           webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE)),
       display: this.getNewFieldValue('display', fieldsToIgnore, oldTwaManifest.display,
           asDisplayMode(webManifest['display']!)!),
-      scope: this.getNewFieldValue('scope', fieldsToIgnore, oldTwaManifest.scope,
-          webManifest['scope']!),
+      fullScopeUrl: this.getNewFieldValue('fullScopeUrl', fieldsToIgnore,
+          oldTwaManifest.fullScopeUrl?.toString(),
+          new URL(webManifest['scope'] || '.', webManifestUrl).toString()),
       themeColor: this.getNewFieldValue('themeColor', fieldsToIgnore,
           oldTwaManifest.themeColor.hex(), webManifest['theme_color']!),
       backgroundColor: this.getNewFieldValue('backgroundColor', fieldsToIgnore,
@@ -544,7 +542,6 @@ export interface TwaManifestJson {
   enableSiteSettingsShortcut?: boolean;
   isChromeOSOnly?: boolean;
   isMetaQuest?: boolean; // Older Manifests may not have this field.
-  scope?: string; // Older Manifests may not have this field.
   fullScopeUrl?: string; // Older Manifests may not have this field.
   minSdkVersion?: number; // Older Manifests may not have this field.
   shareTarget?: ShareTarget;

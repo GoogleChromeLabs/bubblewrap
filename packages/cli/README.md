@@ -372,8 +372,7 @@ Fields:
 |startUrl|string|true|The start path for the TWA. Must be relative to the domain.|
 |themeColor|string|true|The color used for the status bar.|
 |webManifestUrl|string|false|Full URL to the PWA Web Manifest. Required for the application to be compatible with Chrome OS and Meta Quest devices.|
-|scope|string|false|The navigation scope that the browser considers to be within the app. If the user navigates outside the scope, it reverts to a normal web page inside a browser tab or window. Only used to generate the `fullScopeUrl`.|
-|fullScopeUrl|string|false|The navigation scope that the browser considers to be within the app. If the user navigates outside the scope, it reverts to a normal web page inside a browser tab or window. Must be full URL. Required only for Meta Quest devices.|
+|fullScopeUrl|string|false|The navigation scope that the browser considers to be within the app. If the user navigates outside the scope, it reverts to a normal web page inside a browser tab or window. Must be a full URL. Required only for Meta Quest devices.|
 
 ### Features
 
