@@ -300,6 +300,7 @@ export class TwaManifest {
       findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE);
 
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
+    const fullScopeUrl: URL = new URL(webManifest['scope'] || '.', webManifestUrl);
     const shortcuts: ShortcutInfo[] = this.getShortcuts(webManifestUrl, webManifest);
 
     function resolveIconUrl(icon: WebManifestIcon | null): string | undefined {
@@ -335,7 +336,7 @@ export class TwaManifest {
       features: {},
       shareTarget: TwaManifest.verifyShareTarget(webManifestUrl, webManifest.share_target),
       orientation: asOrientation(webManifest.orientation) || DEFAULT_ORIENTATION,
-      fullScopeUrl: new URL(webManifest['scope'] || '.', webManifestUrl).toString(),
+      fullScopeUrl: fullScopeUrl.toString(),
     });
     return twaManifest;
   }
@@ -473,6 +474,7 @@ export class TwaManifest {
         webManifestUrl);
 
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
+    const fullScopeUrl: URL = new URL(webManifest['scope'] || '.', webManifestUrl);
 
     const twaManifest = new TwaManifest({
       ...oldTwaManifestJson,
@@ -484,8 +486,7 @@ export class TwaManifest {
       display: this.getNewFieldValue('display', fieldsToIgnore, oldTwaManifest.display,
           asDisplayMode(webManifest['display']!)!),
       fullScopeUrl: this.getNewFieldValue('fullScopeUrl', fieldsToIgnore,
-          oldTwaManifest.fullScopeUrl?.toString(),
-          new URL(webManifest['scope'] || '.', webManifestUrl).toString()),
+          oldTwaManifest.fullScopeUrl?.toString(), fullScopeUrl.toString()),
       themeColor: this.getNewFieldValue('themeColor', fieldsToIgnore,
           oldTwaManifest.themeColor.hex(), webManifest['theme_color']!),
       backgroundColor: this.getNewFieldValue('backgroundColor', fieldsToIgnore,
