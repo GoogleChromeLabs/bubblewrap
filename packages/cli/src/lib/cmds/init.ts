@@ -249,6 +249,8 @@ export async function init(
   if (args.metaquest) {
     twaManifest.isMetaQuest = true;
     twaManifest.minSdkVersion = 23;
+    // Warn about increasing the minimum Android API Level
+    prompt.printMessage(messages.warnIncreasingMinSdkVersion);
   }
 
   if (args.alphaDependencies) {

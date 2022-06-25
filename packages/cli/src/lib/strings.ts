@@ -122,6 +122,7 @@ type Messages = {
   promptVersionMismatch: (currentVersion: string, playStoreVerison: string) => string;
   promptUpdateProject: string;
   warnFamilyPolicy: string;
+  warnIncreasingMinSdkVersion: string;
   warnPwaFailedQuality: string;
   updateConfigUsage: string;
   jdkPathIsNotCorrect: string;
@@ -398,6 +399,10 @@ the PWA:
       ' Check out the Play for' +
       ' Families\npolicies to learn more.\n' +
       cyan('https://play.google.com/console/about/families/'),
+  warnIncreasingMinSdkVersion:
+      bold(yellow('WARNING: ')) + `The minimum Android API Level (${cyan('minSdkVersion')}) has ` +
+      `been increased\nfrom ${cyan('19')} to ${cyan('23')} because the ${cyan('--metaquest')} ` +
+      'flag is used.',
   warnPwaFailedQuality: red('PWA Quality Criteria check failed.'),
   updateConfigUsage: 'Usage: [--jdkPath <path-to-jdk>] [--androidSdkPath <path-to-android-sdk>]' +
       '(You can insert one or both of them)',
