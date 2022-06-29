@@ -30,6 +30,7 @@ export interface InitArgs {
   manifest?: string;
   directory?: string;
   chromeosonly?: boolean;
+  metaquest?: boolean;
   alphaDependencies?: boolean;
 }
 
@@ -243,6 +244,13 @@ export async function init(
   let twaManifest = await TwaManifest.fromWebManifest(args.manifest);
   if (args.chromeosonly) {
     twaManifest.isChromeOSOnly = true;
+  }
+
+  if (args.metaquest) {
+    twaManifest.isMetaQuest = true;
+    twaManifest.minSdkVersion = 23;
+    // Warn about increasing the minimum Android API Level
+    prompt.printMessage(messages.warnIncreasingMinSdkVersion);
   }
 
   if (args.alphaDependencies) {
