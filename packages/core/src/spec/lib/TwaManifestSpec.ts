@@ -222,6 +222,7 @@ describe('TwaManifest', () => {
         fallbackType: 'webview',
         enableSiteSettingsShortcut: false,
         isChromeOSOnly: false,
+        isMetaQuest: false,
         serviceAccountJsonFile: '/home/service-account.json',
         additionalTrustedOrigins: ['test.com'],
         retainedBundles: [3, 4, 5],
@@ -255,6 +256,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.fallbackType).toBe('webview');
       expect(twaManifest.enableSiteSettingsShortcut).toEqual(false);
       expect(twaManifest.isChromeOSOnly).toEqual(false);
+      expect(twaManifest.isMetaQuest).toEqual(false);
       expect(twaManifest.serviceAccountJsonFile).toEqual(twaManifestJson.serviceAccountJsonFile);
       expect(twaManifest.additionalTrustedOrigins).toEqual(['test.com']);
       expect(twaManifest.retainedBundles).toEqual([3, 4, 5]);
@@ -376,11 +378,13 @@ describe('TwaManifest', () => {
         'appVersionCode': 1,
         'shortcuts': [],
         'generatorApp': 'bubblewrap-cli',
-        'webManifestUrl': 'https://name.github.io/',
+        'webManifestUrl': 'https://name.github.io/manifest.json',
         'fallbackType': 'customtabs',
         'features': {},
         'enableSiteSettingsShortcut': true,
         'isChromeOSOnly': false,
+        'isMetaQuest': false,
+        'fullScopeUrl': 'https://name.github.io/',
         'appVersion': '1',
         'serviceAccountJsonFile': '/home/service-account.json',
       });
@@ -391,7 +395,7 @@ describe('TwaManifest', () => {
         'display': 'fullscreen',
       });
       // A URL to insert as the webManifestUrl.
-      const url = new URL('https://name.github.io/');
+      const url = new URL('https://name.github.io/manifest.json');
       expect(await TwaManifest.merge([], url, webManifest, twaManifest))
           .toEqual(expectedTwaManifest);
     });
@@ -434,21 +438,20 @@ describe('TwaManifest', () => {
         'appVersionCode': 1,
         'shortcuts': [],
         'generatorApp': 'bubblewrap-cli',
-        'webManifestUrl': 'https://name.github.io/',
+        'webManifestUrl': 'https://name.github.io/manifest.json',
         'fallbackType': 'customtabs',
         'features': {},
         'enableSiteSettingsShortcut': true,
         'isChromeOSOnly': false,
+        'isMetaQuest': false,
+        'fullScopeUrl': 'https://name.github.io/',
         'appVersion': '1',
         'serviceAccountJsonFile': '/home/service-account.json',
       });
       // The versions shouldn't change because the update happens in `cli`.
-      const expectedTwaManifest = new TwaManifest({
-        ...twaManifest.toJson(),
-        'webManifestUrl': 'https://other_url.github.io/',
-      });
+      const expectedTwaManifest = twaManifest;
       // A URL to insert as the webManifestUrl.
-      const url = new URL('https://name.github.io/');
+      const url = new URL('https://name.github.io/manifest.json');
       expect(await TwaManifest.merge(['short_name', 'display'], url, webManifest, twaManifest))
           .toEqual(expectedTwaManifest);
     });

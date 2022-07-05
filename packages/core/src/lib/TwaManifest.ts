@@ -71,6 +71,7 @@ const DEFAULT_NAVIGATION_DIVIDER_COLOR = '#00000000';
 const DEFAULT_BACKGROUND_COLOR = '#FFFFFF';
 const DEFAULT_APP_VERSION_CODE = 1;
 const DEFAULT_APP_VERSION_NAME = DEFAULT_APP_VERSION_CODE.toString();
+const DEFAULT_MIN_SDK_VERSION = 19;
 const DEFAULT_SIGNING_KEY_PATH = './android.keystore';
 const DEFAULT_SIGNING_KEY_ALIAS = 'android';
 const DEFAULT_ENABLE_NOTIFICATIONS = true;
@@ -122,6 +123,7 @@ type alphaDependencies = {
  * splashScreenFadeOutDuration: 300
  * isChromeOSOnly: false, // Setting to true will enable a feature that prevents non-ChromeOS devices
  *  from installing the app.
+ * isMetaQuest: false, // Setting to true will generate the build compatible with Meta Quest devices.
  * serviceAccountJsonFile: '<%= serviceAccountJsonFile %>', // The service account used to communicate with
  *  Google Play.
  *
@@ -155,6 +157,9 @@ export class TwaManifest {
   alphaDependencies: alphaDependencies;
   enableSiteSettingsShortcut: boolean;
   isChromeOSOnly: boolean;
+  isMetaQuest: boolean;
+  fullScopeUrl?: URL;
+  minSdkVersion: number;
   shareTarget?: ShareTarget;
   orientation: Orientation;
   fingerprints: Fingerprint[];
@@ -201,6 +206,9 @@ export class TwaManifest {
     this.enableSiteSettingsShortcut = data.enableSiteSettingsShortcut != undefined ?
       data.enableSiteSettingsShortcut : true;
     this.isChromeOSOnly = data.isChromeOSOnly != undefined ? data.isChromeOSOnly : false;
+    this.isMetaQuest = data.isMetaQuest != undefined ? data.isMetaQuest : false;
+    this.fullScopeUrl = data.fullScopeUrl ? new URL(data.fullScopeUrl) : undefined;
+    this.minSdkVersion = data.minSdkVersion || DEFAULT_MIN_SDK_VERSION;
     this.shareTarget = data.shareTarget;
     this.orientation = data.orientation || DEFAULT_ORIENTATION;
     this.fingerprints = data.fingerprints || [];
@@ -224,6 +232,7 @@ export class TwaManifest {
       backgroundColor: this.backgroundColor.hex(),
       appVersion: this.appVersionName,
       webManifestUrl: this.webManifestUrl ? this.webManifestUrl.toString() : undefined,
+      fullScopeUrl: this.fullScopeUrl ? this.fullScopeUrl.toString() : undefined,
     });
   }
 
@@ -291,6 +300,7 @@ export class TwaManifest {
       findSuitableIcon(webManifest.icons, 'monochrome', MIN_NOTIFICATION_ICON_SIZE);
 
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
+    const fullScopeUrl: URL = new URL(webManifest['scope'] || '.', webManifestUrl);
     const shortcuts: ShortcutInfo[] = this.getShortcuts(webManifestUrl, webManifest);
 
     function resolveIconUrl(icon: WebManifestIcon | null): string | undefined {
@@ -326,6 +336,7 @@ export class TwaManifest {
       features: {},
       shareTarget: TwaManifest.verifyShareTarget(webManifestUrl, webManifest.share_target),
       orientation: asOrientation(webManifest.orientation) || DEFAULT_ORIENTATION,
+      fullScopeUrl: fullScopeUrl.toString(),
     });
     return twaManifest;
   }
@@ -463,6 +474,7 @@ export class TwaManifest {
         webManifestUrl);
 
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
+    const fullScopeUrl: URL = new URL(webManifest['scope'] || '.', webManifestUrl);
 
     const twaManifest = new TwaManifest({
       ...oldTwaManifestJson,
@@ -473,6 +485,8 @@ export class TwaManifest {
           webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE)),
       display: this.getNewFieldValue('display', fieldsToIgnore, oldTwaManifest.display,
           asDisplayMode(webManifest['display']!)!),
+      fullScopeUrl: this.getNewFieldValue('fullScopeUrl', fieldsToIgnore,
+          oldTwaManifest.fullScopeUrl?.toString(), fullScopeUrl.toString()),
       themeColor: this.getNewFieldValue('themeColor', fieldsToIgnore,
           oldTwaManifest.themeColor.hex(), webManifest['theme_color']!),
       backgroundColor: this.getNewFieldValue('backgroundColor', fieldsToIgnore,
@@ -528,6 +542,9 @@ export interface TwaManifestJson {
   };
   enableSiteSettingsShortcut?: boolean;
   isChromeOSOnly?: boolean;
+  isMetaQuest?: boolean; // Older Manifests may not have this field.
+  fullScopeUrl?: string; // Older Manifests may not have this field.
+  minSdkVersion?: number; // Older Manifests may not have this field.
   shareTarget?: ShareTarget;
   orientation?: Orientation;
   fingerprints?: Fingerprint[];

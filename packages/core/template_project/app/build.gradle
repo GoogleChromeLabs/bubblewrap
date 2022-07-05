@@ -53,7 +53,7 @@ android {
     compileSdkVersion 31
     defaultConfig {
         applicationId "<%= packageId %>"
-        minSdkVersion 19
+        minSdkVersion <%= minSdkVersion %>
         targetSdkVersion 31
         versionCode <%= appVersionCode %>
         versionName "<%= appVersionName %>"
@@ -70,9 +70,14 @@ android {
 
         <% if (webManifestUrl) { %>
             // The URL the Web Manifest for the Progressive Web App that the TWA points to. This
-            // is used by Chrome OS to open the Web version of the PWA instead of the TWA, as it
-            // will probably give a better user experience for non-mobile devices.
+            // is used by Chrome OS and Meta Quest to open the Web version of the PWA instead of
+            // the TWA, as it will probably give a better user experience for non-mobile devices.
             resValue "string", "webManifestUrl", '<%= webManifestUrl %>'
+        <% } %>
+
+        <% if (fullScopeUrl) { %>
+            // This is used by Meta Quest.
+            resValue "string", "fullScopeUrl", '<%= fullScopeUrl %>'
         <% } %>
 
         <% if (shareTarget) { %>
