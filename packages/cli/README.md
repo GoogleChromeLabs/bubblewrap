@@ -19,7 +19,7 @@
 
 Bubblewrap is a Command Line Interface (CLI) that helps developers to create
 a Project for an Android application that launches an existing Progressive Web App (PWA) using a
-[Trusted Web Activity (TWA)](https://developers.google.com/web/android/trusted-web-activity/).
+[Trusted Web Activity (TWA)](https://developer.chrome.com/docs/android/trusted-web-activity/).
 
 ## Requirements
 - [Node.js](https://nodejs.org/en/) 12.0 or above

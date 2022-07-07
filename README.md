@@ -19,7 +19,7 @@
 
 Bubblewrap is a set of tools and libraries designed to help developers to create, build and update
 projects for Android Applications that launch Progressive Web App (PWA) using
-[Trusted Web Activity (TWA)](https://developers.google.com/web/android/trusted-web-activity/).
+[Trusted Web Activity (TWA)](https://developer.chrome.com/docs/android/trusted-web-activity/).
 
 ## Requirements
 - [Node.js](https://nodejs.org/en/) 12.0 or above
@@ -60,7 +60,7 @@ See [LICENSE](./LICENSE) for more.
 
 This is not an officially supported Google product.
 
-[1]: https://developers.google.com/web/android/trusted-web-activity/quick-start
+[1]: https://developer.chrome.com/docs/android/trusted-web-activity/quick-start/
 [2]: https://join.slack.com/t/chromiumdev/shared_invite/zt-4b4af0yu-1mZ7uF6pCjYMC4poRr8Bkg
 [3]: https://meet.google.com/hps-wjke-qac
 [4]: https://chromiumdev.slack.com/archives/C01829L0URJ

@@ -229,7 +229,7 @@ into a device:
   messageDigitalAssetLinksSuccess: (filename: string): string => {
     return `\t- Generated Digital Asset Links file at ${cyan(filename)}
 \nRead more about setting up Digital Asset Links at:
-\t` + cyan('https://developers.google.com/web/android/trusted-web-activity/quick-start#creating' +
+\t` + cyan('https://developer.chrome.com/docs/android/trusted-web-activity/quick-start/#creating' +
     '-your-asset-link-file');
   },
   messageEnterPasswords: (keypath: string, keyalias: string): string => {
