@@ -37,5 +37,6 @@ jobs:
           [ "$VERSION" == "main" ] && VERSION=next
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
+          [ "$VERSION" == "merge" ] && exit 0
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
