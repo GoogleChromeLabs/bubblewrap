@@ -232,7 +232,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </service>
-                
+
         <% if (enableNotifications) { %>
             <activity android:name="com.google.androidbrowserhelper.trusted.NotificationPermissionRequestActivity" />
         <% } %>

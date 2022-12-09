@@ -97,7 +97,7 @@ export class FeatureManager {
     if (twaManifest.features.arCore?.enabled) {
       this.addFeature(new ArCoreFeature());
     }
-    
+
     // Android T+ needs permission to request sending notifications.
     if (twaManifest.enableNotifications) {
       this.androidManifest.permissions.add('android.permission.POST_NOTIFICATIONS');
