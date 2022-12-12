@@ -233,6 +233,10 @@
             </intent-filter>
         </service>
 
+        <% if (enableNotifications) { %>
+            <activity android:name="com.google.androidbrowserhelper.trusted.NotificationPermissionRequestActivity" />
+        <% } %>
+
         <% for(const component of androidManifest.components) { %>
             <%= component %>
         <% } %>
