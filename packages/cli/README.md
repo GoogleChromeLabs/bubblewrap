@@ -446,16 +446,16 @@ Information on the signature fingerprints for the application. Use to generate t
 
 ## Manually setting up the Environment
 
-### Get the Java Development Kit (JDK) 8.
+### Get the Java Development Kit (JDK) 11.
 The Android Command line tools requires the correct version of the JDK to run. To prevent version
 conflicts with a JDK version that is already installed, Bubblewrap uses a JDK that can unzipped in
 a separate folder.
 
-Download a version of JDK 8 that is compatible with your OS from
-[AdoptOpenJDK](https://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=hotspot)
+Download a version of JDK 11 that is compatible with your OS from
+[AdoptOpenJDK](https://adoptopenjdk.net/releases.html?variant=openjdk11&jvmVariant=hotspot)
 and extract it in its own folder.
 
-:warning: **Warning:** Using a version lower than 8 will make it impossible to compile the project and higher
+:warning: **Warning:** Using a version lower than 11 will make it impossible to compile the project and higher
 versions are incompatible with the Android command line tools.
 
 ### Get the Android command line tools
