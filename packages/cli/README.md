@@ -30,6 +30,13 @@ When running Bubblewrap for the first time, it will offer to automatically downl
 external dependencies. This is the recommended setup, but it's possible to
 [manually setup the environment](#manually-setting-up-the-environment).
 
+## Container
+
+As an alternative to running the cli on your machine with Node.js directly you can use this 
+container image which got the cli and all dependencies pre-installed. To use the cli run
+`docker run --rm -ti ghcr.io/GoogleChromeLabs/bubblewrap:latest [cmd]` as you would normally 
+use `bubblewrap [cmd]`.
+
 ## Quickstart Guide
 
 ### Installing Bubblewrap
