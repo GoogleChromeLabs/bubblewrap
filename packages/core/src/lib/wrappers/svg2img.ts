@@ -22,10 +22,6 @@ export enum Format {
   png = 'png',
 }
 
-export function isSvgSupported(): boolean {
-  return true;
-}
-
 export async function svg2img(svg: string): Promise<Buffer> {
   const opt = {
     fitTo: {
