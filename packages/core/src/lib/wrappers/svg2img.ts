@@ -27,10 +27,10 @@ export async function svg2img(svg: string): Promise<Buffer> {
     fitTo: {
       mode: 'width',
       value: 1200, // Generate the SVG with 1200px width, for larger icons.
-    }
+    },
   } as ResvgRenderOptions;
   const resvg = new Resvg(svg, opt);
-  const pngData = resvg.render()
-  const pngBuffer = pngData.asPng()
+  const pngData = resvg.render();
+  const pngBuffer = pngData.asPng();
   return pngBuffer;
 }

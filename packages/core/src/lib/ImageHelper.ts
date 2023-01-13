@@ -123,7 +123,7 @@ export class ImageHelper {
     }
     let body = await response.arrayBuffer();
     if (contentType.startsWith('image/svg')) {
-      let textDecoder = new TextDecoder();
+      const textDecoder = new TextDecoder();
       try {
         body = await svg2img(textDecoder.decode(body));
       } catch (error) {
