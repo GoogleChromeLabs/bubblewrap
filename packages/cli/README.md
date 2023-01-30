@@ -467,7 +467,7 @@ versions are incompatible with the Android command line tools.
 
 ### Get the Android command line tools
 Download a version of Android command line tools that is compatible with your OS from
-[https://developer.android.com/studio#command-tools](https://developer.android.com/studio#command-tools).
+[https://developer.android.com/studio#command-line-tools-only](https://developer.android.com/studio#command-line-tools-only).
 Create a folder and extract the downloaded file into it. This will further install the androidSdk and android SDK manager without needing to install the whole Android IDE.
 
 ### Tell Bubblewrap where the JDK and Android command line tools are
