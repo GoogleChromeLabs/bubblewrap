@@ -20,7 +20,7 @@ import * as Jimp from 'jimp';
 import {fetchUtils} from './FetchUtils';
 import Color = require('color');
 import {promisify} from 'util';
-import {isSvgSupported, svg2img} from './wrappers/svg2img';
+import {svg2img} from './wrappers/svg2img';
 
 // fs.promises is marked as experimental. This should be replaced when stable.
 const fsMkDir = promisify(fs.mkdir);
@@ -123,14 +123,11 @@ export class ImageHelper {
     }
     let body = await response.arrayBuffer();
     if (contentType.startsWith('image/svg')) {
-      if (!isSvgSupported()) {
-        throw new Error(`This installation doesn't support image/svg. Please, ensure the optional
-            "svg2img" library is installed or use an alternative image format.`);
-      }
+      const textDecoder = new TextDecoder();
       try {
-        body = await svg2img(iconUrl);
+        body = await svg2img(textDecoder.decode(body));
       } catch (error) {
-        throw new Error(`Problem reading ${iconUrl}: ${error.message}`);
+        throw new Error(`Problem reading ${iconUrl}: ${error}`);
       }
     }
     return {

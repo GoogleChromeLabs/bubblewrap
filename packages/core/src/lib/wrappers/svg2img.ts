@@ -14,17 +14,7 @@
 *  limitations under the License.
 */
 
-// This class is needed because svg2img's typescript type definitions didn't work.
-// once it will, there is no need for this class.
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let _svg2img: any;
-try {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  _svg2img = require('svg2img');
-} catch (e) {
-  console.debug('Unable to load the "svg2img" library. SVGs are not supported');
-}
+import {Resvg, ResvgRenderOptions} from '@resvg/resvg-js';
 
 export enum Format {
   jpeg = 'jpeg',
@@ -32,31 +22,15 @@ export enum Format {
   png = 'png',
 }
 
-export interface Svg2imgOptions {
-  width?: number;
-  height?: number;
-  preserveAspectRatio?: boolean | string;
-  format?: Format;
-  quality?: number;
-}
-
-export function isSvgSupported(): boolean {
-  return _svg2img !== undefined;
-}
-
-export function svg2img(svg: string, options: Svg2imgOptions = {}): Promise<Buffer> {
-  if (!_svg2img) {
-    return Promise.reject(
-        new Error('Failed to parse the SVG. The installation of the "svg2img" dependency failed ' +
-            'or Bubblewrap was installed with "--no-optional".'));
-  }
-
-  return new Promise((resolve, reject) => {
-    _svg2img(svg, options, (error: string, buffer: Buffer) => {
-      if (error) {
-        return reject(error);
-      }
-      return resolve(buffer);
-    });
-  });
+export async function svg2img(svg: string): Promise<Buffer> {
+  const opt = {
+    fitTo: {
+      mode: 'width',
+      value: 1200, // Generate the SVG with 1200px width, for larger icons.
+    },
+  } as ResvgRenderOptions;
+  const resvg = new Resvg(svg, opt);
+  const pngData = resvg.render();
+  const pngBuffer = pngData.asPng();
+  return pngBuffer;
 }
