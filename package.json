@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.4.3",
   "description": "Generate TWA projects from a Web Manifest",
+  "engines": {
+    "node": ">=14.15.0"
+  },
   "scripts": {
     "build": "lerna run build",
     "lint": "lerna run lint",
