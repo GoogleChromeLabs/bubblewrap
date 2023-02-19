@@ -22,3 +22,6 @@ App(PWA) used inside it matchs the [minimum quality criteria][2].
 
 [1]: https://developer.chrome.com/docs/android/trusted-web-activity/
 [2]: https://web.dev/using-a-pwa-in-your-android-app/#quality-criteria
+
+## Requirements
+- [Node.js](https://nodejs.org/en/) 14.15.0 or above
