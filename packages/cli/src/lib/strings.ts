@@ -37,7 +37,6 @@ type Messages = {
   errorInvalidInteger: (integer: string) => string;
   errorInvalidSha256Fingerprint: (fingerprint: string) => string;
   errorUrlMustBeImage: (mimeType: string) => string;
-  errorUrlMustNotBeSvg: string;
   errorSdkTerms: string;
   messageInitializingWebManifest: (manifestUrl: string) => string;
   messageAddedFingerprint: (fingerpring: Fingerprint) => string;
@@ -185,7 +184,6 @@ but received ${cyan(received.toString())}. Run ${cyan('bubblewrap help')} for us
   errorUrlMustBeImage: (mimeType: string): string => {
     return `URL must resolve to an image/* mime-type, but resolved to ${mimeType}.`;
   },
-  errorUrlMustNotBeSvg: 'SVG images are not supported yet.',
   errorSdkTerms: 'Downloading Android SDK failed because Terms and Conditions was not signed.',
   messageAddedFingerprint: (fingerprint: Fingerprint): string => {
     return `Added fingerprint with value ${fingerprint.value}.`;

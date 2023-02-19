@@ -76,10 +76,6 @@ export async function validateImageUrl(url: string): Promise<Result<URL, Error>>
     if (!mimeType.startsWith('image/')) {
       return Result.error(new Error(messages.errorUrlMustBeImage(mimeType)));
     }
-
-    if (mimeType.startsWith('image/svg')) {
-      return Result.error(new Error(messages.errorUrlMustNotBeSvg));
-    }
   }
   return validateUrl(url);
 }

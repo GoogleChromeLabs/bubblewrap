@@ -16,7 +16,7 @@
 
 'use strict';
 
-import {findSuitableIcon} from './util';
+import {findSuitableIcon, escapeGradleString} from './util';
 import {WebManifestShortcutJson, WebManifestIcon} from './types/WebManifest';
 
 // As described on https://developer.chrome.com/apps/manifest/name#short_name
@@ -47,8 +47,10 @@ export class ShortcutInfo {
   }
 
   toString(index: number): string {
-    return `[name:'${this.name}', short_name:'${this.shortName}', ` +
-      `url:'${this.url}', icon:'${this.assetName(index)}']`;
+    return `[name:'${escapeGradleString(this.name)}', ` +
+      `short_name:'${escapeGradleString(this.shortName)}', ` +
+      `url:'${this.url}', ` +
+      `icon:'${this.assetName(index)}']`;
   }
 
   assetName(index: number): string {

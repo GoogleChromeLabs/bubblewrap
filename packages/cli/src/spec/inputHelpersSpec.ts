@@ -124,6 +124,8 @@ describe('inputHelpers', () => {
           .toBeTrue();
       expect((await inputHelpers.validateImageUrl('http://example.com/sub/test.jpg'))
           .isOk()).toBeTrue();
+      expect((await inputHelpers.validateImageUrl('http://example.com/sub/test.svg'))
+          .isOk()).toBeTrue();
     });
 
     it('returns Error for invalid urls', async () => {
@@ -132,12 +134,7 @@ describe('inputHelpers', () => {
     });
 
     it('returns Error for non-image mime-types', async () => {
-      expect((await inputHelpers.validateImageUrl('https://www.example.com/html.svg'))
-          .isError()).toBeTrue();
-    });
-
-    it('returns Error for SVG images', async () => {
-      expect((await inputHelpers.validateImageUrl('https://www.example.com/test.svg'))
+      expect((await inputHelpers.validateImageUrl('https://www.example.com/html.exe'))
           .isError()).toBeTrue();
     });
   });
@@ -148,6 +145,8 @@ describe('inputHelpers', () => {
           .isOk()).toBeTrue();
       expect((await inputHelpers.validateImageUrl('http://example.com/sub/test.jpg'))
           .isOk()).toBeTrue();
+      expect((await inputHelpers.validateOptionalUrl('http://example.com/sub/test.svg'))
+          .isOk()).toBeTrue();
       expect((await inputHelpers.validateOptionalUrl('')).isOk()).toBeTrue();
       expect((await inputHelpers.validateOptionalUrl('')).unwrap()).toBeNull();
     });
@@ -157,12 +156,7 @@ describe('inputHelpers', () => {
     });
 
     it('returns Error for non-image mime-types', async () => {
-      expect((await inputHelpers.validateImageUrl('https://www.example.com/html.svg'))
-          .isError()).toBeTrue();
-    });
-
-    it('returns Error for SVG images', async () => {
-      expect((await inputHelpers.validateImageUrl('https://www.example.com/test.svg'))
+      expect((await inputHelpers.validateImageUrl('https://www.example.com/html.exe'))
           .isError()).toBeTrue();
     });
   });
