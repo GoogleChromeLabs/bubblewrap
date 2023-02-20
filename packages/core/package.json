@@ -2,6 +2,9 @@
   "name": "@bubblewrap/core",
   "version": "1.19.1",
   "description": "Core Library to generate, build and sign TWA projects",
+  "engines": {
+    "node": ">=14.15.0"
+  },
   "scripts": {
     "build": "tsc",
     "clean": "del dist",

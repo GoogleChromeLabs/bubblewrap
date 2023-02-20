@@ -2,6 +2,9 @@
   "name": "@bubblewrap/cli",
   "version": "1.19.1",
   "description": "CLI tool to Generate TWA projects from a Web Manifest",
+  "engines": {
+    "node": ">=14.15.0"
+  },
   "bin": {
     "bubblewrap": "bin/bubblewrap.js"
   },
