@@ -38,7 +38,7 @@
     "eslint": "^6.6.0",
     "eslint-config-google": "^0.14.0",
     "jasmine": "^3.6.4",
-    "lerna": "^3.22.1",
+    "lerna": "^6.5.1",
     "lerna-changelog": "^1.0.1",
     "mock-fs": "^4.13.0",
     "npm": "^6.14.11",
