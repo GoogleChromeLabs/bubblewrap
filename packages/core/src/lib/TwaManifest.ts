@@ -117,7 +117,7 @@ type alphaDependencies = {
  * // - icon: Name of the resource in the drawable folder to use as an icon.
  * shortcuts: [
  *      // Insert shortcuts here, for example:
- *      // [name: 'Open SVG', short_name: 'Open', url: '/open', icon: 'splash']
+ *      // { name: 'Open SVG', shortName: 'Open', url: '/open', chosenIconUrl: 'https://example.com/example.svg' }
  *  ],
  * // The duration of fade out animation in milliseconds to be played when removing splash screen.
  * splashScreenFadeOutDuration: 300
