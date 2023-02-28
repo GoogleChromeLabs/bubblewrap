@@ -112,9 +112,9 @@ type alphaDependencies = {
  * enableSiteSettingsShortcut: true, // Set to false to disable the shortcut into site settings.
  * // Add shortcuts for your app here. Every shortcut must include the following fields:
  * // - name: String that will show up in the shortcut.
- * // - short_name: Shorter string used if |name| is too long.
+ * // - shortName: Shorter string used if |name| is too long.
  * // - url: Absolute path of the URL to launch the app with (e.g '/create').
- * // - icon: Name of the resource in the drawable folder to use as an icon.
+ * // - chosenIconUrl: Name of the resource in the drawable folder to use as an icon.
  * shortcuts: [
  *      // Insert shortcuts here, for example:
  *      // { name: 'Open SVG', shortName: 'Open', url: '/open', chosenIconUrl: 'https://example.com/example.svg' }
