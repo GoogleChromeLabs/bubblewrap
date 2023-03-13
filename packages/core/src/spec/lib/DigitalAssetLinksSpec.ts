@@ -42,17 +42,13 @@ describe('DigitalAssetLinks', () => {
     it('Supports multiple fingerprints', () => {
       const digitalAssetLinks =
         JSON.parse(DigitalAssetLinks.generateAssetLinks(packageName, '123', '456'));
-      expect(digitalAssetLinks.length).toBe(2);
+      expect(digitalAssetLinks.length).toBe(1);
       expect(digitalAssetLinks[0].relation[0]).toBe('delegate_permission/common.handle_all_urls');
       expect(digitalAssetLinks[0].target.namespace).toBe('android_app');
       expect(digitalAssetLinks[0].target.package_name).toBe(packageName);
-      expect(digitalAssetLinks[0].target.sha256_cert_fingerprints.length).toBe(1);
+      expect(digitalAssetLinks[0].target.sha256_cert_fingerprints.length).toBe(2);
       expect(digitalAssetLinks[0].target.sha256_cert_fingerprints[0]).toBe('123');
-      expect(digitalAssetLinks[1].relation[0]).toBe('delegate_permission/common.handle_all_urls');
-      expect(digitalAssetLinks[1].target.namespace).toBe('android_app');
-      expect(digitalAssetLinks[1].target.package_name).toBe(packageName);
-      expect(digitalAssetLinks[1].target.sha256_cert_fingerprints.length).toBe(1);
-      expect(digitalAssetLinks[1].target.sha256_cert_fingerprints[0]).toBe('456');
+      expect(digitalAssetLinks[0].target.sha256_cert_fingerprints[1]).toBe('456');
     });
   });
 });
