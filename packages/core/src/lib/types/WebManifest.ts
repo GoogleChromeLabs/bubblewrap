@@ -25,6 +25,7 @@ export interface WebManifestIcon {
 
 export interface WebManifestShortcutJson {
   name?: string;
+  shortName?: string;
   short_name?: string;
   url?: string;
   icons?: Array<WebManifestIcon>;

@@ -41,8 +41,9 @@ describe('TwaManifest', () => {
         'background_color': '#7cc0ff',
         'shortcuts': [{
           'name': 'shortcut name',
-          'short_name': 'short',
+          'shortName': 'short',
           'url': '/launch',
+          'chosenIconUrl': '/shortcut_icon.png',
           'icons': [{
             'src': '/shortcut_icon.png',
             'sizes': '96x96',
@@ -81,8 +82,8 @@ describe('TwaManifest', () => {
       expect(twaManifest.shortcuts[0].chosenIconUrl)
           .toBe('https://pwa-directory.com/shortcut_icon.png');
       expect(twaManifest.generateShortcuts())
-          .toBe('[[name:\'shortcut name\', short_name:\'short\',' +
-            ' url:\'https://pwa-directory.com/launch\', icon:\'shortcut_0\']]');
+          .toBe('[[name:\'shortcut name\', shortName:\'short\',' +
+            ' url:\'https://pwa-directory.com/launch\', chosenIconUrl:\'shortcut_0\']]');
       expect(twaManifest.fallbackType).toBe('customtabs');
     });
 
@@ -119,7 +120,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.retainedBundles).toEqual([]);
     });
 
-    it('Uses "name" when "short_name" is not available', () => {
+    it('Uses "name" when "shortName" is not available', () => {
       const manifest = {
         'name': 'PWA Directory',
       };
@@ -350,8 +351,7 @@ describe('TwaManifest', () => {
           'src': 'https://image.png',
           'sizes': '512x512',
           'purpose': 'any',
-        },
-        ],
+        }],
       };
       const twaManifest = new TwaManifest({
         'packageId': 'id',
@@ -410,8 +410,7 @@ describe('TwaManifest', () => {
           'src': 'https://image.png',
           'sizes': '512x512',
           'purpose': 'any',
-        },
-        ],
+        }],
       };
       const twaManifest = new TwaManifest({
         'packageId': 'id',

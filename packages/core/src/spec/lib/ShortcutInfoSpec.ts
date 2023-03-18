@@ -21,8 +21,9 @@ describe('ShortcutInfo', () => {
     it('creates a correct TWA shortcut', () => {
       const shortcut = {
         'name': 'shortcut name',
-        'short_name': 'short',
+        'shortName': 'short',
         'url': '/launch',
+        'chosenIconUrl': '/shortcut_icon.png',
         'icons': [{
           'src': '/shortcut_icon.png',
           'sizes': '96x96',
@@ -32,12 +33,22 @@ describe('ShortcutInfo', () => {
       const shortcutInfo = ShortcutInfo.fromShortcutJson(manifestUrl, shortcut);
       expect(shortcutInfo.name).toBe('shortcut name');
       expect(shortcutInfo.shortName).toBe('short');
-      expect(shortcutInfo.url).toBe('https://pwa-directory.com/launch');
-      expect(shortcutInfo.chosenIconUrl)
-          .toBe('https://pwa-directory.com/shortcut_icon.png');
-      expect(shortcutInfo.toString(0))
-          .toBe('[name:\'shortcut name\', short_name:\'short\',' +
-            ' url:\'https://pwa-directory.com/launch\', icon:\'shortcut_0\']');
+    });
+
+    it('works with short_name, too', () => {
+      const shortcut = {
+        'name': 'shortcut name',
+        'short_name': 'short',
+        'url': '/launch',
+        'chosenIconUrl': '/shortcut_icon.png',
+        'icons': [{
+          'src': '/shortcut_icon.png',
+          'sizes': '96x96',
+        }],
+      };
+      const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
+      const shortcutInfo = ShortcutInfo.fromShortcutJson(manifestUrl, shortcut);
+      expect(shortcutInfo.shortName).toBe('short');
     });
 
     it('Throws if icon size is empty or too small', () => {

@@ -48,9 +48,9 @@ export class ShortcutInfo {
 
   toString(index: number): string {
     return `[name:'${escapeGradleString(this.name)}', ` +
-      `short_name:'${escapeGradleString(this.shortName)}', ` +
+      `shortName:'${escapeGradleString(this.shortName)}', ` +
       `url:'${this.url}', ` +
-      `icon:'${this.assetName(index)}']`;
+      `chosenIconUrl:'${this.assetName(index)}']`;
   }
 
   assetName(index: number): string {
@@ -66,7 +66,8 @@ export class ShortcutInfo {
    * @returns {TwaManifest}
    */
   static fromShortcutJson(webManifestUrl: URL, shortcut: WebManifestShortcutJson): ShortcutInfo {
-    const name = shortcut.name || shortcut.short_name;
+    const manifestShortName = shortcut.shortName || shortcut.short_name;
+    const name = shortcut.name || manifestShortName;
 
     if (!shortcut.icons || !shortcut.url || !name) {
       throw new Error('missing metadata');
@@ -88,7 +89,7 @@ export class ShortcutInfo {
       return icon ? new URL(icon.src, webManifestUrl).toString() : undefined;
     }
 
-    const shortName = shortcut.short_name || shortcut.name!.substring(0, SHORT_NAME_MAX_SIZE);
+    const shortName = manifestShortName || shortcut.name!.substring(0, SHORT_NAME_MAX_SIZE);
     const url = new URL(shortcut.url, webManifestUrl).toString();
     const shortcutInfo = new ShortcutInfo(name!, shortName!, url, resolveIconUrl(suitableIcon),
         resolveIconUrl(suitableMaskableIcon), resolveIconUrl(suitableMonochromeIcon));

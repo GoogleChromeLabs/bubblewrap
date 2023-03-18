@@ -422,6 +422,7 @@ export class TwaManifest {
         TwaManifest.log.warn(`Skipping shortcut[${i}] for ${err}.`);
       }
       if (shortcuts.length === 4) {
+        TwaManifest.log.warn(`Skipping remaining ${webManifest.shortcuts!.length - 4} shortcuts.`);
         break;
       }
     }
