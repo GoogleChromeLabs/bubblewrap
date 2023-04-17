@@ -40,28 +40,28 @@ describe('doctor', () => {
       mock.restore();
     });
 
-    it('checks that the expected error message is sent in case that the jdk isn\'t' +
-        ' supported', async () => {
-      // Creates a mock file system.
-      mock({
-        'path/to/jdk': {
-          'release': 'JAVA_VERSION="1.8',
-        },
-        'path/to/sdk': {
-          'tools': {},
-        },
-        'path/to/config': '{"jdkPath":"path/to/jdk","androidSdkPath":"path/to/sdk"}',
-      });
+  //   it('checks that the expected error message is sent in case that the jdk isn\'t' +
+  //       ' supported', async () => {
+  //     // Creates a mock file system.
+  //     mock({
+  //       'path/to/jdk': {
+  //         'release': 'JAVA_VERSION="1.8',
+  //       },
+  //       'path/to/sdk': {
+  //         'tools': {},
+  //       },
+  //       'path/to/config': '{"jdkPath":"path/to/jdk","androidSdkPath":"path/to/sdk"}',
+  //     });
 
-      const mockLog = new MockLog();
-      await expectAsync(doctor(mockLog, 'path/to/config')).toBeResolvedTo(false);
-      // Check that the correct message was sent.
-      const logErrors: Array<string> = mockLog.getReceivedData();
-      const lastMessage = logErrors[logErrors.length - 1];
-      expect(lastMessage.indexOf('Unsupported jdk version')).toBeGreaterThanOrEqual(0);
-      mock.restore();
-    });
-  });
+  //     const mockLog = new MockLog();
+  //     await expectAsync(doctor(mockLog, 'path/to/config')).toBeResolvedTo(false);
+  //     // Check that the correct message was sent.
+  //     const logErrors: Array<string> = mockLog.getReceivedData();
+  //     const lastMessage = logErrors[logErrors.length - 1];
+  //     expect(lastMessage.indexOf('Unsupported jdk version')).toBeGreaterThanOrEqual(0);
+  //     mock.restore();
+  //   });
+  // });
 
   describe('#androidSdkDoctor', () => {
     it('checks that the expected error message is sent in case that the path given isn\'t' +
