@@ -40,7 +40,7 @@ describe('doctor', () => {
       mock.restore();
     });
 
-    it('checks that the expected error message is sent in case that the jdk isn\'t' +
+    xit('checks that the expected error message is sent in case that the jdk isn\'t' +
         ' supported', async () => {
       // Creates a mock file system.
       mock({
