@@ -17,6 +17,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as Jimp from 'jimp';
+import {ColorActionName} from '@jimp/plugin-color';
 import {fetchUtils} from './FetchUtils';
 import Color = require('color');
 import {promisify} from 'util';
@@ -91,13 +92,13 @@ export class ImageHelper {
     const image = await Jimp.read(icon.data);
     image.color([
       // Set all pixels to black/0
-      {apply: 'red', params: [-255]},
-      {apply: 'green', params: [-255]},
-      {apply: 'blue', params: [-255]},
+      {apply: ColorActionName.RED, params: [-255]},
+      {apply: ColorActionName.GREEN, params: [-255]},
+      {apply: ColorActionName.BLUE, params: [-255]},
       // Add to channels using theme color
-      {apply: 'red', params: [themeColor.red()]},
-      {apply: 'green', params: [themeColor.green()]},
-      {apply: 'blue', params: [themeColor.blue()]},
+      {apply: ColorActionName.RED, params: [themeColor.red()]},
+      {apply: ColorActionName.GREEN, params: [themeColor.green()]},
+      {apply: ColorActionName.BLUE, params: [themeColor.blue()]},
     ]);
     return {url: icon.url, data: image};
   }
