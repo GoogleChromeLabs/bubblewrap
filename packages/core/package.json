@@ -50,7 +50,7 @@
     "fetch-h2": "^2.5.1",
     "googleapis": "^81.0.0",
     "inquirer": "^7.3.3",
-    "jimp": "^0.14.0",
+    "jimp": "^0.22.7",
     "lodash.template": "^4.5.0",
     "mime-types": "^2.1.28",
     "node-fetch": "^2.6.1",
