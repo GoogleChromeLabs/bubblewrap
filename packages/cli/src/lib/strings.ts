@@ -351,11 +351,11 @@ the PWA:
     return `Directory ${cyan(directory)} does not exist. Do you want to create it now?`;
   },
   promptExperimentalFeature: 'This is an experimental feature. Are you sure you want to continue?',
-  promptInstallJdk: `Do you want Bubblewrap to install JDK?
-  (Enter "No" to use your JDK installation)`,
-  promptJdkPath: 'Path to your existing JDK:',
-  promptInstallSdk: `Do you want Bubblewrap to install Android SDK?
-  (Enter "No" to use your installation)`,
+  promptInstallJdk: `Do you want Bubblewrap to install the JDK (recommended)?
+  (Enter "No" to use your own JDK 11 installation)`,
+  promptJdkPath: 'Path to your existing JDK 11:',
+  promptInstallSdk: `Do you want Bubblewrap to install the Android SDK (recommended)?
+  (Enter "No" to use your own Android SDK installation)`,
   promptSdkTerms: `Do you agree to the Android SDK terms and conditions at ${underline('https://developer.android.com/studio/terms.html')}?`,
   promptSdkPath: 'Path to your existing Android SDK:',
   promptHostMessage: 'Domain:',
