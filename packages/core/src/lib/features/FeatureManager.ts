@@ -24,8 +24,8 @@ import {Log, ConsoleLog} from '../Log';
 import {ArCoreFeature} from './ArCoreFeature';
 
 const ANDROID_BROWSER_HELPER_VERSIONS = {
-  stable: 'com.google.androidbrowserhelper:androidbrowserhelper:2.4.0',
-  alpha: 'com.google.androidbrowserhelper:androidbrowserhelper:2.4.0',
+  stable: 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0',
+  alpha: 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0',
 };
 
 /**
