@@ -24,7 +24,7 @@ export class PlayBillingFeature extends EmptyFeature {
   constructor() {
     super('playbilling');
 
-    this.buildGradle.dependencies.push('com.google.androidbrowserhelper:billing:1.0.0-alpha09');
+    this.buildGradle.dependencies.push('com.google.androidbrowserhelper:billing:1.0.0-alpha10');
 
     this.androidManifest.components.push(`
         <activity
