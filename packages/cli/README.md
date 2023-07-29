@@ -378,6 +378,7 @@ Fields:
 |splashScreenFadeOutDuration|number|true|Duration for the splash screen fade out animation.|
 |startUrl|string|true|The start path for the TWA. Must be relative to the domain.|
 |themeColor|string|true|The color used for the status bar.|
+|themeColorDark|string|true|The color used for the dark status bar.|
 |webManifestUrl|string|false|Full URL to the PWA Web Manifest. Required for the application to be compatible with Chrome OS and Meta Quest devices.|
 |fullScopeUrl|string|false|The navigation scope that the browser considers to be within the app. If the user navigates outside the scope, it reverts to a normal web page inside a browser tab or window. Must be a full URL. Required and used only by Meta Quest devices.|
 |minSdkVersion|number|false|The minimum [Android API Level](https://developer.android.com/guide/topics/manifest/uses-sdk-element#ApiLevels) required for the application to run. Defaults to `23`, if `isMetaQuest` is `true`, and `19` otherwise.|

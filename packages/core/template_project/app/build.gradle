@@ -27,6 +27,7 @@ def twaManifest = [
     name: '<%= escapeGradleString(name) %>', // The application name.
     launcherName: '<%= escapeGradleString(launcherName) %>', // The name shown on the Android Launcher.
     themeColor: '<%= themeColor.hex() %>', // The color used for the status bar.
+    themeColorDark: '<%= themeColorDark.hex() %>', // The color used for the dark status bar.
     navigationColor: '<%= navigationColor.hex() %>', // The color used for the navigation bar.
     navigationColorDark: '<%= navigationColorDark.hex() %>', // The color used for the dark navbar.
     navigationDividerColor: '<%= navigationDividerColor.hex() %>', // The navbar divider color.
@@ -93,6 +94,11 @@ android {
         // `res/values/colors.xml`. Setting in both places is an error and the app will not
         // compile. If not set, the status bar color defaults to #FFFFFF - white.
         resValue "color", "colorPrimary", twaManifest.themeColor
+
+        // This attribute sets the dark status bar color for the TWA. It can be either set here or in
+        // `res/values/colors.xml`. Setting in both places is an error and the app will not
+        // compile. If not set, the status bar color defaults to #000000 - white.
+        resValue "color", "colorPrimaryDark", twaManifest.themeColorDark
 
         // This attribute sets the navigation bar color for the TWA. It can be either set here or
         // in `res/values/colors.xml`. Setting in both places is an error and the app will not
