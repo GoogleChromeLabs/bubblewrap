@@ -181,7 +181,7 @@ export class TwaManifest {
     // Older manifests may not have this field:
     this.display = asDisplayMode(data.display!) || DEFAULT_DISPLAY_MODE;
     this.themeColor = new Color(data.themeColor);
-    this.themeColorDark = new Color(data.themeColorDark);
+    this.themeColorDark = new Color(data.themeColorDark ?? DEFAULT_THEME_COLOR_DARK);
     this.navigationColor = new Color(data.navigationColor);
     this.navigationColorDark = new Color(data.navigationColorDark ?? DEFAULT_NAVIGATION_COLOR);
     this.navigationDividerColor = new Color(data.navigationDividerColor ??
