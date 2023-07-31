@@ -518,7 +518,7 @@ export interface TwaManifestJson {
   launcherName?: string; // Older Manifests may not have this field.
   display?: string; // Older Manifests may not have this field.
   themeColor: string;
-  themeColorDark: string;
+  themeColorDark?: string;
   navigationColor: string;
   navigationColorDark?: string;
   navigationDividerColor?: string;
