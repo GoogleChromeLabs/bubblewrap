@@ -66,6 +66,7 @@ const DEFAULT_SPLASHSCREEN_FADEOUT_DURATION = 300;
 const DEFAULT_APP_NAME = 'My TWA';
 const DEFAULT_DISPLAY_MODE = 'standalone';
 const DEFAULT_THEME_COLOR = '#FFFFFF';
+const DEFAULT_THEME_COLOR_DARK = '#000000';
 const DEFAULT_NAVIGATION_COLOR = '#000000';
 const DEFAULT_NAVIGATION_DIVIDER_COLOR = '#00000000';
 const DEFAULT_BACKGROUND_COLOR = '#FFFFFF';
@@ -101,7 +102,8 @@ type alphaDependencies = {
  * name: '<%= name %>', // The name shown on the Android Launcher.
  * display: '<%= display %>', // The display mode for the TWA.
  * themeColor: '<%= themeColor %>', // The color used for the status bar.
- * navigationColor: '<%= themeColor %>', // The color used for the navigation bar.
+ * themeColorDark: '<%= themeColorDark %>', // The color used for the dark status bar.
+ * navigationColor: '<%= navigationColor %>', // The color used for the navigation bar.
  * navigationColorDark: '<%= navigationColorDark %>', // The color used for the dark navbar.
  * navigationDividerColor: '<%= navigationDividerColor %>', // The color used for the
  * navbar divider.
@@ -135,6 +137,7 @@ export class TwaManifest {
   launcherName: string;
   display: DisplayMode;
   themeColor: Color;
+  themeColorDark: Color;
   navigationColor: Color;
   navigationColorDark: Color;
   navigationDividerColor: Color;
@@ -178,6 +181,7 @@ export class TwaManifest {
     // Older manifests may not have this field:
     this.display = asDisplayMode(data.display!) || DEFAULT_DISPLAY_MODE;
     this.themeColor = new Color(data.themeColor);
+    this.themeColorDark = new Color(data.themeColorDark ?? DEFAULT_THEME_COLOR_DARK);
     this.navigationColor = new Color(data.navigationColor);
     this.navigationColorDark = new Color(data.navigationColorDark ?? DEFAULT_NAVIGATION_COLOR);
     this.navigationDividerColor = new Color(data.navigationDividerColor ??
@@ -225,6 +229,7 @@ export class TwaManifest {
   toJson(): TwaManifestJson {
     return Object.assign({}, this, {
       themeColor: this.themeColor.hex(),
+      themeColorDark: this.themeColorDark.hex(),
       navigationColor: this.navigationColor.hex(),
       navigationColorDark: this.navigationColorDark.hex(),
       navigationDividerColor: this.navigationDividerColor.hex(),
@@ -315,6 +320,7 @@ export class TwaManifest {
         webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE) || DEFAULT_APP_NAME,
       display: asDisplayMode(webManifest['display']!) || DEFAULT_DISPLAY_MODE,
       themeColor: webManifest['theme_color'] || DEFAULT_THEME_COLOR,
+      themeColorDark: DEFAULT_THEME_COLOR_DARK,
       navigationColor: DEFAULT_NAVIGATION_COLOR,
       navigationColorDark: DEFAULT_NAVIGATION_COLOR,
       navigationDividerColor: DEFAULT_NAVIGATION_DIVIDER_COLOR,
@@ -512,6 +518,7 @@ export interface TwaManifestJson {
   launcherName?: string; // Older Manifests may not have this field.
   display?: string; // Older Manifests may not have this field.
   themeColor: string;
+  themeColorDark?: string;
   navigationColor: string;
   navigationColorDark?: string;
   navigationDividerColor?: string;

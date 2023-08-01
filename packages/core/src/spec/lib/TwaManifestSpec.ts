@@ -62,6 +62,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.maskableIconUrl).toBeUndefined();
       expect(twaManifest.monochromeIconUrl).toBeUndefined();
       expect(twaManifest.themeColor.hex()).toBe('#00FF00');
+      expect(twaManifest.themeColorDark.hex()).toBe('#000000');
       expect(twaManifest.navigationColor.hex()).toBe('#000000');
       expect(twaManifest.navigationColorDark.hex()).toBe('#000000');
       expect(twaManifest.navigationDividerColor.hex()).toBe('#000000');
@@ -101,6 +102,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.display).toBe('standalone');
       expect(twaManifest.orientation).toBe('default');
       expect(twaManifest.themeColor.hex()).toBe('#FFFFFF');
+      expect(twaManifest.themeColorDark.hex()).toBe('#000000');
       expect(twaManifest.navigationColor.hex()).toBe('#000000');
       expect(twaManifest.navigationColorDark.hex()).toBe('#000000');
       expect(twaManifest.navigationDividerColor.hex()).toBe('#000000');
@@ -203,6 +205,7 @@ describe('TwaManifest', () => {
         display: 'fullscreen',
         orientation: 'landscape',
         themeColor: '#00ff00',
+        themeColorDark: '#000000',
         navigationColor: '#000000',
         navigationColorDark: '#ffffff',
         navigationDividerColor: '#ff0000',
@@ -237,6 +240,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.display).toEqual('fullscreen');
       expect(twaManifest.orientation).toEqual('landscape');
       expect(twaManifest.themeColor).toEqual(new Color('#00ff00'));
+      expect(twaManifest.themeColorDark).toEqual(new Color('#000000'));
       expect(twaManifest.navigationColor).toEqual(new Color('#000000'));
       expect(twaManifest.navigationColorDark).toEqual(new Color('#ffffff'));
       expect(twaManifest.navigationDividerColor).toEqual(new Color('#ff0000'));
@@ -360,6 +364,7 @@ describe('TwaManifest', () => {
         'launcherName': 'name',
         'display': 'standalone',
         'themeColor': '#FFFFFF',
+        'themeColorDark': '#000000',
         'navigationColor': '#000000',
         'navigationColorDark': '#000000',
         'navigationDividerColor': '#000000',
@@ -420,6 +425,7 @@ describe('TwaManifest', () => {
         'launcherName': 'name',
         'display': 'standalone',
         'themeColor': '#FFFFFF',
+        'themeColorDark': '#000000',
         'navigationColor': '#000000',
         'navigationColorDark': '#000000',
         'navigationDividerColor': '#000000',
