@@ -75,7 +75,7 @@ bubblewrap build
 ```
 
 When building the project for the first time, the Android Build Tools will need to be installed.
-The tool will inkove the installation process for the build tools. Make sure to read and accept
+The tool will invoke the installation process for the build tools. Make sure to read and accept
 the license agreement before proceeding. This process will install the other required files inside the `directory/decompressed` root directory of the android CLI package.
 
 As a result of the build step, the tool will generate a signed APK (`app-release-signed.apk`)
