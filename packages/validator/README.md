@@ -18,7 +18,7 @@
 
 Bubblewrap Validator is a JavaScript library that helps developers to verify if their
 [Trusted Web Activity][1] project is well formed as well as validating if the Progressive Web
-App(PWA) used inside it matchs the [minimum quality criteria][2].
+App(PWA) used inside it matches the [minimum quality criteria][2].
 
 [1]: https://developer.chrome.com/docs/android/trusted-web-activity/
 [2]: https://web.dev/using-a-pwa-in-your-android-app/#quality-criteria
