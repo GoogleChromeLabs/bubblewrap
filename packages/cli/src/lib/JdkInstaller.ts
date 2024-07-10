@@ -19,19 +19,19 @@ import {util} from '@bubblewrap/core';
 import {Prompt} from './Prompt';
 import {enUS as messages} from './strings';
 
-const JDK_VERSION = '11.0.9.1+1';
+const JDK_VERSION = '17.0.11+9';
 const JDK_DIR = `jdk-${JDK_VERSION}`;
-const DOWNLOAD_JDK_BIN_ROOT = `https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-${JDK_VERSION}/`;
-const DOWNLOAD_JDK_SRC_ROOT = 'https://github.com/adoptium/jdk11u/archive/refs/tags/';
+const DOWNLOAD_JDK_BIN_ROOT = `https://github.com/adoptium/temurin17-binaries/releases/download/jdk-${JDK_VERSION}/`;
+const DOWNLOAD_JDK_SRC_ROOT = 'https://github.com/adoptium/jdk17u/archive/refs/tags/';
 const JDK_BIN_VERSION = JDK_VERSION.replace('+', '_');
-const JDK_FILE_NAME_MAC = `OpenJDK11U-jdk_x64_mac_hotspot_${JDK_BIN_VERSION}.tar.gz`;
-const JDK_FILE_NAME_WIN32 = `OpenJDK11U-jdk_x86-32_windows_hotspot_${JDK_BIN_VERSION}.zip`;
-const JDK_FILE_NAME_LINUX64 = `OpenJDK11U-jdk_x64_linux_hotspot_${JDK_BIN_VERSION}.tar.gz`;
+const JDK_FILE_NAME_MAC = `OpenJDK17U-jdk_x64_mac_hotspot_${JDK_BIN_VERSION}.tar.gz`;
+const JDK_FILE_NAME_WIN32 = `OpenJDK17U-jdk_x86-32_windows_hotspot_${JDK_BIN_VERSION}.zip`;
+const JDK_FILE_NAME_LINUX64 = `OpenJDK17U-jdk_x64_linux_hotspot_${JDK_BIN_VERSION}.tar.gz`;
 const JDK_SRC_ZIP = `jdk-${JDK_VERSION}.zip`;
-const JDK_SOURCE_SIZE = 190391098;
+const JDK_SOURCE_SIZE = 178978050;
 
 /**
- * Install JDK 11 by downloading the binary and source code and
+ * Install JDK 17 by downloading the binary and source code and
  * decompressing it. Source code is required
  * based on discussions with legal team about licensing.
  */
@@ -73,7 +73,7 @@ export class JdkInstaller {
   }
 
   /**
-   * Downloads the platform-appropriate version of JDK 11, including
+   * Downloads the platform-appropriate version of JDK 17, including
    * binary and source code.
    *
    * @param installPath {string} path to install JDK at.

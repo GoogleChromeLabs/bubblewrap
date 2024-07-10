@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import Color = require('color');
+import Color from 'color';
 import {URL} from 'url';
 import {isWebUri} from 'valid-url';
 import {Result, DisplayMode, asDisplayMode, asOrientation, Orientation, util}

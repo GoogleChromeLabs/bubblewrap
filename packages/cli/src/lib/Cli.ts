@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import * as minimist from 'minimist';
+import minimist from 'minimist';
 import {update} from './cmds/update';
 import {help} from './cmds/help';
 import {build} from './cmds/build';

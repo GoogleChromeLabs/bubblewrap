@@ -17,7 +17,7 @@
 import {Result, fetchUtils} from '@bubblewrap/core';
 import {Presets, Bar} from 'cli-progress';
 import {green} from 'colors';
-import * as inquirer from 'inquirer';
+import inquirer from 'inquirer';
 
 const KILOBYTE_SIZE = 1024;
 

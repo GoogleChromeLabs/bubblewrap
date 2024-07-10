@@ -339,12 +339,12 @@ the PWA:
 
 \t\t- To open ${italic('https://example.com/')}: ${cyan('/')}
 \t\t- To open ${italic('https://example.com/path-to-pwa/')}: ${cyan('/path-to-pwa/')}\n`,
-  messageDownloadJdk: 'Downloading JDK 11 to ',
+  messageDownloadJdk: 'Downloading JDK 17 to ',
   messageDownloadSdk: 'Downloading Android SDK to ',
-  messageDownloadJdkSrc: 'Downloading the JDK 11 Sources...',
-  messageDecompressJdkSrc: 'Decompressing the JDK 11 Sources...',
-  messageDownloadJdkBin: 'Downloading the JDK 11 Binaries...',
-  messageDecompressJdkBin: 'Decompressing the JDK 11 Binaries...',
+  messageDownloadJdkSrc: 'Downloading the JDK 17 Sources...',
+  messageDecompressJdkSrc: 'Decompressing the JDK 17 Sources...',
+  messageDownloadJdkBin: 'Downloading the JDK 17 Binaries...',
+  messageDecompressJdkBin: 'Decompressing the JDK 17 Binaries...',
   messageDownloadAndroidSdk: 'Downloading the Android SDK...',
   messageDecompressAndroidSdk: 'Decompressing the Android SDK...',
   promptCreateDirectory: (directory: string): string => {
@@ -352,8 +352,8 @@ the PWA:
   },
   promptExperimentalFeature: 'This is an experimental feature. Are you sure you want to continue?',
   promptInstallJdk: `Do you want Bubblewrap to install the JDK (recommended)?
-  (Enter "No" to use your own JDK 11 installation)`,
-  promptJdkPath: 'Path to your existing JDK 11:',
+  (Enter "No" to use your own JDK 17 installation)`,
+  promptJdkPath: 'Path to your existing JDK 17:',
   promptInstallSdk: `Do you want Bubblewrap to install the Android SDK (recommended)?
   (Enter "No" to use your own Android SDK installation)`,
   promptSdkTerms: `Do you agree to the Android SDK terms and conditions at ${underline('https://developer.android.com/studio/terms.html')}?`,
@@ -407,8 +407,8 @@ the PWA:
   jdkPathIsNotCorrect: 'The jdkPath isn\'t correct, please run the following command to update ' +
       'it:\nbubblewrap updateConfig --jdkPath <path-to-jdk>, such that the folder of the path' +
       'contains the file "release". Then run bubblewrap doctor again.',
-  jdkIsNotSupported: 'Unsupported jdk version. Please download "OpenJDK 11(LTS)" at the link ' +
-      'below:\nhttps://adoptopenjdk.net/releases.html?variant=openjdk11&jvmVariant=hotspot.',
+  jdkIsNotSupported: 'Unsupported jdk version. Please download "OpenJDK 17(LTS)" at the link ' +
+      'below:\nhttps://adoptium.net/temurin/releases/?version=17&package=jdk.',
   androidSdkPathIsNotCorrect: 'The androidSdkPath isn\'t correct, please run the following ' +
       'command to update it:\nbubblewrap updateConfig --androidSdkPath <path-to-sdk>, such that ' +
       'the folder of the path contains the folder "build". Then run bubblewrap doctor again.',

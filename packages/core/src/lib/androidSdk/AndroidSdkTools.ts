@@ -41,7 +41,11 @@ export class AndroidSdkTools {
     try {
       return new AndroidSdkTools(process, config, jdkHelper, log);
     } catch (error) {
-      throw new Error(error);
+      if (typeof error === 'string') {
+        throw new Error(error);
+      } else {
+        throw error;
+      }
     }
   }
 

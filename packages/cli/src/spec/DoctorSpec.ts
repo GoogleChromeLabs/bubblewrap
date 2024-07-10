@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import * as mock from 'mock-fs';
+import mock from 'mock-fs';
 import {MockLog} from '@bubblewrap/core';
 import {doctor} from '../lib/cmds/doctor';
 import {enUS as messages} from '../lib/strings';
