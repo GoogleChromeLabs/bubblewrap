@@ -110,7 +110,7 @@ export class JdkHelper {
     try {
       const releaseFilePath = join(javaHome, 'release');
       const file = await fsPromises.readFile(releaseFilePath, 'utf-8');
-      if (file.indexOf('JAVA_VERSION="17.0') < 0) { // Checks if the jdk's version is 11 as needed
+      if (file.indexOf('JAVA_VERSION="17.0') < 0) { // Checks if the jdk's version is 17 as needed
         return Result.error(new ValidatePathError(
             'JDK version not supported. JDK version 17 is required.', 'PathIsNotSupported'));
       }
