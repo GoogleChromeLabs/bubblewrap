@@ -43,6 +43,6 @@
     "mock-fs": "^4.13.0",
     "npm": "^9.5.1",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.9"
+    "typescript": "^5.5.3"
   }
 }

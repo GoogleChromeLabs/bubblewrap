@@ -45,8 +45,10 @@ export class Config {
       const data = await fs.readFile(path, 'utf8');
       return Config.deserialize(data);
     } catch (err) {
-      // If config file does not exist
-      if (err.code === 'ENOENT') return undefined;
+      if (err instanceof Error) {
+        // If config file does not exist
+        if ((err as NodeJS.ErrnoException).code === 'ENOENT') return undefined;
+      }
       throw err;
     }
   }

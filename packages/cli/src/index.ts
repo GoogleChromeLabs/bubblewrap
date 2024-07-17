@@ -26,7 +26,9 @@ module.exports = async (): Promise<void> => {
   try {
     success = await cli.run(args);
   } catch (err) {
-    log.error(err.message);
+    if (err instanceof Error) {
+      log.error(err.message);
+    }
     success = false;
   }
 

@@ -72,7 +72,7 @@ describe('JdkHelper', () => {
     it('Creates a Linux environment and checks that a valid path will pass', async () => {
       mock({
         'jdk': {
-          'release': 'JAVA_VERSION="11.0.1',
+          'release': 'JAVA_VERSION="17.0.1',
         }});
       expect((await JdkHelper.validatePath('jdk', LINUX_PROCESS)).isOk()).toBeTrue();
       mock.restore();
@@ -93,7 +93,7 @@ describe('JdkHelper', () => {
         'jdk': {
           'Contents': {
             'Home': {
-              'release': 'JAVA_VERSION="11.0.1"',
+              'release': 'JAVA_VERSION="17.0.1"',
             },
           },
         }});

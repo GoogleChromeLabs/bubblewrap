@@ -20,7 +20,7 @@ import {existsSync} from 'fs';
 import {promises as fsPromises} from 'fs';
 import {loadOrCreateConfig} from '../lib/config';
 import {MockLog, JdkHelper, Result, AndroidSdkTools} from '@bubblewrap/core';
-import * as mock from 'mock-fs';
+import mock from 'mock-fs';
 import {MockPrompt} from './mock/MockPrompt';
 
 const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap');

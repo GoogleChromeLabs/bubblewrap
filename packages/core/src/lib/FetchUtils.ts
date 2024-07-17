@@ -87,7 +87,7 @@ class FetchUtils {
       });
 
       fileStream.on('finish', () => {
-        resolve();
+        resolve({});
       });
     });
   }

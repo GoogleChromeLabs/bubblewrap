@@ -23,7 +23,7 @@ import {Log, ConsoleLog} from '../../lib/Log';
 import {Result} from '../../lib/Result';
 import {ValidatePathError} from '../errors/ValidatePathError';
 
-export const BUILD_TOOLS_VERSION = '33.0.2';
+export const BUILD_TOOLS_VERSION = '34.0.0';
 
 /**
  * Wraps functionality of the Android SDK Tools and allows them to be invoked programatically.
@@ -41,7 +41,11 @@ export class AndroidSdkTools {
     try {
       return new AndroidSdkTools(process, config, jdkHelper, log);
     } catch (error) {
-      throw new Error(error);
+      if (typeof error === 'string') {
+        throw new Error(error);
+      } else {
+        throw error;
+      }
     }
   }
 

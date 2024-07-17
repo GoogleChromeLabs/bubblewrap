@@ -51,11 +51,12 @@ def twaManifest = [
 ]
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 35
+    namespace "<%= packageId %>"
     defaultConfig {
         applicationId "<%= packageId %>"
         minSdkVersion <%= minSdkVersion %>
-        targetSdkVersion 33
+        targetSdkVersion 35
         versionCode <%= appVersionCode %>
         versionName "<%= appVersionName %>"
 
