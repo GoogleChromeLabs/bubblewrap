@@ -43,12 +43,12 @@ const OUTPUT_AAB = './output.aab';
 describe('JarSigner', () => {
   describe('#sign', () => {
     it('Invokes the correct signing command', async () => {
-      spyOn(fs, 'existsSync').and.returnValue(true);
+      jest.spyOn(fs, 'existsSync').mockReturnValue(true);
       const config = new Config('/home/user/jdk8', '/home/user/sdktools');
       const jdkHelper = new JdkHelper(PROCESS, config);
       const jarSigner = new JarSigner(jdkHelper);
 
-      spyOn(util, 'executeFile').and.stub();
+      jest.spyOn(util, 'executeFile').mockImplementation();
       await jarSigner.sign(SIGNING_KEY_INFO, STORE_PASS, KEY_PASS, INPUT_AAB, OUTPUT_AAB);
       expect(util.executeFile).toHaveBeenCalledWith('jarsigner', [
         '-verbose',

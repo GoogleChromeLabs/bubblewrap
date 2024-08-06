@@ -14,8 +14,12 @@
  *  limitations under the License.
  */
 
+import {vol, fs as memfs} from 'memfs';
+
+jest.mock('fs', () => memfs);
+jest.mock('fs/promises', () => memfs.promises);
+
 import * as util from '../../lib/util';
-import * as mockFs from 'mock-fs';
 import {existsSync} from 'fs';
 
 describe('util', () => {
@@ -238,14 +242,14 @@ describe('util', () => {
 
   describe('rmdirs', () => {
     it('Deletes a single file', async () => {
-      mockFs({'/app.txt': 'Test Content'});
+      vol.fromNestedJSON({'/app.txt': 'Test Content'});
       await util.rmdir('/app.txt');
       expect(existsSync('/app.txt')).toBeFalse();
-      mockFs.restore();
+      vol.reset();
     });
 
     it('Deletes a directory', async () => {
-      mockFs({
+      vol.fromNestedJSON({
         '/test': {
           'app.txt': 'Test Content',
           'subdirectory': {
@@ -257,13 +261,13 @@ describe('util', () => {
       await util.rmdir('/test');
       expect(existsSync('/test')).toBeFalse();
       expect(existsSync('/other-file.txt')).toBeTrue();
-      mockFs.restore();
+      vol.reset();
     });
 
     it('Skips empty directory', async () => {
-      mockFs({});
-      await expectAsync(util.rmdir('/app.txt')).toBeResolved();
-      mockFs.restore();
+      vol.fromNestedJSON({});
+      await expect(util.rmdir('/app.txt')).resolves.not.toThrow();
+      vol.reset();
     });
   });
 

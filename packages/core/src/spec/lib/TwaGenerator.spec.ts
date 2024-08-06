@@ -13,9 +13,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+import {vol, fs as memfs} from 'memfs';
+
+jest.mock('fs', () => memfs);
+jest.mock('fs/promises', () => memfs.promises);
 
 import {TwaGenerator} from '../../lib/TwaGenerator';
-import * as mockFs from 'mock-fs';
 import {existsSync} from 'fs';
 
 describe('TwaGenerator', () => {
@@ -26,7 +29,7 @@ describe('TwaGenerator', () => {
 
   describe('#removeTwaProject', () => {
     it('Removes project files', async () => {
-      mockFs({
+      vol.fromNestedJSON({
         '/root': {
           'app': {
             'build.gradle': 'build.gradle content',
@@ -57,7 +60,7 @@ describe('TwaGenerator', () => {
       expect(existsSync('/root/gradlew.bat')).toBeFalse();
       expect(existsSync('/root/twa-manifest.json')).toBeTrue();
       expect(existsSync('/root/android.keystore')).toBeTrue();
-      mockFs.restore();
+      vol.reset();
     });
   });
 });
