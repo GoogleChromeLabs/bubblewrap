@@ -29,7 +29,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@bubblewrap/core": "^1.21.0",
+    "@bubblewrap/core": "^1.22.0",
     "@bubblewrap/validator": "^1.20.0",
     "@types/cli-progress": "^3.7.0",
     "@types/color": "^3.0.0",
