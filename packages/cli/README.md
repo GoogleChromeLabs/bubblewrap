@@ -399,7 +399,7 @@ Enables the [AppsFlyer SDK](https://support.appsflyer.com/hc/en-us/articles/3600
 
 |Name|Type|Required|Description|
 |:--:|:--:|:------:|:---------:|
-|appsFlyerId|boolean|true|The appsflyer id.|
+|appsFlyerId|string|true|The appsflyer id.|
 |enabled|boolean|true|Set to `true` to enable the feature.|
 
 #### LocationDelegationConfig
