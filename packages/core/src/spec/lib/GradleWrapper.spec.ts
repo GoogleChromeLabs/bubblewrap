@@ -35,7 +35,7 @@ describe('GradleWrapper', () => {
   } as unknown as NodeJS.Process;
 
   beforeEach(async () => {
-    spyOn(fs, 'existsSync').and.returnValue(true);
+    jest.spyOn(fs, 'existsSync').mockReturnValue(true);
     const config = new Config('/home/user/jdk8', '/home/user/sdktools');
     const jdkHelper = new JdkHelper(process, config);
     androidSdkTools = await AndroidSdkTools.create(process, config, jdkHelper);
@@ -44,7 +44,7 @@ describe('GradleWrapper', () => {
 
   describe('#bundleRelease', () => {
     it('Calls "gradle bundleRelease --stacktrace"', async () => {
-      spyOn(util, 'executeFile').and.stub();
+      jest.spyOn(util, 'executeFile').mockImplementation();
       await gradleWrapper.bundleRelease();
       expect(util.executeFile).toHaveBeenCalledWith('./gradlew',
           ['bundleRelease', '--stacktrace'], androidSdkTools.getEnv(), undefined, cwd);
@@ -53,7 +53,7 @@ describe('GradleWrapper', () => {
 
   describe('#assembleRelease', () => {
     it('Calls "gradle assembleRelease --stacktrace"', async () => {
-      spyOn(util, 'executeFile').and.stub();
+      jest.spyOn(util, 'executeFile').mockImplementation();
       await gradleWrapper.assembleRelease();
       expect(util.executeFile).toHaveBeenCalledWith('./gradlew',
           ['assembleRelease', '--stacktrace'], androidSdkTools.getEnv(), undefined, cwd);

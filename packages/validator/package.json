@@ -9,7 +9,10 @@
     "build": "tsc",
     "clean": "del dist",
     "lint": "eslint \"src/**/*.{js,ts}\"",
-    "test": "tsc && jasmine --config=jasmine.json"
+    "test": "tsc && jest --config=jest.config.js"
+  },
+  "jest": {
+    "setupFilesAfterEnv": ["jest-extended/all"]
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

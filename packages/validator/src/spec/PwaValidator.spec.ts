@@ -92,19 +92,19 @@ describe('PwaValidator', () => {
     it('throws an Error if score values are NaN', async () => {
       const psiResult = mockPsiResult(NaN, NaN);
       const pwaValidator = mockPwaValidator(psiResult);
-      await expectAsync(pwaValidator.validate(new URL('https://example.com')))
-          .toBeRejectedWithError();
+      await expect(pwaValidator.validate(new URL('https://example.com')))
+          .rejects.toThrow();
     });
     it('throws an Error if score values are NaN', async () => {
       const psiResult = mockPsiResult(null, null);
       const pwaValidator = mockPwaValidator(psiResult);
-      await expectAsync(pwaValidator.validate(new URL('https://example.com')))
-          .toBeRejectedWithError();
+      await expect(pwaValidator.validate(new URL('https://example.com')))
+          .rejects.toThrow();
     });
     it('throws an Error for an empty PsiResult', async () => {
       const pwaValidator = mockPwaValidator({} as PsiResult);
-      await expectAsync(pwaValidator.validate(new URL('https://example.com')))
-          .toBeRejectedWithError();
+      await expect(pwaValidator.validate(new URL('https://example.com')))
+          .rejects.toThrow();
     });
     it('returns the correct PSI url', async () => {
       const psiResult = mockPsiResult(0.8, 1.0);

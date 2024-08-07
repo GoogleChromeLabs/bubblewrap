@@ -18,7 +18,7 @@
 
 import {JdkHelper} from '../../../lib/jdk/JdkHelper';
 import {Config} from '../../../lib/Config';
-import * as mock from 'mock-fs';
+import {vol} from 'memfs';
 
 const WIN32_PROCESS = {
   platform: 'win32',
@@ -70,26 +70,26 @@ describe('JdkHelper', () => {
 
   describe('validatePath', () => {
     it('Creates a Linux environment and checks that a valid path will pass', async () => {
-      mock({
+      vol.fromNestedJSON({
         'jdk': {
           'release': 'JAVA_VERSION="17.0.1',
         }});
       expect((await JdkHelper.validatePath('jdk', LINUX_PROCESS)).isOk()).toBeTrue();
-      mock.restore();
+      vol.reset();
     });
 
     it('Creates a Linux environment and checks that an invalid path will not pass', async () => {
-      mock({
+      vol.fromNestedJSON({
         'jdk': {
           'release': {},
         }});
       expect((await JdkHelper.validatePath('jdk', LINUX_PROCESS)).isError()).toBeTrue();
       expect((await JdkHelper.validatePath('release', LINUX_PROCESS)).isError()).toBeTrue();
-      mock.restore();
+      vol.reset();
     });
 
     it('Creates a MacOS environment and checks that a valid path will pass', async () => {
-      mock({
+      vol.fromNestedJSON({
         'jdk': {
           'Contents': {
             'Home': {
@@ -98,11 +98,11 @@ describe('JdkHelper', () => {
           },
         }});
       expect((await JdkHelper.validatePath('jdk', MACOS_PROCESS)).isOk()).toBeTrue();
-      mock.restore();
+      vol.reset();
     });
 
     it('Creates a MacOS environment and checks that an invalid path will not pass', async () => {
-      mock({
+      vol.fromNestedJSON({
         'jdk': {
           'Contents': {
             'Home': {
@@ -112,13 +112,13 @@ describe('JdkHelper', () => {
         }});
       expect((await JdkHelper.validatePath('jdk', MACOS_PROCESS)).isError()).toBeTrue();
       expect((await JdkHelper.validatePath('release', MACOS_PROCESS)).isError()).toBeTrue();
-      mock.restore();
+      vol.reset();
     });
   });
 
   describe('getJavaHome', () => {
     it('Creates a Windows environment and checks that the correct Home is returned', async () => {
-      mock({
+      vol.fromNestedJSON({
         'jdk8u265-b01': {
           'bin': {},
           'include': {},
@@ -126,11 +126,11 @@ describe('JdkHelper', () => {
           'release': 'JAVA_VERSION="1.8.0_265',
         }});
       expect(JdkHelper.getJavaHome('jdk8u265-b01', WIN32_PROCESS)).toEqual('jdk8u265-b01\\');
-      mock.restore();
+      vol.reset();
     });
 
     it('Creates a MacOSX environment and checks that the correct Home is returned', async () => {
-      mock({
+      vol.fromNestedJSON({
         'jdk8u265-b01': {
           '_CodeSignature': {},
           'Home': {
@@ -144,11 +144,11 @@ describe('JdkHelper', () => {
         }});
       expect(JdkHelper.getJavaHome('jdk8u265-b01', MACOS_PROCESS))
           .toEqual('jdk8u265-b01/Contents/Home/');
-      mock.restore();
+      vol.reset();
     });
 
     it('Creates a Linux environment and checks that the correct Home is returned', async () => {
-      mock({
+      vol.fromNestedJSON({
         'jdk8u265-b01': {
           'bin': {},
           'include': {},
@@ -156,7 +156,7 @@ describe('JdkHelper', () => {
           'release': 'JAVA_VERSION="1.8.0_265',
         }});
       expect(JdkHelper.getJavaHome('jdk8u265-b01', LINUX_PROCESS)).toEqual('jdk8u265-b01/');
-      mock.restore();
+      vol.reset();
     });
   });
 });

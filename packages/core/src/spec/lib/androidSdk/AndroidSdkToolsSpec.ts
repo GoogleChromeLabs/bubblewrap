@@ -73,13 +73,13 @@ function buildMockProcess(platform: string): NodeJS.Process {
 describe('AndroidSdkTools', () => {
   describe('#constructor', () => {
     it('Throws Error when the path to AndroidSdkHome doesn\'t exist', async () => {
-      spyOn(fs, 'existsSync').and.returnValue(false);
+      jest.spyOn(fs, 'existsSync').mockReturnValue(false);
       const config = buildMockConfig('linux');
       const process = buildMockProcess('linux');
       const jdkHelper = new JdkHelper(process, config);
       const mockLog = new MockLog();
-      await expectAsync(AndroidSdkTools.create(process, config, jdkHelper, mockLog))
-          .toBeRejectedWithError();
+      await expect(AndroidSdkTools.create(process, config, jdkHelper, mockLog))
+          .rejects.toThrow();
     });
   });
 
@@ -92,7 +92,7 @@ describe('AndroidSdkTools', () => {
 
     tests.forEach((test) => {
       it(`Sets the correct ANDROID_HOME on ${test.platform}`, async () => {
-        spyOn(fs, 'existsSync').and.returnValue(true);
+        jest.spyOn(fs, 'existsSync').mockReturnValue(true);
         const config = buildMockConfig(test.platform);
         const process = buildMockProcess(test.platform);
         const jdkHelper = new JdkHelper(process, config);
@@ -119,13 +119,13 @@ describe('AndroidSdkTools', () => {
 
     tests.forEach((test) => {
       it(`Build the correct command-line on ${test.platform}`, async () => {
-        spyOn(fs, 'existsSync').and.returnValue(true);
+        jest.spyOn(fs, 'existsSync').mockReturnValue(true);
         const config = buildMockConfig(test.platform);
         const process = buildMockProcess(test.platform);
         const jdkHelper = new JdkHelper(process, config);
         const mockLog = new MockLog();
         const androidSdkTools = await AndroidSdkTools.create(process, config, jdkHelper, mockLog);
-        spyOn(util, 'execInteractive').and.stub();
+        jest.spyOn(util, 'execInteractive').mockImplementation();
         await androidSdkTools.installBuildTools();
         expect(util.execInteractive).toHaveBeenCalledWith(
             test.expectedCwd,
@@ -137,10 +137,10 @@ describe('AndroidSdkTools', () => {
     });
 
     it('Throws an Error when sdkmanager doesn\'t exist in the filesystem', async () => {
-      const fsSpy = spyOn(fs, 'existsSync');
+      const fsSpy = jest.spyOn(fs, 'existsSync');
 
       // Set existsSync to return true so the AndroidSdkTools can be created.
-      fsSpy.and.returnValue(true);
+      fsSpy.mockReturnValue(true);
       const config = buildMockConfig(tests[0].platform);
       const process = buildMockProcess(tests[0].platform);
       const jdkHelper = new JdkHelper(process, config);
@@ -148,8 +148,8 @@ describe('AndroidSdkTools', () => {
       const androidSdkTools = await AndroidSdkTools.create(process, config, jdkHelper, mockLog);
 
       // Set existsSync to return false so check for sdkmanager fails.
-      fsSpy.and.returnValue(false);
-      await expectAsync(androidSdkTools.installBuildTools()).toBeRejectedWithError();
+      fsSpy.mockReturnValue(false);
+      await expect(androidSdkTools.installBuildTools()).rejects.toThrow();
     });
   });
 
@@ -180,13 +180,13 @@ describe('AndroidSdkTools', () => {
 
     tests.forEach((test) => {
       it(`Build the correct install command on ${test.platform}`, async () => {
-        spyOn(fs, 'existsSync').and.returnValue(true);
+        jest.spyOn(fs, 'existsSync').mockReturnValue(true);
         const config = buildMockConfig(test.platform);
         const process = buildMockProcess(test.platform);
         const jdkHelper = new JdkHelper(process, config);
         const mockLog = new MockLog();
         const androidSdkTools = await AndroidSdkTools.create(process, config, jdkHelper, mockLog);
-        spyOn(util, 'execute').and.stub();
+        jest.spyOn(util, 'execute').mockImplementation();
         await androidSdkTools.install('app-release-signed.apk');
         expect(util.execute).toHaveBeenCalledWith(test.expectedCwd, androidSdkTools.getEnv(),
             mockLog);
@@ -194,17 +194,17 @@ describe('AndroidSdkTools', () => {
     });
 
     it('Throws an error when the APK file name doesn\'t exist', async () => {
-      const fsSpy = spyOn(fs, 'existsSync');
-      fsSpy.and.returnValue(true);
+      const fsSpy = jest.spyOn(fs, 'existsSync');
+      fsSpy.mockReturnValue(true);
 
       const config = buildMockConfig(tests[0].platform);
       const process = buildMockProcess(tests[0].platform);
       const jdkHelper = new JdkHelper(process, config);
       const mockLog = new MockLog();
       const androidSdkTools = await AndroidSdkTools.create(process, config, jdkHelper, mockLog);
-      fsSpy.and.returnValue(false);
-      await expectAsync(androidSdkTools.install('./app-release-signed.apk'))
-          .toBeRejectedWithError();
+      fsSpy.mockReturnValue(false);
+      await expect(androidSdkTools.install('./app-release-signed.apk'))
+          .rejects.toThrow();
     });
   });
 
@@ -248,13 +248,13 @@ describe('AndroidSdkTools', () => {
 
     tests.forEach((test) => {
       it(`Build the correct apksigner command on ${test.platform}`, async () => {
-        spyOn(fs, 'existsSync').and.returnValue(true);
+        jest.spyOn(fs, 'existsSync').mockReturnValue(true);
         const config = buildMockConfig(test.platform);
         const process = buildMockProcess(test.platform);
         const jdkHelper = new JdkHelper(process, config);
         const mockLog = new MockLog();
         const androidSdkTools = await AndroidSdkTools.create(process, config, jdkHelper, mockLog);
-        spyOn(util, 'executeFile').and.stub();
+        jest.spyOn(util, 'executeFile').mockImplementation();
         await androidSdkTools.apksigner(
             '/path/to/keystore.ks', 'kspass', 'alias', 'keypass', 'unsigned.apk', 'signed.apk');
         const expectedEnv = test.platform === 'win32' ?

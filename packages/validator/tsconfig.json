@@ -7,6 +7,7 @@
     "outDir": "dist",
     "strict": true
   },
+  "files": ["../../node_modules/jest-extended/types/index.d.ts"],
   "include": ["src/**/*.ts", "src/spec/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
