@@ -2,10 +2,14 @@ FROM node:18-bullseye
 
 RUN npm install -g svg2img @bubblewrap/cli
 
-RUN apt update && apt install -y openjdk-11-jre openjdk-11-jdk lib32stdc++6 lib32z1
+RUN set -xe \
+  && apt update \
+  && apt install -y openjdk-17-jre openjdk-17-jdk lib32stdc++6 lib32z1 \
+  && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /root/.bubblewrap && \
-  echo '{ "jdkPath": "/usr/lib/jvm/java-11-openjdk-amd64", "androidSdkPath": "" }' > /root/.bubblewrap/config.json
+RUN set -xe \
+  && mkdir -p /root/.bubblewrap \
+  && echo '{ "jdkPath": "/usr/lib/jvm/java-17-openjdk-amd64", "androidSdkPath": "" }' > /root/.bubblewrap/config.json
 
 RUN yes | bubblewrap doctor
 
