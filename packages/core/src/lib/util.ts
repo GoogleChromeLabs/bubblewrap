@@ -51,7 +51,7 @@ export async function execute(
   if (log) {
     log.debug(`Executing shell: ${joinedCmd}`);
   }
-  return await execPromise(joinedCmd, {env: env});
+  return await execPromise(joinedCmd, {env: env, shell: true});
 }
 
 export async function executeFile(
@@ -60,7 +60,7 @@ export async function executeFile(
   if (log) {
     log.debug(`Executing command ${cmd} with args ${args}`);
   }
-  return await execFilePromise(cmd, args, {env: env, cwd: cwd});
+  return await execFilePromise(cmd, args, {env: env, cwd: cwd, shell: true});
 }
 
 export async function unzipFile(
