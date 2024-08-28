@@ -191,7 +191,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="https"
-                    android:host="@string/hostName"/>
+                    android:host="@string/hostName"
+                <% if (fullScopeUrl && fullScopeUrl.pathname !== '/') { %>
+                    android:pathPrefix="<%= fullScopeUrl.pathname %>"
+                <% } %>
+                />
             </intent-filter>
 
             <% for (const additionalOrigin of additionalTrustedOrigins) { %>
