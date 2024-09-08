@@ -296,7 +296,7 @@ bubblewrap play [subcommand]
 These feature requires a service account file to work correctly. Please see [this documentation](https://github.com/chromeos/pwa-play-billing#setup-a-service-account) for setting up a service account.
 
 Global flags (can be applied to all of the features commands):
-  - `--serviceAccountJsonFile`: sets the service account json file location in the twa-manifest.
+  - `--serviceAccountFile`: sets the service account json file location in the twa-manifest.
   - `--manifest`: specifies the manifest file to use if not in the current directory.
 
 

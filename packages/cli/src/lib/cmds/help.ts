@@ -175,7 +175,7 @@ const HELP_MESSAGES = new Map<string, string>(
         'bubblewrap play [subcommand]',
         '',
         '  Global play flags: ',
-        '  --serviceAccountJsonFile=<path> . Path to the the service account JSON file to set in',
+        '  --serviceAccountFile=<path> . Path to the the service account JSON file to set in',
         '                                    the twa-manifest.',
         '  --manifest=<manifestPath> ....... Path to the manifest file to use if not in',
         '                                    the current directory.',
