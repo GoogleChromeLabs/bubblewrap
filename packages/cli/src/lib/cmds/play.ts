@@ -14,6 +14,7 @@
  *  limitations under the License.
  */
 
+import type {ParsedArgs} from 'minimist';
 import {GooglePlay, TwaManifest, asPlayStoreTrack} from '@bubblewrap/core';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -22,7 +23,7 @@ import {Prompt, InquirerPrompt} from '../Prompt';
 import {updateProject} from './shared';
 import {enUS} from '../strings';
 
-export interface PlayArgs {
+export interface PlayArgs extends ParsedArgs {
   track?: string;
   serviceAccountFile?: string;
   manifest?: string;
@@ -36,8 +37,6 @@ export interface PlayArgs {
 
 // Default file path
 const defaultSignedAppBundleFileName = 'app-release-bundle.aab';
-
-type PlayCommand = 'publish' | 'retain' | 'versionCheck';
 
 /**
   * The Play class is the class that is used to communicate with the Google Play Store.
@@ -114,7 +113,11 @@ class Play {
   * Runs the playRetain command. This handles the retaining of packages that are published on Play.
   * @return {boolean} Returns whether or not the run command completed successfully.
   */
-  async runRetain(): Promise<boolean> {
+  async runRetain(prompt: Prompt): Promise<boolean> {
+    // TODO Remove when it's not experimental anymore
+    if (!await prompt.promptConfirm(enUS.promptExperimentalFeature, false)) {
+      return true;
+    }
     const manifestFile = this.args.manifest || path.join(process.cwd(), TWA_MANIFEST_FILE_NAME);
     const twaManifest = await TwaManifest.fromFile(manifestFile);
 
@@ -247,21 +250,26 @@ async function setupGooglePlay(args: PlayArgs): Promise<GooglePlay> {
   return new GooglePlay(twaManifest.serviceAccountJsonFile);
 }
 
-export async function play(parsedArgs: PlayArgs,
-    command: PlayCommand, prompt: Prompt = new InquirerPrompt()): Promise<boolean> {
-  // TODO(@nohe427): Remove after experimental
-  if (!await prompt.promptConfirm(enUS.promptExperimentalFeature, false)) {
-    return true;
+export async function play(
+    args: PlayArgs,
+    prompt: Prompt = new InquirerPrompt(),
+): Promise<boolean> {
+  if (args._.length < 2) {
+    throw new Error(enUS.errorMissingArgument(2, args._.length));
   }
-  const googlePlay = await setupGooglePlay(parsedArgs);
-  const play = new Play(parsedArgs, googlePlay, prompt);
-  switch (command) {
+
+  const googlePlay = await setupGooglePlay(args);
+  const play = new Play(args, googlePlay, prompt);
+  const subcommand = args._[1];
+  switch (subcommand) {
     case 'publish':
-      return await play.runPlayPublish();
+      return play.runPlayPublish();
     case 'versionCheck':
       await play.runVersionCheck();
       return true;
     case 'retain':
-      return await play.runRetain();
+      return play.runRetain(prompt);
+    default:
+      throw new Error(`Unknown subcommand: ${subcommand}`);
   }
 }
