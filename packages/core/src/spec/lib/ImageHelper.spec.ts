@@ -17,6 +17,7 @@
 import * as path from 'path';
 import * as Jimp from 'jimp';
 import Color = require('color');
+import 'jest-expect-message';
 import {ImageHelper} from '../../lib/ImageHelper';
 
 function samePixels(actual: Jimp, expected: Jimp): void {
@@ -31,9 +32,9 @@ function samePixels(actual: Jimp, expected: Jimp): void {
 
     if (expectedPixel.a === 0) {
       // Don't care about color of transparent pixel
-      expect(actualPixel.a).toBe(0, `Pixel at ${x}, ${y}`);
+      expect(actualPixel.a, `Pixel at ${x}, ${y}`).toBe(0);
     } else {
-      expect(actualPixel).toEqual(expectedPixel, `Pixel at ${x}, ${y}`);
+      expect(actualPixel, `Pixel at ${x}, ${y}`).toEqual(expectedPixel);
     }
   }
 }

@@ -14,7 +14,11 @@
  *  limitations under the License.
  */
 
-import mock from 'mock-fs';
+import {vol, fs as memfs} from 'memfs';
+
+jest.mock('fs', () => memfs);
+jest.mock('fs/promises', () => memfs.promises);
+
 import {MockLog} from '@bubblewrap/core';
 import {doctor} from '../lib/cmds/doctor';
 import {enUS as messages} from '../lib/strings';
@@ -24,7 +28,7 @@ describe('doctor', () => {
     it('checks that the expected error message is sent in case that the path given isn\'t' +
         ' valid', async () => {
       // Creates a mock file system.
-      mock({
+      vol.fromNestedJSON({
         'path/to/sdk': {
           'tools': {},
         },
@@ -32,18 +36,18 @@ describe('doctor', () => {
       });
 
       const mockLog = new MockLog();
-      await expectAsync(doctor(mockLog, 'path/to/config')).toBeResolvedTo(false);
+      await expect(doctor(mockLog, 'path/to/config')).resolves.toBe(false);
       // Check that the correct message was sent.
       const logErrors: Array<string> = mockLog.getReceivedData();
       const lastMessage = logErrors[logErrors.length - 1];
       expect(lastMessage.indexOf('jdkPath isn\'t correct')).toBeGreaterThanOrEqual(0);
-      mock.restore();
+      vol.reset();
     });
 
     xit('checks that the expected error message is sent in case that the jdk isn\'t' +
         ' supported', async () => {
       // Creates a mock file system.
-      mock({
+      vol.fromNestedJSON({
         'path/to/jdk': {
           'release': 'JAVA_VERSION="1.8',
         },
@@ -54,12 +58,12 @@ describe('doctor', () => {
       });
 
       const mockLog = new MockLog();
-      await expectAsync(doctor(mockLog, 'path/to/config')).toBeResolvedTo(false);
+      await expect(doctor(mockLog, 'path/to/config')).resolves.toBe(false);
       // Check that the correct message was sent.
       const logErrors: Array<string> = mockLog.getReceivedData();
       const lastMessage = logErrors[logErrors.length - 1];
       expect(lastMessage.indexOf('Unsupported jdk version')).toBeGreaterThanOrEqual(0);
-      mock.restore();
+      vol.reset();
     });
   });
 
@@ -67,7 +71,7 @@ describe('doctor', () => {
     it('checks that the expected error message is sent in case that the path given isn\'t' +
         ' valid', async () => {
       // Creates a mock file system.
-      mock({
+      vol.fromNestedJSON({
         'path/to/jdk': {
           'release': 'JAVA_VERSION="1.8',
         },
@@ -76,12 +80,12 @@ describe('doctor', () => {
 
       const mockLog = new MockLog();
 
-      await expectAsync(doctor(mockLog, 'path/to/config')).toBeResolvedTo(false);
+      await expect(doctor(mockLog, 'path/to/config')).resolves.toBe(false);
 
       // Check that the correct message was sent.
       const logErrors: Array<string> = mockLog.getReceivedData();
       expect(logErrors[logErrors.length - 1]).toEqual(messages.androidSdkPathIsNotCorrect);
-      mock.restore();
+      vol.reset();
     });
   });
 });

@@ -66,8 +66,8 @@ describe('KeyTool', () => {
 
     it('Executes the correct command to create a key', async () => {
       const keyTool = new KeyTool(jdkHelper, new MockLog());
-      spyOn(fs, 'existsSync').and.returnValue(false);
-      spyOn(util, 'execute').and.stub();
+      jest.spyOn(fs, 'existsSync').mockReturnValue(false);
+      jest.spyOn(util, 'execute').mockImplementation();
       await keyTool.createSigningKey(keyOptions);
       expect(util.execute).toHaveBeenCalledWith([
         'keytool',
@@ -85,17 +85,17 @@ describe('KeyTool', () => {
 
     it('Skips creation when a key already exists', async () => {
       const keyTool = new KeyTool(jdkHelper, new MockLog());
-      spyOn(fs, 'existsSync').and.returnValue(true);
-      spyOn(util, 'execute').and.stub();
+      jest.spyOn(fs, 'existsSync').mockReturnValue(true);
+      jest.spyOn(util, 'execute').mockImplementation();
       await keyTool.createSigningKey(keyOptions);
       expect(util.execute).not.toHaveBeenCalled();
     });
 
     it('Deletes and writes a new key when overwrite = true', async () => {
       const keyTool = new KeyTool(jdkHelper, new MockLog());
-      spyOn(fs, 'existsSync').and.returnValue(true);
-      spyOn(fs.promises, 'unlink').and.resolveTo();
-      spyOn(util, 'execute').and.stub();
+      jest.spyOn(fs, 'existsSync').mockReturnValue(true);
+      jest.spyOn(fs.promises, 'unlink').mockResolvedValue();
+      jest.spyOn(util, 'execute').mockImplementation();
       await keyTool.createSigningKey(keyOptions, true);
       expect(fs.promises.unlink).toHaveBeenCalledWith(keyOptions.path);
       expect(util.execute).toHaveBeenCalled();
@@ -112,8 +112,8 @@ describe('KeyTool', () => {
 
     it('Executes the correct command to list keys', async () => {
       const keyTool = new KeyTool(jdkHelper, new MockLog());
-      spyOn(fs, 'existsSync').and.returnValue(true);
-      spyOn(util, 'execute').and.resolveTo({stdout: '', stderr: ''});
+      jest.spyOn(fs, 'existsSync').mockReturnValue(true);
+      jest.spyOn(util, 'execute').mockResolvedValue({stdout: '', stderr: ''});
       await keyTool.list(keyOptions);
       expect(util.execute).toHaveBeenCalledWith([
         'keytool',
@@ -129,8 +129,8 @@ describe('KeyTool', () => {
 
     it('Throws error if keyOptions.path doesn\'t exist', async () => {
       const keyTool = new KeyTool(jdkHelper, new MockLog());
-      spyOn(fs, 'existsSync').and.returnValue(false);
-      await expectAsync(keyTool.list(keyOptions)).toBeRejectedWithError();
+      jest.spyOn(fs, 'existsSync').mockReturnValue(false);
+      await expect(keyTool.list(keyOptions)).rejects.toThrow();
     });
   });
 

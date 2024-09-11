@@ -14,13 +14,17 @@
  *  limitations under the License.
  */
 
+import {vol, fs as memfs} from 'memfs';
+
+jest.mock('fs', () => memfs);
+jest.mock('fs/promises', () => memfs.promises);
+
 import {join} from 'path';
 import {homedir} from 'os';
 import {existsSync} from 'fs';
 import {promises as fsPromises} from 'fs';
 import {loadOrCreateConfig} from '../lib/config';
 import {MockLog, JdkHelper, Result, AndroidSdkTools} from '@bubblewrap/core';
-import mock from 'mock-fs';
 import {MockPrompt} from './mock/MockPrompt';
 
 const DEFAULT_CONFIG_FOLDER = join(homedir(), '.bubblewrap');
@@ -33,14 +37,14 @@ const LEGACY_CONFIG_FILE_PATH = join(LEGACY_CONFIG_FOLDER, LEGACY_CONFIG_NAME);
 describe('config', () => {
   describe('#loadOrCreateConfig', () => {
     beforeAll(() => {
-      spyOn(JdkHelper, 'validatePath').and.returnValue(Promise.resolve(Result.ok('/path/to/jdk')));
-      spyOn(AndroidSdkTools, 'validatePath').and.returnValue(Promise.resolve(Result.ok(
+      jest.spyOn(JdkHelper, 'validatePath').mockReturnValue(Promise.resolve(Result.ok('/path/to/jdk')));
+      jest.spyOn(AndroidSdkTools, 'validatePath').mockReturnValue(Promise.resolve(Result.ok(
           '/path/to/android-sdk')));
     });
 
     it('checks if the file\'s name was changed in case it has the old name', async () => {
       // Creates a mock file system.
-      mock({
+      vol.fromNestedJSON({
         [LEGACY_CONFIG_FOLDER]: {
           'llama-pack-config.json':
             '{"jdkPath":"/path/to/jdk","androidSdkPath":"/path/to/android-sdk"}',
@@ -52,13 +56,13 @@ describe('config', () => {
       expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeFalse();
       // Checks that the old folder was deleted.
       expect(existsSync(LEGACY_CONFIG_FOLDER)).toBeFalse();
-      mock.restore();
+      vol.reset();
     });
 
     it('checks if the old config folder isn\'t deleted in case there are other files there'
         , async () => {
           // Creates a mock file systes.
-          mock({
+          vol.fromNestedJSON({
             [LEGACY_CONFIG_FOLDER]: {
               'llama-pack-config.json':
                 '{"jdkPath":"/path/to/jdk","androidSdkPath":"/path/to/android-sdk"}',
@@ -71,12 +75,12 @@ describe('config', () => {
           expect(existsSync(LEGACY_CONFIG_FILE_PATH)).toBeFalse();
           // Checks that the old folder was not deleted.
           expect(existsSync(LEGACY_CONFIG_FOLDER)).toBeTrue();
-          mock.restore();
+          vol.reset();
         });
 
     it('checks if a config file is created in case there is no config file', async () => {
       // Creates a mock file systes.
-      mock({
+      vol.fromNestedJSON({
         [homedir()]: {},
       });
       const mockLog = new MockLog();
@@ -89,13 +93,13 @@ describe('config', () => {
       await loadOrCreateConfig(mockLog, mockPrompt);
       // Checks if the file name was created.
       expect(existsSync(DEFAULT_CONFIG_FILE_PATH)).toBeTrue();
-      mock.restore();
+      vol.reset();
     });
 
     it('checks if both of the files exists in case there are old and new config files',
         async () => {
           // Creates a mock file systes.
-          mock({
+          vol.fromNestedJSON({
             [LEGACY_CONFIG_FOLDER]: {
               'llama-pack-config.json':
                 '{"content":"some old content",' +
@@ -116,7 +120,7 @@ describe('config', () => {
           const file2 = await fsPromises.readFile(DEFAULT_CONFIG_FILE_PATH, 'utf8');
           expect(file1.indexOf('old content')).toBeGreaterThanOrEqual(0);
           expect(file2.indexOf('new content')).toBeGreaterThanOrEqual(0);
-          mock.restore();
+          vol.reset();
         });
   });
 });
