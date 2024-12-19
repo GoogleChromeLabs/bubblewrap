@@ -51,7 +51,7 @@ export async function execute(
   if (log) {
     log.debug(`Executing shell: ${joinedCmd}`);
   }
-  return await execPromise(joinedCmd, {env: env, shell: true});
+  return await execPromise(joinedCmd, {env: env});
 }
 
 export async function executeFile(
