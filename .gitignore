@@ -7,3 +7,4 @@ dist
 **/node_modules
 **/dist
 lerna-debug.log
+**/.gradle
