@@ -186,8 +186,6 @@ describe('TwaManifest', () => {
 
     it('Replaces unsupported display modes with `standalone`', () => {
       const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
-      expect(TwaManifest.fromWebManifestJson(manifestUrl, {display: 'minimal-ui'}).display)
-          .toBe('standalone');
       expect(TwaManifest.fromWebManifestJson(manifestUrl, {display: 'browser'}).display)
           .toBe('standalone');
     });
@@ -333,11 +331,11 @@ describe('TwaManifest', () => {
     it('Returns display mode if it is supported', () => {
       expect(asDisplayMode('standalone')).toBe('standalone');
       expect(asDisplayMode('fullscreen')).toBe('fullscreen');
+      expect(asDisplayMode('minimal-ui')).toBe('minimal-ui');
     });
 
     it('Returns null for unsupported display modes', () => {
       expect(asDisplayMode('browser')).toBeNull();
-      expect(asDisplayMode('minimal-ui')).toBeNull();
       expect(asDisplayMode('bogus')).toBeNull();
       expect(asDisplayMode('')).toBeNull();
     });
