@@ -78,11 +78,11 @@ export class JdkHelper {
    * @param {Config} config The bubblewrap general configuration
    * @param {NodeJS.Process} process Information from the OS process
    */
-  static getJavaHome(jdkPath, process) {
+ static getJavaHome(jdkPath: string, process: NodeJS.Process): string {
     const joinPath = (process.platform === 'win32') ? path.win32.join : path.posix.join;
       if (process.platform === 'darwin') {
         // If jdkPath already ends with '/Contents/Home' (with or without a trailing slash), return as is.
-        if (jdkPath.endsWith('/Contents/Home') || jdkPath.endsWith('/Contents/Home/')) {
+        if (jdkPath.endsWith('/Contents/Home/')) {
           return jdkPath;
         }
           return joinPath(jdkPath, '/Contents/Home/');
