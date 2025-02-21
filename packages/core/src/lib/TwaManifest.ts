@@ -21,7 +21,7 @@ import {fetchUtils} from './FetchUtils';
 import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
 import Color = require('color');
 import {ConsoleLog} from './Log';
-import {ShareTarget, WebManifestIcon, WebManifestJson} from './types/WebManifest';
+import {ProtocolHandler, ShareTarget, WebManifestIcon, WebManifestJson} from './types/WebManifest';
 import {ShortcutInfo} from './ShortcutInfo';
 import {AppsFlyerConfig} from './features/AppsFlyerFeature';
 import {LocationDelegationConfig} from './features/LocationDelegationFeature';
@@ -169,6 +169,7 @@ export class TwaManifest {
   serviceAccountJsonFile: string | undefined;
   additionalTrustedOrigins: string[];
   retainedBundles: number[];
+  protocolHandlers?: ProtocolHandler[];
 
   private static log = new ConsoleLog('twa-manifest');
 
@@ -219,6 +220,7 @@ export class TwaManifest {
     this.serviceAccountJsonFile = data.serviceAccountJsonFile;
     this.additionalTrustedOrigins = data.additionalTrustedOrigins || [];
     this.retainedBundles = data.retainedBundles || [];
+    this.protocolHandlers = data.protocolHandlers;
   }
 
   /**
@@ -343,6 +345,7 @@ export class TwaManifest {
       shareTarget: TwaManifest.verifyShareTarget(webManifestUrl, webManifest.share_target),
       orientation: asOrientation(webManifest.orientation) || DEFAULT_ORIENTATION,
       fullScopeUrl: fullScopeUrl.toString(),
+      protocolHandlers: webManifest.protocol_handlers,
     });
     return twaManifest;
   }
@@ -479,6 +482,19 @@ export class TwaManifest {
         oldTwaManifestJson.iconUrl!, webManifest.icons!, 'monochrome', MIN_NOTIFICATION_ICON_SIZE,
         webManifestUrl);
 
+    const protocolHandlersMap = new Map<string, string>();
+    for (const handler of oldTwaManifest.protocolHandlers ?? []) {
+      protocolHandlersMap.set(handler.protocol, handler.url);
+    }
+    if (!(fieldsToIgnore.includes('protocol_handlers'))) {
+      for (const handler of webManifest.protocol_handlers ?? []) {
+        protocolHandlersMap.set(handler.protocol, handler.url);
+      };
+    }
+    const protocolHandlers = Array.from(protocolHandlersMap.entries()).map(([protocol, url]) => {
+      return {protocol, url} as ProtocolHandler;
+    });
+
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
     const fullScopeUrl: URL = new URL(webManifest['scope'] || '.', webManifestUrl);
 
@@ -503,6 +519,7 @@ export class TwaManifest {
       maskableIconUrl: maskableIconUrl || oldTwaManifestJson.maskableIconUrl,
       monochromeIconUrl: monochromeIconUrl || oldTwaManifestJson.monochromeIconUrl,
       shortcuts: shortcuts,
+      protocolHandlers: protocolHandlers,
     });
     return twaManifest;
   }
@@ -558,6 +575,7 @@ export interface TwaManifestJson {
   serviceAccountJsonFile?: string;
   additionalTrustedOrigins?: string[];
   retainedBundles?: number[];
+  protocolHandlers?: ProtocolHandler[];
 }
 
 export interface SigningKeyInfo {

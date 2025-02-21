@@ -30,6 +30,11 @@ export interface WebManifestShortcutJson {
   icons?: Array<WebManifestIcon>;
 }
 
+export interface ProtocolHandler {
+  protocol: string;
+  url: string;
+}
+
 type WebManifestDisplayMode = 'browser' | 'minimal-ui' | 'standalone' | 'fullscreen';
 
 export type OrientationLock = 'any' | 'natural' | 'landscape'| 'portrait' | 'portrait-primary'|
@@ -67,4 +72,5 @@ export interface WebManifestJson {
   shortcuts?: Array<WebManifestShortcutJson>;
   share_target?: ShareTarget;
   orientation?: OrientationLock;
+  protocol_handlers?: Array<ProtocolHandler>;
 }

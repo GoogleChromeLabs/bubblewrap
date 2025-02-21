@@ -20,6 +20,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import java.util.HashMap;
+import java.util.Map;
+
 <% for(const imp of launcherActivity.imports) { %>
     import <%= imp %>;
 <% } %>
@@ -48,6 +51,12 @@ public class LauncherActivity
         }
     }
 
+    private final Map<String, String> mProtocolHandlers = new HashMap<String, String>() {{
+        <% for(const protocol of protocolHandlers) { %>
+            put("<%= protocol.protocol %>", "<%= protocol.url %>");
+        <% } %>
+    }};
+
     @Override
     protected Uri getLaunchingUrl() {
         // Get the original launch Url.
@@ -56,6 +65,15 @@ public class LauncherActivity
         <% for(const code of launcherActivity.launchUrl) { %>
             <%= code %>
         <% } %>
+
+        /* Protocol Handler support */
+        String scheme = uri.getScheme();
+        if (mProtocolHandlers.containsKey(scheme)) {
+            String target = uri.toString().replace(scheme + "://", "");
+            String format = mProtocolHandlers.get(scheme);
+            String baseUrl = getString(R.string.launchUrl);
+            return Uri.parse(baseUrl + String.format(format, target));
+        }
 
         return uri;
     }
