@@ -392,6 +392,7 @@ Fields:
 |webManifestUrl|string|false|Full URL to the PWA Web Manifest. Required for the application to be compatible with Chrome OS and Meta Quest devices.|
 |fullScopeUrl|string|false|The navigation scope that the browser considers to be within the app. If the user navigates outside the scope, it reverts to a normal web page inside a browser tab or window. Must be a full URL. Required and used only by Meta Quest devices.|
 |minSdkVersion|number|false|The minimum [Android API Level](https://developer.android.com/guide/topics/manifest/uses-sdk-element#ApiLevels) required for the application to run. Defaults to `23`, if `isMetaQuest` is `true`, and `19` otherwise.|
+|protocolHandlers|[ProtocolHandler](#protocolhandlers)[]|false|List of [Protocol Handlers](#protocolhandlers) supported by the app.|
 
 ### Features
 
@@ -461,6 +462,16 @@ Information on the signature fingerprints for the application. Use to generate t
 |:--:|:--:|:------:|:---------:|
 |name|string|false|An optional name for the fingerprint.|
 |value|string|true|The SHA-256 value for the fingerprint.|
+
+
+### ProtocolHandlers
+
+List of Protocol Handlers registered for the application. These entries may not exactly match what was originally in the webmanifest, because they have been normalized and validated using [these](https://wicg.github.io/manifest-incubations/#processing-the-protocol_handlers-member) rules. If a webmanifest entry is incorrect for any reason (invalid protocol, malformed target url, missing '%s' token) they will be ignored and a warning will be printed out. See [here](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/protocol_handlers) for more information about the Protocol Handler spec. The full list of supported protocols is [here](https://github.com/GoogleChromeLabs/bubblewrap/blob/main/packages/core/src/lib/types/ProtocolHandler.ts).
+
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|protocol|string|true|Data scheme to register (e.g. `bitcoin`, `irc`, `web+coffee`).|
+|url|string|true|Formula for converting a custom data scheme back to a http(s) link, must include '%s' and be the same origin as the web manifest file. Example: `https://test.com/?target=%s`|
 
 ## Manually setting up the Environment
 
