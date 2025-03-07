@@ -354,6 +354,10 @@ describe('TwaManifest', () => {
           'purpose': 'any',
         },
         ],
+        'protocol_handlers': [{
+          'protocol': 'web+test-replace',
+          'url': 'test-format-web/%s',
+        }],
       };
       const twaManifest = new TwaManifest({
         'packageId': 'id',
@@ -390,12 +394,32 @@ describe('TwaManifest', () => {
         'fullScopeUrl': 'https://name.github.io/',
         'appVersion': '1',
         'serviceAccountJsonFile': '/home/service-account.json',
+        'protocolHandlers': [
+          {
+            'protocol': 'web+test-replace',
+            'url': 'test-format-twa/%s',
+          },
+          {
+            'protocol': 'web+test-keep',
+            'url': 'test-format-twa/%s',
+          },
+        ],
       });
       // The versions shouldn't change because the update happens in `cli`.
       const expectedTwaManifest = new TwaManifest({
         ...twaManifest.toJson(),
         'launcherName': 'different_name',
         'display': 'fullscreen',
+        'protocolHandlers': [
+          {
+            'protocol': 'web+test-replace',
+            'url': 'test-format-web/%s',
+          },
+          {
+            'protocol': 'web+test-keep',
+            'url': 'test-format-twa/%s',
+          },
+        ],
       });
       // A URL to insert as the webManifestUrl.
       const url = new URL('https://name.github.io/manifest.json');
@@ -415,6 +439,10 @@ describe('TwaManifest', () => {
           'purpose': 'any',
         },
         ],
+        'protocol_handlers': [{
+          'protocol': 'web+test-replace',
+          'url': 'test-format-web/%s',
+        }],
       };
       const twaManifest = new TwaManifest({
         'packageId': 'id',
@@ -451,13 +479,27 @@ describe('TwaManifest', () => {
         'fullScopeUrl': 'https://name.github.io/',
         'appVersion': '1',
         'serviceAccountJsonFile': '/home/service-account.json',
+        'protocolHandlers': [
+          {
+            'protocol': 'web+test-replace',
+            'url': 'test-format-twa/%s',
+          },
+          {
+            'protocol': 'web+test-keep',
+            'url': 'test-format-twa/%s',
+          },
+        ],
       });
       // The versions shouldn't change because the update happens in `cli`.
       const expectedTwaManifest = twaManifest;
       // A URL to insert as the webManifestUrl.
       const url = new URL('https://name.github.io/manifest.json');
-      expect(await TwaManifest.merge(['short_name', 'display'], url, webManifest, twaManifest))
-          .toEqual(expectedTwaManifest);
+      expect(await TwaManifest.merge(
+          ['short_name', 'display', 'protocol_handlers'],
+          url,
+          webManifest,
+          twaManifest,
+      )).toEqual(expectedTwaManifest);
     });
   });
 });
