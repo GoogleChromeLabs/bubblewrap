@@ -185,6 +185,7 @@ class Build {
       passwords = await this.getPasswords(signingKey);
       signingKey = {
         ...signingKey,
+        ...{path: `"${signingKey.path}"`}, // Wrap path in quotes in case there are spaces
         ...(this.args.signingKeyPath ? {path: this.args.signingKeyPath} : null),
         ...(this.args.signingKeyAlias ? {alias: this.args.signingKeyAlias} : null),
       };
