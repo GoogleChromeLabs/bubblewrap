@@ -22,6 +22,7 @@ import {TwaManifest} from '../TwaManifest';
 import {FirstRunFlagFeature} from './FirstRunFlagFeature';
 import {Log, ConsoleLog} from '../Log';
 import {ArCoreFeature} from './ArCoreFeature';
+import {ProtocolHandlersFeature} from './ProtocolHandlersFeature';
 
 const ANDROID_BROWSER_HELPER_VERSIONS = {
   stable: 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0',
@@ -41,6 +42,7 @@ export class FeatureManager {
     permissions: new Set<string>(),
     components: new Array<string>(),
     applicationMetadata: new Array<Metadata>(),
+    launcherActivityEntries: new Array<string>(),
   };
   applicationClass = {
     imports: new Set<string>(),
@@ -101,6 +103,10 @@ export class FeatureManager {
     // Android T+ needs permission to request sending notifications.
     if (twaManifest.enableNotifications) {
       this.androidManifest.permissions.add('android.permission.POST_NOTIFICATIONS');
+    }
+
+    if (twaManifest.protocolHandlers) {
+      this.addFeature(new ProtocolHandlersFeature(twaManifest.protocolHandlers));
     }
   }
 

@@ -207,6 +207,10 @@
                         android:host="<%= additionalOrigin %>"/>
                 </intent-filter>
             <% } %>
+
+            <% for(const entry of androidManifest.launcherActivityEntries) { %>
+                <%= entry %>
+            <% } %>
         </activity>
 
         <activity android:name="com.google.androidbrowserhelper.trusted.FocusActivity" />
