@@ -23,7 +23,7 @@ export type LocationDelegationConfig = {
 export class LocationDelegationFeature extends EmptyFeature {
   constructor() {
     super('locationDelegation');
-    this.buildGradle.dependencies.push('com.google.androidbrowserhelper:locationdelegation:1.1.1');
+    this.buildGradle.dependencies.push('com.google.androidbrowserhelper:locationdelegation:1.1.2');
 
     this.androidManifest.components.push(`<activity android:name=
         "com.google.androidbrowserhelper.locationdelegation.PermissionRequestActivity"/>`);
