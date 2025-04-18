@@ -30,10 +30,12 @@ export class EmptyFeature implements Feature {
     permissions: string[];
     components: string[];
     applicationMetadata: Metadata[];
+    launcherActivityEntries: string[];
   } = {
     permissions: new Array<string>(),
     components: new Array<string>(),
     applicationMetadata: new Array<Metadata>(),
+    launcherActivityEntries: new Array<string>(),
   };
 
   applicationClass: {

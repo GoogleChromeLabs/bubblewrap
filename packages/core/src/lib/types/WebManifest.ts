@@ -15,6 +15,8 @@
  *  limitations under the License.
  */
 
+import {ProtocolHandler} from './ProtocolHandler';
+
 export interface WebManifestIcon {
   src: string;
   sizes?: string;
@@ -67,4 +69,5 @@ export interface WebManifestJson {
   shortcuts?: Array<WebManifestShortcutJson>;
   share_target?: ShareTarget;
   orientation?: OrientationLock;
+  protocol_handlers?: Array<ProtocolHandler>;
 }

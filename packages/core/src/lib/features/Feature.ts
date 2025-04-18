@@ -69,6 +69,10 @@ export interface Feature {
      * Additional meta-data items to be added into the `application` tag.
      */
     applicationMetadata: Metadata[];
+    /**
+     * Additional manifest entries to be added into the `activity` tag of LauncherActivity.
+     */
+    launcherActivityEntries: string[];
   };
   /**
    * Customizations to be added to `app/src/main/java/<app-package>/Application.java`.
