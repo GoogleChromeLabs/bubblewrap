@@ -21,6 +21,7 @@ import {LocationDelegationFeature} from '../../../lib/features/LocationDelegatio
 import {PlayBillingFeature} from '../../../lib/features/PlayBillingFeature';
 import {TwaManifest} from '../../../lib/TwaManifest';
 import {Feature} from '../../../lib/features/Feature';
+import {ProtocolHandlersFeature} from '../../../lib/features/ProtocolHandlersFeature';
 
 function expectFeatureToBeApplied(features: FeatureManager, feature: Feature): void {
   feature.androidManifest.components.forEach((component) => {
@@ -29,6 +30,10 @@ function expectFeatureToBeApplied(features: FeatureManager, feature: Feature): v
 
   feature.androidManifest.permissions.forEach((permission) => {
     expect(features.androidManifest.permissions).toContain(permission);
+  });
+
+  feature.androidManifest.launcherActivityEntries.forEach((entry) => {
+    expect(features.androidManifest.launcherActivityEntries).toContain(entry);
   });
 
   feature.applicationClass.imports.forEach((imp) => {
@@ -53,6 +58,10 @@ function expectFeatureToBeApplied(features: FeatureManager, feature: Feature): v
 
   feature.launcherActivity.imports.forEach((imp) => {
     expect(features.launcherActivity.imports).toContain(imp);
+  });
+
+  feature.launcherActivity.methods.forEach((method) => {
+    expect(features.launcherActivity.methods).toContain(method);
   });
 
   if (feature.launcherActivity.launchUrl) {
@@ -118,15 +127,23 @@ describe('FeatureManager', () => {
           appsFlyer: appsFlyerConfig,
           firstRunFlag: firstRunFlagConfig,
         },
+        protocolHandlers: [
+          {
+            protocol: 'web+test',
+            url: 'https://test.com/?=%s',
+          },
+        ],
         fallbackType: 'customtabs',
       } as TwaManifest;
 
       const appsFlyerFeature = new AppsFlyerFeature(appsFlyerConfig);
       const firstRunFlagFeature = new FirstRunFlagFeature(firstRunFlagConfig);
+      const protocolHandlerFeature = new ProtocolHandlersFeature(manifest.protocolHandlers!);
       const features = new FeatureManager(manifest);
 
       expectFeatureToBeApplied(features, appsFlyerFeature);
       expectFeatureToBeApplied(features, firstRunFlagFeature);
+      expectFeatureToBeApplied(features, protocolHandlerFeature);
     });
 
 

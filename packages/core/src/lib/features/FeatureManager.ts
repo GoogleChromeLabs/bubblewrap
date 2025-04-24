@@ -144,6 +144,10 @@ export class FeatureManager {
       this.androidManifest.applicationMetadata.push(metadata);
     });
 
+    feature.androidManifest.launcherActivityEntries.forEach((entry) => {
+      this.androidManifest.launcherActivityEntries.push(entry);
+    });
+
     // Adds properties to launcherActivity.
     feature.launcherActivity.imports.forEach((imp) => {
       this.launcherActivity.imports.add(imp);
