@@ -1,6 +1,6 @@
 {
   "name": "@bubblewrap/core",
-  "version": "1.22.4",
+  "version": "1.22.5",
   "description": "Core Library to generate, build and sign TWA projects",
   "engines": {
     "node": ">=14.15.0"
