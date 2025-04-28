@@ -24,7 +24,8 @@ const JDK_DIR = `jdk-${JDK_VERSION}`;
 const DOWNLOAD_JDK_BIN_ROOT = `https://github.com/adoptium/temurin17-binaries/releases/download/jdk-${JDK_VERSION}/`;
 const DOWNLOAD_JDK_SRC_ROOT = 'https://github.com/adoptium/jdk17u/archive/refs/tags/';
 const JDK_BIN_VERSION = JDK_VERSION.replace('+', '_');
-const JDK_FILE_NAME_MAC = `OpenJDK17U-jdk_x64_mac_hotspot_${JDK_BIN_VERSION}.tar.gz`;
+const JDK_FILE_NAME_MAC_INTEL = `OpenJDK17U-jdk_x64_mac_hotspot_${JDK_BIN_VERSION}.tar.gz`;
+const JDK_FILE_NAME_MAC_APPLE = `OpenJDK17U-jdk_aarch64_mac_hotspot_${JDK_BIN_VERSION}.tar.gz`;
 const JDK_FILE_NAME_WIN32 = `OpenJDK17U-jdk_x86-32_windows_hotspot_${JDK_BIN_VERSION}.zip`;
 const JDK_FILE_NAME_LINUX64 = `OpenJDK17U-jdk_x64_linux_hotspot_${JDK_BIN_VERSION}.tar.gz`;
 const JDK_SRC_ZIP = `jdk-${JDK_VERSION}.zip`;
@@ -59,7 +60,19 @@ export class JdkInstaller {
         break;
       }
       case 'darwin': {
-        this.downloadFile = JDK_FILE_NAME_MAC;
+        switch (process.arch) {
+          case 'x64': {
+            this.downloadFile = JDK_FILE_NAME_MAC_INTEL;
+            break;
+          }
+          case 'arm64': {
+            this.downloadFile = JDK_FILE_NAME_MAC_APPLE;
+            break;
+          }
+          default:
+            this.downloadFile = '';
+            throw new Error(`Mac architecture unsupported: ${this.process.arch}`);
+        }
         break;
       }
       case 'linux': {
