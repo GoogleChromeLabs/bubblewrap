@@ -23,6 +23,7 @@ import {FirstRunFlagFeature} from './FirstRunFlagFeature';
 import {Log, ConsoleLog} from '../Log';
 import {ArCoreFeature} from './ArCoreFeature';
 import {ProtocolHandlersFeature} from './ProtocolHandlersFeature';
+import {FileHandlingFeature} from './FileHandlingFeature';
 
 const ANDROID_BROWSER_HELPER_VERSIONS = {
   stable: 'com.google.androidbrowserhelper:androidbrowserhelper:2.6.0',
@@ -107,6 +108,10 @@ export class FeatureManager {
 
     if (twaManifest.protocolHandlers) {
       this.addFeature(new ProtocolHandlersFeature(twaManifest.protocolHandlers));
+    }
+
+    if (twaManifest.fileHandlers) {
+      this.addFeature(new FileHandlingFeature(twaManifest.fileHandlers));
     }
   }
 

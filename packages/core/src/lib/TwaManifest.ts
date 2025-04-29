@@ -29,6 +29,7 @@ import {LocationDelegationConfig} from './features/LocationDelegationFeature';
 import {PlayBillingConfig} from './features/PlayBillingFeature';
 import {FirstRunFlagConfig} from './features/FirstRunFlagFeature';
 import {ArCoreConfig} from './features/ArCoreFeature';
+import {FileHandler, processFileHandlers} from './types/FileHandler';
 
 // The minimum size needed for the app icon.
 const MIN_ICON_SIZE = 512;
@@ -171,6 +172,7 @@ export class TwaManifest {
   additionalTrustedOrigins: string[];
   retainedBundles: number[];
   protocolHandlers?: ProtocolHandler[];
+  fileHandlers?: FileHandler[];
 
   private static log = new ConsoleLog('twa-manifest');
 
@@ -222,6 +224,7 @@ export class TwaManifest {
     this.additionalTrustedOrigins = data.additionalTrustedOrigins || [];
     this.retainedBundles = data.retainedBundles || [];
     this.protocolHandlers = data.protocolHandlers;
+    this.fileHandlers = data.fileHandlers;
   }
 
   /**
@@ -321,6 +324,12 @@ export class TwaManifest {
         fullScopeUrl,
     );
 
+    const fileHandlers = processFileHandlers(
+      webManifest.file_handlers ?? [],
+      fullStartUrl,
+      fullScopeUrl,
+    );
+
     const twaManifest = new TwaManifest({
       packageId: generatePackageId(webManifestUrl.host) || '',
       host: webManifestUrl.host,
@@ -353,6 +362,7 @@ export class TwaManifest {
       orientation: asOrientation(webManifest.orientation) || DEFAULT_ORIENTATION,
       fullScopeUrl: fullScopeUrl.toString(),
       protocolHandlers: processedProtocolHandlers,
+      fileHandlers,
     });
     return twaManifest;
   }
@@ -505,6 +515,18 @@ export class TwaManifest {
     const fullStartUrl: URL = new URL(webManifest['start_url'] || '/', webManifestUrl);
     const fullScopeUrl: URL = new URL(webManifest['scope'] || '.', webManifestUrl);
 
+    let fileHandlers = oldTwaManifestJson.fileHandlers;
+    if (!(fieldsToIgnore.includes('file_handlers'))) {
+      fileHandlers = processFileHandlers(
+        webManifest.file_handlers ?? [],
+        fullStartUrl,
+        fullScopeUrl,
+      );
+      if (fileHandlers.length == 0) {
+        fileHandlers = oldTwaManifestJson.fileHandlers;
+      }
+    }
+
     const twaManifest = new TwaManifest({
       ...oldTwaManifestJson,
       name: this.getNewFieldValue('name', fieldsToIgnore, oldTwaManifest.name,
@@ -527,6 +549,7 @@ export class TwaManifest {
       monochromeIconUrl: monochromeIconUrl || oldTwaManifestJson.monochromeIconUrl,
       shortcuts: shortcuts,
       protocolHandlers: protocolHandlers,
+      fileHandlers,
     });
     return twaManifest;
   }
@@ -583,6 +606,7 @@ export interface TwaManifestJson {
   additionalTrustedOrigins?: string[];
   retainedBundles?: number[];
   protocolHandlers?: ProtocolHandler[];
+  fileHandlers?: FileHandler[];
 }
 
 export interface SigningKeyInfo {
