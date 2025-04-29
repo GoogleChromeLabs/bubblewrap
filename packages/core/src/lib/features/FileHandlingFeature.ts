@@ -17,7 +17,7 @@
 import {EmptyFeature} from './EmptyFeature';
 import {FileHandler} from '../types/FileHandler';
 
-const activityAliasTemplate = (handler: FileHandler, index: number) => `
+const activityAliasTemplate = (handler: FileHandler, index: number): string => `
     <activity-alias
         android:name="FileHandlingActivity${index}"
         android:targetActivity="LauncherActivity"
@@ -29,9 +29,9 @@ const activityAliasTemplate = (handler: FileHandler, index: number) => `
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE"/>
             <data android:scheme="content" />
-            ${ handler.mimeTypes.map(
-              (mimeType: string) => `<data android:mimeType="${mimeType}" />`
-            ).join('\n') }
+${ handler.mimeTypes.map((mimeType: string) => `
+            <data android:mimeType="${mimeType}" />`,
+  ).join('') }
         </intent-filter>
     </activity-alias>
 `;

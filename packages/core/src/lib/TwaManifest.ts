@@ -325,9 +325,9 @@ export class TwaManifest {
     );
 
     const fileHandlers = processFileHandlers(
-      webManifest.file_handlers ?? [],
-      fullStartUrl,
-      fullScopeUrl,
+        webManifest.file_handlers ?? [],
+        fullStartUrl,
+        fullScopeUrl,
     );
 
     const twaManifest = new TwaManifest({
@@ -518,9 +518,9 @@ export class TwaManifest {
     let fileHandlers = oldTwaManifestJson.fileHandlers;
     if (!(fieldsToIgnore.includes('file_handlers'))) {
       fileHandlers = processFileHandlers(
-        webManifest.file_handlers ?? [],
-        fullStartUrl,
-        fullScopeUrl,
+          webManifest.file_handlers ?? [],
+          fullStartUrl,
+          fullScopeUrl,
       );
       if (fileHandlers.length == 0) {
         fileHandlers = oldTwaManifestJson.fileHandlers;

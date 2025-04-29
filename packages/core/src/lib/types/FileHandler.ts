@@ -18,7 +18,7 @@ export interface FileHandlerJson {
   action?: string;
   accept?: {
     [mimeType: string]: Array<string>;
-  }
+  };
 }
 
 export interface FileHandler {
@@ -26,7 +26,7 @@ export interface FileHandler {
   mimeTypes: Array<string>;
 }
 
-function normalizeUrl(url: string, startUrl: URL, scopeUrl: URL,): string | undefined {
+function normalizeUrl(url: string, startUrl: URL, scopeUrl: URL): string | undefined {
   try {
     const absoluteUrl = new URL(url, startUrl);
 
@@ -52,9 +52,9 @@ function normalizeUrl(url: string, startUrl: URL, scopeUrl: URL,): string | unde
 }
 
 export function processFileHandlers(
-  fileHandlers: FileHandlerJson[],
-  startUrl: URL,
-  scopeUrl: URL,
+    fileHandlers: FileHandlerJson[],
+    startUrl: URL,
+    scopeUrl: URL,
 ): FileHandler[] {
   const processedFileHandlers: FileHandler[] = [];
 
