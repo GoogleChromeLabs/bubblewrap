@@ -23,7 +23,7 @@ const activityAliasTemplate = (handler: FileHandler, index: number): string => `
         android:targetActivity="LauncherActivity"
         android:exported="true">
         <meta-data android:name="android.support.customtabs.trusted.FILE_HANDLING_ACTION_URL"
-            android:value="${handler.actionUrl}" /> 
+            android:value="@string/fileHandlingActionUrl${index}" /> 
         <intent-filter>
             <action android:name="android.intent.action.VIEW"/>
             <category android:name="android.intent.category.DEFAULT" />
@@ -42,6 +42,8 @@ export class FileHandlingFeature extends EmptyFeature {
     if (fileHandlers.length === 0) return;
     for (let i = 0; i < fileHandlers.length; i++) {
       this.androidManifest.components.push(activityAliasTemplate(fileHandlers[i], i));
+      this.buildGradle.configs.push(
+          `resValue "string", "fileHandlingActionUrl${i}", "${fileHandlers[i].actionUrl}"`);
     }
   }
 }

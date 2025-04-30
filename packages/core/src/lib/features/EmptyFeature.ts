@@ -21,9 +21,11 @@ export class EmptyFeature implements Feature {
   buildGradle: {
     repositories: string[];
     dependencies: string[];
+    configs: string[];
   } = {
     repositories: new Array<string>(),
     dependencies: new Array<string>(),
+    configs: new Array<string>(),
   };
 
   androidManifest: {

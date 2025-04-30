@@ -148,6 +148,10 @@ android {
 
         resValue "bool", "enableSiteSettingsShortcut", twaManifest.enableSiteSettingsShortcut
         resValue "string", "orientation", twaManifest.orientation
+
+        <% for(const config of buildGradle.configs) { %>
+        <%= config %>
+        <% } %>
     }
     buildTypes {
         release {

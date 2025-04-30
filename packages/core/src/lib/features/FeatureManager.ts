@@ -38,6 +38,7 @@ export class FeatureManager {
   buildGradle = {
     repositories: new Set<string>(),
     dependencies: new Set<string>(),
+    configs: new Set<string>(),
   };
   androidManifest = {
     permissions: new Set<string>(),
@@ -123,6 +124,10 @@ export class FeatureManager {
 
     feature.buildGradle.dependencies.forEach((dep) => {
       this.buildGradle.dependencies.add(dep);
+    });
+
+    feature.buildGradle.configs.forEach((dep) => {
+      this.buildGradle.configs.add(dep);
     });
 
     // Adds properties to application.
