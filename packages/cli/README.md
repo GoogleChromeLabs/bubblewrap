@@ -393,6 +393,7 @@ Fields:
 |fullScopeUrl|string|false|The navigation scope that the browser considers to be within the app. If the user navigates outside the scope, it reverts to a normal web page inside a browser tab or window. Must be a full URL. Required and used only by Meta Quest devices.|
 |minSdkVersion|number|false|The minimum [Android API Level](https://developer.android.com/guide/topics/manifest/uses-sdk-element#ApiLevels) required for the application to run. Defaults to `23`, if `isMetaQuest` is `true`, and `19` otherwise.|
 |protocolHandlers|[ProtocolHandler](#protocolhandlers)[]|false|List of [Protocol Handlers](#protocolhandlers) supported by the app.|
+|fileHandlers|[FileHandler](#fileHandlers)[]|false|List of [File Hanlders](#fileHandlers) supported by the app.|
 
 ### Features
 
@@ -472,6 +473,16 @@ List of Protocol Handlers registered for the application. These entries may not 
 |:--:|:--:|:------:|:---------:|
 |protocol|string|true|Data scheme to register (e.g. `bitcoin`, `irc`, `web+coffee`).|
 |url|string|true|Formula for converting a custom data scheme back to a http(s) link, must include '%s' and be the same origin as the web manifest file. Example: `https://test.com/?target=%s`|
+
+### FileHandlers
+
+List of File Handlers registered for the application. These entries may not exactly match what was originally in the webmanifest. If a webmanifest entry is incorrect for any reason it will be ignored and a warning will be printed out. See [here](https://developer.chrome.com/docs/capabilities/web-apis/file-handling?hl=en) for more information about file handling and [here](https://wicg.github.io/manifest-incubations/#file_handlers-member) for file_handlers webmanifest spec.
+
+|Name|Type|Required|Description|
+|:--:|:--:|:------:|:---------:|
+|actionUrl|string|true|URL to be navigated to in case of file handler launch matching the according MIME types|
+|mimeTypes|string[]|true|The list of MIME types for the file handler|
+
 
 ## Manually setting up the Environment
 
