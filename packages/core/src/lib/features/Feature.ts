@@ -41,6 +41,10 @@ export interface Feature {
      *    Example `androidx.appcompat:appcompat:1.2.0`.
      */
     dependencies: string[];
+    /**
+     * Entries to be added the `android.defaultConfig` section.
+     */
+    configs: string[];
   };
 
   /**

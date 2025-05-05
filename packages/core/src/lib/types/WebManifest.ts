@@ -15,6 +15,7 @@
  *  limitations under the License.
  */
 
+import {FileHandlerJson} from './FileHandler';
 import {ProtocolHandler} from './ProtocolHandler';
 
 export interface WebManifestIcon {
@@ -70,4 +71,5 @@ export interface WebManifestJson {
   share_target?: ShareTarget;
   orientation?: OrientationLock;
   protocol_handlers?: Array<ProtocolHandler>;
+  file_handlers?: Array<FileHandlerJson>;
 }

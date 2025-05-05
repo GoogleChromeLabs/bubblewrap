@@ -48,6 +48,13 @@ describe('TwaManifest', () => {
             'sizes': '96x96',
           }],
         }],
+        'file_handlers': [{
+          'action': '/',
+          'accept': {
+            'text/plain': ['.txt'],
+            'image/jpeg': ['.jpg', 'jpeg'],
+          },
+        }],
       };
       const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
       const twaManifest = TwaManifest.fromWebManifestJson(manifestUrl, manifest as WebManifestJson);
@@ -85,6 +92,12 @@ describe('TwaManifest', () => {
           .toBe('[[name:\'shortcut name\', short_name:\'short\',' +
             ' url:\'https://pwa-directory.com/launch\', icon:\'shortcut_0\']]');
       expect(twaManifest.fallbackType).toBe('customtabs');
+      expect(twaManifest.fileHandlers).toEqual([
+        {
+          'actionUrl': 'https://pwa-directory.com/',
+          'mimeTypes': ['text/plain', 'image/jpeg'],
+        },
+      ]);
     });
 
     it('Sets correct defaults for unavailable fields', () => {
@@ -358,6 +371,13 @@ describe('TwaManifest', () => {
           'protocol': 'web+test-replace',
           'url': 'test-format-web/%s',
         }],
+        'file_handlers': [{
+          'action': '/',
+          'accept': {
+            'text/plain': ['.txt'],
+            'image/jpeg': ['.jpg', 'jpeg'],
+          },
+        }],
       };
       const twaManifest = new TwaManifest({
         'packageId': 'id',
@@ -418,6 +438,12 @@ describe('TwaManifest', () => {
           {
             'protocol': 'web+test-keep',
             'url': 'test-format-twa/%s',
+          },
+        ],
+        'fileHandlers': [
+          {
+            'actionUrl': 'https://name.github.io/',
+            'mimeTypes': ['text/plain', 'image/jpeg'],
           },
         ],
       });
