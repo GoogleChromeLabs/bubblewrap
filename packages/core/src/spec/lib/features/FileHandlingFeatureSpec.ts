@@ -18,8 +18,7 @@ import {FileHandlingFeature} from '../../../lib/features/FileHandlingFeature';
 
 describe('FileHandlingFeature', () => {
   describe('#constructor', () => {
-    // variables is the only field dynamically generated.
-    it('Generates correct variables for application', () => {
+    it('Populates templates from the twaManifest correctly', () => {
       const fileHandlers = [
         {
           'actionUrl': 'https://pwa-directory.com/',
