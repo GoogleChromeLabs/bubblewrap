@@ -394,6 +394,7 @@ Fields:
 |minSdkVersion|number|false|The minimum [Android API Level](https://developer.android.com/guide/topics/manifest/uses-sdk-element#ApiLevels) required for the application to run. Defaults to `23`, if `isMetaQuest` is `true`, and `19` otherwise.|
 |protocolHandlers|[ProtocolHandler](#protocolhandlers)[]|false|List of [Protocol Handlers](#protocolhandlers) supported by the app.|
 |fileHandlers|[FileHandler](#fileHandlers)[]|false|List of [File Hanlders](#fileHandlers) supported by the app.|
+|launchHandlerClientMode|string|false|launch_handler [client_mode](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/launch_handler#client_mode) of the app.|
 
 ### Features
 
@@ -482,6 +483,10 @@ List of File Handlers registered for the application. These entries may not exac
 |:--:|:--:|:------:|:---------:|
 |actionUrl|string|true|URL to be navigated to in case of file handler launch matching the according MIME types|
 |mimeTypes|string[]|true|The list of MIME types for the file handler|
+
+### LaunchHandler
+A string, which specifies the context in which the app should be loaded when launched. Possible values are: "auto", "focus-existing", "navigate-existing", "navigate-new".
+See [launch_handler](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/launch_handler) for more information.
 
 
 ## Manually setting up the Environment

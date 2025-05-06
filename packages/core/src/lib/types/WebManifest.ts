@@ -72,4 +72,7 @@ export interface WebManifestJson {
   orientation?: OrientationLock;
   protocol_handlers?: Array<ProtocolHandler>;
   file_handlers?: Array<FileHandlerJson>;
+  launch_handler?: {
+    client_mode?: string;
+  };
 }

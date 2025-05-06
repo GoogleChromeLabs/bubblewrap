@@ -381,6 +381,7 @@ describe('TwaManifest', () => {
       };
       const twaManifest = new TwaManifest({
         'packageId': 'id',
+        'launchHandlerClientMode': 'navigate_existing',
         'host': 'host',
         'name': 'name',
         'launcherName': 'name',
@@ -472,6 +473,7 @@ describe('TwaManifest', () => {
       };
       const twaManifest = new TwaManifest({
         'packageId': 'id',
+        'launchHandlerClientMode': 'navigate_existing',
         'host': 'host',
         'name': 'name',
         'launcherName': 'name',

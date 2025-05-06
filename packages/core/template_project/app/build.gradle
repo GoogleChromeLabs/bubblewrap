@@ -70,6 +70,10 @@ android {
         def launchUrl = "https://" + twaManifest.hostName + twaManifest.launchUrl
         resValue "string", "launchUrl", launchUrl
 
+        <% if (launchHandlerClientMode) { %>
+            resValue "string", "launchHandlerClientMode", '<%= launchHandlerClientMode %>'
+        <% } %>
+
         <% if (webManifestUrl) { %>
             // The URL the Web Manifest for the Progressive Web App that the TWA points to. This
             // is used by Chrome OS and Meta Quest to open the Web version of the PWA instead of
