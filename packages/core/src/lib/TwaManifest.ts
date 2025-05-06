@@ -173,6 +173,7 @@ export class TwaManifest {
   retainedBundles: number[];
   protocolHandlers?: ProtocolHandler[];
   fileHandlers?: FileHandler[];
+  launchHandlerClientMode?: string;
 
   private static log = new ConsoleLog('twa-manifest');
 
@@ -225,6 +226,7 @@ export class TwaManifest {
     this.retainedBundles = data.retainedBundles || [];
     this.protocolHandlers = data.protocolHandlers;
     this.fileHandlers = data.fileHandlers;
+    this.launchHandlerClientMode = data.launchHandlerClientMode;
   }
 
   /**
@@ -363,6 +365,7 @@ export class TwaManifest {
       fullScopeUrl: fullScopeUrl.toString(),
       protocolHandlers: processedProtocolHandlers,
       fileHandlers,
+      launchHandlerClientMode: webManifest['launch_handler']?.['client_mode'] || '',
     });
     return twaManifest;
   }
@@ -550,6 +553,9 @@ export class TwaManifest {
       shortcuts: shortcuts,
       protocolHandlers: protocolHandlers,
       fileHandlers,
+      launchHandlerClientMode: this.getNewFieldValue('launchHandlerClientMode', fieldsToIgnore,
+          oldTwaManifest.launchHandlerClientMode,
+          webManifest['launch_handler']?.['client_mode'] || ''),
     });
     return twaManifest;
   }
@@ -607,6 +613,7 @@ export interface TwaManifestJson {
   retainedBundles?: number[];
   protocolHandlers?: ProtocolHandler[];
   fileHandlers?: FileHandler[];
+  launchHandlerClientMode?: string;
 }
 
 export interface SigningKeyInfo {
