@@ -196,12 +196,6 @@ describe('TwaManifest', () => {
       expect(twaManifest.maskableIconUrl).toBe('https://pwa-directory.com/favicons/maskable.png');
       expect(twaManifest.monochromeIconUrl).toBe('https://pwa-directory.com/favicons/monochrome.png');
     });
-
-    it('Replaces unsupported display modes with `standalone`', () => {
-      const manifestUrl = new URL('https://pwa-directory.com/manifest.json');
-      expect(TwaManifest.fromWebManifestJson(manifestUrl, {display: 'browser'}).display)
-          .toBe('standalone');
-    });
   });
 
   describe('#constructor', () => {
@@ -345,10 +339,10 @@ describe('TwaManifest', () => {
       expect(asDisplayMode('standalone')).toBe('standalone');
       expect(asDisplayMode('fullscreen')).toBe('fullscreen');
       expect(asDisplayMode('minimal-ui')).toBe('minimal-ui');
+      expect(asDisplayMode('browser')).toBe('browser');
     });
 
     it('Returns null for unsupported display modes', () => {
-      expect(asDisplayMode('browser')).toBeNull();
       expect(asDisplayMode('bogus')).toBeNull();
       expect(asDisplayMode('')).toBeNull();
     });
