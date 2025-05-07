@@ -164,6 +164,12 @@
             <% } else if (display === 'fullscreen-sticky') { %>
             <meta-data android:name="android.support.customtabs.trusted.DISPLAY_MODE"
                 android:value="sticky-immersive" />
+            <% } else if (display === 'minimal-ui') { %>
+            <meta-data android:name="android.support.customtabs.trusted.DISPLAY_MODE"
+                android:value="minimal-ui" />
+            <% } else if (display === 'browser') { %>
+            <meta-data android:name="android.support.customtabs.trusted.DISPLAY_MODE"
+                android:value="browser" />
             <% } %>
 
             <meta-data android:name="android.support.customtabs.trusted.SCREEN_ORIENTATION"
