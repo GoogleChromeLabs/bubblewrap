@@ -84,7 +84,7 @@ describe('FeatureManager', () => {
       expect(features.applicationClass.onCreate).toEqual([]);
       expect(features.applicationClass.variables).toEqual([]);
       expect(features.buildGradle.dependencies).toContain(
-          'com.google.androidbrowserhelper:androidbrowserhelper:2.6.1');
+          'com.google.androidbrowserhelper:androidbrowserhelper:2.6.2');
       expect(features.buildGradle.repositories).toEqual(emptySet);
       expect(features.launcherActivity.imports).toEqual(emptySet);
       expect(features.launcherActivity.launchUrl).toEqual([]);
@@ -99,7 +99,7 @@ describe('FeatureManager', () => {
       } as TwaManifest;
       const features = new FeatureManager(manifest);
       expect(features.buildGradle.dependencies).toContain(
-          'com.google.androidbrowserhelper:androidbrowserhelper:2.6.1');
+          'com.google.androidbrowserhelper:androidbrowserhelper:2.6.2');
     });
 
     it('Adds INTERNET permission when WebView fallback is enabled', () => {
