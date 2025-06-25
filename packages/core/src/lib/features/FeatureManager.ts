@@ -71,12 +71,7 @@ export class FeatureManager {
     }
 
     if (twaManifest.features.playBilling?.enabled) {
-      if (twaManifest.alphaDependencies?.enabled) {
-        this.addFeature(new PlayBillingFeature());
-      } else {
-        log.error('Skipping PlayBillingFeature. '+
-            'Enable alphaDependencies to add PlayBillingFeature.');
-      }
+      this.addFeature(new PlayBillingFeature());
     }
 
     if (twaManifest.features.appsFlyer?.enabled) {

@@ -24,7 +24,6 @@ type Messages = {
   errorFailedToRunQualityCriteria: string;
   errorIconUrlMustExist: (manifest: string) => string;
   errorPlayBillingEnableNotifications: string;
-  errorPlayBillingAlphaDependencies: string;
   errorMaxLength: (maxLength: number, actualLength: number) => string;
   errorMinLength: (minLength: number, actualLength: number) => string;
   errorMissingManifestParameter: string;
@@ -149,8 +148,6 @@ export const enUS: Messages = {
       yellow('\nFailed to run the PWA Quality Criteria checks. Skipping.'),
   errorPlayBillingEnableNotifications: red(`Play Billing requires ${cyan('enableNotifications')} ` +
       `to be ${cyan('true')}.`),
-  errorPlayBillingAlphaDependencies: red(`Play Billing requires ${cyan('alphaDependencies')} ` +
-      'to be enabled.'),
   errorMaxLength: (maxLength, actualLength): string => {
     return `Maximum length is ${maxLength} but input is ${actualLength}.`;
   },
@@ -370,7 +367,7 @@ the PWA:
   promptMaskableIconUrl: 'Maskable icon URL:',
   promptMonochromeIconUrl: 'Monochrome icon URL:',
   promptShortcuts: 'Include app shortcuts?',
-  promptPlayBilling: 'Include support for Play Billing (this relies on alpha dependencies)?',
+  promptPlayBilling: 'Include support for Play Billing?',
   promptLocationDelegation: 'Request geolocation permission?',
   promptPackageId: 'Application ID:',
   promptKeyPath: 'Key store location:',
