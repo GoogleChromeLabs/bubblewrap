@@ -128,11 +128,6 @@ export async function updateProject(
     prompt.printMessage(messages.errorPlayBillingEnableNotifications);
     return false;
   }
-  // Check that if Play Billing is enabled, alphaDependencies must also be enabled.
-  if (features.playBilling?.enabled && !twaManifest.alphaDependencies.enabled) {
-    prompt.printMessage(messages.errorPlayBillingAlphaDependencies);
-    return false;
-  }
 
   // Check that the iconUrl exists.
   if (!twaManifest.iconUrl) {

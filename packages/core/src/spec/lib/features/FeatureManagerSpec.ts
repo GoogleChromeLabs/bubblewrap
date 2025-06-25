@@ -178,9 +178,6 @@ describe('FeatureManager', () => {
             enabled: true,
           },
         },
-        alphaDependencies: {
-          enabled: true,
-        },
       } as TwaManifest;
 
       const playBillingFeature = new PlayBillingFeature();
