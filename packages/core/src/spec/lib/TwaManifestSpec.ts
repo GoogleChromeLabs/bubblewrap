@@ -208,6 +208,7 @@ describe('TwaManifest', () => {
         startUrl: '/',
         iconUrl: 'https://pwa-directory.com/favicons/android-chrome-512x512.png',
         display: 'fullscreen',
+        displayOverride: ['window-controls-overlay', 'not-valid'],
         orientation: 'landscape',
         themeColor: '#00ff00',
         themeColorDark: '#000000',
@@ -243,6 +244,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.startUrl).toEqual(twaManifest.startUrl);
       expect(twaManifest.iconUrl).toEqual(twaManifest.iconUrl);
       expect(twaManifest.display).toEqual('fullscreen');
+      expect(twaManifest.displayOverride).toEqual(['window-controls-overlay']);
       expect(twaManifest.orientation).toEqual('landscape');
       expect(twaManifest.themeColor).toEqual(new Color('#00ff00'));
       expect(twaManifest.themeColorDark).toEqual(new Color('#000000'));

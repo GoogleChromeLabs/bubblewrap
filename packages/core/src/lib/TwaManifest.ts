@@ -46,6 +46,11 @@ const DISPLAY_MODE_VALUES = ['standalone', 'minimal-ui', 'fullscreen', 'fullscre
 export type DisplayMode = typeof DISPLAY_MODE_VALUES[number];
 export const DisplayModes: DisplayMode[] = [...DISPLAY_MODE_VALUES];
 
+// Supported display overrides for TWA
+const DISPLAY_OVERRIDE_VALUES = ['window-controls-overlay'] as const;
+export type DisplayOverrideValue = typeof DISPLAY_OVERRIDE_VALUES[number];
+export const DisplayOverrideValues: DisplayOverrideValue[] = [...DISPLAY_OVERRIDE_VALUES];
+
 export function asDisplayMode(input: string): DisplayMode | null {
   return DISPLAY_MODE_VALUES.includes(input) ? input as DisplayMode : null;
 }
@@ -139,6 +144,7 @@ export class TwaManifest {
   name: string;
   launcherName: string;
   display: DisplayMode;
+  displayOverride: DisplayOverrideValue[];
   themeColor: Color;
   themeColorDark: Color;
   navigationColor: Color;
@@ -228,6 +234,10 @@ export class TwaManifest {
     this.protocolHandlers = data.protocolHandlers;
     this.fileHandlers = data.fileHandlers;
     this.launchHandlerClientMode = data.launchHandlerClientMode;
+    this.displayOverride = (data.displayOverride || []).filter(
+        (dio: string): dio is DisplayOverrideValue => {
+          return (DisplayOverrideValues as string[]).includes(dio);
+        });
   }
 
   /**
@@ -571,6 +581,7 @@ export interface TwaManifestJson {
   name: string;
   launcherName?: string; // Older Manifests may not have this field.
   display?: string; // Older Manifests may not have this field.
+  displayOverride?: string[];
   themeColor: string;
   themeColorDark?: string;
   navigationColor: string;
