@@ -21,7 +21,12 @@ import {fetchUtils} from './FetchUtils';
 import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
 import Color = require('color');
 import {ConsoleLog} from './Log';
-import {ShareTarget, WebManifestIcon, WebManifestJson} from './types/WebManifest';
+import {
+  ShareTarget,
+  WebManifestDisplayOverrideValue,
+  WebManifestIcon,
+  WebManifestJson,
+} from './types/WebManifest';
 import {processProtocolHandlers, ProtocolHandler} from './types/ProtocolHandler';
 import {ShortcutInfo} from './ShortcutInfo';
 import {AppsFlyerConfig} from './features/AppsFlyerFeature';
@@ -46,13 +51,21 @@ const DISPLAY_MODE_VALUES = ['standalone', 'minimal-ui', 'fullscreen', 'fullscre
 export type DisplayMode = typeof DISPLAY_MODE_VALUES[number];
 export const DisplayModes: DisplayMode[] = [...DISPLAY_MODE_VALUES];
 
-// Supported display overrides for TWA
-const DISPLAY_OVERRIDE_VALUES = ['window-controls-overlay'] as const;
-export type DisplayOverrideValue = typeof DISPLAY_OVERRIDE_VALUES[number];
-export const DisplayOverrideValues: DisplayOverrideValue[] = [...DISPLAY_OVERRIDE_VALUES];
-
 export function asDisplayMode(input: string): DisplayMode | null {
   return DISPLAY_MODE_VALUES.includes(input) ? input as DisplayMode : null;
+}
+
+// Supported display overrides for TWA
+export const DisplayOverrideValues: WebManifestDisplayOverrideValue[] = [
+  'standalone', 'minimal-ui', 'fullscreen', 'browser', 'window-controls-overlay', 'tabbed'];
+
+export function resolveDisplayOverride(
+    displayOverride: WebManifestDisplayOverrideValue[]|undefined,
+): WebManifestDisplayOverrideValue[] {
+  if (!displayOverride) return [];
+
+  return displayOverride.filter(
+      (displayOverrideValue) => DisplayOverrideValues.includes(displayOverrideValue));
 }
 
 // Possible values for screen orientation, as defined in `android-browser-helper`:
@@ -144,7 +157,7 @@ export class TwaManifest {
   name: string;
   launcherName: string;
   display: DisplayMode;
-  displayOverride: DisplayOverrideValue[];
+  displayOverride: WebManifestDisplayOverrideValue[];
   themeColor: Color;
   themeColorDark: Color;
   navigationColor: Color;
@@ -234,10 +247,7 @@ export class TwaManifest {
     this.protocolHandlers = data.protocolHandlers;
     this.fileHandlers = data.fileHandlers;
     this.launchHandlerClientMode = data.launchHandlerClientMode;
-    this.displayOverride = (data.displayOverride || []).filter(
-        (dio: string): dio is DisplayOverrideValue => {
-          return (DisplayOverrideValues as string[]).includes(dio);
-        });
+    this.displayOverride = data.displayOverride || [];
   }
 
   /**
@@ -350,6 +360,7 @@ export class TwaManifest {
       launcherName: webManifest['short_name'] ||
         webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE) || DEFAULT_APP_NAME,
       display: asDisplayMode(webManifest['display']!) || DEFAULT_DISPLAY_MODE,
+      displayOverride: resolveDisplayOverride(webManifest['display_override']),
       themeColor: webManifest['theme_color'] || DEFAULT_THEME_COLOR,
       themeColorDark: DEFAULT_THEME_COLOR_DARK,
       navigationColor: DEFAULT_NAVIGATION_COLOR,
@@ -550,6 +561,8 @@ export class TwaManifest {
           webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE)),
       display: this.getNewFieldValue('display', fieldsToIgnore, oldTwaManifest.display,
           asDisplayMode(webManifest['display']!)!),
+      displayOverride: this.getNewFieldValue('displayOverride', fieldsToIgnore,
+          oldTwaManifest.displayOverride, resolveDisplayOverride(webManifest['display_override'])),
       fullScopeUrl: this.getNewFieldValue('fullScopeUrl', fieldsToIgnore,
           oldTwaManifest.fullScopeUrl?.toString(), fullScopeUrl.toString()),
       themeColor: this.getNewFieldValue('themeColor', fieldsToIgnore,
@@ -581,7 +594,7 @@ export interface TwaManifestJson {
   name: string;
   launcherName?: string; // Older Manifests may not have this field.
   display?: string; // Older Manifests may not have this field.
-  displayOverride?: string[];
+  displayOverride?: WebManifestDisplayOverrideValue[];
   themeColor: string;
   themeColorDark?: string;
   navigationColor: string;

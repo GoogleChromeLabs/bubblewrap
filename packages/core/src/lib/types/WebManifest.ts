@@ -35,6 +35,9 @@ export interface WebManifestShortcutJson {
 
 type WebManifestDisplayMode = 'browser' | 'minimal-ui' | 'standalone' | 'fullscreen';
 
+export type WebManifestDisplayOverrideValue = 'window-controls-overlay' | 'tabbed' | 'browser' |
+    'minimal-ui' | 'standalone' | 'fullscreen';
+
 export type OrientationLock = 'any' | 'natural' | 'landscape'| 'portrait' | 'portrait-primary'|
     'portrait-secondary' | 'landscape-primary' | 'landscape-secondary';
 
@@ -64,6 +67,7 @@ export interface WebManifestJson {
   start_url?: string;
   scope?: string;
   display?: WebManifestDisplayMode;
+  display_override?: WebManifestDisplayOverrideValue[];
   theme_color?: string;
   background_color?: string;
   icons?: Array<WebManifestIcon>;

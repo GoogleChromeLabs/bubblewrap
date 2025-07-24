@@ -14,7 +14,12 @@
  *  limitations under the License.
  */
 
-import {TwaManifest, TwaManifestJson, asDisplayMode} from '../../lib/TwaManifest';
+import {
+  TwaManifest,
+  TwaManifestJson,
+  asDisplayMode,
+  resolveDisplayOverride,
+} from '../../lib/TwaManifest';
 import {WebManifestJson} from '../../lib/types/WebManifest';
 import Color = require('color');
 import {ShortcutInfo} from '../../lib/ShortcutInfo';
@@ -208,7 +213,7 @@ describe('TwaManifest', () => {
         startUrl: '/',
         iconUrl: 'https://pwa-directory.com/favicons/android-chrome-512x512.png',
         display: 'fullscreen',
-        displayOverride: ['window-controls-overlay', 'not-valid'],
+        displayOverride: ['window-controls-overlay'],
         orientation: 'landscape',
         themeColor: '#00ff00',
         themeColorDark: '#000000',
@@ -349,6 +354,39 @@ describe('TwaManifest', () => {
       expect(asDisplayMode('')).toBeNull();
     });
   });
+
+  describe('#resolveDisplayOverride', () => {
+    it('Keeps display override values that are supported', () => {
+      expect(resolveDisplayOverride([
+        'browser',
+        'fullscreen',
+        'minimal-ui',
+        'standalone',
+        'window-controls-overlay',
+        'tabbed',
+      ])).toEqual([
+        'browser',
+        'fullscreen',
+        'minimal-ui',
+        'standalone',
+        'window-controls-overlay',
+        'tabbed',
+      ]);
+    });
+
+    it('Ignore unsupported values', () => {
+      expect(resolveDisplayOverride([
+        'browser',
+        // @ts-expect-error Unsupported value for testing
+        'not-supported',
+      ])).toEqual(['browser']);
+      expect(resolveDisplayOverride([
+        // @ts-expect-error Unsupported value for testing
+        'not-supported',
+      ])).toEqual([]);
+    });
+  });
+
   describe('#merge', () => {
     it('Validates that the merge is done correctly in case which' +
         ' there are no fields to ignore', async () => {
@@ -382,6 +420,7 @@ describe('TwaManifest', () => {
         'name': 'name',
         'launcherName': 'name',
         'display': 'standalone',
+        'displayOverride': ['window-controls-overlay'],
         'themeColor': '#FFFFFF',
         'themeColorDark': '#000000',
         'navigationColor': '#000000',
@@ -427,6 +466,7 @@ describe('TwaManifest', () => {
         ...twaManifest.toJson(),
         'launcherName': 'different_name',
         'display': 'fullscreen',
+        'displayOverride': [],
         'protocolHandlers': [
           {
             'protocol': 'web+test-replace',
