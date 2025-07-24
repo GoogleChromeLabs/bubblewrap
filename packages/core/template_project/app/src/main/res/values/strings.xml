@@ -23,6 +23,14 @@
     </string-array>
   <% } %>
 
+  <% if (displayOverride.length > 0) { %>
+    <string-array name="display_override">
+    <% for (const displayOverrideValue of displayOverride) { %>
+      <item><%= displayOverrideValue %></item>
+    <% } %>
+    </string-array>
+  <% } %>
+
   <!--
     This variable below expresses the relationship between the app and the site,
     as documented in the TWA documentation at
