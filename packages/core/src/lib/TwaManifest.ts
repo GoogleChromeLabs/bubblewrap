@@ -56,12 +56,13 @@ export function asDisplayMode(input: string): DisplayMode | null {
 }
 
 // Supported display overrides for TWA
-export const DisplayOverrideValues: WebManifestDisplayOverrideValue[] = [
-  'standalone', 'minimal-ui', 'fullscreen', 'browser', 'window-controls-overlay', 'tabbed'];
+export type DisplayOverrideValue = WebManifestDisplayOverrideValue | 'fullscreen-sticky';
+export const DisplayOverrideValues: DisplayOverrideValue[] = ['standalone', 'minimal-ui',
+  'fullscreen', 'fullscreen-sticky', 'browser', 'window-controls-overlay', 'tabbed'];
 
 export function resolveDisplayOverride(
     displayOverride: WebManifestDisplayOverrideValue[]|undefined,
-): WebManifestDisplayOverrideValue[] {
+): DisplayOverrideValue[] {
   if (!displayOverride) return [];
 
   return displayOverride.filter(
@@ -157,7 +158,7 @@ export class TwaManifest {
   name: string;
   launcherName: string;
   display: DisplayMode;
-  displayOverride: WebManifestDisplayOverrideValue[];
+  displayOverride: DisplayOverrideValue[];
   themeColor: Color;
   themeColorDark: Color;
   navigationColor: Color;
@@ -594,7 +595,7 @@ export interface TwaManifestJson {
   name: string;
   launcherName?: string; // Older Manifests may not have this field.
   display?: string; // Older Manifests may not have this field.
-  displayOverride?: WebManifestDisplayOverrideValue[];
+  displayOverride?: DisplayOverrideValue[];
   themeColor: string;
   themeColorDark?: string;
   navigationColor: string;

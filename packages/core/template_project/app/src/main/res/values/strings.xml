@@ -23,10 +23,20 @@
     </string-array>
   <% } %>
 
+  <!--
+    The "fullscreen" and "fullscreen-sticky" TWA manifest values correspond to "immersive" and "sticky-immersive"
+    AndroidManifest values.
+  -->
   <% if (displayOverride.length > 0) { %>
     <string-array name="display_override">
     <% for (const displayOverrideValue of displayOverride) { %>
-      <item><%= displayOverrideValue %></item>
+      <% if (displayOverrideValue === 'fullscreen') { %>
+        <item>immersive</item>
+      <% } else if (displayOverrideValue === 'fullscreen-sticky') { %>
+        <item>sticky-immersive</item>
+      <% } else { %>
+        <item><%= displayOverrideValue %></item>
+      <% } %>
     <% } %>
     </string-array>
   <% } %>
