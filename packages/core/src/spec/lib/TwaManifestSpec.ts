@@ -14,7 +14,12 @@
  *  limitations under the License.
  */
 
-import {TwaManifest, TwaManifestJson, asDisplayMode} from '../../lib/TwaManifest';
+import {
+  TwaManifest,
+  TwaManifestJson,
+  asDisplayMode,
+  resolveDisplayOverride,
+} from '../../lib/TwaManifest';
 import {WebManifestJson} from '../../lib/types/WebManifest';
 import Color = require('color');
 import {ShortcutInfo} from '../../lib/ShortcutInfo';
@@ -208,6 +213,7 @@ describe('TwaManifest', () => {
         startUrl: '/',
         iconUrl: 'https://pwa-directory.com/favicons/android-chrome-512x512.png',
         display: 'fullscreen',
+        displayOverride: ['window-controls-overlay'],
         orientation: 'landscape',
         themeColor: '#00ff00',
         themeColorDark: '#000000',
@@ -243,6 +249,7 @@ describe('TwaManifest', () => {
       expect(twaManifest.startUrl).toEqual(twaManifest.startUrl);
       expect(twaManifest.iconUrl).toEqual(twaManifest.iconUrl);
       expect(twaManifest.display).toEqual('fullscreen');
+      expect(twaManifest.displayOverride).toEqual(['window-controls-overlay']);
       expect(twaManifest.orientation).toEqual('landscape');
       expect(twaManifest.themeColor).toEqual(new Color('#00ff00'));
       expect(twaManifest.themeColorDark).toEqual(new Color('#000000'));
@@ -347,6 +354,39 @@ describe('TwaManifest', () => {
       expect(asDisplayMode('')).toBeNull();
     });
   });
+
+  describe('#resolveDisplayOverride', () => {
+    it('Keeps display override values that are supported', () => {
+      expect(resolveDisplayOverride([
+        'browser',
+        'fullscreen',
+        'minimal-ui',
+        'standalone',
+        'window-controls-overlay',
+        'tabbed',
+      ])).toEqual([
+        'browser',
+        'fullscreen',
+        'minimal-ui',
+        'standalone',
+        'window-controls-overlay',
+        'tabbed',
+      ]);
+    });
+
+    it('Ignore unsupported values', () => {
+      expect(resolveDisplayOverride([
+        'browser',
+        // @ts-expect-error Unsupported value for testing
+        'not-supported',
+      ])).toEqual(['browser']);
+      expect(resolveDisplayOverride([
+        // @ts-expect-error Unsupported value for testing
+        'not-supported',
+      ])).toEqual([]);
+    });
+  });
+
   describe('#merge', () => {
     it('Validates that the merge is done correctly in case which' +
         ' there are no fields to ignore', async () => {
@@ -380,6 +420,7 @@ describe('TwaManifest', () => {
         'name': 'name',
         'launcherName': 'name',
         'display': 'standalone',
+        'displayOverride': ['window-controls-overlay'],
         'themeColor': '#FFFFFF',
         'themeColorDark': '#000000',
         'navigationColor': '#000000',
@@ -425,6 +466,7 @@ describe('TwaManifest', () => {
         ...twaManifest.toJson(),
         'launcherName': 'different_name',
         'display': 'fullscreen',
+        'displayOverride': [],
         'protocolHandlers': [
           {
             'protocol': 'web+test-replace',

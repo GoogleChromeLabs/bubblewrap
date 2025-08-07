@@ -181,6 +181,12 @@
                     android:resource="@array/additional_trusted_origins" />
             <% } %>
 
+            <% if (displayOverride.length > 0) { %>
+                <meta-data
+                    android:name="android.support.customtabs.trusted.DISPLAY_OVERRIDE"
+                    android:resource="@array/display_override" />
+            <% } %>
+
             <% if (shareTargetIntentFilter) { %>
                 <intent-filter>
                     <% for (const action of shareTargetIntentFilter.actions) { %>

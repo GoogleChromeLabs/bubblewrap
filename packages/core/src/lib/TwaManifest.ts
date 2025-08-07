@@ -21,7 +21,12 @@ import {fetchUtils} from './FetchUtils';
 import {findSuitableIcon, generatePackageId, validateNotEmpty} from './util';
 import Color = require('color');
 import {ConsoleLog} from './Log';
-import {ShareTarget, WebManifestIcon, WebManifestJson} from './types/WebManifest';
+import {
+  ShareTarget,
+  WebManifestDisplayOverrideValue,
+  WebManifestIcon,
+  WebManifestJson,
+} from './types/WebManifest';
 import {processProtocolHandlers, ProtocolHandler} from './types/ProtocolHandler';
 import {ShortcutInfo} from './ShortcutInfo';
 import {AppsFlyerConfig} from './features/AppsFlyerFeature';
@@ -48,6 +53,20 @@ export const DisplayModes: DisplayMode[] = [...DISPLAY_MODE_VALUES];
 
 export function asDisplayMode(input: string): DisplayMode | null {
   return DISPLAY_MODE_VALUES.includes(input) ? input as DisplayMode : null;
+}
+
+// Supported display overrides for TWA
+export type DisplayOverrideValue = WebManifestDisplayOverrideValue | 'fullscreen-sticky';
+export const DisplayOverrideValues: DisplayOverrideValue[] = ['standalone', 'minimal-ui',
+  'fullscreen', 'fullscreen-sticky', 'browser', 'window-controls-overlay', 'tabbed'];
+
+export function resolveDisplayOverride(
+    displayOverride: WebManifestDisplayOverrideValue[]|undefined,
+): DisplayOverrideValue[] {
+  if (!displayOverride) return [];
+
+  return displayOverride.filter(
+      (displayOverrideValue) => DisplayOverrideValues.includes(displayOverrideValue));
 }
 
 // Possible values for screen orientation, as defined in `android-browser-helper`:
@@ -139,6 +158,7 @@ export class TwaManifest {
   name: string;
   launcherName: string;
   display: DisplayMode;
+  displayOverride: DisplayOverrideValue[];
   themeColor: Color;
   themeColorDark: Color;
   navigationColor: Color;
@@ -228,6 +248,7 @@ export class TwaManifest {
     this.protocolHandlers = data.protocolHandlers;
     this.fileHandlers = data.fileHandlers;
     this.launchHandlerClientMode = data.launchHandlerClientMode;
+    this.displayOverride = data.displayOverride || [];
   }
 
   /**
@@ -340,6 +361,7 @@ export class TwaManifest {
       launcherName: webManifest['short_name'] ||
         webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE) || DEFAULT_APP_NAME,
       display: asDisplayMode(webManifest['display']!) || DEFAULT_DISPLAY_MODE,
+      displayOverride: resolveDisplayOverride(webManifest['display_override']),
       themeColor: webManifest['theme_color'] || DEFAULT_THEME_COLOR,
       themeColorDark: DEFAULT_THEME_COLOR_DARK,
       navigationColor: DEFAULT_NAVIGATION_COLOR,
@@ -540,6 +562,8 @@ export class TwaManifest {
           webManifest['name']?.substring(0, SHORT_NAME_MAX_SIZE)),
       display: this.getNewFieldValue('display', fieldsToIgnore, oldTwaManifest.display,
           asDisplayMode(webManifest['display']!)!),
+      displayOverride: this.getNewFieldValue('displayOverride', fieldsToIgnore,
+          oldTwaManifest.displayOverride, resolveDisplayOverride(webManifest['display_override'])),
       fullScopeUrl: this.getNewFieldValue('fullScopeUrl', fieldsToIgnore,
           oldTwaManifest.fullScopeUrl?.toString(), fullScopeUrl.toString()),
       themeColor: this.getNewFieldValue('themeColor', fieldsToIgnore,
@@ -571,6 +595,7 @@ export interface TwaManifestJson {
   name: string;
   launcherName?: string; // Older Manifests may not have this field.
   display?: string; // Older Manifests may not have this field.
+  displayOverride?: DisplayOverrideValue[];
   themeColor: string;
   themeColorDark?: string;
   navigationColor: string;
