@@ -56,7 +56,7 @@ android {
     defaultConfig {
         applicationId "<%= packageId %>"
         minSdkVersion <%= minSdkVersion %>
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode <%= appVersionCode %>
         versionName "<%= appVersionName %>"
 
@@ -163,8 +163,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     lintOptions {
         checkReleaseBuilds false
