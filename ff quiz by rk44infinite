@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Fire Birthday Game - Rehan</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    .quiz-container {
+      max-width: 650px;
+      margin: auto;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+    }
+    button {
+      background: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      margin: 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #ff1a1a;
+      transform: scale(1.05);
+    }
+    .status {
+      font-size: 18px;
+      margin: 15px 0;
+    }
+    .result {
+      font-size: 22px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .level {
+      font-size: 20px;
+      margin: 10px 0;
+      color: #FFD700;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>🔥 Free Fire Birthday Game 🔥</h1>
+    <h2>Happy Birthday, Rehan! 🎉</h2>
+    <p class="status">❤️ Lives: <span id="lives">3</span> | ⏱️ Time: <span id="timer">15</span>s</p>
+    <p class="level">Level: <span id="level">Easy</span></p>
+    <p id="question">Loading question...</p>
+    <div id="options"></div>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const quiz = {
+      easy: [
+        { q: "Which Free Fire character has Camouflage ability?", o: ["Chrono", "Wukong", "Kelly", "Hayato"], a: "Wukong" },
+        { q: "Max squad size in Free Fire?", o: ["2", "3", "4", "5"], a: "4" },
+        { q: "Which gun has fastest rate of fire?", o: ["M1014", "MP40", "AWM", "M60"], a: "MP40" }
+      ],
+      medium: [
+        { q: "What does the Gloo Wall provide?", o: ["Speed", "Cover", "Healing", "Ammo"], a: "Cover" },
+        { q: "Which pet gives healing ability?", o: ["Falco", "Ottero", "Shiba", "Robo"], a: "Ottero" },
+        { q: "Which SMG is famous for high damage?", o: ["MP40", "UMP", "Vector", "P90"], a: "Vector" }
+      ],
+      hard: [
+        { q: "Which map has the location 'Peak'?", o: ["Bermuda", "Kalahari", "Purgatory", "Alpine"], a: "Bermuda" },
+        { q: "Who won Free Fire World Series 2021?", o: ["Phoenix Force", "EVOS", "NaVi", "LOUD"], a: "Phoenix Force" },
+        { q: "Which character has Time Turner ability?", o: ["K", "Chrono", "Skyler", "Xayne"], a: "Chrono" }
+      ]
+    };
+
+    let currentLevel = "easy";
+    let questionIndex = 0;
+    let score = 0;
+    let lives = 3;
+    let timeLeft = 15;
+    let timer;
+
+    const questionElement = document.getElementById("question");
+    const optionsElement = document.getElementById("options");
+    const resultElement = document.getElementById("result");
+    const livesElement = document.getElementById("lives");
+    const timerElement = document.getElementById("timer");
+    const levelElement = document.getElementById("level");
+
+    function loadQuestion() {
+      if (lives <= 0) return showResult("❌ You lost all lives!");
+      let levelQuestions = quiz[currentLevel];
+      if (questionIndex >= levelQuestions.length) {
+        nextLevel();
+        return;
+      }
+      resetTimer();
+      let q = levelQuestions[questionIndex];
+      questionElement.textContent = q.q;
+      optionsElement.innerHTML = "";
+      q.o.forEach(option => {
+        let btn = document.createElement("button");
+        btn.textContent = option;
+        btn.onclick = () => checkAnswer(option);
+        optionsElement.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected) {
+      let correct = quiz[currentLevel][questionIndex].a;
+      if (selected === correct) {
+        score++;
+      } else {
+        lives--;
+        livesElement.textContent = lives;
+        if (lives === 0) {
+          return showResult("❌ You lost all lives!");
+        }
+      }
+      questionIndex++;
+      loadQuestion();
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      timeLeft = 15;
+      timerElement.textContent = timeLeft;
+      timer = setInterval(() => {
+        timeLeft--;
+        timerElement.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          lives--;
+          livesElement.textContent = lives;
+          if (lives === 0) {
+            showResult("⏱️ Time over! You lost all lives.");
+            return;
+          }
+          questionIndex++;
+          loadQuestion();
+        }
+      }, 1000);
+    }
+
+    function nextLevel() {
+      if (currentLevel === "easy") {
+        currentLevel = "medium";
+        questionIndex = 0;
+        levelElement.textContent = "Medium";
+        loadQuestion();
+      } else if (currentLevel === "medium") {
+        currentLevel = "hard";
+        questionIndex = 0;
+        levelElement.textContent = "Hard";
+        loadQuestion();
+      } else {
+        showResult(`🏆 Congratulations Rehan! You cleared all levels with Score: ${score}`);
+      }
+    }
+
+    function showResult(message) {
+      clearInterval(timer);
+      questionElement.textContent = "🎮 Game Over!";
+      optionsElement.innerHTML = "";
+      resultElement.textContent = message + ` | Final Score: ${score}`;
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
