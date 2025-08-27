@@ -1,0 +1,293 @@
+import React, { useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { AlertCircle, Send } from "lucide-react";
+
+// ======================
+// PWA Support
+// ======================
+// Para que la app se instale en el móvil como PWA:
+// 1. Agrega un archivo public/manifest.json con el contenido de abajo.
+// 2. Registra un service worker (ver código comentado más abajo).
+//
+// --- public/manifest.json ---
+// {
+//   "name": "Denuncia Anónima Liceal",
+//   "short_name": "Denuncia",
+//   "start_url": "/",
+//   "display": "standalone",
+//   "background_color": "#ffffff",
+//   "theme_color": "#4f46e5",
+//   "description": "App para denuncias anónimas de acoso y bullying liceal.",
+//   "icons": [
+//     { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+//     { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+//   ]
+// }
+//
+// --- public/sw.js --- (service worker básico)
+// self.addEventListener("install", (e) => {
+//   e.waitUntil(caches.open("app-v1").then((cache) => cache.add("/")));
+// });
+//
+// self.addEventListener("fetch", (e) => {
+//   e.respondWith(
+//     caches.match(e.request).then((response) => response || fetch(e.request))
+//   );
+// });
+//
+// Y en tu index.tsx o _app.tsx, registra el service worker:
+// if ("serviceWorker" in navigator) {
+//   window.addEventListener("load", () => {
+//     navigator.serviceWorker.register("/sw.js");
+//   });
+// }
+
+function randomTrackingCode() {
+  const bytes = new Uint8Array(8);
+  if (typeof window !== "undefined" && window.crypto?.getRandomValues) {
+    window.crypto.getRandomValues(bytes);
+  } else {
+    for (let i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
+  }
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+const categorias = [
+  { value: "acoso", label: "Acoso / bullying" },
+  { value: "ciberacoso", label: "Ciberacoso" },
+  { value: "discriminacion", label: "Discriminación" },
+  { value: "violencia", label: "Violencia física" },
+  { value: "otro", label: "Otro" },
+];
+
+export default function DenunciaAnonimaApp() {
+  const [form, setForm] = useState({
+    centro: "",
+    categoria: "",
+    descripcion: "",
+    fecha: "",
+    ubicacion: "",
+    involucrados: "",
+    adjuntos: [],
+    consentimiento: false,
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [tracking, setTracking] = useState("");
+  const [serverEcho, setServerEcho] = useState<any | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const isValid = useMemo(() => {
+    return (
+      form.centro.trim().length >= 3 &&
+      form.categoria !== "" &&
+      form.descripcion.trim().length >= 20 &&
+      !!form.fecha &&
+      form.consentimiento
+    );
+  }, [form]);
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+    const { name, value, type, checked } = e.target as any;
+    setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    if (!isValid) {
+      setError("Por favor, completa los campos requeridos y acepta la política de uso.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const code = randomTrackingCode();
+      setTracking(code);
+      const payload = {
+        version: 1,
+        tracking_code: code,
+        centro: form.centro.trim(),
+        categoria: form.categoria,
+        descripcion: form.descripcion.trim(),
+        fecha: form.fecha,
+        ubicacion: form.ubicacion.trim() || null,
+        involucrados: form.involucrados.trim() || null,
+        adjuntos: form.adjuntos,
+        consent_policy_version: "1.0-mvp",
+      };
+
+      await new Promise((res) => setTimeout(res, 800));
+      setServerEcho(payload);
+    } catch (err: any) {
+      setError("Ocurrió un error al enviar. Intenta de nuevo.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-indigo-100 via-white to-indigo-50 flex items-start justify-center p-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="w-full max-w-3xl"
+      >
+        <Card className="rounded-2xl shadow-xl">
+          <CardContent className="p-8">
+            <header className="mb-6 text-center">
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-indigo-700">Denuncia Anónima</h1>
+              <p className="text-slate-600 mt-2 max-w-lg mx-auto">Si tú o alguien que conoces sufre acoso o bullying, puedes reportarlo aquí de forma anónima. No recopilamos tu nombre ni contacto.</p>
+            </header>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium">Centro educativo</label>
+                <input
+                  name="centro"
+                  value={form.centro}
+                  onChange={handleChange}
+                  placeholder="Ej: Liceo N° 1 — Barrio/Localidad"
+                  className="mt-1 w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-indigo-400"
+                  required
+                  minLength={3}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium">Tipo de situación</label>
+                <select
+                  name="categoria"
+                  value={form.categoria}
+                  onChange={handleChange}
+                  className="mt-1 w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-indigo-400"
+                  required
+                >
+                  <option value="">Selecciona…</option>
+                  {categorias.map((c) => (
+                    <option key={c.value} value={c.value}>{c.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium">Describe lo ocurrido</label>
+                <textarea
+                  name="descripcion"
+                  value={form.descripcion}
+                  onChange={handleChange}
+                  placeholder="Escribe al menos 20 caracteres…"
+                  className="mt-1 w-full rounded-xl border px-3 py-2 h-32 focus:ring-2 focus:ring-indigo-400"
+                  required
+                  minLength={20}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium">Fecha</label>
+                  <input
+                    type="date"
+                    name="fecha"
+                    value={form.fecha}
+                    onChange={handleChange}
+                    className="mt-1 w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-indigo-400"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium">Lugar (opcional)</label>
+                  <input
+                    name="ubicacion"
+                    value={form.ubicacion}
+                    onChange={handleChange}
+                    placeholder="Ej: patio, salón, redes sociales"
+                    className="mt-1 w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-indigo-400"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium">Personas involucradas (opcional)</label>
+                <input
+                  name="involucrados"
+                  value={form.involucrados}
+                  onChange={handleChange}
+                  placeholder="Iniciales o descripciones (evita nombres completos si te expone)"
+                  className="mt-1 w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-indigo-400"
+                />
+              </div>
+
+              <div className="rounded-xl border p-4 bg-slate-50">
+                <p className="text-sm font-medium">Adjuntos (opcional)</p>
+                <input
+                  type="file"
+                  multiple
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files || []).map((f) => f.name);
+                    setForm((f) => ({ ...f, adjuntos: files }));
+                  }}
+                  className="block mt-2"
+                />
+                {form.adjuntos.length > 0 && (
+                  <ul className="mt-2 text-xs list-disc ml-5 text-slate-600">
+                    {form.adjuntos.map((n, i) => (
+                      <li key={i}>{n}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <div className="flex items-start gap-3 bg-indigo-50 p-4 rounded-xl">
+                <input
+                  type="checkbox"
+                  name="consentimiento"
+                  checked={form.consentimiento}
+                  onChange={handleChange}
+                  className="mt-1"
+                />
+                <p className="text-sm text-slate-700">
+                  Confirmo que entiendo y acepto la <span className="underline">política de uso seguro</span>. La denuncia es anónima y se prohíben acusaciones falsas.
+                </p>
+              </div>
+
+              {error && (
+                <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-red-700 text-sm">
+                  <AlertCircle size={16} /> {error}
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                disabled={!isValid || submitting}
+                className="w-full md:w-auto rounded-2xl px-5 py-2.5 font-medium shadow bg-indigo-600 hover:bg-indigo-700 text-white"
+              >
+                {submitting ? "Enviando…" : <><Send className="inline-block mr-2 h-4 w-4" />Enviar denuncia</>}
+              </Button>
+            </form>
+
+            {tracking && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8 rounded-2xl border p-5 bg-emerald-50 text-center">
+                <h2 className="text-lg font-semibold text-emerald-700">¡Denuncia enviada!</h2>
+                <p className="text-sm mt-1">Guarda este código para dar seguimiento:</p>
+                <div className="mt-2 font-mono text-xl select-all text-emerald-800">{tracking}</div>
+              </motion.div>
+            )}
+
+            {serverEcho && (
+              <div className="mt-6 rounded-2xl border p-5 bg-slate-50">
+                <h3 className="font-semibold">Datos simulados enviados</h3>
+                <pre className="mt-2 text-xs whitespace-pre-wrap break-all">{JSON.stringify(serverEcho, null, 2)}</pre>
+              </div>
+            )}
+
+            <footer className="mt-10 text-xs text-slate-500 text-center">
+              <p>MVP educativo con soporte PWA. Para producción: cifrado extremo a extremo, borrado de metadatos y panel seguro para referentes.</p>
+            </footer>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </div>
+  );
+
