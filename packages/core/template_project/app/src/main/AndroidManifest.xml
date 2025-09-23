@@ -93,6 +93,7 @@
         <% if (enableSiteSettingsShortcut) { %>
             <activity android:name="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity"
                 android:exported="false"
+                android:enabled="true"
                 android:excludeFromRecents="true">
                 <meta-data
                     android:name="android.support.customtabs.trusted.MANAGE_SPACE_URL"
