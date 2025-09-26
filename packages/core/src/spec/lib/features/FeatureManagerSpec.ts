@@ -99,7 +99,7 @@ describe('FeatureManager', () => {
       } as TwaManifest;
       const features = new FeatureManager(manifest);
       expect(features.buildGradle.dependencies).toContain(
-          'com.google.androidbrowserhelper:androidbrowserhelper:2.7.0-alpha01');
+          'com.google.androidbrowserhelper:androidbrowserhelper:2.7.0-alpha02');
     });
 
     it('Adds INTERNET permission when WebView fallback is enabled', () => {
