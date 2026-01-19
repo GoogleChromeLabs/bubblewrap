@@ -54,7 +54,7 @@
     "lodash": "^4.17.21",
     "mime-types": "^2.1.28",
     "node-fetch": "^2.6.1",
-    "tar": "^6.1.0",
+    "tar": "^7.5.3",
     "valid-url": "^1.0.9"
   },
   "gitHead": "ba2a8430ee11d6bf650ed3d071c9c144fff31538"
