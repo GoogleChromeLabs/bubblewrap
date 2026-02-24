@@ -3,7 +3,7 @@
   "version": "1.24.1",
   "description": "CLI tool to Generate TWA projects from a Web Manifest",
   "engines": {
-    "node": ">=14.15.0"
+    "node": ">=18.0.0"
   },
   "bin": {
     "bubblewrap": "bin/bubblewrap.js"

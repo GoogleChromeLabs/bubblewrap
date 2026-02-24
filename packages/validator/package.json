@@ -3,7 +3,7 @@
   "version": "1.22.0",
   "description": "Validate if an app using Trusted Web Activity fulfills the quality criteria",
   "engines": {
-    "node": ">=14.15.0"
+    "node": ">=18.0.0"
   },
   "scripts": {
     "build": "tsc",

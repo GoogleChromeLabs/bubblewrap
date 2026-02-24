@@ -3,7 +3,7 @@
   "version": "1.24.1",
   "description": "Core Library to generate, build and sign TWA projects",
   "engines": {
-    "node": ">=14.15.0"
+    "node": ">=18.0.0"
   },
   "scripts": {
     "build": "tsc",
@@ -40,9 +40,8 @@
     "@types/inquirer": "^9.0.7",
     "@types/lodash": "^4.17.14",
     "@types/mime-types": "^2.1.0",
-    "@types/node": "^12.20.1",
+    "@types/node": "^18.11.0",
     "@types/node-fetch": "^2.5.10",
-    "@types/tar": "^4.0.4",
     "@types/valid-url": "^1.0.3",
     "canvg": "4.0.3",
     "color": "^3.1.3",
