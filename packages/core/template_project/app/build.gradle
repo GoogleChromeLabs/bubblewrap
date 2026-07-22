@@ -56,7 +56,7 @@ android {
     defaultConfig {
         applicationId "<%= packageId %>"
         minSdkVersion <%= minSdkVersion %>
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode <%= appVersionCode %>
         versionName "<%= appVersionName %>"
 
