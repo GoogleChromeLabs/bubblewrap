@@ -1,6 +1,6 @@
 {
   "name": "@bubblewrap/validator",
-  "version": "1.25.0",
+  "version": "1.26.0",
   "description": "Validate if an app using Trusted Web Activity fulfills the quality criteria",
   "engines": {
     "node": ">=18.0.0"
