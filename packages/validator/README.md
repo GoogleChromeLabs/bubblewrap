@@ -24,4 +24,4 @@ App(PWA) used inside it matches the [minimum quality criteria][2].
 [2]: https://web.dev/using-a-pwa-in-your-android-app/#quality-criteria
 
 ## Requirements
-- [Node.js](https://nodejs.org/en/) 14.15.0 or above
+- [Node.js](https://nodejs.org/en/) 18.0.0 or above
