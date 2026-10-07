@@ -22,7 +22,7 @@ import {printValidationResult} from '../pwaValidationHelper';
 const log = new ConsoleLog('validate');
 
 /**
- * Runs the PwaValidator to check a given URL agains the Quality criteria. More information on the
+ * Runs the PwaValidator to check a given URL against the Quality criteria. More information on the
  * Quality Criteria available at: https://web.dev/using-a-pwa-in-your-android-app/#quality-criteria
  * @param {ParsedArgs} args
  */
