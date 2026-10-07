@@ -391,7 +391,7 @@ Fields:
 |themeColorDark|string|true|The color used for the dark status bar.|
 |webManifestUrl|string|false|Full URL to the PWA Web Manifest. Required for the application to be compatible with Chrome OS and Meta Quest devices.|
 |fullScopeUrl|string|false|The navigation scope that the browser considers to be within the app. If the user navigates outside the scope, it reverts to a normal web page inside a browser tab or window. Must be a full URL. Required and used only by Meta Quest devices.|
-|minSdkVersion|number|false|The minimum [Android API Level](https://developer.android.com/guide/topics/manifest/uses-sdk-element#ApiLevels) required for the application to run. Defaults to `23`, if `isMetaQuest` is `true`, and `19` otherwise.|
+|minSdkVersion|number|false|The minimum [Android API Level](https://developer.android.com/guide/topics/manifest/uses-sdk-element#ApiLevels) required for the application to run. Defaults to `23`, if `isMetaQuest` is `true`, and `21` otherwise.|
 |protocolHandlers|[ProtocolHandler](#protocolhandlers)[]|false|List of [Protocol Handlers](#protocolhandlers) supported by the app.|
 |fileHandlers|[FileHandler](#fileHandlers)[]|false|List of [File Hanlders](#fileHandlers) supported by the app.|
 |launchHandlerClientMode|string|false|launch_handler [client_mode](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/launch_handler#client_mode) of the app.|
