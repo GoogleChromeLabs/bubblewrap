@@ -26,8 +26,8 @@ import {ProtocolHandlersFeature} from './ProtocolHandlersFeature';
 import {FileHandlingFeature} from './FileHandlingFeature';
 
 const ANDROID_BROWSER_HELPER_VERSIONS = {
-  stable: 'com.google.androidbrowserhelper:androidbrowserhelper:2.6.2',
-  alpha: 'com.google.androidbrowserhelper:androidbrowserhelper:2.7.0-alpha02',
+  stable: 'com.google.androidbrowserhelper:androidbrowserhelper:2.7.4',
+  alpha: 'com.google.androidbrowserhelper:androidbrowserhelper:2.7.4',
 };
 
 /**
