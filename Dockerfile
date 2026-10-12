@@ -1,4 +1,4 @@
-FROM node:18-bullseye
+FROM node:20-bookworm
 
 RUN npm install -g svg2img @bubblewrap/cli
 
