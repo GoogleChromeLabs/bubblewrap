@@ -80,21 +80,23 @@ export class AndroidSdkTools {
     // those are not properly handled by the Android SDK, so we try running without wrapping the
     // value.
     // TODO(andreban): Check for spaces in the path and throw an Error if one is found.
-    let sdkRootEscapeChar = '"';
-    let sdkManagerPath = this.pathJoin(this.getAndroidHome(), '/tools/bin/sdkmanager');
-    if (this.process.platform === 'win32') {
-      sdkRootEscapeChar = '';
-      sdkManagerPath += '.bat';
+    const sdkRootEscapeChar = this.process.platform === 'win32' ? '' : '"';
+    const sdkManagerPathSuffix = this.process.platform === 'win32' ? '.bat' : '';
+    let sdkManagerPath: string | undefined;
+    const sdkManagerRelativePaths = [
+      'cmdline-tools/latest/bin/sdkmanager', // Latest versions
+      'bin/sdkmanager', // Version 6858069
+      'tools/bin/sdkmanager', // Older versions
+    ];
+    for (const relativePath of sdkManagerRelativePaths) {
+      const path = this.pathJoin(this.getAndroidHome(), relativePath) + sdkManagerPathSuffix;
+      if (fs.existsSync(path)) {
+        sdkManagerPath = path;
+        break;
+      }
     }
-    if (!fs.existsSync(sdkManagerPath)) {
-      // Android SDK version `6858069` and above doesn't have a `tools` folder anymore.
-      sdkManagerPath = this.pathJoin(this.getAndroidHome(), '/bin/sdkmanager');
-      if (this.process.platform === 'win32') {
-        sdkManagerPath += '.bat';
-      }
-      if (!fs.existsSync(sdkManagerPath)) {
-        throw new Error(`Could not find sdkmanager at: ${sdkManagerPath}`);
-      }
+    if (!sdkManagerPath) {
+      throw new Error(`Could not find sdkmanager at: ${this.getAndroidHome()}`);
     }
 
     this.log.info('Installing Build Tools');
@@ -114,7 +116,7 @@ export class AndroidSdkTools {
    */
   async checkBuildTools(): Promise<boolean> {
     const buildToolsPath =
-        this.pathJoin(this.getAndroidHome(), '/build-tools/', BUILD_TOOLS_VERSION);
+      this.pathJoin(this.getAndroidHome(), '/build-tools/', BUILD_TOOLS_VERSION);
     return fs.existsSync(buildToolsPath);
   }
 
@@ -244,13 +246,17 @@ export class AndroidSdkTools {
    * @param {string} sdkPath the path to the sdk.
    */
   static async validatePath(sdkPath: string): Promise<Result<string, ValidatePathError>> {
+    const cmdlineToolsPath = path.join(sdkPath, 'cmdline-tools');
     const toolsPath = path.join(sdkPath, 'tools');
     const binPath = path.join(sdkPath, 'bin');
 
-    // Checks if the path provided is valid. Older versions of the the Android SDK add the
-    // initial files inside the `tools` folder. Version `6858069` and above add it directly
-    // to the `bin` folder.
-    if (!fs.existsSync(sdkPath) || (!fs.existsSync(toolsPath)) && !fs.existsSync(binPath)) {
+    // Checks if the path provided is valid. Older versions of the Android SDK add the
+    // initial files inside the `tools` folder. Version `6858069` add it directly
+    // to the `bin` folder. The latest versions add it to the `cmdline-tools` directory.
+    if (
+      !fs.existsSync(sdkPath) ||
+      (!fs.existsSync(cmdlineToolsPath) && !fs.existsSync(binPath) && !fs.existsSync(toolsPath))
+    ) {
       return Result.error(
           new ValidatePathError('The provided androidSdk isn\'t correct.', 'PathIsNotCorrect'));
     };
