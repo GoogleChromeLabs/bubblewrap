@@ -38,7 +38,6 @@ const COPY_FILE_LIST = [
   'app/src/main/res/values/colors.xml',
   'app/src/main/res/xml/filepaths.xml',
   'app/src/main/res/xml/shortcuts.xml',
-  'app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml',
   'app/src/main/res/drawable-anydpi/shortcut_legacy_background.xml',
 ];
 
@@ -46,6 +45,7 @@ const TEMPLATE_FILE_LIST = [
   'app/build.gradle',
   'app/src/main/AndroidManifest.xml',
   'app/src/main/res/values/strings.xml',
+  'app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml',
 ];
 
 const JAVA_DIR = 'app/src/main/java/';
@@ -71,38 +71,33 @@ const DELETE_FILE_LIST = [
   'app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml',
 ];
 
-const SPLASH_IMAGES: IconDefinition[] = [
-  {dest: 'app/src/main/res/drawable-mdpi/splash.png', size: 300},
-  {dest: 'app/src/main/res/drawable-hdpi/splash.png', size: 450},
-  {dest: 'app/src/main/res/drawable-xhdpi/splash.png', size: 600},
-  {dest: 'app/src/main/res/drawable-xxhdpi/splash.png', size: 900},
-  {dest: 'app/src/main/res/drawable-xxxhdpi/splash.png', size: 1200},
-];
+function scaledIconDefinitions(
+    folder: string,
+    filename: string,
+    mdpiSize: number,
+): IconDefinition[] {
+  return [
+    {dest: `app/src/main/res/${folder}-mdpi/${filename}`, size: mdpiSize},
+    {dest: `app/src/main/res/${folder}-hdpi/${filename}`, size: mdpiSize * 1.5},
+    {dest: `app/src/main/res/${folder}-xhdpi/${filename}`, size: mdpiSize * 2},
+    {dest: `app/src/main/res/${folder}-xxhdpi/${filename}`, size: mdpiSize * 3},
+    {dest: `app/src/main/res/${folder}-xxxhdpi/${filename}`, size: mdpiSize * 4},
+  ];
+}
+
+const SPLASH_IMAGES: IconDefinition[] = scaledIconDefinitions('drawable', 'splash.png', 300);
 
 const IMAGES: IconDefinition[] = [
-  {dest: 'app/src/main/res/mipmap-mdpi/ic_launcher.png', size: 48},
-  {dest: 'app/src/main/res/mipmap-hdpi/ic_launcher.png', size: 72},
-  {dest: 'app/src/main/res/mipmap-xhdpi/ic_launcher.png', size: 96},
-  {dest: 'app/src/main/res/mipmap-xxhdpi/ic_launcher.png', size: 144},
-  {dest: 'app/src/main/res/mipmap-xxxhdpi/ic_launcher.png', size: 192},
+  ...scaledIconDefinitions('mipmap', 'ic_launcher.png', 48),
   {dest: 'store_icon.png', size: 512},
 ];
 
-const ADAPTIVE_IMAGES: IconDefinition[] = [
-  {dest: 'app/src/main/res/mipmap-mdpi/ic_maskable.png', size: 82},
-  {dest: 'app/src/main/res/mipmap-hdpi/ic_maskable.png', size: 123},
-  {dest: 'app/src/main/res/mipmap-xhdpi/ic_maskable.png', size: 164},
-  {dest: 'app/src/main/res/mipmap-xxhdpi/ic_maskable.png', size: 246},
-  {dest: 'app/src/main/res/mipmap-xxxhdpi/ic_maskable.png', size: 328},
-];
+const ADAPTIVE_IMAGES: IconDefinition[] = scaledIconDefinitions('mipmap', 'ic_maskable.png', 82);
 
-const NOTIFICATION_IMAGES: IconDefinition[] = [
-  {dest: 'app/src/main/res/drawable-mdpi/ic_notification_icon.png', size: 24},
-  {dest: 'app/src/main/res/drawable-hdpi/ic_notification_icon.png', size: 36},
-  {dest: 'app/src/main/res/drawable-xhdpi/ic_notification_icon.png', size: 48},
-  {dest: 'app/src/main/res/drawable-xxhdpi/ic_notification_icon.png', size: 72},
-  {dest: 'app/src/main/res/drawable-xxxhdpi/ic_notification_icon.png', size: 96},
-];
+const THEMED_IMAGES: IconDefinition[] = scaledIconDefinitions('mipmap', 'ic_monochrome.png', 82);
+
+const NOTIFICATION_IMAGES: IconDefinition[] =
+    scaledIconDefinitions('drawable', 'ic_notification_icon.png', 24);
 
 const WEB_MANIFEST_LOCATION = '/app/src/main/res/raw/';
 const WEB_MANIFEST_FILE_NAME = 'web_app_manifest.json';
@@ -129,13 +124,7 @@ function shortcutMonochromeTemplateFileMap(assetName: string): Record<string, st
 }
 
 function shortcutImages(assetName: string): IconDefinition[] {
-  return [
-    {dest: `app/src/main/res/drawable-mdpi/${assetName}.png`, size: 48},
-    {dest: `app/src/main/res/drawable-hdpi/${assetName}.png`, size: 72},
-    {dest: `app/src/main/res/drawable-xhdpi/${assetName}.png`, size: 96},
-    {dest: `app/src/main/res/drawable-xxhdpi/${assetName}.png`, size: 144},
-    {dest: `app/src/main/res/drawable-xxxhdpi/${assetName}.png`, size: 192},
-  ];
+  return scaledIconDefinitions('drawable', `${assetName}.png`, 48);
 }
 
 // fs.promises is marked as experimental. This should be replaced when stable.
@@ -372,7 +361,7 @@ export class TwaGenerator {
   async createTwaProject(targetDirectory: string, twaManifest: TwaManifest, log: Log,
       reportProgress: twaGeneratorProgress = noOpProgress): Promise<void> {
     const features = new FeatureManager(twaManifest, log);
-    const progress = new Progress(9, reportProgress);
+    const progress = new Progress(10, reportProgress);
     const error = twaManifest.validate();
     if (error !== null) {
       throw new Error(`Invalid TWA Manifest: ${error}`);
@@ -381,8 +370,12 @@ export class TwaGenerator {
     const templateDirectory = path.join(__dirname, '../../template_project');
 
     const copyFileList = new Set(COPY_FILE_LIST);
+    const templateFileList = new Set(TEMPLATE_FILE_LIST);
     if (!twaManifest.maskableIconUrl) {
-      DELETE_FILE_LIST.forEach((file) => copyFileList.delete(file));
+      DELETE_FILE_LIST.forEach((file) => {
+        copyFileList.delete(file);
+        templateFileList.delete(file);
+      });
     }
     progress.update();
 
@@ -407,7 +400,7 @@ export class TwaGenerator {
 
     // Generate templated files
     await this.applyTemplateList(
-        templateDirectory, targetDirectory, TEMPLATE_FILE_LIST, args);
+        templateDirectory, targetDirectory, Array.from(templateFileList), args);
     progress.update();
 
     // Generate java files
@@ -429,6 +422,12 @@ export class TwaGenerator {
     // Generate adaptive images
     if (twaManifest.maskableIconUrl) {
       await this.generateIcons(twaManifest.maskableIconUrl, targetDirectory, ADAPTIVE_IMAGES);
+    }
+    progress.update();
+
+    // Generate themed images
+    if (twaManifest.monochromeIconUrl) {
+      await this.generateIcons(twaManifest.monochromeIconUrl, targetDirectory, THEMED_IMAGES);
     }
     progress.update();
 
