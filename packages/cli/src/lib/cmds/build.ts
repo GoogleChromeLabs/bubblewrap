@@ -43,7 +43,7 @@ interface SigningKeyPasswords {
   keyPassword: string;
 }
 
-class Build {
+export class Build {
   constructor(
       private args: ParsedArgs,
       private androidSdkTools: AndroidSdkTools,
@@ -111,9 +111,9 @@ class Build {
   async signApk(signingKey: SigningKeyInfo, passwords: SigningKeyPasswords): Promise<void> {
     await this.androidSdkTools.apksigner(
         signingKey.path,
-        `"${passwords.keystorePassword}"`,
+        passwords.keystorePassword,
         signingKey.alias,
-        `"${passwords.keyPassword}"`,
+        passwords.keyPassword,
         APK_ALIGNED_FILE_NAME, // input file path
         APK_SIGNED_FILE_NAME,
     );
@@ -126,8 +126,8 @@ class Build {
   async signAppBundle(signingKey: SigningKeyInfo, passwords: SigningKeyPasswords): Promise<void> {
     await this.jarSigner.sign(
         signingKey,
-        `"${passwords.keystorePassword}"`,
-        `"${passwords.keyPassword}"`,
+        passwords.keystorePassword,
+        passwords.keyPassword,
         APP_BUNDLE_BUILD_OUTPUT_FILE_NAME,
         APP_BUNDLE_SIGNED_FILE_NAME);
   }
@@ -189,7 +189,7 @@ class Build {
       passwords = await this.getPasswords(signingKey);
       signingKey = {
         ...signingKey,
-        ...{path: `"${signingKey.path}"`}, // Wrap path in quotes in case there are spaces
+        ...{path: signingKey.path},
         ...(this.args.signingKeyPath ? {path: this.args.signingKeyPath} : null),
         ...(this.args.signingKeyAlias ? {alias: this.args.signingKeyAlias} : null),
       };
