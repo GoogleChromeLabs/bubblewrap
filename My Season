@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Season - Registro de Partidas</title>
+    
+    <!-- Configuração PWA (para "Instalar App") -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#f59e0b">
+    
+    <!-- CDNs Essenciais -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Firebase CDNs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, deleteDoc, doc, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Variáveis globais do ambiente (Canvas)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // Inicializa o Firebase e expõe funções globais para o código React/Babel usar
+        const app = initializeApp(firebaseConfig);
+        window.db = getFirestore(app);
+        window.auth = getAuth(app);
+        window.Timestamp = Timestamp;
+        
+        window.FB = {
+            initializeApp,
+            getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged,
+            getFirestore, collection, addDoc, onSnapshot, query, deleteDoc, doc, Timestamp,
+            appId, firebaseConfig, initialAuthToken,
+        };
+
+        // Autenticação inicial
+        onAuthStateChanged(window.auth, async (user) => {
+            if (!user) {
+                try {
+                    if (window.FB.initialAuthToken) {
+                        await signInWithCustomToken(window.auth, window.FB.initialAuthToken);
+                    } else {
+                        await signInAnonymously(window.auth);
+                    }
+                } catch (e) {
+                    console.error("Erro na autenticação:", e);
+                }
+            }
+            // Dispara um evento para o React saber que o Firebase e Auth estão prontos
+            document.dispatchEvent(new CustomEvent('firebase-ready'));
+        });
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <!-- Indicador de carregamento inicial -->
+        <div class="flex items-center justify-center min-h-screen bg-gray-900 text-white p-4">
+            <svg class="animate-spin h-5 w-5 mr-3 text-yellow-400" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Iniciando o My Season...
+        </div>
+    </div>
+
+    <!-- Código React (compilado por Babel) -->
+    <script type="text/babel">
+        // Acessa as funções e variáveis globais expostas pelo bloco de script do Firebase
+        const { useState, useEffect, useMemo } = React;
+        const { db, auth, Timestamp, FB } = window;
+        const { collection, addDoc, onSnapshot, query, deleteDoc, doc } = window.FB;
+
+        /**
+         * Calcula uma nota de desempenho (Score) baseada nas estatísticas da partida.
+         * @param {object} data - Dados da partida.
+         * @returns {number} A nota calculada, arredondada para uma casa decimal.
+         */
+        const calculateScore = (data) => {
+          let score = 6.0;
+          score += data.goals * 1.5;
+          score += data.assists * 1.0;
+          score += data.passesCompleted * 0.005;
+          score += data.tackles * 0.2;
+          score += data.foulsSuffered * 0.1;
+          score -= data.yellowCard ? 0.5 : 0;
+          score -= data.redCard ? 1.5 : 0;
+          score -= data.foulsCommitted * 0.1;
+          score = Math.min(10.0, Math.max(4.0, score));
+          return Math.round(score * 10) / 10;
+        };
+
+        // Componente principal do aplicativo
+        const App = () => {
+          const [userId, setUserId] = useState(null);
+          const [isAuthReady, setIsAuthReady] = useState(false);
+          const [matches, setMatches] = useState([]);
+          const [loading, setLoading] = useState(true);
+          const [error, setError] = useState(null);
+          const [isSaving, setIsSaving] = useState(false);
+
+          const [form, setForm] = useState({
+            opponent: '',
+            goals: 0,
+            assists: 0,
+            yellowCard: false,
+            redCard: false,
+            passesCompleted: 0,
+            tackles: 0,
+            foulsSuffered: 0,
+            foulsCommitted: 0,
+            date: new Date().toISOString().substring(0, 10),
+          });
+
+          // 1. Inicialização do Auth Listener (usa o evento disparado no script anterior)
+          useEffect(() => {
+            const handleFirebaseReady = () => {
+                const currentUserId = auth.currentUser?.uid || crypto.randomUUID();
+                setUserId(currentUserId);
+                setIsAuthReady(true);
+            };
+
+            // Escuta o evento de autenticação completa
+            document.addEventListener('firebase-ready', handleFirebaseReady);
+
+            return () => document.removeEventListener('firebase-ready', handleFirebaseReady);
+          }, []);
+
+
+          // 2. Carregamento e Observação de Partidas (onSnapshot)
+          useEffect(() => {
+            if (!isAuthReady || !userId || !db) return;
+
+            setLoading(true);
+            setError(null);
+
+            try {
+              // Caminho: /artifacts/{appId}/users/{userId}/matches
+              const matchesCollectionRef = collection(db, `artifacts/${FB.appId}/users/${userId}/matches`);
+              const q = query(matchesCollectionRef);
+
+              const unsubscribe = onSnapshot(q, (snapshot) => {
+                const matchesData = snapshot.docs.map(doc => ({
+                  id: doc.id,
+                  ...doc.data(),
+                  date: doc.data().date instanceof Timestamp 
+                          ? doc.data().date.toDate().toISOString().substring(0, 10)
+                          : doc.data().date,
+                })).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                setMatches(matchesData);
+                setLoading(false);
+              }, (err) => {
+                console.error("Erro ao ouvir a coleção de partidas:", err);
+                setError("Erro ao carregar o histórico de partidas.");
+                setLoading(false);
+              });
+
+              return () => unsubscribe();
+            } catch (e) {
+              console.error("Erro ao configurar listener:", e);
+              setError("Erro de acesso ao banco de dados.");
+              setLoading(false);
+            }
+          }, [isAuthReady, userId]); // Depende do estado de autenticação e do ID
+
+
+          // 3. Manipulação do Formulário
+          const handleInputChange = (e) => {
+            const { name, value, type, checked } = e.target;
+            let newValue = value;
+
+            if (type === 'number') {
+              if (value === '') {
+                newValue = '';
+              } else {
+                const intValue = parseInt(value, 10);
+                newValue = Math.max(0, isNaN(intValue) ? 0 : intValue);
+              }
+            } else if (type === 'checkbox') {
+              newValue = checked;
+            }
+
+            setForm(prev => ({ ...prev, [name]: newValue }));
+          };
+
+          const getNum = (val) => (val === '' ? 0 : val);
+
+          const handleSaveMatch = async (e) => {
+            e.preventDefault();
+            if (!db || !userId || !form.opponent) {
+              setError("Preencha o nome do adversário.");
+              return;
+            }
+
+            setIsSaving(true);
+            setError(null);
+
+            try {
+              const matchData = {
+                goals: getNum(form.goals),
+                assists: getNum(form.assists),
+                passesCompleted: getNum(form.passesCompleted),
+                tackles: getNum(form.tackles),
+                foulsSuffered: getNum(form.foulsSuffered),
+                foulsCommitted: getNum(form.foulsCommitted),
+                yellowCard: form.yellowCard,
+                redCard: form.redCard,
+                opponent: form.opponent,
+                date: Timestamp.fromDate(new Date(form.date)), 
+                userId: userId,
+                appId: FB.appId,
+              };
+
+              const score = calculateScore(matchData);
+              const matchToSave = { ...matchData, score: score };
+
+              const matchesCollectionRef = collection(db, `artifacts/${FB.appId}/users/${userId}/matches`);
+              await addDoc(matchesCollectionRef, matchToSave);
+
+              setForm({
+                opponent: '', goals: 0, assists: 0, yellowCard: false, redCard: false, 
+                passesCompleted: 0, tackles: 0, foulsSuffered: 0, foulsCommitted: 0,
+                date: form.date, 
+              });
+
+            } catch (e) {
+              console.error("Erro ao salvar a partida:", e);
+              setError("Falha ao salvar a partida. Tente novamente.");
+            } finally {
+              setIsSaving(false);
+            }
+          };
+          
+          const handleDeleteMatch = async (matchId) => {
+            if (!db || !userId) { return; }
+            try {
+              const docRef = doc(db, `artifacts/${FB.appId}/users/${userId}/matches`, matchId);
+              await deleteDoc(docRef);
+            } catch (e) {
+              console.error("Erro ao deletar a partida:", e);
+              setError("Falha ao deletar a partida.");
+            }
+          };
+
+          // 4. Cálculo de Estatísticas Gerais
+          const globalStats = useMemo(() => {
+            if (matches.length === 0) {
+              return { totalMatches: 0, totalGoals: 0, totalAssists: 0, avgScore: 'N/A', totalTackles: 0, };
+            }
+            const totalGoals = matches.reduce((sum, m) => sum + (m.goals || 0), 0);
+            const totalAssists = matches.reduce((sum, m) => sum + (m.assists || 0), 0);
+            const totalScore = matches.reduce((sum, m) => sum + (m.score || 0), 0);
+            const avgScore = (totalScore / matches.length).toFixed(1);
+            return { totalMatches: matches.length, totalGoals, totalAssists, avgScore, };
+          }, [matches]);
+
+
+          if (!isAuthReady || loading) {
+            return (
+              <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white p-4">
+                <svg className="animate-spin h-5 w-5 mr-3 text-yellow-400" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Carregando dados e autenticando...
+              </div>
+            );
+          }
+
+          // Componentes Auxiliares (definidos dentro do escopo do App)
+          const StatCard = ({ title, value, icon, highlight = false }) => (
+            <div className={`p-4 rounded-xl text-center shadow-inner transition duration-300 ${
+              highlight ? 'bg-yellow-600/30 border border-yellow-500' : 'bg-gray-700 border border-gray-600'
+            }`}>
+              <div className="text-3xl mb-1">{icon}</div>
+              <div className="text-2xl font-bold text-white">{value}</div>
+              <div className="text-sm text-gray-400">{title}</div>
+            </div>
+          );
+
+          const InputField = ({ label, name, type, value, onChange, required, min = "0" }) => (
+            <div>
+              <label htmlFor={name} className="block text-sm font-medium text-gray-300 mb-1">
+                {label}
+              </label>
+              <input
+                id={name}
+                name={name}
+                type={type}
+                value={value.toString()} 
+                onChange={onChange}
+                required={required}
+                min={type === 'number' ? min : undefined}
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-yellow-500 focus:border-yellow-500 transition duration-150"
+              />
+            </div>
+          );
+
+          const CheckboxField = ({ label, name, checked, onChange }) => (
+            <div className="flex items-center pt-6">
+              <input
+                id={name}
+                name={name}
+                type="checkbox"
+                checked={checked}
+                onChange={onChange}
+                className="h-5 w-5 text-yellow-500 bg-gray-700 border-gray-600 rounded focus:ring-yellow-500 transition duration-150"
+              />
+              <label htmlFor={name} className="ml-2 text-sm font-medium text-gray-300">
+                {label}
+              </label>
+            </div>
+          );
+
+          const getScoreColor = (score) => {
+              if (score >= 8.0) return '#4ADE80';
+              if (score >= 7.0) return '#FCD34D';
+              if (score >= 6.0) return '#F97316';
+              return '#EF4444';
+          }
+          
+          const StatDetail = ({ icon, label, value }) => (
+              <div className="flex items-center space-x-1 bg-gray-600 rounded px-2 py-1">
+                  <span className="text-sm">{icon}</span>
+                  <span className="text-gray-300 font-medium">{value}</span>
+                  <span className="text-gray-400 hidden sm:inline">({label})</span>
+              </div>
+          );
+
+
+          const MatchCard = ({ match, onDelete }) => (
+            <div className="p-4 bg-gray-700 rounded-xl shadow-md border-l-4 border-yellow-500 flex justify-between items-start flex-wrap relative">
+              <div className="flex-1 min-w-[200px] mb-2 md:mb-0">
+                <div className="text-lg font-bold text-yellow-400">vs {match.opponent}</div>
+                <div className="text-sm text-gray-400">
+                  {new Date(match.date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                </div>
+              </div>
+              
+              <div className="flex flex-col items-center justify-center mr-4">
+                  <span className="text-4xl font-extrabold" style={{ color: getScoreColor(match.score) }}>
+                    {match.score?.toFixed(1) || 'N/A'}
+                  </span>
+                  <span className="text-xs text-gray-400">Nota</span>
+              </div>
+
+              <div className="w-full md:w-auto mt-2 md:mt-0">
+                  <div className="grid grid-cols-3 gap-2 text-xs">
+                      <StatDetail icon="🥅" label="Gols" value={match.goals} />
+                      <StatDetail icon="👟" label="Assists" value={match.assists} />
+                      <StatDetail icon="🛡️" label="Desarmes" value={match.tackles} />
+                      <StatDetail icon="⚡" label="Passes" value={match.passesCompleted} />
+                      <StatDetail icon="⚠️" label="FC" value={match.foulsCommitted} />
+                      <StatDetail icon="🤕" label="FS" value={match.foulsSuffered} />
+                  </div>
+                  {(match.yellowCard || match.redCard) && (
+                      <div className='mt-2 flex space-x-2 justify-center'>
+                          {match.yellowCard && <span className="px-2 py-0.5 rounded-full bg-yellow-500 text-gray-900 font-bold text-xs">Amarelo</span>}
+                          {match.redCard && <span className="px-2 py-0.5 rounded-full bg-red-600 text-white font-bold text-xs">Vermelho</span>}
+                      </div>
+                  )}
+              </div>
+              
+              <button 
+                onClick={() => onDelete(match.id)}
+                className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition duration-150 p-1 rounded-full bg-gray-600/50 hover:bg-gray-600/80 focus:outline-none focus:ring-2 focus:ring-red-500"
+                aria-label="Deletar partida"
+                title="Apagar Partida"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
+          );
+          
+          return (
+            <div className="min-h-screen bg-gray-900 text-gray-100 p-4 md:p-8 font-inter">
+              <header className="text-center mb-8">
+                <h1 className="text-3xl md:text-4xl font-extrabold text-yellow-400 mb-2">My Season</h1>
+                <p className="text-gray-400 text-sm">Registro e Análise de Desempenho em Partidas</p>
+                <p className="text-xs text-gray-500 mt-2">ID do Usuário: <span className='font-mono'>{userId}</span></p>
+              </header>
+
+              {error && (
+                <div className="bg-red-900 border border-red-700 text-white p-3 rounded-lg mb-4 text-center">
+                  Erro: {error}
+                </div>
+              )}
+
+              {/* Seção 1: Estatísticas Gerais */}
+              <section className="mb-8 p-4 bg-gray-800 rounded-xl shadow-lg">
+                <h2 className="text-xl font-bold text-gray-200 mb-4 border-b border-gray-700 pb-2">Estatísticas Gerais</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <StatCard title="Partidas Totais" value={globalStats.totalMatches} icon="⚽" />
+                  <StatCard title="Gols Totais" value={globalStats.totalGoals} icon="🥅" />
+                  <StatCard title="Assistências" value={globalStats.totalAssists} icon="👟" />
+                  <StatCard title="Nota Média" value={globalStats.avgScore} icon="⭐" highlight={true} />
+                </div>
+              </section>
+
+              {/* Seção 2: Registro de Nova Partida */}
+              <section className="mb-8 p-4 bg-gray-800 rounded-xl shadow-lg">
+                <h2 className="text-xl font-bold text-gray-200 mb-4 border-b border-gray-700 pb-2">Registrar Nova Partida</h2>
+                <form onSubmit={handleSaveMatch} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <InputField label="Adversário" name="opponent" type="text" value={form.opponent} onChange={handleInputChange} required />
+                    <InputField label="Data da Partida" name="date" type="date" value={form.date} onChange={handleInputChange} required />
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <InputField label="Gols" name="goals" type="number" value={form.goals} onChange={handleInputChange} min="0" />
+                    <InputField label="Assistências" name="assists" type="number" value={form.assists} onChange={handleInputChange} min="0" />
+                    <InputField label="Desarmes" name="tackles" type="number" value={form.tackles} onChange={handleInputChange} min="0" />
+                    <InputField label="Passes Completos" name="passesCompleted" type="number" value={form.passesCompleted} onChange={handleInputChange} min="0" />
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <InputField label="Faltas Cometidas" name="foulsCommitted" type="number" value={form.foulsCommitted} onChange={handleInputChange} min="0" />
+                    <InputField label="Faltas Sofridas" name="foulsSuffered" type="number" value={form.foulsSuffered} onChange={handleInputChange} min="0" />
+                    <CheckboxField label="Cartão Amarelo" name="yellowCard" checked={form.yellowCard} onChange={handleInputChange} />
+                    <CheckboxField label="Cartão Vermelho" name="redCard" checked={form.redCard} onChange={handleInputChange} />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSaving}
+                    className={`w-full py-3 px-4 rounded-lg font-semibold transition duration-300 ${
+                      isSaving 
+                        ? 'bg-gray-600 cursor-not-allowed' 
+                        : 'bg-yellow-500 text-gray-900 hover:bg-yellow-400 shadow-md hover:shadow-lg'
+                    }`}
+                  >
+                    {isSaving ? 'Salvando...' : 'Salvar Partida e Calcular Nota'}
+                  </button>
+                </form>
+              </section>
+              
+              {/* Seção 3: Histórico de Partidas */}
+              <section className="p-4 bg-gray-800 rounded-xl shadow-lg">
+                <h2 className="text-xl font-bold text-gray-200 mb-4 border-b border-gray-700 pb-2">Histórico de Partidas ({matches.length})</h2>
+                <p className="text-sm text-gray-400 mb-4">Clique no ícone <span className="text-red-500">lixeira</span> para apagar uma partida.</p>
+                <div className="space-y-3">
+                  {matches.map(match => (
+                    <MatchCard key={match.id} match={match} onDelete={handleDeleteMatch} />
+                  ))}
+                  {matches.length === 0 && !loading && (
+                    <p className="text-center text-gray-500 p-4">Nenhuma partida registrada ainda. Use o formulário acima para começar!</p>
+                  )}
+                </div>
+              </section>
+
+            </div>
+          );
+        };
+
+        // Monta o aplicativo quando o documento estiver pronto e o Firebase for inicializado
+        document.addEventListener('firebase-ready', () => {
+            const container = document.getElementById('root');
+            const root = ReactDOM.createRoot(container);
+            root.render(<App />);
+        });
+
+    </script>
+</body>
+</html>
+
