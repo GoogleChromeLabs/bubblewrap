@@ -100,6 +100,10 @@ class Build {
     };
   }
 
+  formatPassword(password: string): string {
+    return `'${password}'`.replace(/'/g, "'\\''");
+  }
+
   async buildApk(): Promise<void> {
     await this.gradleWrapper.assembleRelease();
     await this.androidSdkTools.zipalignOnlyVerification(
@@ -111,9 +115,9 @@ class Build {
   async signApk(signingKey: SigningKeyInfo, passwords: SigningKeyPasswords): Promise<void> {
     await this.androidSdkTools.apksigner(
         signingKey.path,
-        `"${passwords.keystorePassword}"`,
+        this.formatPassword(passwords.keystorePassword),
         signingKey.alias,
-        `"${passwords.keyPassword}"`,
+        this.formatPassword(passwords.keyPassword),
         APK_ALIGNED_FILE_NAME, // input file path
         APK_SIGNED_FILE_NAME,
     );
@@ -126,8 +130,8 @@ class Build {
   async signAppBundle(signingKey: SigningKeyInfo, passwords: SigningKeyPasswords): Promise<void> {
     await this.jarSigner.sign(
         signingKey,
-        `"${passwords.keystorePassword}"`,
-        `"${passwords.keyPassword}"`,
+        this.formatPassword(passwords.keystorePassword),
+        this.formatPassword(passwords.keyPassword),
         APP_BUNDLE_BUILD_OUTPUT_FILE_NAME,
         APP_BUNDLE_SIGNED_FILE_NAME);
   }
