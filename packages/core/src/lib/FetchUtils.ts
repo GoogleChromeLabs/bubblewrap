@@ -15,6 +15,8 @@
  */
 
 import * as fs from 'fs';
+import {pipeline} from 'stream';
+import {promisify} from 'util';
 import {context, Response as FetchH2Response} from 'fetch-h2';
 import nodefetch, {Response as NodeFetchResponse} from 'node-fetch';
 
@@ -26,6 +28,7 @@ export type NodeFetchOrFetchH2Response = FetchH2Response | NodeFetchResponse;
 const userAgent = 'Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/81.0';
 const fetchh2Ctx = context({userAgent: userAgent, overwriteUserAgent: true});
 const fetchh2 = fetchh2Ctx.fetch;
+const pipelinePromise = promisify(pipeline);
 
 class FetchUtils {
   private fetchEngine = DEFAULT_FETCH_ENGINE;
@@ -71,25 +74,15 @@ class FetchUtils {
     const fileStream = fs.createWriteStream(path);
     let received = 0;
 
-    await new Promise((resolve, reject) => {
-      readableStream.pipe(fileStream);
-
-      // Even though we're piping the chunks, we intercept them to check for the download progress.
-      if (progressCallback) {
-        readableStream.on('data', (chunk) => {
-          received = received + chunk.length;
-          progressCallback(received, fileSize);
-        });
-      }
-
-      readableStream.on('error', (err) => {
-        reject(err);
+    // Observe chunks without taking over the stream's error and cleanup handling.
+    if (progressCallback) {
+      readableStream.on('data', (chunk) => {
+        received = received + chunk.length;
+        progressCallback(received, fileSize);
       });
+    }
 
-      fileStream.on('finish', () => {
-        resolve({});
-      });
-    });
+    await pipelinePromise(readableStream, fileStream);
   }
 }
 
