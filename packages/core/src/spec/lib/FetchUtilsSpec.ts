@@ -17,16 +17,23 @@
 import * as fs from 'fs';
 import * as http from 'http';
 import * as os from 'os';
+import {Socket} from 'net';
 import * as path from 'path';
 import {FetchEngine, fetchUtils} from '../../lib/FetchUtils';
 
 for (const engine of ['node-fetch', 'fetch-h2'] as FetchEngine[]) {
   describe(`FetchUtils.downloadFile (${engine})`, () => {
-    let server: http.Server;
-    let directory: string;
+    let server: http.Server | undefined;
+    let directory: string | undefined;
+    let sockets: Set<Socket>;
+    let finishChunks: (() => void) | undefined;
     let url: string;
 
     beforeEach(async () => {
+      sockets = new Set();
+      server = undefined;
+      directory = undefined;
+      finishChunks = undefined;
       directory = fs.mkdtempSync(path.join(os.tmpdir(), 'bubblewrap-download-'));
       fetchUtils.setFetchEngine(engine);
       server = http.createServer((_request, response) => {
@@ -36,22 +43,47 @@ for (const engine of ['node-fetch', 'fetch-h2'] as FetchEngine[]) {
           return;
         }
         response.writeHead(200, {'Content-Length': '8'});
+        if (_request.url === '/chunks') {
+          finishChunks = (): void => {
+            response.end('load');
+          };
+          response.write('down');
+          return;
+        }
         response.end('download');
       });
-      await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+      server.on('connection', (socket) => {
+        sockets.add(socket);
+        socket.on('close', () => sockets.delete(socket));
+      });
+      const listeningServer = server;
+      await new Promise<void>((resolve) => listeningServer.listen(0, '127.0.0.1', resolve));
       const address = server.address() as {port: number};
       url = `http://127.0.0.1:${address.port}/file`;
     });
 
     afterEach(async () => {
       fetchUtils.setFetchEngine('fetch-h2');
-      server.closeAllConnections();
-      await new Promise<void>((resolve) => server.close(() => resolve()));
-      fs.rmSync(directory, {recursive: true, force: true});
+      try {
+        // eslint-disable-next-line no-unused-expressions
+        server?.closeAllConnections?.();
+        // Node 18.0 has no closeAllConnections; also close fetch-h2 probe sockets.
+        for (const socket of sockets) {
+          socket.destroy();
+        }
+        if (server) {
+          const closingServer = server;
+          await new Promise<void>((resolve) => closingServer.close(() => resolve()));
+        }
+      } finally {
+        if (directory) {
+          fs.rmSync(directory, {recursive: true, force: true});
+        }
+      }
     });
 
     it('writes the complete file and reports progress', async () => {
-      const destination = path.join(directory, 'file');
+      const destination = path.join(directory!, 'file');
       let received = 0;
       let total = 0;
       await fetchUtils.downloadFile(url, destination, (current, size) => {
@@ -63,9 +95,33 @@ for (const engine of ['node-fetch', 'fetch-h2'] as FetchEngine[]) {
       expect(total).toBe(8);
     });
 
+    it('writes the complete file without a progress callback', async () => {
+      const destination = path.join(directory!, 'no-progress');
+      await fetchUtils.downloadFile(url, destination);
+      expect(fs.readFileSync(destination, 'utf8')).toBe('download');
+    });
+
+    it('accumulates progress across multiple response chunks', async () => {
+      const destination = path.join(directory!, 'chunks');
+      const received: number[] = [];
+      const totals: number[] = [];
+      const chunksUrl = url.replace('/file', '/chunks');
+      await fetchUtils.downloadFile(chunksUrl, destination, (current, size) => {
+        received.push(current);
+        totals.push(size);
+        // Only send the second chunk after the first has reached the consumer.
+        if (current === 4) {
+          finishChunks!();
+        }
+      });
+      expect(fs.readFileSync(destination, 'utf8')).toBe('download');
+      expect(received).toEqual([4, 8]);
+      expect(totals).toEqual([8, 8]);
+    });
+
     it('still rejects response stream errors', async () => {
       await expectAsync(fetchUtils.downloadFile(
-          url.replace('/file', '/invalid-gzip'), path.join(directory, 'invalid')))
+          url.replace('/file', '/invalid-gzip'), path.join(directory!, 'invalid')))
           .toBeRejected();
     });
 
@@ -85,7 +141,7 @@ for (const engine of ['node-fetch', 'fetch-h2'] as FetchEngine[]) {
       let timer: ReturnType<typeof setTimeout> | undefined;
       try {
         const result = await Promise.race([
-          fetchUtils.downloadFile(url, path.join(directory, 'missing', 'file'))
+          fetchUtils.downloadFile(url, path.join(directory!, 'missing', 'file'))
               .then(() => 'resolved', (error: NodeJS.ErrnoException) => error.code),
           new Promise<string>((resolve) => {
             timer = setTimeout(() => resolve('pending'), 2000);
