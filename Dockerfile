@@ -15,4 +15,4 @@ RUN yes | bubblewrap doctor
 
 WORKDIR /app
 
-ENTRYPOINT ["bubblewrap"]
+
