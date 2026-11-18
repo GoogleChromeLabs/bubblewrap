@@ -32,10 +32,10 @@
   "devDependencies": {
     "@types/jasmine": "^3.6.3",
     "@types/mock-fs": "^4.13.0",
-    "@typescript-eslint/eslint-plugin": "^2.34.0",
-    "@typescript-eslint/parser": "^2.34.0",
+    "@typescript-eslint/eslint-plugin": "^8.60.0",
+    "@typescript-eslint/parser": "^8.60.0",
     "del-cli": "^3.0.1",
-    "eslint": "^6.6.0",
+    "eslint": "^10.4.0",
     "eslint-config-google": "^0.14.0",
     "jasmine": "^3.6.4",
     "lerna": "^6.5.1",
